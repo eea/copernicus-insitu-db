@@ -10,12 +10,19 @@ class Metric(models.Model):
     breakthrough = models.CharField(max_length=100)
     goal = models.CharField(max_length=100)
 
+    def __str__(self):
+        return 'T: {} - B: {} - G: {}'.format(
+            self.threshold, self.breakthrough, self.goal)
+
 
 class CopernicusService(models.Model):
     acronym = models.CharField(max_length=10)
     name = models.CharField(max_length=100)
     description = models.TextField()
     website = models.CharField(max_length=255)
+
+    def __str__(self):
+        return self.name
 
 
 class EntrustedEntity(models.Model):
@@ -26,6 +33,9 @@ class EntrustedEntity(models.Model):
     class Meta:
         verbose_name_plural = 'entrusted entities'
 
+    def __str__(self):
+        return self.name
+
 
 class Component(models.Model):
     acronym = models.CharField(max_length=10)
@@ -33,6 +43,9 @@ class Component(models.Model):
     service = models.ForeignKey(CopernicusService, on_delete=models.CASCADE)
     entrusted_entity = models.ForeignKey(EntrustedEntity,
                                          on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.name
 
 
 class Requirement(models.Model):
@@ -60,6 +73,9 @@ class Requirement(models.Model):
                                             on_delete=models.CASCADE,
                                             related_name='+')
 
+    def __str__(self):
+        return self.name
+
 
 class Product(models.Model):
     acronym = models.CharField(max_length=10)
@@ -78,6 +94,9 @@ class Product(models.Model):
                                  related_name='+')
     requirements = models.ManyToManyField(Requirement,
                                           through='ProductRequirement')
+
+    def __str__(self):
+        return self.name
 
 
 class ProductRequirement(models.Model):
@@ -98,6 +117,9 @@ class ProductRequirement(models.Model):
                                     related_name='+')
     barriers = models.ManyToManyField(picklists.Barrier)
 
+    def __str__(self):
+        return '{} - {}'.format(self.product.name, self.requirement.name)
+
 
 class DataResponsible(models.Model):
     name = models.CharField(max_length=100)
@@ -105,6 +127,9 @@ class DataResponsible(models.Model):
     is_network = models.BooleanField(default=False)
     members = models.ManyToManyField('self', blank=True)
     countries = models.ManyToManyField(picklists.Country)
+
+    def __str__(self):
+        return self.name
 
 
 class DataResponsibleDetails(models.Model):
@@ -128,6 +153,9 @@ class DataResponsibleDetails(models.Model):
 
     class Meta:
         verbose_name_plural = 'data responsible details'
+
+    def __str__(self):
+        return 'Details for {}'.format(self.name)
 
 
 class DataGroup(models.Model):
@@ -160,6 +188,9 @@ class DataGroup(models.Model):
     responsibles = models.ManyToManyField(DataResponsible,
                                           through='DataResponsibleRelation')
 
+    def __str__(self):
+        return self.name
+
 
 class DataRequirement(models.Model):
     data_group = models.ForeignKey(DataGroup, on_delete=models.CASCADE)
@@ -170,6 +201,9 @@ class DataRequirement(models.Model):
     level_of_compliance = models.ForeignKey(picklists.ComplianceLevel,
                                             on_delete=models.CASCADE,
                                             related_name='+')
+
+    def __str__(self):
+        return '{} - {}'.format(self.data_group.name, self.requirement.name)
 
 
 class DataResponsibleRelation(models.Model):
@@ -182,3 +216,6 @@ class DataResponsibleRelation(models.Model):
     data_group = models.ForeignKey(DataGroup, on_delete=models.CASCADE)
     responsible = models.ForeignKey(DataResponsible, on_delete=models.CASCADE)
     role = models.IntegerField(choices=ROLE_CHOICES, db_index=True)
+
+    def __str__(self):
+        return '{} - {}'.format(self.data_group.name, self.responsible.name)

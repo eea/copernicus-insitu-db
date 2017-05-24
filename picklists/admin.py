@@ -5,7 +5,10 @@ from django.contrib import admin
 from picklists import models
 
 
-admin.site.register(models.Country)
+class CountryAdmin(admin.ModelAdmin):
+    search_fields = ('code', 'name')
+
+admin.site.register(models.Country, CountryAdmin)
 admin.site.register(models.InspireTheme)
 admin.site.register(models.ProductStatus)
 admin.site.register(models.ProductGroup)
