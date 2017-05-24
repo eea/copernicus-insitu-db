@@ -1,0 +1,16 @@
+import os
+
+DEBUG = True
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'HOST': os.environ.get('POSTGRES_HOST', 'postgres'),
+        'NAME': os.environ.get('POSTGRES_DBNAME', 'insitu'),
+        'USER': os.environ.get('POSTGRES_DBUSER', 'insitu'),
+        'PASSWORD': os.environ.get('POSTGRES_DBPASS', 'insitu'),
+        'PORT': '5432',
+    }
+}
+
+TIME_ZONE = 'Europe/Copenhagen'

@@ -5,3 +5,6 @@ __pycache__/
 # virtualenv
 venv/
 sandbox/
+
+# local settings
+local_settings.py
