@@ -16,7 +16,7 @@ if [ -z "$1" ]; then
   python manage.py loaddata picklists &&
   python manage.py collectstatic --noinput &&
   exec gunicorn copernicus.wsgi:application \
-         --name gemet \
+         --name insitu \
          --bind 0.0.0.0:8000 \
          --workers 3 \
          --access-logfile - \
