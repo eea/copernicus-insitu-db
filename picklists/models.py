@@ -26,8 +26,48 @@ class InspireTheme(models.Model):
         ordering = ['sort_order']
 
     def __str__(self):
-        return ('{}: {}'.format(self.annex, self.name)
-                if self.annex else self.name)
+        return (
+            '{}: {}'.format(self.annex, self.name)
+            if self.annex
+            else self.name
+        )
+
+
+class EssentialClimateVariable(models.Model):
+    DOMAIN_CHOICES = (
+        (0, 'ATMOSPHERIC'),
+        (1, 'OCEANIC'),
+        (2, 'TERRESTRIAL'),
+    )
+    COMPONENT_CHOICES = (
+        (0, 'SURFACE'),
+        (1, 'UPPER-AIR'),
+        (2, 'COMPOSITION'),
+        (3, 'PHYSICS'),
+        (4, 'BIOGEOCHEMISTRY'),
+        (5, 'BIOLOGY/ECOSYSTEMS'),
+        (6, 'HYDROLOGICAL'),
+        (7, 'CRYOSPHERE'),
+        (8, 'CRYOSPHERE/BIOSPHERE'),
+        (9, 'BIOSPHERE'),
+        (10, 'HUMAN DIMENSION'),
+    )
+    domain = models.IntegerField(choices=DOMAIN_CHOICES)
+    component = models.IntegerField(choices=COMPONENT_CHOICES)
+    parameter = models.CharField(max_length=100)
+    description = models.TextField(blank=True)
+    sort_order = models.IntegerField()
+
+    class Meta:
+        ordering = ['sort_order']
+
+    def __str__(self):
+        return (
+            '{} - {} - {}'.format(
+                self.get_domain_display(),
+                self.get_component_display(),
+                self.parameter)
+        )
 
 
 class ProductStatus(models.Model):

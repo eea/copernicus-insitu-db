@@ -8,3 +8,6 @@ sandbox/
 
 # local settings
 local_settings.py
+
+# macOS specific files
+*.DS_Store

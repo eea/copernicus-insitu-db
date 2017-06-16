@@ -10,6 +10,7 @@ class CountryAdmin(admin.ModelAdmin):
 
 admin.site.register(models.Country, CountryAdmin)
 admin.site.register(models.InspireTheme)
+admin.site.register(models.EssentialClimateVariable)
 admin.site.register(models.ProductStatus)
 admin.site.register(models.ProductGroup)
 admin.site.register(models.DefinitionLevel)

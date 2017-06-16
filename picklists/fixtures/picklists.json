@@ -2082,6 +2082,589 @@
   }
 },
 {
+  "model": "picklists.essentialclimatevariable",
+  "pk": 1,
+  "fields": {
+    "domain": 0,
+    "component": 0,
+    "parameter": "Air temperature",
+    "description": "",
+    "sort_order": 1
+  }
+},
+{
+  "model": "picklists.essentialclimatevariable",
+  "pk": 2,
+  "fields": {
+    "domain": 0,
+    "component": 0,
+    "parameter": "Wind speed and direction",
+    "description": "",
+    "sort_order": 2
+  }
+},
+{
+  "model": "picklists.essentialclimatevariable",
+  "pk": 3,
+  "fields": {
+    "domain": 0,
+    "component": 0,
+    "parameter": "Water vapor",
+    "description": "",
+    "sort_order": 3
+  }
+},
+{
+  "model": "picklists.essentialclimatevariable",
+  "pk": 4,
+  "fields": {
+    "domain": 0,
+    "component": 0,
+    "parameter": "Pressure",
+    "description": "",
+    "sort_order": 4
+  }
+},
+{
+  "model": "picklists.essentialclimatevariable",
+  "pk": 5,
+  "fields": {
+    "domain": 0,
+    "component": 0,
+    "parameter": "Precipitation",
+    "description": "",
+    "sort_order": 5
+  }
+},
+{
+  "model": "picklists.essentialclimatevariable",
+  "pk": 6,
+  "fields": {
+    "domain": 0,
+    "component": 0,
+    "parameter": "Surface radiation budget",
+    "description": "",
+    "sort_order": 6
+  }
+},
+{
+  "model": "picklists.essentialclimatevariable",
+  "pk": 7,
+  "fields": {
+    "domain": 0,
+    "component": 1,
+    "parameter": "Lightning",
+    "description": "",
+    "sort_order": 7
+  }
+},
+{
+  "model": "picklists.essentialclimatevariable",
+  "pk": 8,
+  "fields": {
+    "domain": 0,
+    "component": 1,
+    "parameter": "Temperature",
+    "description": "",
+    "sort_order": 8
+  }
+},
+{
+  "model": "picklists.essentialclimatevariable",
+  "pk": 9,
+  "fields": {
+    "domain": 0,
+    "component": 1,
+    "parameter": "Wind speed and direction",
+    "description": "",
+    "sort_order": 9
+  }
+},
+{
+  "model": "picklists.essentialclimatevariable",
+  "pk": 10,
+  "fields": {
+    "domain": 0,
+    "component": 1,
+    "parameter": "Water vapor",
+    "description": "",
+    "sort_order": 10
+  }
+},
+{
+  "model": "picklists.essentialclimatevariable",
+  "pk": 11,
+  "fields": {
+    "domain": 0,
+    "component": 1,
+    "parameter": "Cloud properties",
+    "description": "",
+    "sort_order": 11
+  }
+},
+{
+  "model": "picklists.essentialclimatevariable",
+  "pk": 12,
+  "fields": {
+    "domain": 0,
+    "component": 1,
+    "parameter": "Earth radiation budget (including solar irradiance)",
+    "description": "",
+    "sort_order": 12
+  }
+},
+{
+  "model": "picklists.essentialclimatevariable",
+  "pk": 13,
+  "fields": {
+    "domain": 0,
+    "component": 2,
+    "parameter": "Carbon Dioxide, Methane and other long-lived greenhouse gases",
+    "description": "",
+    "sort_order": 13
+  }
+},
+{
+  "model": "picklists.essentialclimatevariable",
+  "pk": 14,
+  "fields": {
+    "domain": 0,
+    "component": 2,
+    "parameter": "Ozone and aerosol",
+    "description": "",
+    "sort_order": 14
+  }
+},
+{
+  "model": "picklists.essentialclimatevariable",
+  "pk": 15,
+  "fields": {
+    "domain": 1,
+    "component": 3,
+    "parameter": "Subsurface temperature",
+    "description": "",
+    "sort_order": 15
+  }
+},
+{
+  "model": "picklists.essentialclimatevariable",
+  "pk": 16,
+  "fields": {
+    "domain": 1,
+    "component": 3,
+    "parameter": "Subsurface salinity",
+    "description": "",
+    "sort_order": 16
+  }
+},
+{
+  "model": "picklists.essentialclimatevariable",
+  "pk": 17,
+  "fields": {
+    "domain": 1,
+    "component": 3,
+    "parameter": "Subsurface currents",
+    "description": "",
+    "sort_order": 17
+  }
+},
+{
+  "model": "picklists.essentialclimatevariable",
+  "pk": 18,
+  "fields": {
+    "domain": 1,
+    "component": 3,
+    "parameter": "Ocean surface stress",
+    "description": "",
+    "sort_order": 18
+  }
+},
+{
+  "model": "picklists.essentialclimatevariable",
+  "pk": 19,
+  "fields": {
+    "domain": 1,
+    "component": 3,
+    "parameter": "Ocean surface heat flux",
+    "description": "",
+    "sort_order": 19
+  }
+},
+{
+  "model": "picklists.essentialclimatevariable",
+  "pk": 20,
+  "fields": {
+    "domain": 1,
+    "component": 3,
+    "parameter": "Sea surface temperature",
+    "description": "",
+    "sort_order": 20
+  }
+},
+{
+  "model": "picklists.essentialclimatevariable",
+  "pk": 21,
+  "fields": {
+    "domain": 1,
+    "component": 3,
+    "parameter": "Surface currents",
+    "description": "",
+    "sort_order": 21
+  }
+},
+{
+  "model": "picklists.essentialclimatevariable",
+  "pk": 22,
+  "fields": {
+    "domain": 1,
+    "component": 3,
+    "parameter": "Sea-surface salinity",
+    "description": "",
+    "sort_order": 22
+  }
+},
+{
+  "model": "picklists.essentialclimatevariable",
+  "pk": 23,
+  "fields": {
+    "domain": 1,
+    "component": 3,
+    "parameter": "Sea level",
+    "description": "",
+    "sort_order": 23
+  }
+},
+{
+  "model": "picklists.essentialclimatevariable",
+  "pk": 24,
+  "fields": {
+    "domain": 1,
+    "component": 3,
+    "parameter": "Sea state",
+    "description": "",
+    "sort_order": 24
+  }
+},
+{
+  "model": "picklists.essentialclimatevariable",
+  "pk": 25,
+  "fields": {
+    "domain": 1,
+    "component": 3,
+    "parameter": "Sea-ice",
+    "description": "",
+    "sort_order": 25
+  }
+},
+{
+  "model": "picklists.essentialclimatevariable",
+  "pk": 26,
+  "fields": {
+    "domain": 1,
+    "component": 4,
+    "parameter": "Inorganic carbon",
+    "description": "",
+    "sort_order": 26
+  }
+},
+{
+  "model": "picklists.essentialclimatevariable",
+  "pk": 27,
+  "fields": {
+    "domain": 1,
+    "component": 4,
+    "parameter": "Oxygen",
+    "description": "",
+    "sort_order": 27
+  }
+},
+{
+  "model": "picklists.essentialclimatevariable",
+  "pk": 28,
+  "fields": {
+    "domain": 1,
+    "component": 4,
+    "parameter": "Nutrients",
+    "description": "",
+    "sort_order": 28
+  }
+},
+{
+  "model": "picklists.essentialclimatevariable",
+  "pk": 29,
+  "fields": {
+    "domain": 1,
+    "component": 4,
+    "parameter": "Transient tracers",
+    "description": "",
+    "sort_order": 29
+  }
+},
+{
+  "model": "picklists.essentialclimatevariable",
+  "pk": 30,
+  "fields": {
+    "domain": 1,
+    "component": 4,
+    "parameter": "Suspended particulates",
+    "description": "",
+    "sort_order": 30
+  }
+},
+{
+  "model": "picklists.essentialclimatevariable",
+  "pk": 31,
+  "fields": {
+    "domain": 1,
+    "component": 4,
+    "parameter": "Stable carbon isotopes",
+    "description": "",
+    "sort_order": 31
+  }
+},
+{
+  "model": "picklists.essentialclimatevariable",
+  "pk": 32,
+  "fields": {
+    "domain": 1,
+    "component": 4,
+    "parameter": "Dissolved Organic carbon",
+    "description": "",
+    "sort_order": 32
+  }
+},
+{
+  "model": "picklists.essentialclimatevariable",
+  "pk": 33,
+  "fields": {
+    "domain": 1,
+    "component": 4,
+    "parameter": "Nitrous Oxide (N2O)",
+    "description": "",
+    "sort_order": 33
+  }
+},
+{
+  "model": "picklists.essentialclimatevariable",
+  "pk": 34,
+  "fields": {
+    "domain": 1,
+    "component": 4,
+    "parameter": "Ocean colour",
+    "description": "",
+    "sort_order": 34
+  }
+},
+{
+  "model": "picklists.essentialclimatevariable",
+  "pk": 35,
+  "fields": {
+    "domain": 1,
+    "component": 5,
+    "parameter": "Plankton",
+    "description": "",
+    "sort_order": 35
+  }
+},
+{
+  "model": "picklists.essentialclimatevariable",
+  "pk": 36,
+  "fields": {
+    "domain": 1,
+    "component": 5,
+    "parameter": "Marine habitat properties",
+    "description": "",
+    "sort_order": 36
+  }
+},
+{
+  "model": "picklists.essentialclimatevariable",
+  "pk": 37,
+  "fields": {
+    "domain": 2,
+    "component": 6,
+    "parameter": "River discharge",
+    "description": "",
+    "sort_order": 37
+  }
+},
+{
+  "model": "picklists.essentialclimatevariable",
+  "pk": 38,
+  "fields": {
+    "domain": 2,
+    "component": 6,
+    "parameter": "Groundwater",
+    "description": "",
+    "sort_order": 38
+  }
+},
+{
+  "model": "picklists.essentialclimatevariable",
+  "pk": 39,
+  "fields": {
+    "domain": 2,
+    "component": 6,
+    "parameter": "Lakes",
+    "description": "",
+    "sort_order": 39
+  }
+},
+{
+  "model": "picklists.essentialclimatevariable",
+  "pk": 40,
+  "fields": {
+    "domain": 2,
+    "component": 6,
+    "parameter": "Soil moisture",
+    "description": "",
+    "sort_order": 40
+  }
+},
+{
+  "model": "picklists.essentialclimatevariable",
+  "pk": 41,
+  "fields": {
+    "domain": 2,
+    "component": 7,
+    "parameter": "Snow",
+    "description": "",
+    "sort_order": 41
+  }
+},
+{
+  "model": "picklists.essentialclimatevariable",
+  "pk": 42,
+  "fields": {
+    "domain": 2,
+    "component": 7,
+    "parameter": "Glaciers",
+    "description": "",
+    "sort_order": 42
+  }
+},
+{
+  "model": "picklists.essentialclimatevariable",
+  "pk": 43,
+  "fields": {
+    "domain": 2,
+    "component": 7,
+    "parameter": "Ice sheets",
+    "description": "",
+    "sort_order": 43
+  }
+},
+{
+  "model": "picklists.essentialclimatevariable",
+  "pk": 44,
+  "fields": {
+    "domain": 2,
+    "component": 7,
+    "parameter": "Permafrost",
+    "description": "",
+    "sort_order": 44
+  }
+},
+{
+  "model": "picklists.essentialclimatevariable",
+  "pk": 45,
+  "fields": {
+    "domain": 2,
+    "component": 8,
+    "parameter": "Albedo",
+    "description": "",
+    "sort_order": 45
+  }
+},
+{
+  "model": "picklists.essentialclimatevariable",
+  "pk": 46,
+  "fields": {
+    "domain": 2,
+    "component": 9,
+    "parameter": "FAPAR",
+    "description": "",
+    "sort_order": 46
+  }
+},
+{
+  "model": "picklists.essentialclimatevariable",
+  "pk": 47,
+  "fields": {
+    "domain": 2,
+    "component": 9,
+    "parameter": "Leaf Area Index",
+    "description": "",
+    "sort_order": 47
+  }
+},
+{
+  "model": "picklists.essentialclimatevariable",
+  "pk": 48,
+  "fields": {
+    "domain": 2,
+    "component": 9,
+    "parameter": "Land surface temperature",
+    "description": "",
+    "sort_order": 48
+  }
+},
+{
+  "model": "picklists.essentialclimatevariable",
+  "pk": 49,
+  "fields": {
+    "domain": 2,
+    "component": 9,
+    "parameter": "Land cover",
+    "description": "",
+    "sort_order": 49
+  }
+},
+{
+  "model": "picklists.essentialclimatevariable",
+  "pk": 50,
+  "fields": {
+    "domain": 2,
+    "component": 9,
+    "parameter": "Above ground biomass",
+    "description": "",
+    "sort_order": 50
+  }
+},
+{
+  "model": "picklists.essentialclimatevariable",
+  "pk": 51,
+  "fields": {
+    "domain": 2,
+    "component": 9,
+    "parameter": "Soil carbon",
+    "description": "",
+    "sort_order": 51
+  }
+},
+{
+  "model": "picklists.essentialclimatevariable",
+  "pk": 52,
+  "fields": {
+    "domain": 2,
+    "component": 10,
+    "parameter": "Anthropogenic water use",
+    "description": "",
+    "sort_order": 52
+  }
+},
+{
+  "model": "picklists.essentialclimatevariable",
+  "pk": 53,
+  "fields": {
+    "domain": 2,
+    "component": 10,
+    "parameter": "Anthropogenic greenhouse gas fluxes",
+    "description": "",
+    "sort_order": 53
+  }
+},
+{
   "model": "picklists.productstatus",
   "pk": 1,
   "fields": {
