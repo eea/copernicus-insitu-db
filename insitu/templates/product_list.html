@@ -1,0 +1,38 @@
+{% extends '_layout.html' %}
+{% load static %}
+
+{% block style %}
+  <link rel="stylesheet" type="text/css" href="{% static 'css/jquery.dataTables.min.css' %}"/>
+{% endblock %}
+
+{% block content %}
+
+  <h1>
+    <span>Products</span>
+    <a class="btn btn-primary pull-right" href="{% url 'product_add' %}">New product</a>
+  </h1>
+
+  <table id="products" width="100%"
+    class="table table-condensed table-bordered table-hover">
+    <thead>
+      <tr>
+        <th>Acronym</th>
+        <th>Name</th>
+      </tr>
+    </thead>
+  </table>
+{% endblock %}
+
+{% block scripts %}
+  <script src="{% static 'js/jquery-3.2.1.min.js' %}"></script>
+  <script src="{% static 'js/jquery.dataTables.min.js' %}"></script>
+  <script>
+    $(document).ready(function () {
+      $('#products').dataTable({
+        "processing": true,
+        "serverSide": true,
+        "ajax": "{% url 'products_json' %}"
+      });
+    });
+  </script>
+{% endblock %}

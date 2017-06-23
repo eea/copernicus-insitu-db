@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django_elasticsearch_dsl',
     'picklists',
     'insitu',
 ]
@@ -126,3 +127,10 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, '..', 'static/')
+
+ELASTICSEARCH_DSL = {
+    'default': {
+        'hosts': 'elasticsearch',
+        'http_auth': "elastic:changeme",
+    },
+}

@@ -2,7 +2,7 @@
 from __future__ import unicode_literals
 from django.db import models
 
-from picklists import models as picklists
+from picklists import models as pickmodels
 
 
 class Metric(models.Model):
@@ -51,10 +51,10 @@ class Component(models.Model):
 class Requirement(models.Model):
     name = models.CharField(max_length=100)
     note = models.TextField(blank=True)
-    dissemination = models.ForeignKey(picklists.Dissemination,
+    dissemination = models.ForeignKey(pickmodels.Dissemination,
                                       on_delete=models.CASCADE,
                                       related_name='+')
-    quality = models.ForeignKey(picklists.Quality,
+    quality = models.ForeignKey(pickmodels.Quality,
                                 on_delete=models.CASCADE,
                                 related_name='+')
     uncertainty = models.ForeignKey(Metric,
@@ -82,14 +82,14 @@ class Product(models.Model):
     name = models.CharField(max_length=100)
     description = models.TextField(blank=True)
     note = models.TextField(blank=True)
-    group = models.ForeignKey(picklists.ProductGroup,
+    group = models.ForeignKey(pickmodels.ProductGroup,
                               on_delete=models.CASCADE)
     component = models.ForeignKey(Component,
                                   on_delete=models.CASCADE)
-    status = models.ForeignKey(picklists.ProductStatus,
+    status = models.ForeignKey(pickmodels.ProductStatus,
                                on_delete=models.CASCADE,
                                related_name='+')
-    coverage = models.ForeignKey(picklists.Coverage,
+    coverage = models.ForeignKey(pickmodels.Coverage,
                                  on_delete=models.CASCADE,
                                  related_name='+')
     requirements = models.ManyToManyField(Requirement,
@@ -103,19 +103,19 @@ class ProductRequirement(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     requirement = models.ForeignKey(Requirement, on_delete=models.CASCADE)
     note = models.TextField(blank=True)
-    level_of_definition = models.ForeignKey(picklists.DefinitionLevel,
+    level_of_definition = models.ForeignKey(pickmodels.DefinitionLevel,
                                             on_delete=models.CASCADE,
                                             related_name='+')
-    distance_to_target = models.ForeignKey(picklists.TargetDistance,
+    distance_to_target = models.ForeignKey(pickmodels.TargetDistance,
                                            on_delete=models.CASCADE,
                                            related_name='+')
-    relevance = models.ForeignKey(picklists.Relevance,
+    relevance = models.ForeignKey(pickmodels.Relevance,
                                   on_delete=models.CASCADE,
                                   related_name='+')
-    criticality = models.ForeignKey(picklists.Criticality,
+    criticality = models.ForeignKey(pickmodels.Criticality,
                                     on_delete=models.CASCADE,
                                     related_name='+')
-    barriers = models.ManyToManyField(picklists.Barrier)
+    barriers = models.ManyToManyField(pickmodels.Barrier)
 
     def __str__(self):
         return '{} - {}'.format(self.product.name, self.requirement.name)
@@ -126,7 +126,7 @@ class DataResponsible(models.Model):
     description = models.TextField(blank=True)
     is_network = models.BooleanField(default=False)
     members = models.ManyToManyField('self', blank=True)
-    countries = models.ManyToManyField(picklists.Country)
+    countries = models.ManyToManyField(pickmodels.Country)
 
     def __str__(self):
         return self.name
@@ -161,28 +161,28 @@ class DataResponsibleDetails(models.Model):
 class DataGroup(models.Model):
     name = models.CharField(max_length=100)
     note = models.TextField(blank=True)
-    frequency = models.ForeignKey(picklists.Frequency,
+    frequency = models.ForeignKey(pickmodels.Frequency,
                                   on_delete=models.CASCADE,
                                   related_name='+')
-    coverage = models.ForeignKey(picklists.Coverage,
+    coverage = models.ForeignKey(pickmodels.Coverage,
                                  on_delete=models.CASCADE,
                                  related_name='+')
-    timeliness = models.ForeignKey(picklists.Timeliness,
+    timeliness = models.ForeignKey(pickmodels.Timeliness,
                                    on_delete=models.CASCADE,
                                    related_name='+')
-    policy = models.ForeignKey(picklists.Policy,
+    policy = models.ForeignKey(pickmodels.Policy,
                                on_delete=models.CASCADE,
                                related_name='+')
-    data_type = models.ForeignKey(picklists.DataType,
+    data_type = models.ForeignKey(pickmodels.DataType,
                                   on_delete=models.CASCADE,
                                   related_name='+')
-    data_format = models.ForeignKey(picklists.DataFormat,
+    data_format = models.ForeignKey(pickmodels.DataFormat,
                                     on_delete=models.CASCADE,
                                     related_name='+')
-    quality = models.ForeignKey(picklists.Quality,
+    quality = models.ForeignKey(pickmodels.Quality,
                                 on_delete=models.CASCADE,
                                 related_name='+')
-    inspire_themes = models.ManyToManyField(picklists.InspireTheme)
+    inspire_themes = models.ManyToManyField(pickmodels.InspireTheme)
     requirements = models.ManyToManyField(Requirement,
                                           through='DataRequirement')
     responsibles = models.ManyToManyField(DataResponsible,
@@ -198,7 +198,7 @@ class DataRequirement(models.Model):
     information_costs = models.BooleanField(default=False)
     handling_costs = models.BooleanField(default=False)
     note = models.TextField(blank=True)
-    level_of_compliance = models.ForeignKey(picklists.ComplianceLevel,
+    level_of_compliance = models.ForeignKey(pickmodels.ComplianceLevel,
                                             on_delete=models.CASCADE,
                                             related_name='+')
 
