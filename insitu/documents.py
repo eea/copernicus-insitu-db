@@ -15,6 +15,11 @@ if not getattr(Search, '_patched', False):
 class ProductDoc(DocType):
     acronym = fields.KeywordField()
     name = fields.KeywordField()
+    group = fields.KeywordField(attr='group.name')
+    service = fields.KeywordField(attr='component.service.name')
+    entity = fields.KeywordField(attr='component.entrusted_entity.acronym')
+    component = fields.KeywordField(attr='component.name')
+    coverage = fields.KeywordField(attr='coverage.name')
 
     class Meta:
         model = Product

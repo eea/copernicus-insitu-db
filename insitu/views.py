@@ -27,8 +27,9 @@ class ProductAdd(CreateView):
 
 
 class ProductListJson(BaseDatatableView):
-    columns = ['acronym', 'name']
-    order_columns = ['acronym', 'name']
+    columns = ['acronym', 'name', 'group', 'service', 'component', 'entity',
+               'coverage']
+    order_columns = columns
 
     def get_initial_queryset(self):
         return ProductDoc.search()
