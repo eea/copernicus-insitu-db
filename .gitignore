@@ -11,3 +11,10 @@ local_settings.py
 
 # macOS specific files
 *.DS_Store
+
+# Docker conf
+env/*.env
+docker-compose.yaml
+
+# PyCharm conf
+.idea/
