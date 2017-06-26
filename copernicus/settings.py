@@ -130,7 +130,7 @@ STATIC_ROOT = os.path.join(BASE_DIR, '..', 'static/')
 
 ELASTICSEARCH_DSL = {
     'default': {
-        'hosts': 'elasticsearch',
-        'http_auth': "elastic:changeme",
+        'hosts': env('ELASTICSEARCH_HOST'),
+        'http_auth': env('ELASTICSEARCH_AUTH'),
     },
 }
