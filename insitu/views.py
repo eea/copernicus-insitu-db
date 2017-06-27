@@ -2,7 +2,7 @@
 from __future__ import unicode_literals
 
 from django.core.urlresolvers import reverse
-from django.views.generic import CreateView, TemplateView, DetailView
+from django.views.generic import CreateView, TemplateView, DetailView, UpdateView
 
 from django_datatables_view.base_datatable_view import BaseDatatableView
 
@@ -22,6 +22,15 @@ class ProductList(TemplateView):
 class ProductAdd(CreateView):
     template_name = 'product_add.html'
     form_class = ProductForm
+
+    def get_success_url(self):
+        return reverse('product_list')
+
+
+class ProductEdit(UpdateView):
+    template_name = 'product_edit.html'
+    form_class = ProductForm
+    model = models.Product
 
     def get_success_url(self):
         return reverse('product_list')

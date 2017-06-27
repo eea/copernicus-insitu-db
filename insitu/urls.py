@@ -22,4 +22,8 @@ urlpatterns = [
     url(r'^product/(?P<pk>[0-9]+)/$',
         views.ProductDetail.as_view(),
         name='product_detail'),
+
+    url(r'^product/(?P<pk>[0-9]+)/edit/$',
+        views.ProductEdit.as_view(),
+        name='product_edit'),
 ]
