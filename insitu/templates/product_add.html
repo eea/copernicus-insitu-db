@@ -1,7 +1,18 @@
 {% extends '_layout.html' %}
 {% load bootstrap %}
 
+{% block title %}
+  Add a new product
+{% endblock %}
+
 {% block content %}
+
+  <div class="row">
+    <h1 class="col-sm-12">
+      <span>Add a new product</span>
+    </h1>
+  </div>
+
   <form action="" method="POST">
     {% csrf_token %}
     {{ form|bootstrap }}
