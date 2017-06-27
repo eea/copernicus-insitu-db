@@ -1,4 +1,4 @@
-from django.forms import ModelForm, HiddenInput
+from django.forms import HiddenInput, ModelForm
 
 from insitu.models import Product, ProductRequirement
 
