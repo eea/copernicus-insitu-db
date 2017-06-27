@@ -1,15 +1,6 @@
 {% extends '_layout.html' %}
 {% load static %}
 
-{% block style %}
-  <style>
-    .popover {
-      min-width: 40%;
-      max-width: 100%;
-    }
-  </style>
-{% endblock %}
-
 {% block content %}
   <div class="row">
     <div class="col-sm-12">
@@ -21,72 +12,42 @@
     <table id="detail-table" class="table borderless col-sm-12">
       <tbody>
       <tr class="row">
-        <th class="col-md-4 col-sm-6">
-          Name
-        </th>
-        <td class="col-md-8 col-sm-6">
-          {{ product.name }}
-        </td>
+        <th class="col-md-4 col-sm-6">Name</th>
+        <td class="col-md-8 col-sm-6">{{ product.name }}</td>
       </tr>
 
       <tr class="row">
-        <th class="col-md-4 col-sm-6">
-          Acronym
-        </th>
-        <td class="col-md-8 col-sm-6">
-          {{ product.acronym }}
-        </td>
+        <th class="col-md-4 col-sm-6">Acronym</th>
+        <td class="col-md-8 col-sm-6">{{ product.acronym }}</td>
       </tr>
 
       <tr class="row">
-        <th class="col-md-4 col-sm-6">
-          Description
-        </th>
-        <td class="col-md-8 col-sm-6">
-          {{ product.description }}
-        </td>
+        <th class="col-md-4 col-sm-6">Description</th>
+        <td class="col-md-8 col-sm-6">{{ product.description }}</td>
       </tr>
 
       <tr class="row">
-        <th class="col-md-4 col-sm-6">
-          Note
-        </th>
-        <td class="col-md-8 col-sm-6">
-          {{ product.note }}
-        </td>
+        <th class="col-md-4 col-sm-6">Note</th>
+        <td class="col-md-8 col-sm-6">{{ product.note }}</td>
       </tr>
 
       <tr class="row">
-        <th class="col-md-4 col-sm-6">
-          Status
-        </th>
-        <td class="col-md-8 col-sm-6">
-          {{ product.status }}
-        </td>
+        <th class="col-md-4 col-sm-6">Status</th>
+        <td class="col-md-8 col-sm-6">{{ product.status }}</td>
       </tr>
 
       <tr class="row">
-        <th class="col-md-4 col-sm-6">
-          Group
-        </th>
-        <td class="col-md-8 col-sm-6">
-          {{ product.group }}
-        </td>
+        <th class="col-md-4 col-sm-6">Group</th>
+        <td class="col-md-8 col-sm-6">{{ product.group }}</td>
       </tr>
 
       <tr class="row">
-        <th class="col-md-4 col-sm-6">
-          Coverage
-        </th>
-        <td class="col-md-8 col-sm-6">
-          {{ product.coverage }}
-        </td>
+        <th class="col-md-4 col-sm-6">Coverage</th>
+        <td class="col-md-8 col-sm-6">{{ product.coverage }}</td>
       </tr>
 
       <tr class="row">
-        <th class="col-md-4 col-sm-6">
-          Service
-        </th>
+        <th class="col-md-4 col-sm-6">Service</th>
         <td class="col-md-8 col-sm-6">
           <span data-toggle="popover"
                 title="{{ product.component.service }}"
@@ -97,9 +58,7 @@
       </tr>
 
       <tr class="row">
-        <th class="col-md-4 col-sm-6">
-          Component
-        </th>
+        <th class="col-md-4 col-sm-6">Component</th>
         <td class="col-md-8 col-sm-6">
           <span data-toggle="popover"
                 title="{{ product.component }}"
