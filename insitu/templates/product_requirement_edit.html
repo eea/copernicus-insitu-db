@@ -1,0 +1,22 @@
+{% extends '_layout.html' %}
+{% load bootstrap %}
+
+{% block title %}
+  Edit product {{ object.name }}
+{% endblock %}
+
+{% block content %}
+
+  <div class="row">
+    <h1 class="col-sm-12">
+      <span>Edit requirement <small>for {{ rel.product.name }}</small></span>
+    </h1>
+  </div>
+
+  <form action="" method="POST">
+    {% csrf_token %}
+    {{ form|bootstrap }}
+    <input type="hidden" name="product" value="{{ rel.product.pk }}" />
+    <input class="btn btn-primary" type="submit" value="Save" />
+  </form>
+{% endblock %}

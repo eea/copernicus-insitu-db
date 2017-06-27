@@ -1,6 +1,6 @@
-from django.forms import ModelForm
+from django.forms import ModelForm, HiddenInput
 
-from insitu.models import Product
+from insitu.models import Product, ProductRequirement
 
 
 class ProductForm(ModelForm):
@@ -8,3 +8,14 @@ class ProductForm(ModelForm):
         model = Product
         fields = ['acronym', 'name', 'description', 'group', 'component',
                   'status', 'coverage', 'note']
+
+
+class ProductRequirementForm(ModelForm):
+    class Meta:
+        model = ProductRequirement
+        fields = ['requirement', 'product', 'note', 'level_of_definition',
+                  'distance_to_target', 'relevance', 'criticality',
+                  'barriers']
+        widgets = {
+            'product': HiddenInput()
+        }

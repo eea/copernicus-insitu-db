@@ -1,6 +1,11 @@
 {% extends '_layout.html' %}
 {% load static %}
 
+{% block style %}
+  <link rel="stylesheet" type="text/css"
+        href="{% static 'css/jquery.dataTables.min.css' %}"/>
+{% endblock %}
+
 {% block title %}
   Product details
 {% endblock %}
@@ -74,11 +79,59 @@
       </tbody>
     </table>
   </div>
+
+  <div class="row">
+    <h3 class="col-sm-12">
+      <span>Requirements</span>
+      <span class="pull-right">
+        <a class="btn btn-primary pull-right"
+           href="{% url 'product_requirement_add' product.pk %}">Add requirement</a>
+      </span>
+    </h3>
+    <div class="col-sm-12">
+      <table id="requirements"
+             class="table table-condensed table-bordered table-hover">
+        <thead>
+        <tr>
+          <th>Requirement</th>
+          <th>Level of definition</th>
+          <th>Distance to target</th>
+          <th>Relevant for</th>
+          <th>Criticality</th>
+          <th>Note</th>
+          <th></th>
+          <th></th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for rel in product.productrequirement_set.all %}
+          <tr>
+            <td>{{ rel.requirement.name }}</td>
+            <td>{{ rel.level_of_definition }}</td>
+            <td>{{ rel.distance_to_target }}</td>
+            <td>{{ rel.relevance }}</td>
+            <td>{{ rel.criticality }}</td>
+            <td>{{ rel.note }}</td>
+            <td>
+              <a href="{% url 'product_requirement_edit' product_pk=product.pk pk=rel.pk %}">Edit</a>
+            </td>
+            <td>
+              <a href="{% url 'product_requirement_delete' product_pk=product.pk pk=rel.pk %}">Delete</a>
+            </td>
+          </tr>
+        {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+
 {% endblock %}
 
 {% block scripts %}
   <script src="{% static 'js/jquery-3.2.1.min.js' %}"></script>
   <script src="{% static 'js/bootstrap.min.js' %}"></script>
+  <script src="{% static 'js/jquery.dataTables.min.js' %}"></script>
+  <script src="{% static 'js/jquery.dataTables.bootstrap.min.js' %}"></script>
   <script>
     $(function () {
       $('[data-toggle="popover"]').popover({
@@ -87,6 +140,8 @@
         html: true,
         container: 'table'
       });
-    })
+
+      var table = $('#requirements').dataTable();
+    });
   </script>
 {% endblock %}
