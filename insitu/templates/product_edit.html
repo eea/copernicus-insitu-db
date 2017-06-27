@@ -17,5 +17,7 @@
     {% csrf_token %}
     {{ form|bootstrap }}
     <input class="btn btn-primary" type="submit" value="Save" />
+    <a href="{% url 'product_detail' product.pk %}"
+       class="btn btn-default">Cancel</a>
   </form>
 {% endblock %}

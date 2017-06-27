@@ -12,9 +12,13 @@
 
 {% block content %}
   <div class="row">
-    <div class="col-sm-12">
-      <h1>Product details</h1>
-    </div>
+    <h1 class="col-sm-12">
+      <span>Product details</span>
+      <span class="pull-right">
+      <a class="btn btn-primary pull-right" href="{% url 'product_edit' product.pk %}">Edit
+        product</a>
+      </span>
+    </h1>
   </div>
 
   <div class="row">

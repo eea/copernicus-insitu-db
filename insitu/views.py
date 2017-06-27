@@ -47,6 +47,7 @@ class ProductEdit(UpdateView):
     template_name = 'product_edit.html'
     form_class = forms.ProductForm
     model = models.Product
+    context_object_name = 'product'
 
     def get_success_url(self):
         return reverse('product_list')
