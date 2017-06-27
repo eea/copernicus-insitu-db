@@ -98,6 +98,7 @@
           <th>Distance to target</th>
           <th>Relevant for</th>
           <th>Criticality</th>
+          <th>Barriers</th>
           <th>Note</th>
           <th></th>
           <th></th>
@@ -111,6 +112,11 @@
             <td>{{ rel.distance_to_target }}</td>
             <td>{{ rel.relevance }}</td>
             <td>{{ rel.criticality }}</td>
+            <td>
+              {% for barrier in rel.barriers.all %}
+                <div>{{ barrier }}</div>
+              {% endfor %}
+            </td>
             <td>{{ rel.note }}</td>
             <td>
               <a href="{% url 'product_requirement_edit' product_pk=product.pk pk=rel.pk %}">Edit</a>
