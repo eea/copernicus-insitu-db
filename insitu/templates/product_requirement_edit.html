@@ -18,5 +18,7 @@
     {{ form|bootstrap }}
     <input type="hidden" name="product" value="{{ rel.product.pk }}" />
     <input class="btn btn-primary" type="submit" value="Save" />
+    <a href="{% url 'product_detail' rel.product.pk %}"
+           class="btn btn-default">Cancel</a>
   </form>
 {% endblock %}
