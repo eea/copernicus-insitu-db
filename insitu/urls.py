@@ -8,4 +8,6 @@ urlpatterns = [
     url(r'^product/data/$', views.ProductListJson.as_view(),
         name='products_json'),
     url(r'^product/add/$', views.ProductAdd.as_view(), name='product_add'),
+    url(r'^product/(?P<pk>[0-9]+)/edit/$', views.ProductEdit.as_view(),
+        name='product_edit'),
 ]
