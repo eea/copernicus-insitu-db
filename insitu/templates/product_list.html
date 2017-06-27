@@ -44,12 +44,12 @@
   <script src="{% static 'js/jquery.dataTables.min.js' %}"></script>
   <script src="{% static 'js/jquery.dataTables.bootstrap.min.js' %}"></script>
   <script>
-      $(document).ready(function () {
-          var table = $('#products').dataTable({
-              "processing": true,
-              "serverSide": true,
-              "ajax": "{% url 'products_json' %}"
-          });
+    $(document).ready(function () {
+      var table = $('#products').dataTable({
+        "processing": true,
+        "serverSide": true,
+        "ajax": "{% url 'products_json' %}"
       });
+    });
   </script>
 {% endblock %}
