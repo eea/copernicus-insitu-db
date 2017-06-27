@@ -2785,7 +2785,7 @@
   "model": "picklists.definitionlevel",
   "pk": 2,
   "fields": {
-    "name": "Resonable ",
+    "name": "Resonable",
     "description": "",
     "sort_order": 2
   }
@@ -2803,7 +2803,7 @@
   "model": "picklists.definitionlevel",
   "pk": 4,
   "fields": {
-    "name": "Speculative ",
+    "name": "Speculative",
     "description": "",
     "sort_order": 4
   }
@@ -2839,7 +2839,7 @@
   "model": "picklists.targetdistance",
   "pk": 2,
   "fields": {
-    "name": "Gap is static ",
+    "name": "Gap is static",
     "description": "",
     "sort_order": 2
   }
@@ -2848,7 +2848,7 @@
   "model": "picklists.targetdistance",
   "pk": 3,
   "fields": {
-    "name": "Gap is widening ",
+    "name": "Gap is widening",
     "description": "",
     "sort_order": 3
   }
@@ -2921,7 +2921,7 @@
   "pk": 1,
   "fields": {
     "name": "Essential",
-    "description": "Product specifications will not be met if essential data are unavailable. ",
+    "description": "Product specifications will not be met if essential data are unavailable.",
     "sort_order": 1
   }
 },
@@ -2939,7 +2939,7 @@
   "pk": 3,
   "fields": {
     "name": "Useful",
-    "description": "Additional in situ data not directly linked to product generation, validation or calibration are considered as useful. ",
+    "description": "Additional in situ data not directly linked to product generation, validation or calibration are considered as useful.",
     "sort_order": 3
   }
 },
@@ -2974,7 +2974,7 @@
   "model": "picklists.barrier",
   "pk": 2,
   "fields": {
-    "name": "Availability ",
+    "name": "Availability",
     "description": "",
     "sort_order": 2
   }
@@ -2992,7 +2992,7 @@
   "model": "picklists.barrier",
   "pk": 4,
   "fields": {
-    "name": "Acurracy ",
+    "name": "Acurracy",
     "description": "",
     "sort_order": 4
   }
@@ -3028,7 +3028,7 @@
   "model": "picklists.barrier",
   "pk": 8,
   "fields": {
-    "name": "Frequency ",
+    "name": "Frequency",
     "description": "",
     "sort_order": 6
   }
@@ -3037,7 +3037,7 @@
   "model": "picklists.barrier",
   "pk": 9,
   "fields": {
-    "name": "Resolution ",
+    "name": "Resolution",
     "description": "",
     "sort_order": 7
   }
@@ -3073,7 +3073,7 @@
   "model": "picklists.barrier",
   "pk": 13,
   "fields": {
-    "name": "Metadata ",
+    "name": "Metadata",
     "description": "",
     "sort_order": 11
   }
@@ -3352,7 +3352,7 @@
   "model": "picklists.quality",
   "pk": 3,
   "fields": {
-    "name": "Extended ",
+    "name": "Extended",
     "description": "",
     "sort_order": 3
   }
@@ -3388,7 +3388,7 @@
   "model": "picklists.compliancelevel",
   "pk": 2,
   "fields": {
-    "name": "Partially ",
+    "name": "Partially",
     "description": "",
     "sort_order": 2
   }
@@ -3937,7 +3937,7 @@
   "model": "picklists.dataformat",
   "pk": 7,
   "fields": {
-    "name": "Scanned ",
+    "name": "Scanned",
     "description": "",
     "sort_order": 5
   }
@@ -3973,7 +3973,7 @@
   "model": "picklists.dataformat",
   "pk": 11,
   "fields": {
-    "name": "Binary ",
+    "name": "Binary",
     "description": "",
     "sort_order": 9
   }
