@@ -1,3 +1,5 @@
+from django.core.urlresolvers import reverse
+
 from django_elasticsearch_dsl import DocType, Index, fields
 from elasticsearch_dsl.search import Search
 
@@ -21,9 +23,14 @@ class ProductDoc(DocType):
     component = fields.KeywordField(attr='component.name')
     coverage = fields.KeywordField(attr='coverage.name')
 
+    def get_name_display(self):
+        url = reverse('product_detail', kwargs={'pk': self.id})
+        return '<a href="{url}">{name}</a>'.format(url=url, name=self.name)
+
     class Meta:
         model = Product
         fields = [
+            'id',
             'description',
             'note',
         ]
