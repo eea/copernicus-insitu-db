@@ -2,10 +2,11 @@
 from __future__ import unicode_literals
 
 from django.core.urlresolvers import reverse
-from django.views.generic import CreateView, TemplateView
+from django.views.generic import CreateView, TemplateView, DetailView
 
 from django_datatables_view.base_datatable_view import BaseDatatableView
 
+from insitu import models
 from insitu.forms import ProductForm
 from insitu.documents import ProductDoc
 
@@ -39,3 +40,9 @@ class ProductListJson(BaseDatatableView):
         if not search_text:
             return qs
         return qs.query('query_string', query=search_text)
+
+
+class ProductDetail(DetailView):
+    template_name = 'product_detail.html'
+    model = models.Product
+    context_object_name = 'product'
