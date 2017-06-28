@@ -24,7 +24,7 @@
       <form method="POST">
         {% csrf_token %}
         <input class="btn btn-danger" type="submit" value="Delete"/>
-        <a href="{% url 'product_detail' rel.product.pk %}"
+        <a href="{% url 'product:detail' rel.product.pk %}"
            class="btn btn-default">Cancel</a>
       </form>
     </div>

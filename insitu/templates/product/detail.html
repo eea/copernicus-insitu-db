@@ -15,7 +15,7 @@
     <h1 class="col-sm-12">
       <span>Product details</span>
       <span class="pull-right">
-      <a class="btn btn-primary pull-right" href="{% url 'product_edit' product.pk %}">Edit
+      <a class="btn btn-primary pull-right" href="{% url 'product:edit' product.pk %}">Edit
         product</a>
       </span>
     </h1>
@@ -89,7 +89,7 @@
       <span>Requirements</span>
       <span class="pull-right">
         <a class="btn btn-primary pull-right"
-           href="{% url 'product_requirement_add' product.pk %}">Add requirement</a>
+           href="{% url 'product:requirement:add' product.pk %}">Add requirement</a>
       </span>
     </h3>
     <div class="col-sm-12">
@@ -123,10 +123,10 @@
             </td>
             <td>{{ rel.note }}</td>
             <td>
-              <a href="{% url 'product_requirement_edit' product_pk=product.pk pk=rel.pk %}">Edit</a>
+              <a href="{% url 'product:requirement:edit' product_pk=product.pk pk=rel.pk %}">Edit</a>
             </td>
             <td>
-              <a href="{% url 'product_requirement_delete' product_pk=product.pk pk=rel.pk %}">Delete</a>
+              <a href="{% url 'product:requirement:delete' product_pk=product.pk pk=rel.pk %}">Delete</a>
             </td>
           </tr>
         {% endfor %}

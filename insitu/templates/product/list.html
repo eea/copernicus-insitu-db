@@ -17,7 +17,7 @@
       <span>Products</span>
       <span class="pull-right">
       <a class="btn btn-primary pull-right"
-         href="{% url 'product_add' %}">New product</a>
+         href="{% url 'product:add' %}">New product</a>
       </span>
     </h1>
   </div>
@@ -73,7 +73,7 @@
             </select>
           </div>
 
-          <div class="form-coverage">
+          <div class="form-group">
             <label for="coverage">Coverage:</label>
             <select id="coverage" class="form-control">
               {% for coverage in coverages %}
@@ -82,8 +82,10 @@
             </select>
           </div>
 
-          <button type="button" class="btn btn-default"
-                  id="filter-btn">Filter</button>
+          <div class="form-group">
+            <button type="button" class="btn btn-primary"
+                    id="filter-btn">Filter</button>
+          </div>
 
         </div>
       </div>
@@ -102,7 +104,7 @@
         "processing": true,
         "serverSide": true,
         "ajax": {
-          "url": "{% url 'products_json' %}",
+          "url": "{% url 'product:json' %}",
           "data": function(d) {
             d.service = $('#service').val();
             d.group = $('#group').val();
