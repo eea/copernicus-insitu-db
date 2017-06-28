@@ -1,16 +1,20 @@
 # -*- coding: utf-8 -*-
+import json
+
 from django.core.urlresolvers import reverse
+from django.http import HttpResponse
 from django.views.generic import CreateView
 from django.views.generic import DetailView
 from django.views.generic import TemplateView
 from django.views.generic import UpdateView
+from django.views.generic import View
 
 from django_datatables_view.base_datatable_view import BaseDatatableView
 
 from insitu import documents
 from insitu import forms
 from insitu import models
-from insitu.utils import get_choices, ALL_OPTIONS_LABEL
+from insitu.utils import get_choices, ALL_OPTIONS_LABEL, get_choices_filtered
 from picklists import models as pickmodels
 
 
@@ -23,11 +27,15 @@ class ProductList(TemplateView):
         groups = get_choices(pickmodels.ProductGroup, 'name')
         statuses = get_choices(pickmodels.ProductStatus, 'name')
         coverages = get_choices(pickmodels.Coverage, 'name')
+        components = get_choices(models.Component, 'name')
+        entities = get_choices(models.EntrustedEntity, 'name')
         context.update({
             'services': services,
             'groups': groups,
             'statuses': statuses,
             'coverages': coverages,
+            'components': components,
+            'entities': entities,
         })
         return context
 
@@ -36,7 +44,7 @@ class ProductListJson(BaseDatatableView):
     columns = ['acronym', 'name', 'group', 'service', 'component', 'entity',
                'status', 'coverage']
     order_columns = columns
-    filters = ['service', 'group', 'status', 'coverage']
+    filters = ['service', 'group', 'status', 'coverage', 'component', 'entity']
 
     def get_initial_queryset(self):
         return documents.ProductDoc.search()
@@ -52,6 +60,20 @@ class ProductListJson(BaseDatatableView):
         if not search_text:
             return qs
         return qs.query('query_string', query=search_text)
+
+
+class ComponentsFilter(View):
+    def get(self, request, *args, **kwargs):
+        service = request.GET.get('service', '')
+        entity = request.GET.get('entity', '')
+        components = models.Component.objects.all()
+        if service and service != ALL_OPTIONS_LABEL:
+            components = components.filter(service__name=service)
+        if entity and entity != ALL_OPTIONS_LABEL:
+            components = components.filter(entrusted_entity__name=entity)
+        return HttpResponse(
+            json.dumps(get_choices_filtered(components, 'name')),
+            content_type='application/json')
 
 
 class ProductAdd(CreateView):
