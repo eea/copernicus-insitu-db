@@ -10,36 +10,24 @@ class ProductForm(ModelForm):
                   'status', 'coverage', 'note']
 
 
-class ProductRequirementForm(ModelForm):
+class ProductRequirementBaseForm(ModelForm):
+    class Meta:
+        model = ProductRequirement
+        fields = ['requirement', 'product', 'note', 'level_of_definition',
+                  'distance_to_target', 'relevance', 'criticality',
+                  'barriers']
+
+
+class ProductRequirementForm(ProductRequirementBaseForm):
     product = ModelChoiceField(disabled=True,
                                queryset=Product.objects.all())
 
-    class Meta:
-        model = ProductRequirement
-        fields = ['requirement', 'product', 'note', 'level_of_definition',
-                  'distance_to_target', 'relevance', 'criticality',
-                  'barriers']
 
-
-class RequirementProductRequirementForm(ModelForm):
+class RequirementProductRequirementForm(ProductRequirementBaseForm):
     requirement = ModelChoiceField(disabled=True,
                                    queryset=Requirement.objects.all())
 
-    class Meta:
-        model = ProductRequirement
-        fields = ['requirement', 'product', 'note', 'level_of_definition',
-                  'distance_to_target', 'relevance', 'criticality',
-                  'barriers']
 
-
-class ProductRequirementEditForm(ModelForm):
-    requirement = ModelChoiceField(disabled=True,
-                                   queryset=Requirement.objects.all())
-    product = ModelChoiceField(disabled=True,
-                               queryset=Product.objects.all())
-
-    class Meta:
-        model = ProductRequirement
-        fields = ['requirement', 'product', 'note', 'level_of_definition',
-                  'distance_to_target', 'relevance', 'criticality',
-                  'barriers']
+class ProductRequirementEditForm(ProductRequirementForm,
+                                 RequirementProductRequirementForm):
+    pass
