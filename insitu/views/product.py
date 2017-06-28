@@ -3,6 +3,7 @@ import json
 
 from django.core.urlresolvers import reverse
 from django.http import HttpResponse
+from django.http.response import JsonResponse
 from django.views.generic import CreateView
 from django.views.generic import DetailView
 from django.views.generic import TemplateView
@@ -14,7 +15,7 @@ from django_datatables_view.base_datatable_view import BaseDatatableView
 from insitu import documents
 from insitu import forms
 from insitu import models
-from insitu.utils import get_choices, ALL_OPTIONS_LABEL, get_choices_filtered
+from insitu.utils import get_choices, ALL_OPTIONS_LABEL
 from picklists import models as pickmodels
 
 
@@ -23,12 +24,18 @@ class ProductList(TemplateView):
 
     def get_context_data(self):
         context = super(ProductList, self).get_context_data()
-        services = get_choices(models.CopernicusService, 'name')
-        groups = get_choices(pickmodels.ProductGroup, 'name')
-        statuses = get_choices(pickmodels.ProductStatus, 'name')
-        coverages = get_choices(pickmodels.Coverage, 'name')
-        components = get_choices(models.Component, 'name')
-        entities = get_choices(models.EntrustedEntity, 'acronym')
+        services = get_choices('name',
+                               model_cls=models.CopernicusService)
+        groups = get_choices('name',
+                             model_cls=pickmodels.ProductGroup)
+        statuses = get_choices('name',
+                               model_cls=pickmodels.ProductStatus)
+        coverages = get_choices('name',
+                                model_cls=pickmodels.Coverage)
+        components = get_choices('name',
+                                 model_cls=models.Component)
+        entities = get_choices('acronym',
+                               model_cls=models.EntrustedEntity)
         context.update({
             'services': services,
             'groups': groups,
@@ -66,14 +73,14 @@ class ComponentsFilter(View):
     def get(self, request, *args, **kwargs):
         service = request.GET.get('service', '')
         entity = request.GET.get('entity', '')
+
         components = models.Component.objects.all()
         if service and service != ALL_OPTIONS_LABEL:
             components = components.filter(service__name=service)
         if entity and entity != ALL_OPTIONS_LABEL:
             components = components.filter(entrusted_entity__acronym=entity)
-        return HttpResponse(
-            json.dumps(get_choices_filtered(components, 'name')),
-            content_type='application/json')
+        data = {'components': get_choices('name', objects=components)}
+        return JsonResponse(data)
 
 
 class ProductAdd(CreateView):

@@ -150,8 +150,9 @@
             'entity': entity,
             'service': service
           },
-          function (data) {
+          function (response) {
             var select = $('#component');
+            var data = response['components'];
             select.find('option').remove();
             for (var i = 0; i < data.length; i++) {
               select.append(
