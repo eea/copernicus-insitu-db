@@ -1,6 +1,6 @@
-from django.forms import HiddenInput, ModelForm
+from django.forms import HiddenInput, ModelForm, ModelChoiceField
 
-from insitu.models import Product, ProductRequirement
+from insitu.models import Product, ProductRequirement, Requirement
 
 
 class ProductForm(ModelForm):
@@ -11,11 +11,35 @@ class ProductForm(ModelForm):
 
 
 class ProductRequirementForm(ModelForm):
+    product = ModelChoiceField(disabled=True,
+                               queryset=Product.objects.all())
+
     class Meta:
         model = ProductRequirement
         fields = ['requirement', 'product', 'note', 'level_of_definition',
                   'distance_to_target', 'relevance', 'criticality',
                   'barriers']
-        widgets = {
-            'product': HiddenInput()
-        }
+
+
+class RequirementProductRequirementForm(ModelForm):
+    requirement = ModelChoiceField(disabled=True,
+                                   queryset=Requirement.objects.all())
+
+    class Meta:
+        model = ProductRequirement
+        fields = ['requirement', 'product', 'note', 'level_of_definition',
+                  'distance_to_target', 'relevance', 'criticality',
+                  'barriers']
+
+
+class ProductRequirementEditForm(ModelForm):
+    requirement = ModelChoiceField(disabled=True,
+                                   queryset=Requirement.objects.all())
+    product = ModelChoiceField(disabled=True,
+                               queryset=Product.objects.all())
+
+    class Meta:
+        model = ProductRequirement
+        fields = ['requirement', 'product', 'note', 'level_of_definition',
+                  'distance_to_target', 'relevance', 'criticality',
+                  'barriers']

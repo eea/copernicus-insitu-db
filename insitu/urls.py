@@ -47,10 +47,29 @@ product_patterns = [
                 namespace='requirement')),
 ]
 
+requirement_product_requirement_patterns = [
+    url(r'^add/$',
+        views.RequirementProductRequirementAdd.as_view(),
+        name='add'),
+
+    url(r'^(?P<pk>[0-9]+)/edit$',
+        views.ProductRequirementEdit.as_view(),
+        name='edit'),
+
+    url(r'^(?P<pk>[0-9]+)/delete$',
+        views.ProductRequirementDelete.as_view(),
+        name='delete'),
+]
+
+
 requirement_patterns = [
     url(r'^(?P<pk>[0-9]+)/$',
         views.RequirementDetail.as_view(),
-        name='detail')
+        name='detail'),
+
+    url(r'^(?P<requirement_pk>[0-9]+)/product/',
+        include(requirement_product_requirement_patterns,
+                namespace='product')),
 ]
 
 urlpatterns = [

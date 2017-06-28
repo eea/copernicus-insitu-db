@@ -2,14 +2,14 @@
 {% load bootstrap %}
 
 {% block title %}
-  Edit product {{ object.name }}
+  Edit {{ rel.product.name }} - {{ rel.requirement.name }} relation
 {% endblock %}
 
 {% block content %}
 
   <div class="row">
     <h1 class="col-sm-12">
-      <span>Edit requirement <small>for {{ rel.product.name }}</small></span>
+      <span>Edit {{ rel.product.name }} - {{ rel.requirement.name }} relation</span>
     </h1>
   </div>
 
@@ -18,7 +18,7 @@
     {{ form|bootstrap }}
     <input type="hidden" name="product" value="{{ rel.product.pk }}" />
     <input class="btn btn-primary" type="submit" value="Save" />
-    <a href="{% url 'product:detail' rel.product.pk %}"
+    <a href={{ url }}
            class="btn btn-default">Cancel</a>
   </form>
 {% endblock %}

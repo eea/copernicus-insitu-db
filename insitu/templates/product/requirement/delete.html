@@ -2,20 +2,20 @@
 {% load bootstrap %}
 
 {% block title %}
-  Edit product {{ object.name }}
+  Delete {{ rel.product.name }} - {{ rel.requirement.name }} relation
 {% endblock %}
 
 {% block content %}
 
   <div class="row">
     <h1 class="col-sm-12">
-      <span>Delete requirement <small>for {{ rel.product.name }}</small></span>
+      <span>Delete {{ rel.product.name }} - {{ rel.requirement.name }} relation</span>
     </h1>
   </div>
 
   <div class="row">
     <div class="col-sm-12">
-      Are you sure you want to delete <b>{{ rel.requirement }}</b>?
+      Are you sure you want to delete this <b> relation </b>?
     </div>
   </div>
   <br>
@@ -24,7 +24,7 @@
       <form method="POST">
         {% csrf_token %}
         <input class="btn btn-danger" type="submit" value="Delete"/>
-        <a href="{% url 'product:detail' rel.product.pk %}"
+        <a href={{ url }}
            class="btn btn-default">Cancel</a>
       </form>
     </div>

@@ -1,6 +1,11 @@
 {% extends '_layout.html' %}
 {% load static %}
 
+{% block style %}
+  <link rel="stylesheet" type="text/css"
+        href="{% static 'css/jquery.dataTables.min.css' %}"/>
+{% endblock %}
+
 {% block title %}
   Requirement details
 {% endblock %}
@@ -60,17 +65,77 @@
         <th class="col-md-4 col-sm-6">Vertical resolution</th>
         {% include 'bits/metric.html' with metric=requirement.horizontal_resolution %}
       </tr>
+      </tbody>
     </table>
+  </div>
+
+  <div class="row">
+    <h3 class="col-sm-12">
+      <span>Products</span>
+      <span class="pull-right">
+        <a class="btn btn-primary pull-right"
+           href="{% url 'requirement:product:add' requirement.pk %}">Add product requirement</a>
+      </span>
+    </h3>
+    <div class="col-sm-12">
+      <table id="products"
+             class="table table-condensed table-bordered table-hover">
+        <thead>
+        <tr>
+          <th>Product</th>
+          <th>Level of definition</th>
+          <th>Distance to target</th>
+          <th>Relevant for</th>
+          <th>Criticality</th>
+          <th>Barriers</th>
+          <th>Note</th>
+          <th class="no-sort"></th>
+          <th class="no-sort"></th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for rel in requirement.productrequirement_set.all %}
+          <tr>
+            <td>{{ rel.product.name }}</td>
+            <td>{{ rel.level_of_definition }}</td>
+            <td>{{ rel.distance_to_target }}</td>
+            <td>{{ rel.relevance }}</td>
+            <td>{{ rel.criticality }}</td>
+            <td>
+              {% for barrier in rel.barriers.all %}
+                <div>{{ barrier }}</div>
+              {% endfor %}
+            </td>
+            <td>{{ rel.note }}</td>
+            <td>
+              <a href="{% url 'requirement:product:edit' requirement_pk=requirement.pk pk=rel.pk %}">Edit</a>
+            </td>
+            <td>
+              <a href="{% url 'requirement:product:delete' requirement_pk=requirement.pk pk=rel.pk %}">Delete</a>
+            </td>
+          </tr>
+        {% endfor %}
+        </tbody>
+      </table>
+    </div>
   </div>
 {% endblock %}
 
 {% block scripts %}
   <script src="{% static 'js/jquery-3.2.1.min.js' %}"></script>
   <script src="{% static 'js/bootstrap.min.js' %}"></script>
+  <script src="{% static 'js/jquery.dataTables.min.js' %}"></script>
+  <script src="{% static 'js/jquery.dataTables.bootstrap.min.js' %}"></script>
   <script>
     $(function () {
       $('[data-toggle="popover"]').popover({
         trigger: 'hover',
+      });
+      var table = $('#products').dataTable({
+        columnDefs: [
+          { targets: 'no-sort',
+            orderable: false }
+        ]
       });
     })
   </script>
