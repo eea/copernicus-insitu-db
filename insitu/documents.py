@@ -25,7 +25,7 @@ class ProductDoc(DocType):
     coverage = fields.KeywordField(attr='coverage.name')
 
     def get_name_display(self):
-        url = reverse('product_detail', kwargs={'pk': self.id})
+        url = reverse('product:detail', kwargs={'pk': self.id})
         return '<a href="{url}">{name}</a>'.format(url=url, name=self.name)
 
     class Meta:

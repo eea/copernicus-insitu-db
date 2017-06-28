@@ -1,26 +1,21 @@
 # -*- coding: utf-8 -*-
-from __future__ import unicode_literals
-
 from django.core.urlresolvers import reverse
-from django.views.generic import (
-    CreateView, TemplateView, DetailView, UpdateView, DeleteView,
-)
+from django.views.generic import CreateView
+from django.views.generic import DetailView
+from django.views.generic import TemplateView
+from django.views.generic import UpdateView
 
 from django_datatables_view.base_datatable_view import BaseDatatableView
 
-from insitu import models
+from insitu import documents
 from insitu import forms
-from insitu.documents import ProductDoc
+from insitu import models
 from insitu.utils import get_choices, ALL_OPTIONS_LABEL
 from picklists import models as pickmodels
 
 
-class HomeView(TemplateView):
-    template_name = 'home.html'
-
-
 class ProductList(TemplateView):
-    template_name = 'product_list.html'
+    template_name = 'product/list.html'
 
     def get_context_data(self):
         context = super(ProductList, self).get_context_data()
@@ -44,7 +39,7 @@ class ProductListJson(BaseDatatableView):
     filters = ['service', 'group', 'status', 'coverage']
 
     def get_initial_queryset(self):
-        return ProductDoc.search()
+        return documents.ProductDoc.search()
 
     def filter_queryset(self, qs):
         for filter in self.filters:
@@ -60,61 +55,24 @@ class ProductListJson(BaseDatatableView):
 
 
 class ProductAdd(CreateView):
-    template_name = 'product_add.html'
+    template_name = 'product/add.html'
     form_class = forms.ProductForm
 
     def get_success_url(self):
-        return reverse('product_list')
+        return reverse('product:list')
 
 
 class ProductEdit(UpdateView):
-    template_name = 'product_edit.html'
+    template_name = 'product/edit.html'
     form_class = forms.ProductForm
     model = models.Product
     context_object_name = 'product'
 
     def get_success_url(self):
-        return reverse('product_list')
+        return reverse('product:list')
 
 
 class ProductDetail(DetailView):
-    template_name = 'product_detail.html'
+    template_name = 'product/detail.html'
     model = models.Product
     context_object_name = 'product'
-
-
-class ProductRequirementAdd(CreateView):
-    template_name = 'product_requirement_add.html'
-    form_class = forms.ProductRequirementForm
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        product_pk = self.kwargs['product_pk']
-        context['product'] = models.Product.objects.get(pk=product_pk)
-        return context
-
-    def get_success_url(self):
-        return reverse('product_detail',
-                       kwargs={'pk': self.kwargs['product_pk']})
-
-
-class ProductRequirementEdit(UpdateView):
-    model = models.ProductRequirement
-    template_name = 'product_requirement_edit.html'
-    form_class = forms.ProductRequirementForm
-    context_object_name = 'rel'
-
-    def get_success_url(self):
-        return reverse('product_detail',
-                       kwargs={'pk': self.kwargs['product_pk']})
-
-
-class ProductRequirementDelete(DeleteView):
-    model = models.ProductRequirement
-    template_name = 'product_requirement_delete.html'
-    form_class = forms.ProductRequirementForm
-    context_object_name = 'rel'
-
-    def get_success_url(self):
-        return reverse('product_detail',
-                       kwargs={'pk': self.kwargs['product_pk']})
