@@ -28,7 +28,7 @@ class ProductList(TemplateView):
         statuses = get_choices(pickmodels.ProductStatus, 'name')
         coverages = get_choices(pickmodels.Coverage, 'name')
         components = get_choices(models.Component, 'name')
-        entities = get_choices(models.EntrustedEntity, 'name')
+        entities = get_choices(models.EntrustedEntity, 'acronym')
         context.update({
             'services': services,
             'groups': groups,
@@ -70,7 +70,7 @@ class ComponentsFilter(View):
         if service and service != ALL_OPTIONS_LABEL:
             components = components.filter(service__name=service)
         if entity and entity != ALL_OPTIONS_LABEL:
-            components = components.filter(entrusted_entity__name=entity)
+            components = components.filter(entrusted_entity__acronym=entity)
         return HttpResponse(
             json.dumps(get_choices_filtered(components, 'name')),
             content_type='application/json')
