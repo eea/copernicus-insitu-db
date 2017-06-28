@@ -1,0 +1,77 @@
+{% extends '_layout.html' %}
+{% load static %}
+
+{% block title %}
+  Requirement details
+{% endblock %}
+
+{% block content %}
+  <div class="row">
+    <div class="col-sm-12">
+      <h1>Requirement details</h1>
+    </div>
+  </div>
+
+
+  <div class="row">
+    <table id="detail-table" class="table borderless col-sm-12">
+      <tbody>
+      <tr class="row">
+        <th class="col-md-4 col-sm-6">Name</th>
+        <td class="col-md-8 col-sm-6">{{ requirement.name }}</td>
+      </tr>
+
+      <tr class="row">
+        <th class="col-md-4 col-sm-6">Note</th>
+        <td class="col-md-8 col-sm-6">{{ requirement.note }}</td>
+      </tr>
+
+      <tr class="row">
+        <th class="col-md-4 col-sm-6">Dissemination</th>
+        <td class="col-md-8 col-sm-6">{{ requirement.dissemination }}</td>
+      </tr>
+
+      <tr class="row">
+        <th class="col-md-4 col-sm-6">Quality</th>
+        <td class="col-md-8 col-sm-6">{{ requirement.quality }}</td>
+      </tr>
+
+      <tr class="row">
+        <th class="col-md-4 col-sm-6">Uncertainty</th>
+        {% include 'bits/metric.html' with metric=requirement.uncertainty %}
+      </tr>
+
+      <tr class="row">
+        <th class="col-md-4 col-sm-6">Frequency</th>
+        {% include 'bits/metric.html' with metric=requirement.frequency %}
+      </tr>
+
+      <tr class="row">
+        <th class="col-md-4 col-sm-6">Timeliness</th>
+        {% include 'bits/metric.html' with metric=requirement.timeliness %}
+      </tr>
+
+      <tr class="row">
+        <th class="col-md-4 col-sm-6">Horizontal resolution</th>
+        {% include 'bits/metric.html' with metric=requirement.horizontal_resolution %}
+      </tr>
+
+      <tr class="row">
+        <th class="col-md-4 col-sm-6">Vertical resolution</th>
+        {% include 'bits/metric.html' with metric=requirement.horizontal_resolution %}
+      </tr>
+    </table>
+  </div>
+{% endblock %}
+
+{% block scripts %}
+  <script src="{% static 'js/jquery-3.2.1.min.js' %}"></script>
+  <script src="{% static 'js/bootstrap.min.js' %}"></script>
+  <script>
+    $(function () {
+      $('[data-toggle="popover"]').popover({
+        trigger: 'hover',
+      });
+    })
+  </script>
+{% endblock %}
