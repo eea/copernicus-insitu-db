@@ -2,13 +2,10 @@
 import json
 
 from django.core.urlresolvers import reverse
-from django.http import HttpResponse
 from django.http.response import JsonResponse
-from django.views.generic import CreateView
-from django.views.generic import DetailView
-from django.views.generic import TemplateView
-from django.views.generic import UpdateView
 from django.views.generic import View
+from django.views.generic import TemplateView, DetailView
+from django.views.generic import CreateView, UpdateView
 
 from django_datatables_view.base_datatable_view import BaseDatatableView
 
