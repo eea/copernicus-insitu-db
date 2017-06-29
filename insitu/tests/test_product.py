@@ -2,7 +2,7 @@ from django.core.urlresolvers import reverse
 from django.test import TestCase
 
 from insitu import models
-from insitu.tests.base import create_product_group, create_status, create_coverage, create_component
+from insitu.tests import factories
 
 REQUIRED_ERROR = ['This field is required.']
 
@@ -13,15 +13,20 @@ class ProductTests(TestCase):
         self.related_fields = ['group', 'component', 'status', 'coverage']
         self.required_fields = ['acronym', 'name', 'group', 'component',
                                 'status', 'coverage']
+        group = factories.ProductGroupFactory()
+        component = factories.ComponentFactory()
+        status = factories.ProductStatusFactory()
+        coverage = factories.CoverageFactory()
+
         self._PRODUCT_DATA = {
             'acronym': 'TST',
             'name': 'TEST product',
             'note': 'TEST note',
             'description': 'TEST description',
-            'group': create_product_group().pk,
-            'component': create_component().pk,
-            'status': create_status().pk,
-            'coverage': create_coverage().pk
+            'group': group.pk,
+            'component': component.pk,
+            'status': status.pk,
+            'coverage': coverage.pk
         }
 
     def test_create_product_fields_required(self):
@@ -43,3 +48,17 @@ class ProductTests(TestCase):
             self.assertEqual(getattr(product, field), data[field])
         for related_field in self.related_fields:
             self.assertEqual(getattr(product, related_field).pk, data[related_field])
+
+    def test_list_product(self):
+        factories.ProductFactory()
+        resp = self.client.get(reverse('product:json'))
+        self.assertEqual(resp.status_code, 200)
+        data = resp.json()
+        self.assertIs(data['recordsTotal'], 1)
+        self.assertIs(data['recordsFiltered'], 1)
+
+    def test_detail_product(self):
+        product = factories.ProductFactory()
+        resp = self.client.get(reverse('product:detail',
+                               kwargs={'pk': product.pk}))
+        self.assertEqual(resp.context['product'], product)
