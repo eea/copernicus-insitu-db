@@ -47,6 +47,17 @@ product_patterns = [
                 namespace='requirement')),
 ]
 
+
+requirement_patterns = [
+    url(r'^(?P<pk>[0-9]+)/$',
+        views.RequirementDetail.as_view(),
+        name='detail'),
+
+    url(r'^(?P<requirement_pk>[0-9]+)/product/',
+        include(product_requirement_patterns,
+                namespace='product')),
+]
+
 urlpatterns = [
     url(r'^$',
         views.HomeView.as_view(),
@@ -55,4 +66,7 @@ urlpatterns = [
     url(r'^product/',
         include(product_patterns,
                 namespace='product')),
+    url(r'^requirement/',
+        include(requirement_patterns,
+                namespace='requirement')),
 ]

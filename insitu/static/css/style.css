@@ -3,6 +3,21 @@
     max-width: 100%;
 }
 
+.orange{
+    color: #FC7300;
+}
+
+.blue{
+    color: #00529B;
+}
+
+.green{
+    color: #007B2B;
+}
+
+.no-padding-left{
+    padding-left: 0;
+}
 .paginate_button.active:hover {
     background: #eee !important;
     border: 1px #ddd !important;

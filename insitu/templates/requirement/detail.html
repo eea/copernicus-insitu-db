@@ -7,78 +7,63 @@
 {% endblock %}
 
 {% block title %}
-  Product details
+  Requirement details
 {% endblock %}
 
 {% block content %}
   <div class="row">
-    <h1 class="col-sm-12">
-      <span>Product details</span>
-      <span class="pull-right">
-      <a class="btn btn-primary pull-right" href="{% url 'product:edit' product.pk %}">Edit
-        product</a>
-      </span>
-    </h1>
+    <div class="col-sm-12">
+      <h1>Requirement details</h1>
+    </div>
   </div>
+
 
   <div class="row">
     <table id="detail-table" class="table borderless col-sm-12">
       <tbody>
       <tr class="row">
         <th class="col-md-4 col-sm-6">Name</th>
-        <td class="col-md-8 col-sm-6">{{ product.name }}</td>
-      </tr>
-
-      <tr class="row">
-        <th class="col-md-4 col-sm-6">Acronym</th>
-        <td class="col-md-8 col-sm-6">{{ product.acronym }}</td>
-      </tr>
-
-      <tr class="row">
-        <th class="col-md-4 col-sm-6">Description</th>
-        <td class="col-md-8 col-sm-6">{{ product.description }}</td>
+        <td class="col-md-8 col-sm-6">{{ requirement.name }}</td>
       </tr>
 
       <tr class="row">
         <th class="col-md-4 col-sm-6">Note</th>
-        <td class="col-md-8 col-sm-6">{{ product.note }}</td>
+        <td class="col-md-8 col-sm-6">{{ requirement.note }}</td>
       </tr>
 
       <tr class="row">
-        <th class="col-md-4 col-sm-6">Status</th>
-        <td class="col-md-8 col-sm-6">{{ product.status }}</td>
+        <th class="col-md-4 col-sm-6">Dissemination</th>
+        <td class="col-md-8 col-sm-6">{{ requirement.dissemination }}</td>
       </tr>
 
       <tr class="row">
-        <th class="col-md-4 col-sm-6">Group</th>
-        <td class="col-md-8 col-sm-6">{{ product.group }}</td>
+        <th class="col-md-4 col-sm-6">Quality</th>
+        <td class="col-md-8 col-sm-6">{{ requirement.quality }}</td>
       </tr>
 
       <tr class="row">
-        <th class="col-md-4 col-sm-6">Coverage</th>
-        <td class="col-md-8 col-sm-6">{{ product.coverage }}</td>
+        <th class="col-md-4 col-sm-6">Uncertainty</th>
+        {% include 'bits/metric.html' with metric=requirement.uncertainty %}
       </tr>
 
       <tr class="row">
-        <th class="col-md-4 col-sm-6">Service</th>
-        <td class="col-md-8 col-sm-6">
-          <span data-toggle="popover"
-                title="{{ product.component.service }}"
-                data-content="{% include 'popovers/service.html' with service=product.component.service %}">
-            {{ product.component.service }}
-          </span>
-        </td>
+        <th class="col-md-4 col-sm-6">Frequency</th>
+        {% include 'bits/metric.html' with metric=requirement.frequency %}
       </tr>
 
       <tr class="row">
-        <th class="col-md-4 col-sm-6">Component</th>
-        <td class="col-md-8 col-sm-6">
-          <span data-toggle="popover"
-                title="{{ product.component }}"
-                data-content="{% include 'popovers/component.html' with component=product.component %}">
-            {{ product.component }}
-          </span>
-        </td>
+        <th class="col-md-4 col-sm-6">Timeliness</th>
+        {% include 'bits/metric.html' with metric=requirement.timeliness %}
+      </tr>
+
+      <tr class="row">
+        <th class="col-md-4 col-sm-6">Horizontal resolution</th>
+        {% include 'bits/metric.html' with metric=requirement.horizontal_resolution %}
+      </tr>
+
+      <tr class="row">
+        <th class="col-md-4 col-sm-6">Vertical resolution</th>
+        {% include 'bits/metric.html' with metric=requirement.horizontal_resolution %}
       </tr>
       </tbody>
     </table>
@@ -86,18 +71,18 @@
 
   <div class="row">
     <h3 class="col-sm-12">
-      <span>Requirements</span>
+      <span>Products</span>
       <span class="pull-right">
         <a class="btn btn-primary pull-right"
-           href="{% url 'product:requirement:add' product.pk %}">Add requirement</a>
+           href="{% url 'requirement:product:add' requirement.pk %}">Add product requirement</a>
       </span>
     </h3>
     <div class="col-sm-12">
-      <table id="requirements"
+      <table id="products"
              class="table table-condensed table-bordered table-hover">
         <thead>
         <tr>
-          <th>Requirement</th>
+          <th>Product</th>
           <th>Level of definition</th>
           <th>Distance to target</th>
           <th>Relevant for</th>
@@ -109,10 +94,10 @@
         </tr>
         </thead>
         <tbody>
-        {% for rel in product.productrequirement_set.all %}
+        {% for rel in requirement.productrequirement_set.all %}
           <tr>
             <td>
-              <a href="{% url 'requirement:detail' rel.requirement.pk %}">{{ rel.requirement.name }}</a>
+              <a href="{% url 'product:detail' rel.product.pk %}">{{ rel.product.name }}</a>
             </td>
             <td>{{ rel.level_of_definition }}</td>
             <td>{{ rel.distance_to_target }}</td>
@@ -125,10 +110,10 @@
             </td>
             <td>{{ rel.note }}</td>
             <td>
-              <a href="{% url 'product:requirement:edit' product_pk=product.pk pk=rel.pk %}">Edit</a>
+              <a href="{% url 'requirement:product:edit' requirement_pk=requirement.pk pk=rel.pk %}">Edit</a>
             </td>
             <td>
-              <a href="{% url 'product:requirement:delete' product_pk=product.pk pk=rel.pk %}">Delete</a>
+              <a href="{% url 'requirement:product:delete' requirement_pk=requirement.pk pk=rel.pk %}">Delete</a>
             </td>
           </tr>
         {% endfor %}
@@ -136,7 +121,6 @@
       </table>
     </div>
   </div>
-
 {% endblock %}
 
 {% block scripts %}
@@ -148,17 +132,13 @@
     $(function () {
       $('[data-toggle="popover"]').popover({
         trigger: 'hover',
-        placement: 'right',
-        html: true,
-        container: 'table'
       });
-
-      var table = $('#requirements').dataTable({
+      var table = $('#products').dataTable({
         columnDefs: [
           { targets: 'no-sort',
             orderable: false }
         ]
       });
-    });
+    })
   </script>
 {% endblock %}

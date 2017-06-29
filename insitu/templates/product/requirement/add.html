@@ -2,23 +2,22 @@
 {% load bootstrap %}
 
 {% block title %}
-  Add a new requirement
+  {{ title }}
 {% endblock %}
 
 {% block content %}
 
   <div class="row">
     <h1 class="col-sm-12">
-      <span>Add a new requirement <small>for {{ product.name }}</small></span>
+      <span>{{ title }}</span>
     </h1>
   </div>
 
   <form action="" method="POST">
     {% csrf_token %}
     {{ form|bootstrap }}
-    <input type="hidden" name="product" value="{{ product.pk }}" />
     <input class="btn btn-primary" type="submit" value="Save" />
-    <a href="{% url 'product:detail' product.pk %}"
+    <a href="{{ url }}"
        class="btn btn-default">Cancel</a>
   </form>
 {% endblock %}
