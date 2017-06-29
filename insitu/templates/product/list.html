@@ -117,6 +117,7 @@
   <script src="{% static 'js/jquery-3.2.1.min.js' %}"></script>
   <script src="{% static 'js/jquery.dataTables.min.js' %}"></script>
   <script src="{% static 'js/jquery.dataTables.bootstrap.min.js' %}"></script>
+  <script src="{% static 'js/fnFilterOnReturn.js' %}"></script>
   <script>
     $(document).ready(function () {
       var $table = $('#products').dataTable({
@@ -133,13 +134,12 @@
             d.coverage = $('#coverage').val();
           }
         }
-      });
+      }).fnFilterOnReturn();
 
       $('#filter-btn').on('click', function () {
         var table = $table.DataTable();
         table.ajax.reload();
       });
-
 
       $('#service,#entity').change(function () {
         var service = $('#service').val();
