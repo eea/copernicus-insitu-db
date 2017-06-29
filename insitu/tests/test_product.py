@@ -1,14 +1,18 @@
-import json
-
 from django.core.urlresolvers import reverse
 from django.test import TestCase
 
 from insitu import models
 from insitu.tests.base import create_product_group, create_status, create_coverage, create_component
 
+REQUIRED_ERROR = ['This field is required.']
+
 
 class ProductTests(TestCase):
     def setUp(self):
+        self.fields = ['acronym', 'name', 'note', 'description']
+        self.related_fields = ['group', 'component', 'status', 'coverage']
+        self.required_fields = ['acronym', 'name', 'group', 'component',
+                                'status', 'coverage']
         self._PRODUCT_DATA = {
             'acronym': 'TST',
             'name': 'TEST product',
@@ -21,7 +25,12 @@ class ProductTests(TestCase):
         }
 
     def test_create_product_fields_required(self):
-        pass
+        data = {}
+        resp = self.client.post(reverse('product:add'), data)
+        self.assertEqual(resp.status_code, 200)
+        self.assertIsNot(resp.context['form'].errors, {})
+        errors = {field: REQUIRED_ERROR for field in self.required_fields}
+        self.assertDictEqual(resp.context['form'].errors, errors)
 
     def test_create_product(self):
         data = self._PRODUCT_DATA
@@ -30,7 +39,7 @@ class ProductTests(TestCase):
         qs = models.Product.objects.all()
         self.assertEqual(qs.count(), 1)
         product = qs.first()
-        for attribute in ['acronym', 'name', 'note', 'description']:
-            self.assertEqual(getattr(product, attribute), data[attribute])
-        for related_object in ['group', 'component', 'status', 'coverage']:
-            self.assertEqual(getattr(product, related_object).pk, data[related_object])
+        for field in self.fields:
+            self.assertEqual(getattr(product, field), data[field])
+        for related_field in self.related_fields:
+            self.assertEqual(getattr(product, related_field).pk, data[related_field])
