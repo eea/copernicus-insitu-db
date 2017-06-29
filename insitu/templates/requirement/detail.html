@@ -96,7 +96,9 @@
         <tbody>
         {% for rel in requirement.productrequirement_set.all %}
           <tr>
-            <td>{{ rel.product.name }}</td>
+            <td>
+              <a href="{% url 'product:detail' rel.product.pk %}">{{ rel.product.name }}</a>
+            </td>
             <td>{{ rel.level_of_definition }}</td>
             <td>{{ rel.distance_to_target }}</td>
             <td>{{ rel.relevance }}</td>
