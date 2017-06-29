@@ -54,3 +54,11 @@ TO DO
   ```
 
 7. Visit [http://localhost:8000/](http://localhost:8000/) to see if the app is up and running.
+
+### Running tests
+
+1. Run tests:
+
+    ```
+    $ ./manage.py test --settings=copernicus.testsettings
+    ```
