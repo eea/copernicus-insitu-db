@@ -1,6 +1,4 @@
 # -*- coding: utf-8 -*-
-import json
-
 from django.core.urlresolvers import reverse
 from django.http.response import JsonResponse
 from django.views.generic import View
