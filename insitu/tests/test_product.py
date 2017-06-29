@@ -6,7 +6,6 @@ from insitu.tests import factories
 
 REQUIRED_ERROR = ['This field is required.']
 
-# CHECK SUCCESS URL
 
 class ProductTests(TestCase):
     def setUp(self):
