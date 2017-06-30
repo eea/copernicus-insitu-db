@@ -54,6 +54,7 @@ class ProductRequirementAdd(CreateView):
         self._set_model_used()
         return super().post(self, request, *args, **kwargs)
 
+
 class ProductRequirementEdit(UpdateView):
     model = models.ProductRequirement
     template_name = 'product/requirement/edit.html'

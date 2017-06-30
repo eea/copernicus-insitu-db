@@ -62,3 +62,10 @@ TO DO
     ```
     $ ./manage.py test --settings=copernicus.testsettings
     ```
+
+2. Check coverage:
+
+    ```
+    $ coverage run --source='.' ./manage.py test --settings=copernicus.testsettings
+    $ coverage html
+    ```
