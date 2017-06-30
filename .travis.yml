@@ -1,8 +1,12 @@
 language: python
 python:
   - "3.6"
+services:
+  - elasticsearch
 install:
   - pip install -r requirements-dev.txt
+before_script:
+  - sleep 10
 script:
   - ./manage.py test --settings=copernicus.testsettings
 notifications:
