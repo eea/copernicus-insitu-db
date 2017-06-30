@@ -1,13 +1,34 @@
 language: python
 python:
   - "3.6"
-services:
-  - elasticsearch
+addons:
+  apt:
+    packages:
+      - oracle-java8-installer
+
+before_install:
+  - sudo update-java-alternatives -s java-8-oracle
+  - export JAVA_HOME=/usr/lib/jvm/java-8-oracle/jre
+  - java -version
+env:
+  global:
+    - WAIT_FOR_ES=3
+    - ES_VERSION=5.4.1
+    - ELASTICSEARCH_HOST=elasticsearch
+    - ELASTICSEARCH_AUTH=elastic:changeme
+
 install:
+  - mkdir /tmp/elasticsearch
+  - wget -O - https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-${ES_VERSION}.tar.gz | tar xz --directory=/tmp/elasticsearch --strip-components=1
+  - /tmp/elasticsearch/bin/elasticsearch -d
+  - pip install git+https://github.com/elastic/elasticsearch-py.git#egg=elasticsearch
   - pip install -r requirements-dev.txt
+
 before_script:
-  - sleep 10
+  - sleep $(WAIT_FOR_ES)
+
 script:
+  - ./manage.py search_index --rebuild
   - ./manage.py test --settings=copernicus.testsettings
 notifications:
   email:

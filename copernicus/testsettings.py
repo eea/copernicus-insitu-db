@@ -11,10 +11,3 @@ DATABASES = {
 }
 
 SECRET_KEY = 'app_tests_secret_key'
-
-ELASTICSEARCH_DSL = {
-    'default': {
-        'hosts': 'elasticsearch',
-        'http_auth': 'elastic:changeme',
-    },
-}
