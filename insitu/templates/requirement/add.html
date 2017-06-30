@@ -1,0 +1,41 @@
+{% extends '_layout.html' %}
+{% load bootstrap3 %}
+{% block title %}
+  Add a new requirement
+{% endblock %}
+
+{% block content %}
+
+  <div class="row">
+    <h1 class="col-sm-12">
+      <span>Add a new requirement</span>
+    </h1>
+  </div>
+<form action="" method="post">
+  {% csrf_token %}
+  {% bootstrap_field form.name %}
+
+  {% bootstrap_field form.note %}
+
+  {% bootstrap_field form.dissemination %}
+
+  {% bootstrap_field form.quality %}
+
+  <label class="control-label">Uncertainty</label>
+  {% include 'bits/metric_field.html' with name='uncertainty' %}
+
+  <label class="control-label">Frequency</label>
+  {% include 'bits/metric_field.html' with name='frequency' %}
+
+  <label class="control-label">Timeliness</label>
+  {% include 'bits/metric_field.html' with name='timeliness' %}
+
+  <label class="control-label">Horizontal resolution</label>
+  {% include 'bits/metric_field.html' with name='horizontal_resolution' %}
+
+  <label class="control-label">Vertical resolution</label>
+  {% include 'bits/metric_field.html' with name='vertical_resolution' %}
+
+  <input class="btn btn-primary" type="submit" value="Save" />
+</form>
+{% endblock %}

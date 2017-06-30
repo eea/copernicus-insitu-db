@@ -64,6 +64,9 @@ requirement_patterns = [
     url(r'^(?P<requirement_pk>[0-9]+)/product/',
         include(product_requirement_patterns,
                 namespace='product')),
+    url(r'^add/$',
+        views.RequirementAdd.as_view(),
+        name='add'),
 ]
 
 urlpatterns = [
