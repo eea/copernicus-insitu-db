@@ -47,6 +47,7 @@ TO DO
 
   ```
   $ docker exec -it insitu_app bash
+  $ pip install -r requirements-dev.txt
   $ ./manage.py migrate
   $ ./manage.py loaddata picklists
   $ ./manage.py search_index --rebuild

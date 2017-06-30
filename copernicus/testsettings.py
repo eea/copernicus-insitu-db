@@ -10,4 +10,11 @@ DATABASES = {
     }
 }
 
+ELASTICSEARCH_DSL = {
+    'default': {
+        'hosts': env('ELASTICSEARCH_TEST_HOST'),
+        'http_auth': env('ELASTICSEARCH_TEST_AUTH'),
+    },
+}
+
 SECRET_KEY = 'app_tests_secret_key'
