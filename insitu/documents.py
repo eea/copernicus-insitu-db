@@ -3,7 +3,7 @@ from django.core.urlresolvers import reverse
 from django_elasticsearch_dsl import DocType, Index, fields
 from elasticsearch_dsl.search import Search
 
-from insitu.models import Product
+from insitu.models import Product, Requirement
 
 
 insitu = Index('insitu')
@@ -33,5 +33,23 @@ class ProductDoc(DocType):
         fields = [
             'id',
             'description',
+            'note',
+        ]
+
+
+@insitu.doc_type
+class RequirementDoc(DocType):
+    name = fields.KeywordField()
+    dissemination = fields.KeywordField(attr='dissemination.name')
+    quality = fields.KeywordField(attr='quality.name')
+
+    def get_name_display(self):
+        url = reverse('requirement:detail', kwargs={'pk': self.id})
+        return '<a href="{url}">{name}</a>'.format(url=url, name=self.name)
+
+    class Meta:
+        model = Requirement
+        fields = [
+            'id',
             'note',
         ]

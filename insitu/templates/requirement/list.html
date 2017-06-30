@@ -1,0 +1,113 @@
+{% extends '_layout.html' %}
+{% load static %}
+
+{% block style %}
+  <link rel="stylesheet" type="text/css"
+        href="{% static 'css/jquery.dataTables.min.css' %}"/>
+{% endblock %}
+
+{% block title %}
+  Requirements
+{% endblock %}
+
+{% block content %}
+
+  <div class="row">
+    <h1 class="col-sm-12">
+      <span>Requirements</span>
+      {% comment %}
+      <span class="pull-right">
+        <a class="btn btn-primary pull-right"
+           href="{% url 'requirement:add' %}">New requirement</a>
+      </span>
+      {% endcomment %}
+    </h1>
+  </div>
+
+  <div class="row">
+    <div class="col-lg-10">
+      <table id="requirements" width="100%"
+             class="table table-condensed table-bordered table-hover">
+        <thead>
+        <tr>
+          <th>Name</th>
+          <th>Dissemination</th>
+          <th>Quality</th>
+        </tr>
+        </thead>
+      </table>
+    </div>
+
+    <div class="col-lg-2">
+      <div class="panel panel-default">
+        <div class="panel-heading">Filters</div>
+        <div class="panel-body">
+
+          <div class="form-group">
+            <label for="dissemination">Dissemination:</label>
+            <select id="dissemination" class="form-control">
+              {% for dissemination in disseminations %}
+                <option value="{{ dissemination }}">{{ dissemination }}</option>
+              {% endfor %}
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="quality">Quality:</label>
+            <select id="quality" class="form-control">
+              {% for quality in qualities %}
+                <option value="{{ quality }}">{{ quality }}</option>
+              {% endfor %}
+            </select>
+          </div>
+
+          <div class="form-group">
+            <button type="button" class="btn btn-primary"
+                    id="filter-btn">Filter
+            </button>
+          </div>
+          <div class="form-group">
+            <button type="button" class="btn btn-default"
+                    id="reset-btn">Reset all filters
+            </button>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+{% endblock %}
+
+{% block scripts %}
+  <script src="{% static 'js/jquery-3.2.1.min.js' %}"></script>
+  <script src="{% static 'js/jquery.dataTables.min.js' %}"></script>
+  <script src="{% static 'js/jquery.dataTables.bootstrap.min.js' %}"></script>
+  <script src="{% static 'js/fnFilterOnReturn.js' %}"></script>
+  <script>
+    $(document).ready(function () {
+      var $table = $('#requirements').dataTable({
+        "processing": true,
+        "serverSide": true,
+        "ajax": {
+          "url": "{% url 'requirement:json' %}",
+          "data": function (d) {
+            d.dissemination = $('#dissemination').val();
+            d.quality = $('#quality').val();
+          }
+        }
+      }).fnFilterOnReturn();
+
+      $('#filter-btn').on('click', function () {
+        var table = $table.DataTable();
+        table.ajax.reload();
+      });
+
+      $('#reset-btn').on('click', function () {
+        $('#dissemination,#quality').val('All');
+        var table = $table.DataTable();
+        table.ajax.reload();
+      });
+    });
+  </script>
+{% endblock %}

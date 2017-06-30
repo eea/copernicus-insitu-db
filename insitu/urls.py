@@ -49,6 +49,14 @@ product_patterns = [
 
 
 requirement_patterns = [
+    url(r'^list/$',
+        views.RequirementList.as_view(),
+        name='list'),
+
+    url(r'^data/$',
+        views.RequirementListJson.as_view(),
+        name='json'),
+
     url(r'^(?P<pk>[0-9]+)/$',
         views.RequirementDetail.as_view(),
         name='detail'),
