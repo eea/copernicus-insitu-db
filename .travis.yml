@@ -28,7 +28,7 @@ before_script:
   - sleep $WAIT_FOR_ES
 
 script:
-  - ./manage.py search_index --rebuild
+  - ./manage.py search_index --rebuild -f
   - ./manage.py test --settings=copernicus.testsettings
 notifications:
   email:
