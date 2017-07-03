@@ -61,6 +61,10 @@ requirement_patterns = [
         views.RequirementDetail.as_view(),
         name='detail'),
 
+    url(r'^(?P<pk>[0-9]+)/edit$',
+        views.RequirementEdit.as_view(),
+        name='edit'),
+
     url(r'^(?P<requirement_pk>[0-9]+)/product/',
         include(product_requirement_patterns,
                 namespace='product')),
