@@ -1,9 +1,49 @@
 from django.core.urlresolvers import reverse
 
-from django.views.generic import CreateView, DetailView, UpdateView
+from django.views.generic import DetailView, TemplateView
+from django.views.generic import CreateView, UpdateView
 
+from insitu import documents
 from insitu import forms
 from insitu import models
+from insitu.utils import get_choices
+from insitu.views.base import ESDatatableView
+from picklists import models as pickmodels
+
+
+class DataGroupList(TemplateView):
+    template_name = 'data_group/list.html'
+
+    def get_context_data(self):
+        context = super(DataGroupList, self).get_context_data()
+        names = get_choices('name', model_cls=models.DataGroup)
+        frequencies = get_choices('name', model_cls=pickmodels.Frequency)
+        coverages = get_choices('name', model_cls=pickmodels.Coverage)
+        timelinesses = get_choices('name', model_cls=pickmodels.Timeliness)
+        policies = get_choices('name', model_cls=pickmodels.Policy)
+        data_types = get_choices('name', model_cls=pickmodels.DataType)
+        data_formats = get_choices('name', model_cls=pickmodels.DataFormat)
+        qualities = get_choices('name', model_cls=pickmodels.Quality)
+        context.update({
+            'names': names,
+            'frequencies': frequencies,
+            'coverages': coverages,
+            'timelinesses': timelinesses,
+            'policies': policies,
+            'data_types': data_types,
+            'data_formats': data_formats,
+            'qualities': qualities,
+        })
+        return context
+
+
+class DataGroupListJson(ESDatatableView):
+    columns = ['name', 'frequency', 'coverage', 'timeliness', 'policy',
+               'data_type', 'data_format', 'quality']
+    order_columns = columns
+    filters = ['name', 'frequency', 'coverage', 'timeliness', 'policy',
+               'data_type', 'data_format', 'quality']
+    document = documents.DataGroupDoc
 
 
 class DataGroupAdd(CreateView):

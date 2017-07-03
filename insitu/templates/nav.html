@@ -23,6 +23,11 @@
         <li class="{% active requirements_list %}">
           <a href="{{ requirements_list }}">Requirements</a>
         </li>
+
+        {% url 'data_group:list' as data_group_list %}
+        <li class="{% active data_group_list %}">
+          <a href="{{ data_group_list }}">Data groups</a>
+        </li>
       </ul>
     </div><!-- /.navbar-collapse -->
   </div><!-- /.container-fluid -->

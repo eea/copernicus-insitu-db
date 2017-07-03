@@ -74,6 +74,14 @@ requirement_patterns = [
 ]
 
 data_group_patterns = [
+    url(r'^list/$',
+        views.DataGroupList.as_view(),
+        name='list'),
+
+    url(r'^data/$',
+        views.DataGroupListJson.as_view(),
+        name='json'),
+
     url(r'^add/$',
         views.DataGroupAdd.as_view(),
         name='add'),
