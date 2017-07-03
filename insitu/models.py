@@ -2,6 +2,7 @@
 from __future__ import unicode_literals
 from django.db import models
 
+from insitu.signals import data_resposible_updated
 from picklists import models as pickmodels
 
 
@@ -134,6 +135,15 @@ class DataResponsible(models.Model):
     def __str__(self):
         return self.name
 
+    def get_elastic_search_data(self):
+        data = dict()
+        details = self.details.first()
+        for field in ['acronym', 'address', 'phone', 'email', 'contact_person']:
+            data[field] = getattr(details, field) if details else '-'
+        data['responsible_type'] = details.get_responsible_type_display if details \
+            else '-'
+        return data
+
 
 class DataResponsibleDetails(models.Model):
     COMMERCIAL = 1
@@ -152,13 +162,19 @@ class DataResponsibleDetails(models.Model):
     contact_person = models.CharField(max_length=100)
     responsible_type = models.IntegerField(choices=TYPE_CHOICES, db_index=True)
     data_responsible = models.ForeignKey(DataResponsible,
-                                         on_delete=models.CASCADE)
+                                         on_delete=models.CASCADE,
+                                         related_name='details')
 
     class Meta:
         verbose_name_plural = 'data responsible details'
 
     def __str__(self):
-        return 'Details for {}'.format(self.name)
+        return 'Details for {}'.format(self.data_responsible.name)
+
+    def save(self, force_insert=False, force_update=False, using=None,
+             update_fields=None):
+        super().save(force_insert, force_update, using, update_fields)
+        data_resposible_updated.send(sender=self)
 
 
 class DataGroup(models.Model):

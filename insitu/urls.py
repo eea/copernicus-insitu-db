@@ -95,6 +95,16 @@ data_group_patterns = [
         name='edit'),
 ]
 
+responsible_patterns = [
+    url(r'^list/$',
+        views.DataResponsibleList.as_view(),
+        name='list'),
+
+    url(r'^data/$',
+        views.DataResponsibleListJson.as_view(),
+        name='json'),
+]
+
 urlpatterns = [
     url(r'^$',
         views.HomeView.as_view(),
@@ -103,10 +113,16 @@ urlpatterns = [
     url(r'^product/',
         include(product_patterns,
                 namespace='product')),
+
     url(r'^requirement/',
         include(requirement_patterns,
                 namespace='requirement')),
+
     url(r'^data-group/',
         include(data_group_patterns,
                 namespace='data_group')),
+
+    url(r'^responsible/',
+        include(responsible_patterns,
+                namespace='responsible')),
 ]

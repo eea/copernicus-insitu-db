@@ -28,6 +28,11 @@
         <li class="{% active data_group_list %}">
           <a href="{{ data_group_list }}">Data groups</a>
         </li>
+
+        {% url 'responsible:list' as responsible_list %}
+        <li class="{% active responsible_list %}">
+          <a href="{{ responsible_list }}">Responsibles</a>
+        </li>
       </ul>
     </div><!-- /.navbar-collapse -->
   </div><!-- /.container-fluid -->

@@ -1,0 +1,128 @@
+{% extends '_layout.html' %}
+{% load static %}
+
+{% block style %}
+  <link rel="stylesheet" type="text/css"
+        href="{% static 'css/jquery.dataTables.min.css' %}"/>
+{% endblock %}
+
+{% block title %}
+  Requirements
+{% endblock %}
+
+{% block content %}
+
+  <div class="row">
+    <h1 class="col-sm-12">
+      <span>Data responsibles </span>
+    </h1>
+  </div>
+
+  <div class="row">
+    <div class="col-lg-10">
+      <table id="responsibles" width="100%"
+             class="table table-condensed table-bordered table-hover">
+        <thead>
+        <tr>
+          <th>Name</th>
+          <th>Acronym</th>
+          <th>Address</th>
+          <th>Phone</th>
+          <th>Email</th>
+          <th>Contact person</th>
+          <th>Responsible type</th>
+          <th>Is network?</th>
+        </tr>
+        </thead>
+      </table>
+    </div>
+
+    <div class="col-lg-2">
+      <div class="panel panel-default">
+        <div class="panel-heading">Filters</div>
+        <div class="panel-body">
+
+          <div class="form-group">
+            <label for="is_network">Is network:</label>
+            <select id="is_network" class="form-control">
+              <option value="{{ ALL_OPTIONS_LABEL }}">All</option>
+              <option value="true">Yes</option>
+              <option value="false">No</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="responsible_type">Responsible type:</label>
+            <select id="responsible_type" class="form-control">
+              {% for responsible_type in responsible_types %}
+                <option value="{{ responsible_type.1 }}">
+                  {{ responsible_type.1 }}</option>
+              {% endfor %}
+            </select>
+          </div>
+
+          <div class="form-group">
+            <button type="button" class="btn btn-primary"
+                    id="filter-btn">Filter
+            </button>
+          </div>
+          <div class="form-group">
+            <button type="button" class="btn btn-default"
+                    id="reset-btn">Reset all filters
+            </button>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+{% endblock %}
+
+{% block scripts %}
+  <script src="{% static 'js/jquery-3.2.1.min.js' %}"></script>
+  <script src="{% static 'js/jquery.dataTables.min.js' %}"></script>
+  <script src="{% static 'js/jquery.dataTables.bootstrap.min.js' %}"></script>
+  <script src="{% static 'js/fnFilterOnReturn.js' %}"></script>
+  <script>
+    $(document).ready(function () {
+      var $table = $('#responsibles').dataTable({
+        "processing": true,
+        "serverSide": true,
+        "ajax": {
+          "url": "{% url 'responsible:json' %}",
+          "data": function (d) {
+            d.is_network = $('#is_network').val();
+            d.responsible_type = $('#responsible_type').val();
+          }
+        },
+        "columnDefs": [
+          {
+            "render": function (data, type, row) {
+              if (data) {
+                return "<span class='glyphicon glyphicon-ok-circle " +
+                  "text-success'></span>";
+              }
+              else {
+                return "<span class='glyphicon glyphicon-remove-circle " +
+                  "text-danger'></span>";
+              }
+            },
+            "targets": [7]
+          }
+        ]
+      }).fnFilterOnReturn();
+
+      $('#filter-btn').on('click', function () {
+        var table = $table.DataTable();
+        table.ajax.reload();
+      });
+
+      $('#reset-btn').on('click', function () {
+        $('#is_network, #responsible_type').val('All');
+        var table = $table.DataTable();
+        table.ajax.reload();
+      });
+    });
+  </script>
+{% endblock %}

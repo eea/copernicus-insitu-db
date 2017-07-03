@@ -78,7 +78,7 @@ class ProductRequirementFactory(DjangoModelFactory):
 
 class DataResponsibleFactory(DjangoModelFactory):
     name = 'test data responsible'
-    countries = SubFactory(factories.CountryFactory)
+    countries = RelatedFactory(factories.CountryFactory)
 
     class Meta:
         model = models.DataResponsible
