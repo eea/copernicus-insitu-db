@@ -78,10 +78,15 @@ data_group_patterns = [
         views.DataGroupAdd.as_view(),
         name='add'),
 
+    url(r'^(?P<pk>[0-9]+)/$',
+        views.DataGroupDetail.as_view(),
+        name='detail'),
+
     url(r'^(?P<pk>[0-9]+)/edit$',
         views.DataGroupEdit.as_view(),
         name='edit'),
 ]
+
 urlpatterns = [
     url(r'^$',
         views.HomeView.as_view(),

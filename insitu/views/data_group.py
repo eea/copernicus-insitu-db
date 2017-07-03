@@ -24,3 +24,9 @@ class DataGroupEdit(UpdateView):
 
     def get_success_url(self):
         return reverse('data_group:detail', kwargs={'pk': self.object.pk})
+
+
+class DataGroupDetail(DetailView):
+    template_name = 'data_group/detail.html'
+    model = models.DataGroup
+    context_object_name = 'data_group'
