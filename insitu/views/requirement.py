@@ -2,6 +2,10 @@ from django.core.urlresolvers import reverse
 from django.shortcuts import redirect
 from django.views.generic import CreateView, DetailView, TemplateView
 
+from django.core.urlresolvers import reverse
+from django.views.generic import DetailView
+from django.views.generic import UpdateView
+
 from insitu import documents
 from insitu import forms
 from insitu import models
@@ -40,62 +44,32 @@ class RequirementListJson(ESDatatableView):
 class RequirementAdd(CreateView):
     template_name = 'requirement/add.html'
     form_class = forms.RequirementForm
+    model = models.Requirement
 
-    def get_success_url(self, id):
-        return reverse('requirement:detail', kwargs={'pk': id})
+    def get_success_url(self):
+        instance = self.object
+        return reverse('requirement:detail', kwargs={'pk': instance.pk})
 
-    def _create_metric(self, threshold, breakthrough, goal):
-        return models.Metric.objects.create(
-            threshold=threshold,
-            breakthrough=breakthrough,
-            goal=goal
-        )
-    
-    def post(self, request, *args, **kwargs):
-        form =  self.get_form()
-        if form.is_valid():
-            data = form.data
-            uncertainty = self._create_metric(
-                data['uncertainty_threshold'], 
-                data['uncertainty_breakthrough'],
-                data['uncertainty_goal'],
-            )
-            frequency =  self._create_metric(
-                data['frequency_threshold'], 
-                data['frequency_breakthrough'],
-                data['frequency_goal'],
-            )
-            timeliness =  self._create_metric(
-                data['timeliness_threshold'], 
-                data['timeliness_breakthrough'],
-                data['timeliness_goal'],
-            )
-            horizontal_resolution =  self._create_metric(
-                data['horizontal_resolution_threshold'], 
-                data['horizontal_resolution_breakthrough'],
-                data['horizontal_resolution_goal'],
-            )
-            vertical_resolution =  self._create_metric(
-                data['vertical_resolution_threshold'], 
-                data['vertical_resolution_breakthrough'],
-                data['vertical_resolution_goal'],
-            )
-            dissemination = pickmodels.Dissemination.objects.get(
-                id=data['dissemination']
-            )
-            quality = pickmodels.Quality.objects.get(id=data['quality'])
-            requirement = models.Requirement.objects.create(
-                name=data['name'],
-                note=data['note'],
-                dissemination=dissemination,
-                quality=quality,
-                uncertainty=uncertainty,
-                frequency=frequency,
-                timeliness=timeliness,
-                horizontal_resolution=horizontal_resolution,
-                vertical_resolution=vertical_resolution
-            )
-            return redirect(self.get_success_url(requirement.id))
-        else:
-            return super().post(self, request, *args, **kwargs)
 
+class RequirementEdit(UpdateView):
+    template_name = 'requirement/edit.html'
+    form_class = forms.RequirementForm
+    model = models.Requirement
+    context_object_name = 'requirement'
+
+    def get_initial(self):
+        requirement = self.get_object()
+        initial_data = super().get_initial()
+        for field in ['name', 'note', 'dissemination', 'quality']:
+            initial_data[field] = getattr(requirement, field)
+        for field in ['uncertainty', 'frequency', 'timeliness',
+                      'horizontal_resolution', 'vertical_resolution']:
+            for attr in ['threshold', 'breakthrough', 'goal']:
+                initial_data["_".join([field, attr])] = getattr(getattr(requirement,
+                                                                        field), attr)
+        return initial_data.copy()
+
+    def get_success_url(self):
+        instance = self.get_object()
+        return reverse('requirement:detail',
+                       kwargs={'pk': instance.pk})

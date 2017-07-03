@@ -12,9 +12,13 @@
 
 {% block content %}
   <div class="row">
-    <div class="col-sm-12">
-      <h1>Requirement details</h1>
-    </div>
+    <h1 class="col-sm-12">
+      <span>Requirement details</span>
+      <span class="pull-right">
+      <a class="btn btn-primary pull-right"
+         href="{% url 'requirement:edit' requirement.pk %}">Edit requirement</a>
+      </span>
+    </h1>
   </div>
 
 
