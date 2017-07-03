@@ -1,5 +1,13 @@
 {% extends '_layout.html' %}
 {% load bootstrap3 %}
+{% load static %}
+
+{% block style %}
+  <link rel="stylesheet" type="text/css"
+        href="{% static 'css/select2.min.css' %}"/>
+  <link rel="stylesheet" type="text/css"
+        href="{% static 'css/select2-bootstrap.min.css' %}"/>
+{% endblock %}
 
 {% block title %}
   Edit product {{ object.name }}
@@ -21,4 +29,14 @@
     <a href="{% url 'product:detail' product.pk %}"
        class="btn btn-default">Cancel</a>
   </form>
+{% endblock %}
+
+{% block scripts %}
+  <script src="{% static 'js/jquery-3.2.1.min.js' %}"></script>
+  <script src="{% static 'js/select2.min.js' %}"></script>
+  <script>
+    $(document).ready(function () {
+      $('select').select2();
+    });
+  </script>
 {% endblock %}

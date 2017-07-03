@@ -1,8 +1,16 @@
 {% extends '_layout.html' %}
 {% load bootstrap3 %}
+{% load static %}
 
 {% block title %}
   Edit {{ rel.product.name }} - {{ rel.requirement.name }} relation
+{% endblock %}
+
+{% block style %}
+  <link rel="stylesheet" type="text/css"
+        href="{% static 'css/select2.min.css' %}"/>
+  <link rel="stylesheet" type="text/css"
+        href="{% static 'css/select2-bootstrap.min.css' %}"/>
 {% endblock %}
 
 {% block content %}
@@ -21,7 +29,17 @@
     {% bootstrap_form form %}
     <input type="hidden" name="product" value="{{ rel.product.pk }}" />
     <input class="btn btn-primary" type="submit" value="Save" />
-    <a href={{ url }}
-           class="btn btn-default">Cancel</a>
+    <a href="{{ url }}"
+       class="btn btn-default">Cancel</a>
   </form>
+{% endblock %}
+
+{% block scripts %}
+  <script src="{% static 'js/jquery-3.2.1.min.js' %}"></script>
+  <script src="{% static 'js/select2.min.js' %}"></script>
+  <script>
+    $(document).ready(function () {
+      $('select').select2();
+    });
+  </script>
 {% endblock %}
