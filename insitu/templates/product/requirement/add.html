@@ -1,5 +1,5 @@
 {% extends '_layout.html' %}
-{% load bootstrap %}
+{% load bootstrap3 %}
 
 {% block title %}
   {{ title }}
@@ -15,7 +15,7 @@
 
   <form action="" method="POST">
     {% csrf_token %}
-    {{ form|bootstrap }}
+    {% bootstrap_form form %}
     <input class="btn btn-primary" type="submit" value="Save" />
     <a href="{{ url }}"
        class="btn btn-default">Cancel</a>
