@@ -1,0 +1,21 @@
+{% extends '_layout.html' %}
+{% load bootstrap3 %}
+
+{% block title %}
+  Add a new data group
+{% endblock %}
+
+{% block content %}
+
+  <div class="row">
+    <h1 class="col-sm-12">
+      <span>Add a new data group</span>
+    </h1>
+  </div>
+
+  <form action="" method="POST">
+    {% csrf_token %}
+    {% bootstrap_form form %}
+    <input class="btn btn-primary" type="submit" value="Save" />
+  </form>
+{% endblock %}

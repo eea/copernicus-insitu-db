@@ -73,6 +73,12 @@ requirement_patterns = [
         name='add'),
 ]
 
+data_group_patterns = [
+    url(r'^add/$',
+        views.DataGroupAdd.as_view(),
+        name='add'),
+
+]
 urlpatterns = [
     url(r'^$',
         views.HomeView.as_view(),
@@ -84,4 +90,7 @@ urlpatterns = [
     url(r'^requirement/',
         include(requirement_patterns,
                 namespace='requirement')),
+    url(r'^data-group/',
+        include(data_group_patterns,
+                namespace='data_group')),
 ]
