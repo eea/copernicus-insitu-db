@@ -101,7 +101,6 @@ class ProductTests(base.CreateCheckTestCase):
         self.assertEqual(len(data['components']), 1)
         self.assertTrue(ALL_OPTIONS_LABEL in data['components'])
 
-
     def test_product_component_filter_entity(self):
         entity_1 = base.EntrustedEntityFactory(acronym="Special")
         entity_2 = base.EntrustedEntityFactory(acronym="Other")
