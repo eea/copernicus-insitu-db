@@ -1,5 +1,6 @@
 from django.forms import CharField, ModelForm, ModelChoiceField
-from insitu.models import Product, ProductRequirement, Requirement, Metric
+from insitu.models import DataGroup, Metric, Product
+from insitu.models import ProductRequirement, Requirement
 from picklists.models import Dissemination, Quality
 
 
@@ -106,3 +107,12 @@ class RequirementForm(ModelForm):
             self._update_metric(self.instance.vertical_resolution,
                                 **vertical_resolution_data)
             return Requirement.objects.filter(pk=self.instance.pk).update(**data)
+
+
+class DataGroupForm(ModelForm):
+    class Meta:
+        model = DataGroup
+        auto_created = True
+        fields = ['name', 'note', 'frequency', 'coverage', 'timeliness',
+                  'policy', 'data_type', 'data_format', 'quality',
+                  'inspire_themes']
