@@ -1,10 +1,6 @@
 from django.core.urlresolvers import reverse
-from django.shortcuts import redirect
-from django.views.generic import CreateView, DetailView, TemplateView
-
-from django.core.urlresolvers import reverse
-from django.views.generic import DetailView
-from django.views.generic import UpdateView
+from django.views.generic import DetailView, TemplateView
+from django.views.generic import CreateView, UpdateView
 
 from insitu import documents
 from insitu import forms
@@ -35,7 +31,8 @@ class RequirementList(TemplateView):
 
 
 class RequirementListJson(ESDatatableView):
-    columns = ['name', 'dissemination', 'quality']
+    columns = ['name', 'dissemination', 'quality', 'uncertainty', 'frequency',
+               'timeliness', 'horizontal_resolution', 'vertical_resolution']
     order_columns = columns
     filters = ['dissemination', 'quality']
     document = documents.RequirementDoc

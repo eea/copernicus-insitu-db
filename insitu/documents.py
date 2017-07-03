@@ -42,6 +42,13 @@ class RequirementDoc(DocType):
     name = fields.KeywordField()
     dissemination = fields.KeywordField(attr='dissemination.name')
     quality = fields.KeywordField(attr='quality.name')
+    uncertainty = fields.KeywordField(attr='uncertainty.to_elastic_search_format')
+    frequency = fields.KeywordField(attr='frequency.to_elastic_search_format')
+    timeliness = fields.KeywordField(attr='timeliness.to_elastic_search_format')
+    horizontal_resolution = fields.KeywordField(
+        attr='horizontal_resolution.to_elastic_search_format')
+    vertical_resolution = fields.KeywordField(
+        attr='vertical_resolution.to_elastic_search_format')
 
     def get_name_display(self):
         url = reverse('requirement:detail', kwargs={'pk': self.id})

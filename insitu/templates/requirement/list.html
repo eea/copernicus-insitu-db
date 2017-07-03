@@ -31,6 +31,11 @@
           <th>Name</th>
           <th>Dissemination</th>
           <th>Quality</th>
+          <th>Uncertainty</th>
+          <th>Frequency</th>
+          <th>Timeliness</th>
+          <th>Horizontal resolution</th>
+          <th>Vertical resolution</th>
         </tr>
         </thead>
       </table>
@@ -93,7 +98,26 @@
             d.dissemination = $('#dissemination').val();
             d.quality = $('#quality').val();
           }
-        }
+        },
+        "columnDefs": [
+          {
+            "render": function (data, type, row) {
+              function generate_div(color, data) {
+                return "<div class='col-sm-12 " + color + " no-padding-left'>"+ data +
+                  "</div>";
+              }
+              var threshold = data.split('T: ').pop().split(' - B: ').shift();
+              var breakthrough = data.split('B: ').pop().split(' - G: ').shift();
+              var goal = data.split('G: ').pop();
+              return (
+                generate_div('green', threshold) +
+                generate_div('blue', breakthrough) +
+                generate_div('orange', goal));
+            },
+            "targets": [3, 4, 5, 6, 7]
+          },
+          {"visible": false, "targets": [3]}
+        ]
       }).fnFilterOnReturn();
 
       $('#filter-btn').on('click', function () {

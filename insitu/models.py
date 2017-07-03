@@ -14,6 +14,9 @@ class Metric(models.Model):
         return 'T: {} - B: {} - G: {}'.format(
             self.threshold, self.breakthrough, self.goal)
 
+    def to_elastic_search_format(self):
+        return str(self)
+
 
 class CopernicusService(models.Model):
     acronym = models.CharField(max_length=10)
