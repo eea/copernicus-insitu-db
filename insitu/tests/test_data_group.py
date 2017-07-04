@@ -84,7 +84,7 @@ class DataGroupTests(base.CreateCheckTestCase):
         data_group = base.DataGroupFactory()
         data = self._DATA
         resp = self.client.post(
-            reverse('data_group:edit', kwargs={'pk': data_group.pk}),
-            data)
+            reverse('data_group:edit', kwargs={'pk': data_group.pk}), data
+        )
         self.assertEqual(resp.status_code, 302)
         self.check_single_object(models.DataGroup, data)
