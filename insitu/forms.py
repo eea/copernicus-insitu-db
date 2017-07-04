@@ -115,4 +115,4 @@ class DataGroupForm(ModelForm):
         auto_created = True
         fields = ['name', 'note', 'frequency', 'coverage', 'timeliness',
                   'policy', 'data_type', 'data_format', 'quality',
-                  'inspire_themes']
+                  'inspire_themes', 'essential_climate_variables']

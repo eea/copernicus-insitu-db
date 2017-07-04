@@ -186,6 +186,9 @@ class DataGroup(models.Model):
                                 on_delete=models.CASCADE,
                                 related_name='+')
     inspire_themes = models.ManyToManyField(pickmodels.InspireTheme)
+    essential_climate_variables = models.ManyToManyField(
+        pickmodels.EssentialClimateVariable
+    )
     requirements = models.ManyToManyField(Requirement,
                                           through='DataRequirement')
     responsibles = models.ManyToManyField(DataResponsible,

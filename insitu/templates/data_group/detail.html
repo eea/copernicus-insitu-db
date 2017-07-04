@@ -72,10 +72,21 @@
         <th class="col-md-4 col-sm-6">Inspire themes</th>
         <td class="col-md-8 col-sm-6">
           {% for inspire_theme in data_group.inspire_themes.all %}
-            <p>{{inspire_theme }}</p>
+            <p>{{ inspire_theme }}</p>
           {% endfor %}
         </td>
       </tr>
+      {% if data_group.essential_climate_variables.all|length %}
+      <tr class="row">
+        <th class="col-md-4 col-sm-6">Essential climate variables</th>
+        <td class="col-md-8 col-sm-6">
+          {% for essential_climate_variable in data_group.essential_climate_variables.all %}
+            <p>{{ essential_climate_variable }}</p>
+          {% endfor %}
+        </td>
+      </tr>
+      {% endif %}
+
       </tbody>
     </table>
   </div>
