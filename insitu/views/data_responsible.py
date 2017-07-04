@@ -1,8 +1,12 @@
 # -*- coding: utf-8 -*-
-from django.views.generic import TemplateView
+from django.http import HttpResponseRedirect
+from django.urls import reverse
+from django.views.generic import CreateView
+from django.views.generic import TemplateView, DetailView
 
 from insitu import documents
 from insitu import models
+from insitu import forms
 from insitu.utils import ALL_OPTIONS_LABEL
 from insitu.views.base import ESDatatableView
 
@@ -28,3 +32,9 @@ class DataResponsibleListJson(ESDatatableView):
     order_columns = columns
     filters = ['is_network', 'responsible_type']
     document = documents.DataResponsibleDoc
+
+
+class DataResponsibleDetail(DetailView):
+    template_name = 'data_responsible/detail.html'
+    model = models.DataResponsible
+    context_object_name = 'responsible'

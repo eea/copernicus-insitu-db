@@ -103,6 +103,10 @@ responsible_patterns = [
     url(r'^data/$',
         views.DataResponsibleListJson.as_view(),
         name='json'),
+
+    url(r'^(?P<pk>[0-9]+)/$',
+        views.DataResponsibleDetail.as_view(),
+        name='detail'),
 ]
 
 urlpatterns = [

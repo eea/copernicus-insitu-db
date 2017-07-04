@@ -1,32 +1,31 @@
-from django.forms import CharField, ModelForm, ModelChoiceField
-from insitu.models import DataGroup, Metric, Product
-from insitu.models import ProductRequirement, Requirement
+from django import forms
+from insitu import models
 from picklists.models import Dissemination, Quality
 
 
-class ProductForm(ModelForm):
+class ProductForm(forms.ModelForm):
     class Meta:
-        model = Product
+        model = models.Product
         fields = ['acronym', 'name', 'description', 'group', 'component',
                   'status', 'coverage', 'note']
 
 
-class ProductRequirementBaseForm(ModelForm):
+class ProductRequirementBaseForm(forms.ModelForm):
     class Meta:
-        model = ProductRequirement
+        model = models.ProductRequirement
         fields = ['requirement', 'product', 'note', 'level_of_definition',
                   'distance_to_target', 'relevance', 'criticality',
                   'barriers']
 
 
 class ProductRequirementForm(ProductRequirementBaseForm):
-    product = ModelChoiceField(disabled=True,
-                               queryset=Product.objects.all())
+    product = forms.ModelChoiceField(disabled=True,
+                                     queryset=models.Product.objects.all())
 
 
 class RequirementProductRequirementForm(ProductRequirementBaseForm):
-    requirement = ModelChoiceField(disabled=True,
-                                   queryset=Requirement.objects.all())
+    requirement = forms.ModelChoiceField(disabled=True,
+                                         queryset=models.Requirement.objects.all())
 
 
 class ProductRequirementEditForm(ProductRequirementForm,
@@ -34,29 +33,29 @@ class ProductRequirementEditForm(ProductRequirementForm,
     pass
 
 
-class RequirementForm(ModelForm):
-    uncertainty_threshold = CharField(max_length=100)
-    uncertainty_breakthrough = CharField(max_length=100)
-    uncertainty_goal = CharField(max_length=100)
-    frequency_threshold = CharField(max_length=100)
-    frequency_breakthrough = CharField(max_length=100)
-    frequency_goal = CharField(max_length=100)
-    timeliness_threshold = CharField(max_length=100)
-    timeliness_breakthrough = CharField(max_length=100)
-    timeliness_goal = CharField(max_length=100)
-    horizontal_resolution_threshold = CharField(max_length=100)
-    horizontal_resolution_breakthrough = CharField(max_length=100)
-    horizontal_resolution_goal = CharField(max_length=100)
-    vertical_resolution_threshold = CharField(max_length=100)
-    vertical_resolution_breakthrough = CharField(max_length=100)
-    vertical_resolution_goal = CharField(max_length=100)
+class RequirementForm(forms.ModelForm):
+    uncertainty_threshold = forms.CharField(max_length=100)
+    uncertainty_breakthrough = forms.CharField(max_length=100)
+    uncertainty_goal = forms.CharField(max_length=100)
+    frequency_threshold = forms.CharField(max_length=100)
+    frequency_breakthrough = forms.CharField(max_length=100)
+    frequency_goal = forms.CharField(max_length=100)
+    timeliness_threshold = forms.CharField(max_length=100)
+    timeliness_breakthrough = forms.CharField(max_length=100)
+    timeliness_goal = forms.CharField(max_length=100)
+    horizontal_resolution_threshold = forms.CharField(max_length=100)
+    horizontal_resolution_breakthrough = forms.CharField(max_length=100)
+    horizontal_resolution_goal = forms.CharField(max_length=100)
+    vertical_resolution_threshold = forms.CharField(max_length=100)
+    vertical_resolution_breakthrough = forms.CharField(max_length=100)
+    vertical_resolution_goal = forms.CharField(max_length=100)
 
     class Meta:
-        model = Requirement
+        model = models.Requirement
         fields = ['name', 'note', 'dissemination', 'quality']
 
     def _create_metric(self, threshold, breakthrough, goal):
-        return Metric.objects.create(
+        return models.Metric.objects.create(
             threshold=threshold,
             breakthrough=breakthrough,
             goal=goal
@@ -97,7 +96,7 @@ class RequirementForm(ModelForm):
             data['horizontal_resolution'] = self._create_metric(
                 **horizontal_resolution_data)
             data['vertical_resolution'] = self._create_metric(**vertical_resolution_data)
-            return Requirement.objects.create(**data)
+            return models.Requirement.objects.create(**data)
         else:
             self._update_metric(self.instance.uncertainty, **uncertainty_data)
             self._update_metric(self.instance.frequency, **frequency_data)
@@ -106,12 +105,12 @@ class RequirementForm(ModelForm):
                                 **horizontal_resolution_data)
             self._update_metric(self.instance.vertical_resolution,
                                 **vertical_resolution_data)
-            return Requirement.objects.filter(pk=self.instance.pk).update(**data)
+            return models.Requirement.objects.filter(pk=self.instance.pk).update(**data)
 
 
-class DataGroupForm(ModelForm):
+class DataGroupForm(forms.ModelForm):
     class Meta:
-        model = DataGroup
+        model = models.DataGroup
         auto_created = True
         fields = ['name', 'note', 'frequency', 'coverage', 'timeliness',
                   'policy', 'data_type', 'data_format', 'quality',

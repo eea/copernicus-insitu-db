@@ -102,6 +102,10 @@ class DataResponsibleDoc(DocType):
             'description'
         ]
 
+    def get_name_display(self):
+        url = reverse('responsible:detail', kwargs={'pk': self.id})
+        return '<a href="{url}">{name}</a>'.format(url=url, name=self.name)
+
     @staticmethod
     def update_index(sender, **kwargs):
         data_responsible = sender.data_responsible

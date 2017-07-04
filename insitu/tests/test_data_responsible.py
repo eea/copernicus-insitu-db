@@ -32,3 +32,9 @@ class DataResponsibleTests(base.CreateCheckTestCase):
         base.DataResponsibleFactory()
         resp = self.client.get(reverse('responsible:list'))
         self.assertTemplateUsed(resp, 'data_responsible/list.html')
+
+    def test_detail_responsible(self):
+        responsible = base.DataResponsibleFactory()
+        resp = self.client.get(reverse('responsible:detail',
+                                       kwargs={'pk': responsible.pk}))
+        self.assertEqual(resp.context['responsible'], responsible)
