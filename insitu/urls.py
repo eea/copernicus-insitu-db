@@ -73,6 +73,28 @@ requirement_patterns = [
         name='add'),
 ]
 
+data_group_patterns = [
+    url(r'^list/$',
+        views.DataGroupList.as_view(),
+        name='list'),
+
+    url(r'^data/$',
+        views.DataGroupListJson.as_view(),
+        name='json'),
+
+    url(r'^add/$',
+        views.DataGroupAdd.as_view(),
+        name='add'),
+
+    url(r'^(?P<pk>[0-9]+)/$',
+        views.DataGroupDetail.as_view(),
+        name='detail'),
+
+    url(r'^(?P<pk>[0-9]+)/edit$',
+        views.DataGroupEdit.as_view(),
+        name='edit'),
+]
+
 urlpatterns = [
     url(r'^$',
         views.HomeView.as_view(),
@@ -84,4 +106,7 @@ urlpatterns = [
     url(r'^requirement/',
         include(requirement_patterns,
                 namespace='requirement')),
+    url(r'^data-group/',
+        include(data_group_patterns,
+                namespace='data_group')),
 ]

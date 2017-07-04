@@ -3,7 +3,7 @@ from django.core.urlresolvers import reverse
 from django_elasticsearch_dsl import DocType, Index, fields
 from elasticsearch_dsl.search import Search
 
-from insitu.models import Product, Requirement
+from insitu.models import DataGroup, Product, Requirement
 
 
 insitu = Index('insitu')
@@ -59,4 +59,27 @@ class RequirementDoc(DocType):
         fields = [
             'id',
             'note',
+        ]
+
+
+@insitu.doc_type
+class DataGroupDoc(DocType):
+    name = fields.KeywordField()
+    frequency = fields.KeywordField(attr='frequency.name')
+    coverage = fields.KeywordField(attr='coverage.name')
+    timeliness = fields.KeywordField(attr='timeliness.name')
+    policy = fields.KeywordField(attr='policy.name')
+    data_type = fields.KeywordField(attr='data_type.name')
+    data_format = fields.KeywordField(attr='data_format.name')
+    quality = fields.KeywordField(attr='quality.name')
+
+    def get_name_display(self):
+        url = reverse('data_group:detail', kwargs={'pk': self.id})
+        return '<a href="{url}">{name}</a>'.format(url=url, name=self.name)
+
+    class Meta:
+        model = DataGroup
+        fields = [
+            'id',
+            'note'
         ]

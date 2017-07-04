@@ -1,4 +1,4 @@
-from factory import SubFactory, RelatedFactory
+from factory import SubFactory, RelatedFactory, post_generation
 from factory.django import DjangoModelFactory
 
 from insitu import models
@@ -107,9 +107,9 @@ class DataGroupFactory(DjangoModelFactory):
     data_type = SubFactory(factories.DataTypeFactory)
     data_format = SubFactory(factories.DataFormatFactory)
     quality = SubFactory(factories.QualityFactory)
-    inspire_themes = SubFactory(factories.InspireThemeFactory)
-    requirements = SubFactory(RequirementFactory)
-    responsibles = SubFactory(DataResponsibleFactory)
+    inspire_themes = RelatedFactory(factories.InspireThemeFactory)
+    # requirements = SubFactory(RequirementFactory)
+    # responsibles = SubFactory(DataResponsibleFactory)
 
     class Meta:
         model = models.DataGroup

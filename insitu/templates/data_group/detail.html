@@ -1,0 +1,96 @@
+{% extends '_layout.html' %}
+{% load static %}
+
+{% block style %}
+  <link rel="stylesheet" type="text/css"
+        href="{% static 'css/jquery.dataTables.min.css' %}"/>
+{% endblock %}
+
+{% block title %}
+  Data group details
+{% endblock %}
+
+{% block content %}
+  <div class="row">
+    <h1 class="col-sm-12">
+      <span>Data group details</span>
+      <span class="pull-right">
+      <a class="btn btn-primary pull-right" href="{% url 'data_group:edit' data_group.pk %}">Edit data group</a>
+      </span>
+    </h1>
+  </div>
+
+  <div class="row">
+    <table id="detail-table" class="table borderless col-sm-12">
+      <tbody>
+      <tr class="row">
+        <th class="col-md-4 col-sm-6">Name</th>
+        <td class="col-md-8 col-sm-6">{{ data_group.name }}</td>
+      </tr>
+
+      <tr class="row">
+        <th class="col-md-4 col-sm-6">Note</th>
+        <td class="col-md-8 col-sm-6">{{ data_group.note }}</td>
+      </tr>
+
+      <tr class="row">
+        <th class="col-md-4 col-sm-6">Frequency</th>
+        <td class="col-md-8 col-sm-6">{{ data_group.frequency }}</td>
+      </tr>
+
+      <tr class="row">
+        <th class="col-md-4 col-sm-6">Coverage</th>
+        <td class="col-md-8 col-sm-6">{{ data_group.coverage }}</td>
+      </tr>
+
+      <tr class="row">
+        <th class="col-md-4 col-sm-6">Timeliness</th>
+        <td class="col-md-8 col-sm-6">{{ data_group.timeliness }}</td>
+      </tr>
+
+      <tr class="row">
+        <th class="col-md-4 col-sm-6">Policy</th>
+        <td class="col-md-8 col-sm-6">{{ data_group.policy }}</td>
+      </tr>
+
+      <tr class="row">
+        <th class="col-md-4 col-sm-6">Data type</th>
+        <td class="col-md-8 col-sm-6">{{ data_group.data_type }}</td>
+      </tr>
+
+      <tr class="row">
+        <th class="col-md-4 col-sm-6">Data format</th>
+        <td class="col-md-8 col-sm-6">{{ data_group.data_format }}</td>
+      </tr>
+
+      <tr class="row">
+        <th class="col-md-4 col-sm-6">Quality</th>
+        <td class="col-md-8 col-sm-6">{{ data_group.quality }}</td>
+      </tr>
+
+      {% if data_group.inspire_themes.all|length %}
+        <tr class="row">
+          <th class="col-md-4 col-sm-6">Inspire themes</th>
+          <td class="col-md-8 col-sm-6">
+            {% for inspire_theme in data_group.inspire_themes.all %}
+              <p>{{ inspire_theme }}</p>
+            {% endfor %}
+          </td>
+        </tr>
+      {% endif %}
+
+      {% if data_group.essential_climate_variables.all|length %}
+        <tr class="row">
+          <th class="col-md-4 col-sm-6">Essential climate variables</th>
+          <td class="col-md-8 col-sm-6">
+            {% for essential_climate_variable in data_group.essential_climate_variables.all %}
+              <p>{{ essential_climate_variable }}</p>
+            {% endfor %}
+          </td>
+        </tr>
+      {% endif %}
+
+      </tbody>
+    </table>
+  </div>
+{% endblock %}

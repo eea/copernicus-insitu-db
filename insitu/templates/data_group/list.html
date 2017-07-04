@@ -1,0 +1,166 @@
+{% extends '_layout.html' %}
+{% load static %}
+
+{% block style %}
+  <link rel="stylesheet" type="text/css"
+        href="{% static 'css/jquery.dataTables.min.css' %}"/>
+{% endblock %}
+
+{% block title %}
+  Data groups
+{% endblock %}
+
+{% block content %}
+
+  <div class="row">
+    <h1 class="col-sm-12">
+      <span>Data groups</span>
+      <span class="pull-right">
+        <a class="btn btn-primary pull-right"
+           href="{% url 'data_group:add' %}">New data group</a>
+      </span>
+    </h1>
+  </div>
+
+  <div class="row">
+    <div class="col-lg-10">
+      <table id="data_groups" width="100%"
+             class="table table-condensed table-bordered table-hover">
+        <thead>
+        <tr>
+          <th>Name</th>
+          <th>Frequency</th>
+          <th>Coverage</th>
+          <th>Timeliness</th>
+          <th>Policy</th>
+          <th>Data type</th>
+          <th>Data format</th>
+          <th>Quality</th>
+        </tr>
+        </thead>
+      </table>
+    </div>
+
+   <div class="col-lg-2">
+      <div class="panel panel-default">
+        <div class="panel-heading">Filters</div>
+        <div class="panel-body">
+
+          <div class="form-group">
+            <label for="frequency">Frequency:</label>
+            <select id="frequency" class="form-control">
+              {% for frequency in frequencies %}
+                <option value="{{ frequency }}">{{ frequency }}</option>
+              {% endfor %}
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="coverage">Coverage:</label>
+            <select id="coverage" class="form-control">
+              {% for coverage in coverages %}
+                <option value="{{ coverage }}">{{ coverage }}</option>
+              {% endfor %}
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="timeliness">Timeliness:</label>
+            <select id="timeliness" class="form-control">
+              {% for timeliness in timelinesses %}
+                <option value="{{ timeliness }}">{{ timeliness }}</option>
+              {% endfor %}
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="policy">Policy:</label>
+            <select id="policy" class="form-control">
+              {% for policy in policies %}
+                <option value="{{ policy }}">{{ policy }}</option>
+              {% endfor %}
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="data_type">Data type:</label>
+            <select id="data_type" class="form-control">
+              {% for data_type in data_types %}
+                <option value="{{ data_type }}">{{ data_type }}</option>
+              {% endfor %}
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="data_format">Data format:</label>
+            <select id="data_format" class="form-control">
+              {% for data_format in data_formats %}
+                <option value="{{ data_format }}">{{ data_format }}</option>
+              {% endfor %}
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="quality">Quality:</label>
+            <select id="quality" class="form-control">
+              {% for quality in qualities %}
+                <option value="{{ quality }}">{{ quality }}</option>
+              {% endfor %}
+            </select>
+          </div>
+
+          <div class="form-group">
+            <button type="button" class="btn btn-primary"
+                    id="filter-btn">Filter
+            </button>
+          </div>
+          <div class="form-group">
+            <button type="button" class="btn btn-default"
+                    id="reset-btn">Reset all filters
+            </button>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}
+
+{% block scripts %}
+  <script src="{% static 'js/jquery-3.2.1.min.js' %}"></script>
+  <script src="{% static 'js/jquery.dataTables.min.js' %}"></script>
+  <script src="{% static 'js/jquery.dataTables.bootstrap.min.js' %}"></script>
+  <script src="{% static 'js/fnFilterOnReturn.js' %}"></script>
+  <script>
+    $(document).ready(function () {
+      var $table = $('#data_groups').dataTable({
+        "processing": true,
+        "serverSide": true,
+        "ajax": {
+          "url": "{% url 'data_group:json' %}",
+          "data": function (d) {
+            d.name = $('#name').val();
+            d.frequency = $('#frequency').val();
+            d.coverage = $('#coverage').val();
+            d.timeliness = $('#timeliness').val();
+            d.policy = $('#policy').val();
+            d.data_type = $('#data_type').val();
+            d.data_format = $('#data_format').val();
+            d.quality = $('#quality').val();
+          }
+        }
+      }).fnFilterOnReturn();
+
+      $('#filter-btn').on('click', function () {
+        var table = $table.DataTable();
+        table.ajax.reload();
+      });
+
+      $('#reset-btn').on('click', function () {
+        $('#name,#frequency,#coverage,#timeliness,#policy,#data_type,#data_format,#quality').val('All');
+        var table = $table.DataTable();
+        table.ajax.reload();
+      });
+    });
+  </script>
+{% endblock %}
