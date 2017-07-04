@@ -129,7 +129,9 @@ class DataResponsible(models.Model):
     name = models.CharField(max_length=100)
     description = models.TextField(blank=True)
     is_network = models.BooleanField(default=False)
-    members = models.ManyToManyField('self', blank=True)
+    networks = models.ManyToManyField('self', blank=True,
+                                      related_name='members',
+                                      symmetrical=False)
     countries = models.ManyToManyField(pickmodels.Country)
 
     def __str__(self):

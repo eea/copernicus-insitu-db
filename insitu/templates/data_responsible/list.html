@@ -14,7 +14,14 @@
 
   <div class="row">
     <h1 class="col-sm-12">
-      <span>Data responsibles </span>
+      <span class="">Data responsibles </span>
+      <span class="pull-right">
+        <a class="btn btn-primary pull-right"
+           href="{% url 'responsible:add_network' %}">New data responsible network</a>
+        <br>
+        <a class="btn btn-primary pull-right"
+           href="{% url 'responsible:add_non_network' %}">New data responsible</a>
+      </span>
     </h1>
   </div>
 

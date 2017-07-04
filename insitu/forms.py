@@ -115,3 +115,41 @@ class DataGroupForm(forms.ModelForm):
         fields = ['name', 'note', 'frequency', 'coverage', 'timeliness',
                   'policy', 'data_type', 'data_format', 'quality',
                   'inspire_themes', 'essential_climate_variables']
+
+
+class DataResponsibleNetworkForm(forms.ModelForm):
+    is_network = forms.BooleanField(initial=True,
+                                    widget=forms.HiddenInput)
+
+    class Meta:
+        model = models.DataResponsible
+        fields = ['name', 'description', 'countries', 'is_network']
+
+
+class DataResponsibleDetailsForm(forms.ModelForm):
+    data_responsible = forms.ModelChoiceField(
+        widget=forms.HiddenInput,
+        queryset=models.DataResponsible.objects.filter(is_network=False),
+        required=False)
+
+    class Meta:
+        model = models.DataResponsibleDetails
+        fields = ['acronym', 'website', 'address', 'phone', 'email', 'contact_person',
+                  'responsible_type', 'data_responsible']
+
+
+class DataResponsibleNonNetworkForm(forms.ModelForm):
+    networks = forms.ModelMultipleChoiceField(
+        queryset=models.DataResponsible.objects.filter(is_network=True),
+        label='Networks')
+
+    class Meta:
+        model = models.DataResponsible
+        fields = ['name', 'description', 'countries', 'networks']
+
+    def save(self, commit=True):
+        instance = super().save(commit)
+        for pk in self.data['networks']:
+            network = models.DataResponsible.objects.get(pk=pk)
+            instance.networks.add(network)
+        return instance

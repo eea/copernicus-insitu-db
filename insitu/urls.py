@@ -107,6 +107,14 @@ responsible_patterns = [
     url(r'^(?P<pk>[0-9]+)/$',
         views.DataResponsibleDetail.as_view(),
         name='detail'),
+
+    url(r'^add-network/$',
+        views.DataResponsibleAddNetwork.as_view(),
+        name='add_network'),
+
+    url(r'^add/$',
+        views.DataResponsibleAddNonNetwork.as_view(),
+        name='add_non_network'),
 ]
 
 urlpatterns = [

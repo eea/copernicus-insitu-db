@@ -2,7 +2,6 @@ from django.core.urlresolvers import reverse
 
 from insitu import models
 from insitu.tests import base
-from insitu.tests.base.testcase import CreateCheckTestCase
 from insitu.utils import ALL_OPTIONS_LABEL
 
 
