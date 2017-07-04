@@ -16,7 +16,6 @@ class DataGroupList(TemplateView):
 
     def get_context_data(self):
         context = super(DataGroupList, self).get_context_data()
-        names = get_choices('name', model_cls=models.DataGroup)
         frequencies = get_choices('name', model_cls=pickmodels.Frequency)
         coverages = get_choices('name', model_cls=pickmodels.Coverage)
         timelinesses = get_choices('name', model_cls=pickmodels.Timeliness)
@@ -25,7 +24,6 @@ class DataGroupList(TemplateView):
         data_formats = get_choices('name', model_cls=pickmodels.DataFormat)
         qualities = get_choices('name', model_cls=pickmodels.Quality)
         context.update({
-            'names': names,
             'frequencies': frequencies,
             'coverages': coverages,
             'timelinesses': timelinesses,
@@ -41,7 +39,7 @@ class DataGroupListJson(ESDatatableView):
     columns = ['name', 'frequency', 'coverage', 'timeliness', 'policy',
                'data_type', 'data_format', 'quality']
     order_columns = columns
-    filters = ['name', 'frequency', 'coverage', 'timeliness', 'policy',
+    filters = ['frequency', 'coverage', 'timeliness', 'policy',
                'data_type', 'data_format', 'quality']
     document = documents.DataGroupDoc
 
