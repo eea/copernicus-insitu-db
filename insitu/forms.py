@@ -126,13 +126,15 @@ class DataRequirementBaseForm(forms.ModelForm):
 
 
 class DataRequirementForm(DataRequirementBaseForm):
-    data_group = forms.ModelChoiceField(disabled=True,
-                               queryset=models.DataGroup.objects.all())
+    data_group = forms.ModelChoiceField(
+        disabled=True,
+        queryset=models.DataGroup.objects.all())
 
 
 class RequirementDataRequirementForm(DataRequirementBaseForm):
-    requirement = forms.ModelChoiceField(disabled=True,
-                                   queryset=models.Requirement.objects.all())
+    requirement = forms.ModelChoiceField(
+        disabled=True,
+        queryset=models.Requirement.objects.all())
 
 
 class DataRequirementEditForm(DataRequirementForm,
