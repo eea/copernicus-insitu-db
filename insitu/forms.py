@@ -118,6 +118,28 @@ class DataGroupForm(forms.ModelForm):
                   'inspire_themes', 'essential_climate_variables']
 
 
+class DataRequirementBaseForm(forms.ModelForm):
+    class Meta:
+        model = models.DataRequirement
+        fields = ['data_group', 'requirement', 'information_costs', 'handling_costs',
+                  'note', 'level_of_compliance']
+
+
+class DataRequirementForm(DataRequirementBaseForm):
+    data_group = forms.ModelChoiceField(disabled=True,
+                               queryset=models.DataGroup.objects.all())
+
+
+class RequirementDataRequirementForm(DataRequirementBaseForm):
+    requirement = forms.ModelChoiceField(disabled=True,
+                                   queryset=models.Requirement.objects.all())
+
+
+class DataRequirementEditForm(DataRequirementForm,
+                                 RequirementDataRequirementForm):
+    pass
+
+
 class DataResponsibleNetworkForm(forms.ModelForm):
     is_network = forms.BooleanField(initial=True,
                                     widget=forms.HiddenInput)

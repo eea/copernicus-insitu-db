@@ -47,6 +47,19 @@ product_patterns = [
                 namespace='requirement')),
 ]
 
+data_requirement_patterns = [
+    url(r'^add/$',
+        views.DataRequirementAdd.as_view(),
+        name='add'),
+
+    url(r'^(?P<pk>[0-9]+)/$',
+        views.DataRequirementEdit.as_view(),
+        name='edit'),
+
+    url(r'^(?P<pk>[0-9]+)/delete$',
+        views.DataRequirementDelete.as_view(),
+        name='delete'),
+]
 
 requirement_patterns = [
     url(r'^list/$',
@@ -71,6 +84,10 @@ requirement_patterns = [
     url(r'^add/$',
         views.RequirementAdd.as_view(),
         name='add'),
+
+    url(r'^(?P<requirement_pk>[0-9]+)/data-group/',
+        include(data_requirement_patterns,
+                namespace='data_group')),
 ]
 
 data_group_data_responsible_patterns = [
@@ -112,6 +129,10 @@ data_group_patterns = [
     url(r'^(?P<group_pk>[0-9]+)/responsible/',
         include(data_group_data_responsible_patterns,
                 namespace='responsible')),
+
+    url(r'^(?P<data_group_pk>[0-9]+)/requirement/',
+        include(data_requirement_patterns,
+                namespace='requirement')),
 ]
 
 responsible_patterns = [
