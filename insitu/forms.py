@@ -1,4 +1,5 @@
 from django import forms
+
 from insitu import models
 from picklists.models import Dissemination, Quality
 
@@ -164,15 +165,17 @@ class DataResponsibleRelationBaseForm(forms.ModelForm):
 
 
 class DataResponsibleRelationResponsibleForm(DataResponsibleRelationBaseForm):
-    responsible = forms.ModelChoiceField(disabled=True,
-                                         queryset=models.DataResponsible.objects.all())
+    responsible = forms.ModelChoiceField(
+        disabled=True,
+        queryset=models.DataResponsible.objects.all())
 
 
 class DataResponsibleRelationGroupForm(DataResponsibleRelationBaseForm):
-    data_group = forms.ModelChoiceField(disabled=True,
-                                        queryset=models.DataGroup.objects.all())
+    data_group = forms.ModelChoiceField(
+        disabled=True,
+        queryset=models.DataGroup.objects.all())
 
 
 class DataResponsibleRelationEditForm(DataResponsibleRelationResponsibleForm,
-                                       DataResponsibleRelationGroupForm):
+                                      DataResponsibleRelationGroupForm):
     pass

@@ -92,8 +92,10 @@ class DataResponsibleDoc(DocType):
     address = fields.KeywordField(attr='get_elastic_search_data.address')
     phone = fields.KeywordField(attr='get_elastic_search_data.phone')
     email = fields.KeywordField(attr='get_elastic_search_data.email')
-    contact_person = fields.KeywordField(attr='get_elastic_search_data.contact_person')
-    responsible_type = fields.KeywordField(attr='get_elastic_search_data.responsible_type')
+    contact_person = fields.KeywordField(
+        attr='get_elastic_search_data.contact_person')
+    responsible_type = fields.KeywordField(
+        attr='get_elastic_search_data.responsible_type')
 
     class Meta:
         model = DataResponsible
