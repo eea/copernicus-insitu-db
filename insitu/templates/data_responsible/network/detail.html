@@ -1,7 +1,13 @@
 {% extends '_layout.html' %}
+{% load static %}
 
 {% block title %}
   Data Responsible Network
+{% endblock %}
+
+{% block style %}
+  <link rel="stylesheet" type="text/css"
+        href="{% static 'css/jquery.dataTables.min.css' %}"/>
 {% endblock %}
 
 {% block content %}
@@ -51,4 +57,24 @@
     </table>
   </div>
 
+  {% include 'data_responsible/_data_group_table.html' %}
+
+{% endblock %}
+
+{% block scripts %}
+  <script src="{% static 'js/jquery-3.2.1.min.js' %}"></script>
+  <script src="{% static 'js/bootstrap.min.js' %}"></script>
+  <script src="{% static 'js/jquery.dataTables.min.js' %}"></script>
+  <script src="{% static 'js/jquery.dataTables.bootstrap.min.js' %}"></script>
+  <script>
+    $(function () {
+
+      var table = $('#groups').dataTable({
+        columnDefs: [
+          { targets: 'no-sort',
+            orderable: false }
+        ]
+      });
+    });
+  </script>
 {% endblock %}

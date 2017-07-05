@@ -73,6 +73,21 @@ requirement_patterns = [
         name='add'),
 ]
 
+data_group_data_responsible_patterns = [
+    url(r'^add/$',
+        views.DataGroupDataResponsibleAdd.as_view(),
+        name='add'),
+
+    url(r'^(?P<pk>[0-9]+)/$',
+        views.DataGroupDataResponsibleEdit.as_view(),
+        name='edit'),
+
+    url(r'^(?P<pk>[0-9]+)/delete$',
+        views.DataGroupDataResponsibleDelete.as_view(),
+        name='delete'),
+]
+
+
 data_group_patterns = [
     url(r'^list/$',
         views.DataGroupList.as_view(),
@@ -93,6 +108,10 @@ data_group_patterns = [
     url(r'^(?P<pk>[0-9]+)/edit$',
         views.DataGroupEdit.as_view(),
         name='edit'),
+
+    url(r'^(?P<group_pk>[0-9]+)/responsible/',
+        include(data_group_data_responsible_patterns,
+                namespace='responsible')),
 ]
 
 responsible_patterns = [
@@ -123,6 +142,10 @@ responsible_patterns = [
     url(r'^(?P<pk>[0-9]+)/edit/$',
         views.DataResponsibleEditNonNetwork.as_view(),
         name='edit_non_network'),
+
+    url(r'^(?P<responsible_pk>[0-9]+)/group/',
+        include(data_group_data_responsible_patterns,
+                namespace='group')),
 ]
 
 urlpatterns = [

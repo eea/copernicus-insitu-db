@@ -155,3 +155,24 @@ class DataResponsibleNonNetworkForm(forms.ModelForm):
                 network = models.DataResponsible.objects.get(pk=pk)
                 instance.networks.add(network)
         return instance
+
+
+class DataResponsibleRelationBaseForm(forms.ModelForm):
+    class Meta:
+        model = models.DataResponsibleRelation
+        fields = ['data_group', 'responsible', 'role']
+
+
+class DataResponsibleRelationResponsibleForm(DataResponsibleRelationBaseForm):
+    responsible = forms.ModelChoiceField(disabled=True,
+                                         queryset=models.DataResponsible.objects.all())
+
+
+class DataResponsibleRelationGroupForm(DataResponsibleRelationBaseForm):
+    data_group = forms.ModelChoiceField(disabled=True,
+                                        queryset=models.DataGroup.objects.all())
+
+
+class DataResponsibleRelationEditForm(DataResponsibleRelationResponsibleForm,
+                                       DataResponsibleRelationGroupForm):
+    pass
