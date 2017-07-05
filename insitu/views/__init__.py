@@ -3,7 +3,7 @@ from .product import *
 from .requirement import *
 from .data_group import *
 from .data_responsible import *
-from .data_group_data_responsible import *
+from .data_responsible_relation import *
 
 from django.views.generic import TemplateView
 
