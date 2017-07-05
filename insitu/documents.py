@@ -1,10 +1,9 @@
 from django.core.urlresolvers import reverse
-
 from django_elasticsearch_dsl import DocType, Index, fields
 from elasticsearch_dsl.search import Search
 
-from insitu.models import DataGroup, Product, Requirement
-
+from insitu.models import Product, Requirement, DataResponsible, DataGroup
+from insitu.signals import data_resposible_updated
 
 insitu = Index('insitu')
 
@@ -83,3 +82,36 @@ class DataGroupDoc(DocType):
             'id',
             'note'
         ]
+
+
+@insitu.doc_type
+class DataResponsibleDoc(DocType):
+    name = fields.KeywordField()
+    is_network = fields.BooleanField()
+    acronym = fields.KeywordField(attr='get_elastic_search_data.acronym')
+    address = fields.KeywordField(attr='get_elastic_search_data.address')
+    phone = fields.KeywordField(attr='get_elastic_search_data.phone')
+    email = fields.KeywordField(attr='get_elastic_search_data.email')
+    contact_person = fields.KeywordField(
+        attr='get_elastic_search_data.contact_person')
+    responsible_type = fields.KeywordField(
+        attr='get_elastic_search_data.responsible_type')
+
+    class Meta:
+        model = DataResponsible
+        fields = [
+            'id',
+            'description'
+        ]
+
+    def get_name_display(self):
+        url = reverse('responsible:detail', kwargs={'pk': self.id})
+        return '<a href="{url}">{name}</a>'.format(url=url, name=self.name)
+
+    @staticmethod
+    def update_index(sender, **kwargs):
+        data_responsible = sender.data_responsible
+        document = DataResponsibleDoc.get(id=data_responsible.id)
+        document.update(data_responsible)
+
+data_resposible_updated.connect(DataResponsibleDoc.update_index)

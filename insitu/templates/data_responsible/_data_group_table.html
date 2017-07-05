@@ -1,0 +1,38 @@
+<div class="row">
+  <h3 class="col-sm-12">
+    <span>Data Groups</span>
+    <span class="pull-right">
+        <a class="btn btn-primary pull-right"
+           href="{% url 'responsible:group:add' responsible.pk %}">Add data group</a>
+      </span>
+  </h3>
+  <div class="col-sm-12">
+    <table id="groups"
+           class="table table-condensed table-bordered table-hover">
+      <thead>
+      <tr>
+        <th>Data group</th>
+        <th>Role</th>
+        <th></th>
+        <th></th>
+      </tr>
+      </thead>
+      <tbody>
+      {% for rel in responsible.dataresponsiblerelation_set.all %}
+        <tr>
+          <td>
+            <a href="{% url 'data_group:detail' rel.data_group.pk %}">{{ rel.data_group.name }}</a>
+          </td>
+          <td>{{ rel.get_role_display }}</td>
+          <td>
+            <a href="{% url 'responsible:group:edit' responsible_pk=responsible.pk pk=rel.pk %}">Edit</a>
+          </td>
+          <td>
+            <a href="{% url 'responsible:group:delete' responsible_pk=responsible.pk pk=rel.pk %}">Delete</a>
+          </td>
+        </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>

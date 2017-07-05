@@ -2,7 +2,6 @@ from django.core.urlresolvers import reverse
 
 from insitu import models
 from insitu.tests import base
-from insitu.tests.base.testcase import CreateCheckTestCase
 from insitu.utils import ALL_OPTIONS_LABEL
 
 
@@ -118,7 +117,6 @@ class ProductTests(base.CreateCheckTestCase):
         data = resp.json()
         self.assertEqual(len(data['components']), 1)
         self.assertTrue(ALL_OPTIONS_LABEL in data['components'])
-
 
     def test_product_component_filter_entity_and_service(self):
         service_1 = base.CopernicusServiceFactory(name="Special service")

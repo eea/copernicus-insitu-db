@@ -89,8 +89,72 @@
           </td>
         </tr>
       {% endif %}
-
       </tbody>
     </table>
   </div>
+  <div class="row">
+    <h3 class="col-sm-12">
+      <span>Data Responsibles</span>
+      <span class="pull-right">
+        <a class="btn btn-primary pull-right"
+           href="{% url 'data_group:responsible:add' data_group.pk %}">Add data
+          responsible</a>
+      </span>
+    </h3>
+    <div class="col-sm-12">
+      <table id="responsibles"
+             class="table table-condensed table-bordered table-hover">
+        <thead>
+          <tr>
+            <th>Data responsible</th>
+            <th>Is network</th>
+            <th>Role</th>
+            <th></th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+        {% for rel in data_group.dataresponsiblerelation_set.all %}
+          <tr>
+            <td>
+              <a href="{% url 'responsible:detail' rel.responsible.pk %}">{{ rel.responsible.name }}</a>
+            </td>
+            <td>
+              {% if rel.responsible.is_network %}
+                <span class='glyphicon glyphicon-ok-circle text-success'></span>
+              {% else %}
+                <span class='glyphicon glyphicon-remove-circle text-danger'></span>
+              {% endif %}
+            </td>
+            <td>{{ rel.get_role_display }}</td>
+            <td>
+              <a href="{% url 'data_group:responsible:edit' group_pk=data_group.pk pk=rel.pk %}">Edit</a>
+            </td>
+            <td>
+              <a href="{% url 'data_group:responsible:delete' group_pk=data_group.pk pk=rel.pk %}">Delete</a>
+            </td>
+          </tr>
+        {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+{% endblock %}
+
+{% block scripts %}
+  <script src="{% static 'js/jquery-3.2.1.min.js' %}"></script>
+  <script src="{% static 'js/bootstrap.min.js' %}"></script>
+  <script src="{% static 'js/jquery.dataTables.min.js' %}"></script>
+  <script src="{% static 'js/jquery.dataTables.bootstrap.min.js' %}"></script>
+  <script>
+    $(function () {
+
+      var table = $('#responsibles').dataTable({
+        columnDefs: [
+          { targets: 'no-sort',
+            orderable: false }
+        ]
+      });
+    });
+  </script>
 {% endblock %}

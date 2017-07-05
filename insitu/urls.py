@@ -73,6 +73,21 @@ requirement_patterns = [
         name='add'),
 ]
 
+data_group_data_responsible_patterns = [
+    url(r'^add/$',
+        views.DataGroupDataResponsibleAdd.as_view(),
+        name='add'),
+
+    url(r'^(?P<pk>[0-9]+)/$',
+        views.DataGroupDataResponsibleEdit.as_view(),
+        name='edit'),
+
+    url(r'^(?P<pk>[0-9]+)/delete$',
+        views.DataGroupDataResponsibleDelete.as_view(),
+        name='delete'),
+]
+
+
 data_group_patterns = [
     url(r'^list/$',
         views.DataGroupList.as_view(),
@@ -93,6 +108,44 @@ data_group_patterns = [
     url(r'^(?P<pk>[0-9]+)/edit$',
         views.DataGroupEdit.as_view(),
         name='edit'),
+
+    url(r'^(?P<group_pk>[0-9]+)/responsible/',
+        include(data_group_data_responsible_patterns,
+                namespace='responsible')),
+]
+
+responsible_patterns = [
+    url(r'^list/$',
+        views.DataResponsibleList.as_view(),
+        name='list'),
+
+    url(r'^data/$',
+        views.DataResponsibleListJson.as_view(),
+        name='json'),
+
+    url(r'^(?P<pk>[0-9]+)/$',
+        views.DataResponsibleDetail.as_view(),
+        name='detail'),
+
+    url(r'^add-network/$',
+        views.DataResponsibleAddNetwork.as_view(),
+        name='add_network'),
+
+    url(r'^(?P<pk>[0-9]+)/edit-network/$',
+        views.DataResponsibleEditNetwork.as_view(),
+        name='edit_network'),
+
+    url(r'^add/$',
+        views.DataResponsibleAddNonNetwork.as_view(),
+        name='add_non_network'),
+
+    url(r'^(?P<pk>[0-9]+)/edit/$',
+        views.DataResponsibleEditNonNetwork.as_view(),
+        name='edit_non_network'),
+
+    url(r'^(?P<responsible_pk>[0-9]+)/group/',
+        include(data_group_data_responsible_patterns,
+                namespace='group')),
 ]
 
 urlpatterns = [
@@ -103,10 +156,16 @@ urlpatterns = [
     url(r'^product/',
         include(product_patterns,
                 namespace='product')),
+
     url(r'^requirement/',
         include(requirement_patterns,
                 namespace='requirement')),
+
     url(r'^data-group/',
         include(data_group_patterns,
                 namespace='data_group')),
+
+    url(r'^responsible/',
+        include(responsible_patterns,
+                namespace='responsible')),
 ]

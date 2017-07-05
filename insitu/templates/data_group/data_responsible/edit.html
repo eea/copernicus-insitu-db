@@ -1,0 +1,45 @@
+{% extends '_layout.html' %}
+{% load bootstrap3 %}
+{% load static %}
+
+{% block title %}
+  Edit {{ rel.data_group.name }} - {{ rel.responsible.name }} relation
+{% endblock %}
+
+{% block style %}
+  <link rel="stylesheet" type="text/css"
+        href="{% static 'css/select2.min.css' %}"/>
+  <link rel="stylesheet" type="text/css"
+        href="{% static 'css/select2-bootstrap.min.css' %}"/>
+{% endblock %}
+
+{% block content %}
+
+  <div class="row">
+    <h1>
+      <p class="col-sm-12">Edit relation</p>
+      <p class="col-sm-12">
+        <small>{{ rel.data_group.name }} - {{ rel.responsible.name }}</small>
+      </p>
+    </h1>
+  </div>
+
+  <form action="" method="POST">
+    {% csrf_token %}
+    {% bootstrap_form form %}
+    <input type="hidden" name="data_group" value="{{ rel.data_group.pk }}" />
+    <input class="btn btn-primary" type="submit" value="Save" />
+    <a href="{{ url }}"
+       class="btn btn-default">Cancel</a>
+  </form>
+{% endblock %}
+
+{% block scripts %}
+  <script src="{% static 'js/jquery-3.2.1.min.js' %}"></script>
+  <script src="{% static 'js/select2.min.js' %}"></script>
+  <script>
+    $(document).ready(function () {
+      $('select').select2();
+    });
+  </script>
+{% endblock %}

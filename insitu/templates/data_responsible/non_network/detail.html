@@ -1,0 +1,115 @@
+{% extends '_layout.html' %}
+{% load static %}
+
+{% block title %}
+  Data Responsible
+{% endblock %}
+
+{% block style %}
+  <link rel="stylesheet" type="text/css"
+        href="{% static 'css/jquery.dataTables.min.css' %}"/>
+{% endblock %}
+
+{% block content %}
+  <div class="row">
+    <h1 class="col-sm-12">
+      <span>Data responsible </span>
+      <span class="pull-right">
+      <a class="btn btn-primary pull-right"
+         href="{% url 'responsible:edit_non_network' responsible.pk %}">
+        Edit data responsible
+      </a>
+      </span>
+    </h1>
+  </div>
+
+  <div class="row">
+    <table id="detail-table" class="table borderless col-sm-12">
+      <tbody>
+      <tr class="row">
+        <th class="col-md-4 col-sm-6">Name</th>
+        <td class="col-md-8 col-sm-6">{{ responsible.name }}</td>
+      </tr>
+
+      <tr class="row">
+        <th class="col-md-4 col-sm-6">Description</th>
+        <td class="col-md-8 col-sm-6">{{ responsible.description }}</td>
+      </tr>
+
+      <tr class="row">
+        <th class="col-md-4 col-sm-6">Countries</th>
+        <td class="col-md-8 col-sm-6">
+          {% for country in responsible.countries.all %}
+            <span class="col-sm-12 no-padding-left">{{ country }}</span>
+          {% endfor %}
+        </td>
+      </tr>
+
+      <tr class="row">
+        <th class="col-md-4 col-sm-6">Networks</th>
+        <td class="col-md-8 col-sm-6">
+          {% for network in responsible.networks.all %}
+            <span class="col-sm-12 no-padding-left">
+                <a
+                  href="{% url 'responsible:detail' network.pk %}">{{ network.name }}</a>
+              </span>
+          {% empty %}
+            <span class="col-sm-12 no-padding-left">-</span>
+          {% endfor %}
+        </td>
+      </tr>
+      <tr class="row">
+        <th class="col-md-4 col-sm-6">Acronym</th>
+        <td class="col-md-8 col-sm-6">{{ responsible.details.first.acronym }}</td>
+      </tr>
+      <tr class="row">
+        <th class="col-md-4 col-sm-6">Website</th>
+        <td class="col-md-8 col-sm-6">{{ responsible.details.first.website }}</td>
+      </tr>
+      <tr class="row">
+        <th class="col-md-4 col-sm-6">Address</th>
+        <td class="col-md-8 col-sm-6">{{ responsible.details.first.address }}</td>
+      </tr>
+      <tr class="row">
+        <th class="col-md-4 col-sm-6">Phone</th>
+        <td class="col-md-8 col-sm-6">{{ responsible.details.first.phone }}</td>
+      </tr>
+      <tr class="row">
+        <th class="col-md-4 col-sm-6">Email</th>
+        <td class="col-md-8 col-sm-6">{{ responsible.details.first.email }}</td>
+      </tr>
+      <tr class="row">
+        <th class="col-md-4 col-sm-6">Contact person</th>
+        <td class="col-md-8 col-sm-6">
+          {{ responsible.details.first.contact_person }}</td>
+      </tr>
+      <tr class="row">
+        <th class="col-md-4 col-sm-6">Responsible type</th>
+        <td class="col-md-8 col-sm-6">
+          {{ responsible.details.first.get_responsible_type_display }}</td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+
+  {% include 'data_responsible/_data_group_table.html' %}
+
+{% endblock %}
+
+{% block scripts %}
+  <script src="{% static 'js/jquery-3.2.1.min.js' %}"></script>
+  <script src="{% static 'js/bootstrap.min.js' %}"></script>
+  <script src="{% static 'js/jquery.dataTables.min.js' %}"></script>
+  <script src="{% static 'js/jquery.dataTables.bootstrap.min.js' %}"></script>
+  <script>
+    $(function () {
+
+      var table = $('#groups').dataTable({
+        columnDefs: [
+          { targets: 'no-sort',
+            orderable: false }
+        ]
+      });
+    });
+  </script>
+{% endblock %}
