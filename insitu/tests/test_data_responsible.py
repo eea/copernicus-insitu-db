@@ -6,7 +6,7 @@ from insitu.tests import base
 
 class DataResponsibleTests(base.CreateCheckTestCase):
     fields = ['name', 'is_network', 'description']
-    many_to_many_fields = ['members', 'countries']
+    many_to_many_fields = ['networks', 'countries']
     required_fields = ['name', 'is_network', 'countries']
 
     def setUp(self):
@@ -82,14 +82,23 @@ class DataResponsibleTests(base.CreateCheckTestCase):
         data = self._DATA
         resp = self.client.post(reverse('responsible:add_network'), data)
         self.assertEqual(resp.status_code, 302)
-        data['members'] = []
+        data['networks'] = []
+        self.check_single_object(models.DataResponsible, data)
+
+    def test_edit_network_responsible(self):
+        data = self._DATA
+        network = base.DataResponsibleFactory(is_network=True)
+        resp = self.client.post(reverse('responsible:edit_network',
+                                       kwargs={'pk': network.pk}),
+                               data)
+        self.assertEqual(resp.status_code, 302)
+        data['networks'] = []
         self.check_single_object(models.DataResponsible, data)
 
     def test_add_non_network_responsible_required_fields(self):
         data = {}
         resp = self.client.post(reverse('responsible:add_non_network'), data)
         non_network_fields = self.required_fields
-        non_network_fields.append('networks')
         non_network_fields.remove('is_network')
         responsible_errors = {field: self.REQUIRED_ERROR for field in non_network_fields}
         self.check_required_errors(resp, responsible_errors)
@@ -115,10 +124,9 @@ class DataResponsibleTests(base.CreateCheckTestCase):
 
         responsible = models.DataResponsible.objects.last()
         details = responsible.details.first()
-        network_1 = models.DataResponsible.objects.get(pk=network_1.pk)
-        network_2 = models.DataResponsible.objects.get(pk=network_2.pk)
+        network_1.refresh_from_db()
+        network_2.refresh_from_db()
         data['is_network'] = False
-        data['members'] = []
 
         self.assertEqual(resp.status_code, 302)
         self.check_object(responsible, data)
@@ -136,3 +144,24 @@ class DataResponsibleTests(base.CreateCheckTestCase):
         self.assertEqual(responsible.details.count(), 1)
         for attr in details_data.keys():
             self.assertEqual(getattr(details, attr), data[attr])
+
+    def test_edit_non_network_responsible(self):
+        data = self._DATA
+        data['is_network'] = False
+        details_data = self._DETAILS_DATA
+        data.update(**details_data)
+        responsible = base.DataResponsibleFactory(is_network=False)
+        details = base.DataResponsibleDetailsFactory(data_responsible=responsible
+                                                     )
+        resp = self.client.post(reverse('responsible:edit_non_network',
+                                        kwargs={'pk': responsible.pk}),
+                                data)
+
+        self.assertEqual(resp.status_code, 302)
+        responsible.refresh_from_db()
+        data['networks'] = []
+        self.check_object(responsible, data)
+        details.refresh_from_db()
+        for attr in details_data.keys():
+            self.assertEqual(getattr(details, attr), data[attr])
+

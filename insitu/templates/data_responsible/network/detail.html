@@ -1,0 +1,54 @@
+{% extends '_layout.html' %}
+
+{% block title %}
+  Data Responsible Network
+{% endblock %}
+
+{% block content %}
+  <div class="row">
+    <h1 class="col-sm-12">
+      <span>Data responsible network</span>
+      <span class="pull-right">
+      <a class="btn btn-primary pull-right"
+         href="{% url 'responsible:edit_network' responsible.pk %}">
+        Edit data responsible
+      </a>
+      </span>
+    </h1>
+  </div>
+
+  <div class="row">
+    <table id="detail-table" class="table borderless col-sm-12">
+      <tbody>
+      <tr class="row">
+        <th class="col-md-4 col-sm-6">Name</th>
+        <td class="col-md-8 col-sm-6">{{ responsible.name }}</td>
+      </tr>
+
+      <tr class="row">
+        <th class="col-md-4 col-sm-6">Description</th>
+        <td class="col-md-8 col-sm-6">{{ responsible.description }}</td>
+      </tr>
+
+      <tr class="row">
+        <th class="col-md-4 col-sm-6">Countries</th>
+        <td class="col-md-8 col-sm-6">
+          {% for country in responsible.countries.all %}
+            <span class="col-sm-12 no-padding-left">{{ country }}</span>
+          {% endfor %}
+        </td>
+      </tr>
+
+        <tr class="row">
+          <th class="col-md-4 col-sm-6">Members</th>
+          <td class="col-md-8 col-sm-6">
+            {% for member in responsible.members.all %}
+                <a href="{% url 'responsible:detail' member.pk %}">{{ member.name }}</a>
+            {% endfor %}
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+{% endblock %}

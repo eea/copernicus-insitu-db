@@ -118,7 +118,6 @@ class ProductTests(base.CreateCheckTestCase):
         self.assertEqual(len(data['components']), 1)
         self.assertTrue(ALL_OPTIONS_LABEL in data['components'])
 
-
     def test_product_component_filter_entity_and_service(self):
         service_1 = base.CopernicusServiceFactory(name="Special service")
         service_2 = base.CopernicusServiceFactory(name="Other service")

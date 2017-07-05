@@ -140,6 +140,7 @@ class DataResponsibleDetailsForm(forms.ModelForm):
 
 class DataResponsibleNonNetworkForm(forms.ModelForm):
     networks = forms.ModelMultipleChoiceField(
+        required=False,
         queryset=models.DataResponsible.objects.filter(is_network=True),
         label='Networks')
 
@@ -149,7 +150,8 @@ class DataResponsibleNonNetworkForm(forms.ModelForm):
 
     def save(self, commit=True):
         instance = super().save(commit)
-        for pk in self.data['networks']:
-            network = models.DataResponsible.objects.get(pk=pk)
-            instance.networks.add(network)
+        if 'networks' in self.data:
+            for pk in self.data['networks']:
+                network = models.DataResponsible.objects.get(pk=pk)
+                instance.networks.add(network)
         return instance

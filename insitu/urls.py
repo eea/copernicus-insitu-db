@@ -112,9 +112,17 @@ responsible_patterns = [
         views.DataResponsibleAddNetwork.as_view(),
         name='add_network'),
 
+    url(r'^(?P<pk>[0-9]+)/edit-network/$',
+        views.DataResponsibleEditNetwork.as_view(),
+        name='edit_network'),
+
     url(r'^add/$',
         views.DataResponsibleAddNonNetwork.as_view(),
         name='add_non_network'),
+
+    url(r'^(?P<pk>[0-9]+)/edit/$',
+        views.DataResponsibleEditNonNetwork.as_view(),
+        name='edit_non_network'),
 ]
 
 urlpatterns = [
