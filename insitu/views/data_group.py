@@ -1,7 +1,7 @@
 from django.core.urlresolvers import reverse
 
 from django.views.generic import DetailView, TemplateView
-from django.views.generic import CreateView, UpdateView
+from django.views.generic import CreateView, UpdateView, DeleteView
 
 from insitu import documents
 from insitu import forms
@@ -68,3 +68,14 @@ class DataGroupDetail(DetailView):
     template_name = 'data_group/detail.html'
     model = models.DataGroup
     context_object_name = 'data_group'
+
+
+class DataGroupDelete(DeleteView):
+
+    template_name = 'data_group/delete.html'
+    form_class = forms.DataGroupForm
+    model = models.DataGroup
+    context_object_name = 'data_group'
+
+    def get_success_url(self):
+        return reverse('data_group:list')

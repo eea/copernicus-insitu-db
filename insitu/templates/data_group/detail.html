@@ -14,6 +14,10 @@
   <div class="row">
     <h1 class="col-sm-12">
       <span>Data group details</span>
+      <span class="pull-right delete-btn">
+      <a class="btn btn-primary pull-right" href="{% url 'data_group:delete' data_group.pk %}">Delete
+        data group</a>
+      </span>
       <span class="pull-right">
       <a class="btn btn-primary pull-right" href="{% url 'data_group:edit' data_group.pk %}">Edit data group</a>
       </span>
