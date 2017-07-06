@@ -1,9 +1,56 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 from django.db import models
+from django.db.models.query import QuerySet
 
-from insitu.signals import data_resposible_updated
+from insitu import signals
 from picklists import models as pickmodels
+
+
+class SoftDeleteQuerySet(QuerySet):
+    def delete(self):
+        for x in self:
+            x.delete()
+
+
+class SoftDeleteManager(models.Manager):
+
+    def get_queryset(self):
+        return SoftDeleteQuerySet(self.model).filter(_deleted=False)
+
+    def really_all(self):
+        return SoftDeleteQuerySet(self.model).all()
+
+    def deleted(self):
+        return SoftDeleteQuerySet(self.model).filter(_deleted=True)
+
+    def delete(self):
+        self.update(_deleted=True)
+
+
+class SoftDeleteModelMixin(models.Model):
+    _deleted = models.BooleanField(default=False)
+
+    objects = SoftDeleteManager()
+
+    related_objects = []
+
+    def delete_related(self):
+        for class_name, field in self.related_objects:
+            objects = globals()[class_name].objects.filter(
+                        **{field: self})
+            objects.delete()
+
+    def delete(self, using=None):
+        self._deleted = True
+        self.save(using=using)
+        self.delete_related()
+        if hasattr(self, 'elastic_delete_signal'):
+            self.elastic_delete_signal.send(sender=self)
+
+
+    class Meta:
+        abstract = True
 
 
 class Metric(models.Model):
@@ -52,7 +99,13 @@ class Component(models.Model):
         return self.name
 
 
-class Requirement(models.Model):
+class Requirement(SoftDeleteModelMixin):
+    related_objects = [
+        ('ProductRequirement', 'requirement'),
+        ('DataRequirement', 'requirement')
+    ]
+    elastic_delete_signal = signals.requirement_deleted
+
     name = models.CharField(max_length=100)
     note = models.TextField(blank=True)
     dissemination = models.ForeignKey(pickmodels.Dissemination,
@@ -81,7 +134,12 @@ class Requirement(models.Model):
         return self.name
 
 
-class Product(models.Model):
+class Product(SoftDeleteModelMixin):
+    related_objects = [
+        ('ProductRequirement', 'product'),
+    ]
+    elastic_delete_signal = signals.product_deleted
+
     acronym = models.CharField(max_length=10)
     name = models.CharField(max_length=100)
     description = models.TextField(blank=True)
@@ -103,7 +161,7 @@ class Product(models.Model):
         return self.name
 
 
-class ProductRequirement(models.Model):
+class ProductRequirement(SoftDeleteModelMixin):
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     requirement = models.ForeignKey(Requirement, on_delete=models.CASCADE)
     note = models.TextField(blank=True)
@@ -125,7 +183,13 @@ class ProductRequirement(models.Model):
         return '{} - {}'.format(self.product.name, self.requirement.name)
 
 
-class DataResponsible(models.Model):
+class DataResponsible(SoftDeleteModelMixin):
+    related_objects = [
+        ('DataResponsibleDetails', 'data_responsible'),
+        ('DataResponsibleRelation', 'responsible'),
+    ]
+    elastic_delete_signal = signals.data_responsible_deleted
+
     name = models.CharField(max_length=100)
     description = models.TextField(blank=True)
     is_network = models.BooleanField(default=False)
@@ -147,7 +211,8 @@ class DataResponsible(models.Model):
         return data
 
 
-class DataResponsibleDetails(models.Model):
+class DataResponsibleDetails(SoftDeleteModelMixin):
+
     COMMERCIAL = 1
     PUBLIC = 2
     INSTITUTIONAL = 3
@@ -176,10 +241,16 @@ class DataResponsibleDetails(models.Model):
     def save(self, force_insert=False, force_update=False, using=None,
              update_fields=None):
         super().save(force_insert, force_update, using, update_fields)
-        data_resposible_updated.send(sender=self)
+        signals.data_resposible_updated.send(sender=self)
 
 
-class DataGroup(models.Model):
+class DataGroup(SoftDeleteModelMixin):
+    related_objects = [
+        ('DataRequirement', 'data_group'),
+        ('DataResponsibleRelation', 'data_group'),
+    ]
+    elastic_delete_signal = signals.data_group_deleted
+
     name = models.CharField(max_length=100)
     note = models.TextField(blank=True)
     frequency = models.ForeignKey(pickmodels.Frequency,
@@ -216,7 +287,7 @@ class DataGroup(models.Model):
         return self.name
 
 
-class DataRequirement(models.Model):
+class DataRequirement(SoftDeleteModelMixin):
     data_group = models.ForeignKey(DataGroup, on_delete=models.CASCADE)
     requirement = models.ForeignKey(Requirement, on_delete=models.CASCADE)
     information_costs = models.BooleanField(default=False)
@@ -230,7 +301,7 @@ class DataRequirement(models.Model):
         return '{} - {}'.format(self.data_group.name, self.requirement.name)
 
 
-class DataResponsibleRelation(models.Model):
+class DataResponsibleRelation(SoftDeleteModelMixin):
     ORIGINATOR = 1
     DISTRIBUTOR = 2
     ROLE_CHOICES = (

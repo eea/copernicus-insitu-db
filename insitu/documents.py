@@ -3,7 +3,7 @@ from django_elasticsearch_dsl import DocType, Index, fields
 from elasticsearch_dsl.search import Search
 
 from insitu.models import Product, Requirement, DataResponsible, DataGroup
-from insitu.signals import data_resposible_updated
+from insitu import signals
 
 insitu = Index('insitu')
 
@@ -26,6 +26,11 @@ class ProductDoc(DocType):
     def get_name_display(self):
         url = reverse('product:detail', kwargs={'pk': self.id})
         return '<a href="{url}">{name}</a>'.format(url=url, name=self.name)
+
+    @staticmethod
+    def delete_index(sender, **kwargs):
+        document = ProductDoc.get(id=sender.id)
+        document.delete()
 
     class Meta:
         model = Product
@@ -53,6 +58,11 @@ class RequirementDoc(DocType):
         url = reverse('requirement:detail', kwargs={'pk': self.id})
         return '<a href="{url}">{name}</a>'.format(url=url, name=self.name)
 
+    @staticmethod
+    def delete_index(sender, **kwargs):
+        document = RequirementDoc.get(id=sender.id)
+        document.delete()
+
     class Meta:
         model = Requirement
         fields = [
@@ -75,6 +85,11 @@ class DataGroupDoc(DocType):
     def get_name_display(self):
         url = reverse('data_group:detail', kwargs={'pk': self.id})
         return '<a href="{url}">{name}</a>'.format(url=url, name=self.name)
+
+    @staticmethod
+    def delete_index(sender, **kwargs):
+        document = DataGroupDoc.get(id=sender.id)
+        document.delete()
 
     class Meta:
         model = DataGroup
@@ -109,9 +124,18 @@ class DataResponsibleDoc(DocType):
         return '<a href="{url}">{name}</a>'.format(url=url, name=self.name)
 
     @staticmethod
+    def delete_index(sender, **kwargs):
+        document = DataResponsibleDoc.get(id=sender.id)
+        document.delete()
+
+    @staticmethod
     def update_index(sender, **kwargs):
         data_responsible = sender.data_responsible
         document = DataResponsibleDoc.get(id=data_responsible.id)
         document.update(data_responsible)
 
-data_resposible_updated.connect(DataResponsibleDoc.update_index)
+signals.data_resposible_updated.connect(DataResponsibleDoc.update_index)
+signals.product_deleted.connect(ProductDoc.delete_index)
+signals.requirement_deleted.connect(RequirementDoc.delete_index)
+signals.data_group_deleted.connect(DataGroupDoc.delete_index)
+signals.data_responsible_deleted.connect(DataResponsibleDoc.delete_index)
