@@ -156,8 +156,20 @@
               </td>
               <td> {{ rel.level_of_compliance }} </td>
               <td> {{ rel.note }} </td>
-              <td> {{ rel.information_costs }} </td>
-              <td> {{ rel.handling_costs }} </td>
+              <td> 
+                {% if rel.information_costs %} 
+                  <span class='glyphicon glyphicon-ok-circle text-success'></span>
+                {% else %}
+                  <span class='glyphicon glyphicon-remove-circle text-danger'></span>
+                {% endif %}
+              </td>
+              <td> 
+                {% if rel.handling_costs %} 
+                  <span class='glyphicon glyphicon-ok-circle text-success'></span>
+                {% else %}
+                  <span class='glyphicon glyphicon-remove-circle text-danger'></span>
+                {% endif %}
+              </td>
               <td>
               <a href="{% url 'requirement:data_group:edit' requirement_pk=requirement.pk pk=rel.pk %}">Edit</a>
               <td>
