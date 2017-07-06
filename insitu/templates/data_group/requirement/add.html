@@ -4,7 +4,7 @@
 
 {% block style %}
   <link rel="stylesheet" type="text/css"
-  			href="{% static 'css/select2.min.css' %}"/>
+        href="{% static 'css/select2.min.css' %}"/>
   <link rel="stylesheet" type="text/css"
         href="{% static 'css/select2-bootstrap.min.css' %}"/>
 {% endblock %}
@@ -14,26 +14,26 @@
 {% endblock %}
 
 {% block content %}
-	<div class="row">
-		<h1 class="col-sm-12">
-			<span>{{ title }}</span>
-		</h1>
-	</div>
-	<form action="" method="POST">
-		{% csrf_token %}
-		{% bootstrap_form form %}
-		<input class="btn btn-primary" type="submit" value="Save" />
-		<a href="{{ url }}"
-       	class="btn btn-default">Cancel</a>
-	</form>
+  <div class="row">
+    <h1 class="col-sm-12">
+      <span>{{ title }}</span>
+    </h1>
+  </div>
+  <form action="" method="POST">
+    {% csrf_token %}
+    {% bootstrap_form form %}
+    <input class="btn btn-primary" type="submit" value="Save"/>
+    <a href="{{ url }}"
+       class="btn btn-default">Cancel</a>
+  </form>
 {% endblock %}
 
 {% block script %}
-	<script src="{% static 'js/jquery-3.2.1.min.js' %}"></script>
-  	<script src="{% static 'js/select2.min.js' %}"></script>
-  	<script>
-    	$(document).ready(function () {
-      		$('select').select2();
-    	});
-    </script>
+  <script src="{% static 'js/jquery-3.2.1.min.js' %}"></script>
+  <script src="{% static 'js/select2.min.js' %}"></script>
+  <script>
+    $(document).ready(function () {
+      $('select').select2();
+    });
+  </script>
 {% endblock %}

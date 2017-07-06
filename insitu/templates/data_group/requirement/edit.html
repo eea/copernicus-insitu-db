@@ -3,7 +3,7 @@
 {% load static %}
 
 {% block title %}
-	Edit {{ rel.data_group.name }} - {{ rel.requirement.name }} relation
+  Edit {{ rel.data_group.name }} - {{ rel.requirement.name }} relation
 {% endblock %}
 
 {% block style %}
@@ -15,7 +15,7 @@
 
 {% block content %}
 
-	<div class="row">
+  <div class="row">
     <h1>
       <p class="col-sm-12">Edit relation</p>
       <p class="col-sm-12">
@@ -27,8 +27,8 @@
   <form action="" method="POST">
     {% csrf_token %}
     {% bootstrap_form form %}
-    <input type="hidden" name="data_group" value="{{ rel.data_group.pk }}" />
-    <input class="btn btn-primary" type="submit" value="Save" />
+    <input type="hidden" name="data_group" value="{{ rel.data_group.pk }}"/>
+    <input class="btn btn-primary" type="submit" value="Save"/>
     <a href="{{ url }}"
        class="btn btn-default">Cancel</a>
   </form>
