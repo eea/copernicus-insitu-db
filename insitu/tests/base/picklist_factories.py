@@ -154,3 +154,11 @@ class DataFormatFactory(DjangoModelFactory):
 
     class Meta:
         model = models.DataFormat
+
+
+class DefinitionLevelFactory(DjangoModelFactory):
+    name = 'Test DefinitionLevel'
+    sort_order = 0
+
+    class Meta:
+        model = models.DefinitionLevel
