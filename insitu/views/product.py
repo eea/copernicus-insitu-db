@@ -4,6 +4,7 @@ from django.http.response import JsonResponse
 from django.views.generic import View
 from django.views.generic import TemplateView, DetailView
 from django.views.generic import CreateView, UpdateView
+from django.views.generic import DeleteView
 
 from insitu import documents
 from insitu import forms
@@ -79,3 +80,14 @@ class ProductDetail(DetailView):
     template_name = 'product/detail.html'
     model = models.Product
     context_object_name = 'product'
+
+
+class ProductDelete(DeleteView):
+
+    template_name = 'product/delete.html'
+    form_class = forms.ProductForm
+    model = models.Product
+    context_object_name = 'product'
+
+    def get_success_url(self):
+        return reverse('product:list')
