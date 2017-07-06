@@ -1,6 +1,7 @@
 from django.core.urlresolvers import reverse
 
 from insitu import models
+from insitu.documents import DataResponsibleDoc
 from insitu.tests import base
 
 
@@ -165,3 +166,49 @@ class DataResponsibleTests(base.CreateCheckTestCase):
         for attr in details_data.keys():
             self.assertEqual(getattr(details, attr), data[attr])
 
+    def test_delete_data_responsible_network(self):
+        responsible = base.DataResponsibleFactory(is_network=False)
+        resp = self.client.post(
+            reverse('responsible:delete_network',
+                    kwargs={'pk': responsible.pk})
+        )
+        self.assertEqual(resp.status_code, 302)
+        self.check_single_object_deleted(models.DataResponsible)
+        self.check_objects_are_soft_deleted(models.DataResponsible,
+                                            DataResponsibleDoc)
+
+
+    def test_delete_data_responsible_network_related_objects(self):
+        responsible = base.DataResponsibleFactory(is_network=True)
+        base.DataResponsibleDetailsFactory(data_responsible=responsible)
+        base.DataResponsibleRelationFactory(responsible=responsible)
+        self.client.post(
+            reverse('responsible:delete_network',
+                    kwargs={'pk': responsible.pk})
+        )
+        self.check_objects_are_soft_deleted(models.DataResponsibleDetails)
+        self.check_objects_are_soft_deleted(models.DataResponsibleRelation)
+
+
+    def test_delete_data_responsible_non_network(self):
+        responsible = base.DataResponsibleFactory(is_network=False)
+        resp = self.client.post(
+            reverse('responsible:delete_non_network',
+                    kwargs={'pk': responsible.pk})
+        )
+        self.assertEqual(resp.status_code, 302)
+        self.check_single_object_deleted(models.DataResponsible)
+        self.check_objects_are_soft_deleted(models.DataResponsible,
+                                            DataResponsibleDoc)
+
+
+    def test_delete_data_responsible_non_network_related_objects(self):
+        responsible = base.DataResponsibleFactory(is_network=False)
+        base.DataResponsibleDetailsFactory(data_responsible=responsible)
+        base.DataResponsibleRelationFactory(responsible=responsible)
+        self.client.post(
+            reverse('responsible:delete_non_network',
+                    kwargs={'pk': responsible.pk})
+        )
+        self.check_objects_are_soft_deleted(models.DataResponsibleDetails)
+        self.check_objects_are_soft_deleted(models.DataResponsibleRelation)

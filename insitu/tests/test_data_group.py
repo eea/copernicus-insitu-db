@@ -2,6 +2,7 @@ from django.core.urlresolvers import reverse
 
 from insitu import models
 from insitu.tests import base
+from insitu.documents import DataGroupDoc
 
 
 class DataGroupTests(base.CreateCheckTestCase):
@@ -88,3 +89,21 @@ class DataGroupTests(base.CreateCheckTestCase):
         )
         self.assertEqual(resp.status_code, 302)
         self.check_single_object(models.DataGroup, data)
+
+    def test_delete_data_group(self):
+        data_group = base.DataGroupFactory()
+        resp = self.client.post(
+            reverse('data_group:delete', kwargs={'pk': data_group.pk}))
+        self.assertEqual(resp.status_code, 302)
+        self.check_single_object_deleted(models.DataGroup)
+        self.check_objects_are_soft_deleted(models.DataGroup, DataGroupDoc)
+
+    def test_delete_data_group_related_objects(self):
+        data_group = base.DataGroupFactory()
+        base.DataRequirementFactory(data_group=data_group)
+        base.DataResponsibleRelationFactory(data_group=data_group)
+        self.client.post(
+            reverse('data_group:delete', kwargs={'pk': data_group.pk})
+        )
+        self.check_objects_are_soft_deleted(models.DataRequirement)
+        self.check_objects_are_soft_deleted(models.DataResponsibleRelation)
