@@ -1,6 +1,7 @@
 from django.core.urlresolvers import reverse
 
 from insitu import models
+from insitu.documents import ProductDoc
 from insitu.tests import base
 from insitu.utils import ALL_OPTIONS_LABEL
 
@@ -144,3 +145,21 @@ class ProductTests(base.CreateCheckTestCase):
         data = resp.json()
         self.assertEqual(len(data['components']), 1)
         self.assertTrue(ALL_OPTIONS_LABEL in data['components'])
+
+
+    def test_delete_product(self):
+        product = base.ProductFactory()
+        resp = self.client.post(
+            reverse('product:delete', kwargs={'pk': product.pk}))
+        self.assertEqual(resp.status_code, 302)
+        self.check_single_object_deleted(models.Product)
+        self.check_objects_are_soft_deleted(models.Product, ProductDoc)
+
+
+    def test_delete_product_related_objects(self):
+        product = base.ProductFactory()
+        base.ProductRequirementFactory(product=product)
+        self.client.post(
+            reverse('product:delete', kwargs={'pk': product.pk})
+        )
+        self.check_objects_are_soft_deleted(models.ProductRequirement)

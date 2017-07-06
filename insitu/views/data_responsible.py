@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from django.http import HttpResponseRedirect
 from django.urls import reverse
-from django.views.generic import CreateView, UpdateView
+from django.views.generic import CreateView, UpdateView, DeleteView
 from django.views.generic import TemplateView, DetailView
 
 from insitu import documents
@@ -61,6 +61,16 @@ class DataResponsibleEditNetwork(UpdateView):
 
     def get_success_url(self):
         return reverse('responsible:detail', kwargs={'pk': self.object.pk})
+
+
+class DataResponsibleDeleteNetwork(DeleteView):
+    template_name = 'data_responsible/network/delete.html'
+    form_class = forms.DataResponsibleNetworkForm
+    context_object_name = 'responsible'
+    model = models.DataResponsible
+
+    def get_success_url(self):
+        return reverse('responsible:list')
 
 
 class DataResponsibleAddNonNetwork(CreateView):
@@ -136,3 +146,12 @@ class DataResponsibleEditNonNetwork(UpdateView):
 
     def get_success_url(self):
         return reverse('responsible:detail', kwargs={'pk': self.object.pk})
+
+class DataResponsibleDeleteNonNetwork(DeleteView):
+    template_name = 'data_responsible/non_network/delete.html'
+    form_class = forms.DataResponsibleNonNetworkForm
+    context_object_name = 'responsible'
+    model = models.DataResponsible
+
+    def get_success_url(self):
+        return reverse('responsible:list')

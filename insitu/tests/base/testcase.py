@@ -46,3 +46,11 @@ class CreateCheckTestCase(TestCase):
 
     def check_single_object_deleted(self, model_cls):
         self.assertFalse(model_cls.objects.exists())
+
+    def check_objects_are_soft_deleted(self, model_cls, document=None):
+        self.assertTrue(model_cls.objects.really_all())
+        for obj in model_cls.objects.really_all():
+            self.assertTrue(obj._deleted)
+            if document:
+                resp = document.get(id=obj.id, ignore=404)
+                self.assertIsNone(resp)

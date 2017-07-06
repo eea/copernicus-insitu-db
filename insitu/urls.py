@@ -42,6 +42,10 @@ product_patterns = [
         views.ProductEdit.as_view(),
         name='edit'),
 
+    url(r'^(?P<pk>[0-9]+)/delete/$',
+        views.ProductDelete.as_view(),
+        name='delete'),
+
     url(r'^(?P<product_pk>[0-9]+)/requirement/',
         include(product_requirement_patterns,
                 namespace='requirement')),
@@ -64,6 +68,10 @@ requirement_patterns = [
     url(r'^(?P<pk>[0-9]+)/edit$',
         views.RequirementEdit.as_view(),
         name='edit'),
+
+    url(r'^(?P<pk>[0-9]+)/delete/$',
+        views.RequirementDelete.as_view(),
+        name='delete'),
 
     url(r'^(?P<requirement_pk>[0-9]+)/product/',
         include(product_requirement_patterns,
@@ -109,6 +117,10 @@ data_group_patterns = [
         views.DataGroupEdit.as_view(),
         name='edit'),
 
+    url(r'^(?P<pk>[0-9]+)/delete/$',
+        views.DataGroupDelete.as_view(),
+        name='delete'),
+
     url(r'^(?P<group_pk>[0-9]+)/responsible/',
         include(data_group_data_responsible_patterns,
                 namespace='responsible')),
@@ -135,6 +147,10 @@ responsible_patterns = [
         views.DataResponsibleEditNetwork.as_view(),
         name='edit_network'),
 
+    url(r'^(?P<pk>[0-9]+)/delete-network/$',
+        views.DataResponsibleDeleteNetwork.as_view(),
+        name='delete_network'),
+
     url(r'^add/$',
         views.DataResponsibleAddNonNetwork.as_view(),
         name='add_non_network'),
@@ -142,6 +158,10 @@ responsible_patterns = [
     url(r'^(?P<pk>[0-9]+)/edit/$',
         views.DataResponsibleEditNonNetwork.as_view(),
         name='edit_non_network'),
+
+    url(r'^(?P<pk>[0-9]+)/delete/$',
+        views.DataResponsibleDeleteNonNetwork.as_view(),
+        name='delete_non_network'),
 
     url(r'^(?P<responsible_pk>[0-9]+)/group/',
         include(data_group_data_responsible_patterns,

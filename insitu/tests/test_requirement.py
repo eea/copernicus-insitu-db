@@ -1,6 +1,7 @@
 from django.core.urlresolvers import reverse
 
 from insitu import models
+from insitu.documents import RequirementDoc
 from insitu.tests import base
 
 
@@ -79,3 +80,22 @@ class RequirementTests(base.CreateCheckTestCase):
                                         kwargs={'pk': requirement.pk}), data)
         self.assertEqual(resp.status_code, 302)
         self.check_single_object(models.Requirement, data)
+
+    def test_delete_requirement(self):
+        requirement = base.RequirementFactory()
+        resp = self.client.post(
+            reverse('requirement:delete', kwargs={'pk': requirement.pk}))
+        self.assertEqual(resp.status_code, 302)
+        self.check_single_object_deleted(models.Requirement)
+        self.check_objects_are_soft_deleted(models.Requirement, RequirementDoc)
+
+
+    def test_delete_requirement_related_objects(self):
+        requirement = base.RequirementFactory()
+        base.ProductRequirementFactory(requirement=requirement)
+        base.DataRequirementFactory(requirement=requirement)
+        self.client.post(
+            reverse('requirement:delete', kwargs={'pk': requirement.pk})
+        )
+        self.check_objects_are_soft_deleted(models.ProductRequirement)
+        self.check_objects_are_soft_deleted(models.DataRequirement)
