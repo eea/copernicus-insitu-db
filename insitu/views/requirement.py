@@ -1,6 +1,6 @@
 from django.core.urlresolvers import reverse
 from django.views.generic import DetailView, TemplateView
-from django.views.generic import CreateView, UpdateView
+from django.views.generic import CreateView, UpdateView, DeleteView
 
 from insitu import documents
 from insitu import forms
@@ -70,3 +70,13 @@ class RequirementEdit(UpdateView):
         instance = self.get_object()
         return reverse('requirement:detail',
                        kwargs={'pk': instance.pk})
+
+class RequirementDelete(DeleteView):
+
+    template_name = 'requirement/delete.html'
+    form_class = forms.RequirementForm
+    model = models.Requirement
+    context_object_name = 'requirement'
+
+    def get_success_url(self):
+        return reverse('requirement:list')
