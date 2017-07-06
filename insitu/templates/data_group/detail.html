@@ -143,6 +143,62 @@
       </table>
     </div>
   </div>
+  <div class="row">
+    <h3 class="col-sm-12">
+      <span>Requirements</span>
+      <span class="pull-right">
+        <a class="btn btn-primary pull-right"
+           href="{% url 'data_group:requirement:add' data_group.pk %}">Add data requirement</a>
+      </span>
+    </h3>
+    <div class="col-sm-12">
+      <table id="requirements"
+           class="table table-condensed table-bordered table-hover">
+        <thead>
+        <tr>
+          <th>Requirement</th>
+          <th>Level of compliace</th>
+          <th>Note</th>
+          <th>Information costs</th>
+          <th>Handling costs</th>
+          <th class="no-sort"></th>
+          <th class="no-sort"></th>
+        </tr>
+        </thread>
+        <tbody>
+        {% for rel in data_group.datarequirement_set.all %}
+          <tr>
+            <td> 
+              <a href="{% url 'requirement:detail' rel.requirement.pk %}">{{ rel.requirement }}</a>
+            </td>
+            <td> {{ rel.level_of_compliance }} </td>
+            <td> {{ rel.note }} </td>
+            <td> 
+              {% if rel.information_costs %} 
+                <span class='glyphicon glyphicon-ok-circle text-success'></span>
+              {% else %}
+                <span class='glyphicon glyphicon-remove-circle text-danger'></span>
+              {% endif %}
+            </td>
+            <td> 
+              {% if rel.handling_costs %} 
+                <span class='glyphicon glyphicon-ok-circle text-success'></span>
+              {% else %}
+                <span class='glyphicon glyphicon-remove-circle text-danger'></span>
+              {% endif %}
+            </td>
+            <td>
+            <a href="{% url 'data_group:requirement:edit' data_group_pk=data_group.pk pk=rel.pk %}">Edit</a>
+            </td>
+            <td>
+            <a href="{% url 'data_group:requirement:delete' data_group_pk=data_group.pk pk=rel.pk %}">Delete</a>
+            </td>
+          </tr>
+        {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
 {% endblock %}
 
 {% block scripts %}

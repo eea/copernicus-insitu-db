@@ -129,6 +129,63 @@
       </table>
     </div>
   </div>
+
+  <div class="row">
+    <h3 class="col-sm-12">
+      <span>Data Groups</span>
+      <span class="pull-right">
+        <a class="btn btn-primary pull-right"
+           href="{% url 'requirement:data_group:add' requirement.pk %}">Add data requirement</a>
+      </span>
+    </h3>
+    <div class="col-sm-12">
+        <table id="data_groups"
+             class="table table-condensed table-bordered table-hover">
+          <thead>
+          <tr>
+            <th>Data Group</th>
+            <th>Level of compliace</th>
+            <th>Note</th>
+            <th>Information costs</th>
+            <th>Handling costs</th>
+            <th class="no-sort"></th>
+            <th class="no-sort"></th>
+          </tr>
+          </thread>
+          <tbody>
+          {% for rel in requirement.datarequirement_set.all %}
+            <tr>
+              <td> 
+                <a href="{% url 'data_group:detail' rel.data_group.pk %}">{{ rel.data_group }}</a>
+              </td>
+              <td> {{ rel.level_of_compliance }} </td>
+              <td> {{ rel.note }} </td>
+              <td> 
+                {% if rel.information_costs %} 
+                  <span class='glyphicon glyphicon-ok-circle text-success'></span>
+                {% else %}
+                  <span class='glyphicon glyphicon-remove-circle text-danger'></span>
+                {% endif %}
+              </td>
+              <td> 
+                {% if rel.handling_costs %} 
+                  <span class='glyphicon glyphicon-ok-circle text-success'></span>
+                {% else %}
+                  <span class='glyphicon glyphicon-remove-circle text-danger'></span>
+                {% endif %}
+              </td>
+              <td>
+              <a href="{% url 'requirement:data_group:edit' requirement_pk=requirement.pk pk=rel.pk %}">Edit</a>
+              </td>
+              <td>
+              <a href="{% url 'requirement:data_group:delete' requirement_pk=requirement.pk pk=rel.pk %}">Delete</a>
+              </td>
+            </tr>
+          {% endfor %}
+          </tbody>
+        </table>
+    </div>
+  </div>
 {% endblock %}
 
 {% block scripts %}
@@ -142,6 +199,16 @@
         trigger: 'hover',
       });
       var table = $('#products').dataTable({
+        columnDefs: [
+          { targets: 'no-sort',
+            orderable: false }
+        ]
+      });
+    })
+  </script>
+  <script>
+    $(function () {
+      var table = $('#data_groups').dataTable({
         columnDefs: [
           { targets: 'no-sort',
             orderable: false }
