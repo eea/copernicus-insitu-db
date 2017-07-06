@@ -28,7 +28,7 @@ class SoftDeleteManager(models.Manager):
         self.update(_deleted=True)
 
 
-class SoftDeleteModelMixin(models.Model):
+class SoftDeleteModel(models.Model):
     _deleted = models.BooleanField(default=False)
 
     objects = SoftDeleteManager()
@@ -99,7 +99,7 @@ class Component(models.Model):
         return self.name
 
 
-class Requirement(SoftDeleteModelMixin):
+class Requirement(SoftDeleteModel):
     related_objects = [
         ('ProductRequirement', 'requirement'),
         ('DataRequirement', 'requirement')
@@ -134,7 +134,7 @@ class Requirement(SoftDeleteModelMixin):
         return self.name
 
 
-class Product(SoftDeleteModelMixin):
+class Product(SoftDeleteModel):
     related_objects = [
         ('ProductRequirement', 'product'),
     ]
@@ -161,7 +161,7 @@ class Product(SoftDeleteModelMixin):
         return self.name
 
 
-class ProductRequirement(SoftDeleteModelMixin):
+class ProductRequirement(SoftDeleteModel):
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     requirement = models.ForeignKey(Requirement, on_delete=models.CASCADE)
     note = models.TextField(blank=True)
@@ -183,7 +183,7 @@ class ProductRequirement(SoftDeleteModelMixin):
         return '{} - {}'.format(self.product.name, self.requirement.name)
 
 
-class DataResponsible(SoftDeleteModelMixin):
+class DataResponsible(SoftDeleteModel):
     related_objects = [
         ('DataResponsibleDetails', 'data_responsible'),
         ('DataResponsibleRelation', 'responsible'),
@@ -211,7 +211,7 @@ class DataResponsible(SoftDeleteModelMixin):
         return data
 
 
-class DataResponsibleDetails(SoftDeleteModelMixin):
+class DataResponsibleDetails(SoftDeleteModel):
 
     COMMERCIAL = 1
     PUBLIC = 2
@@ -244,7 +244,7 @@ class DataResponsibleDetails(SoftDeleteModelMixin):
         signals.data_resposible_updated.send(sender=self)
 
 
-class DataGroup(SoftDeleteModelMixin):
+class DataGroup(SoftDeleteModel):
     related_objects = [
         ('DataRequirement', 'data_group'),
         ('DataResponsibleRelation', 'data_group'),
@@ -287,7 +287,7 @@ class DataGroup(SoftDeleteModelMixin):
         return self.name
 
 
-class DataRequirement(SoftDeleteModelMixin):
+class DataRequirement(SoftDeleteModel):
     data_group = models.ForeignKey(DataGroup, on_delete=models.CASCADE)
     requirement = models.ForeignKey(Requirement, on_delete=models.CASCADE)
     information_costs = models.BooleanField(default=False)
@@ -301,7 +301,7 @@ class DataRequirement(SoftDeleteModelMixin):
         return '{} - {}'.format(self.data_group.name, self.requirement.name)
 
 
-class DataResponsibleRelation(SoftDeleteModelMixin):
+class DataResponsibleRelation(SoftDeleteModel):
     ORIGINATOR = 1
     DISTRIBUTOR = 2
     ROLE_CHOICES = (
