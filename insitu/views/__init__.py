@@ -5,6 +5,7 @@ from .data_group import *
 from .data_responsible import *
 from .data_responsible_relation import *
 from .data_requirement import *
+from .user import *
 
 from django.views.generic import TemplateView
 

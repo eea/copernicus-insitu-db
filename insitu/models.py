@@ -2,6 +2,7 @@
 from __future__ import unicode_literals
 
 from django.contrib.auth import get_user_model
+from django.contrib.auth.models import User
 from django.db import models
 from django.db.models.query import QuerySet
 
