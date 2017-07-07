@@ -71,3 +71,14 @@ class PermissionsCheckTestCase(TestCase):
         self.client.login(username=username, password=password)
         self.check_user_redirect(method, url, redirect_url)
         self.client.logout()
+
+    def check_user_redirect_all_methods(self, url, redirect_url):
+        for method in ['GET', 'POST']:
+            self.check_user_redirect(method, url, redirect_url)
+
+    def check_authenticated_user_redirect_all_methods(self, username, password,
+                                                      url, redirect_url):
+        self.client.login(username=username, password=password)
+        for method in ['GET', 'POST']:
+            self.check_user_redirect(method, url, redirect_url)
+        self.client.logout()

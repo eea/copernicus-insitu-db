@@ -2,6 +2,7 @@
 from __future__ import unicode_literals
 
 from django.core.urlresolvers import reverse
+from insitu.views.protected import IsCopernicusServiceResponsible
 from insitu.views.protected import (
     ProtectedUpdateView, ProtectedCreateView, ProtectedDeleteView)
 
@@ -11,6 +12,14 @@ from insitu import forms
 
 class DataGroupDataResponsibleAdd(ProtectedCreateView):
     template_name = 'data_group/data_responsible/add.html'
+    permission_classes = (IsCopernicusServiceResponsible, )
+
+    def permission_denied(self, request):
+        if 'responsible_pk' in self.kwargs:
+            self.permission_denied_redirect = reverse('responsible:list')
+        else:
+            self.permission_denied_redirect = reverse('data_group:list')
+        return super().permission_denied(request)
 
     def _set_model_used(self):
         if 'responsible_pk' in self.kwargs:
@@ -61,6 +70,14 @@ class DataGroupDataResponsibleEdit(ProtectedUpdateView):
     template_name = 'data_group/data_responsible/edit.html'
     form_class = forms.DataResponsibleRelationEditForm
     context_object_name = 'rel'
+    permission_classes = (IsCopernicusServiceResponsible, )
+
+    def permission_denied(self, request):
+        if 'responsible_pk' in self.kwargs:
+            self.permission_denied_redirect = reverse('responsible:list')
+        else:
+            self.permission_denied_redirect = reverse('data_group:list')
+        return super().permission_denied(request)
 
     def _get_reverse_url(self):
         if 'responsible_pk' in self.kwargs:
@@ -84,6 +101,14 @@ class DataGroupDataResponsibleDelete(ProtectedDeleteView):
     model = models.DataResponsibleRelation
     template_name = 'data_group/data_responsible/delete.html'
     context_object_name = 'rel'
+    permission_classes = (IsCopernicusServiceResponsible, )
+
+    def permission_denied(self, request):
+        if 'responsible_pk' in self.kwargs:
+            self.permission_denied_redirect = reverse('responsible:list')
+        else:
+            self.permission_denied_redirect = reverse('data_group:list')
+        return super().permission_denied(request)
 
     def _get_reverse_url(self):
         if 'responsible_pk' in self.kwargs:
