@@ -1,22 +1,23 @@
 from django.core.urlresolvers import reverse
-from django.views.generic import DetailView, TemplateView
-from django.views.generic import CreateView, UpdateView, DeleteView
 
 from insitu import documents
 from insitu import forms
 from insitu import models
 from insitu.utils import get_choices
 from insitu.views.base import ESDatatableView
+from insitu.views.protected import (
+    ProtectedTemplateView, ProtectedDetailView,
+    ProtectedUpdateView, ProtectedCreateView, ProtectedDeleteView)
 from picklists import models as pickmodels
 
 
-class RequirementDetail(DetailView):
+class RequirementDetail(ProtectedDetailView):
     template_name = 'requirement/detail.html'
     model = models.Requirement
     context_object_name = 'requirement'
 
 
-class RequirementList(TemplateView):
+class RequirementList(ProtectedTemplateView):
     template_name = 'requirement/list.html'
 
     def get_context_data(self):
@@ -38,7 +39,7 @@ class RequirementListJson(ESDatatableView):
     document = documents.RequirementDoc
 
 
-class RequirementAdd(CreateView):
+class RequirementAdd(ProtectedCreateView):
     template_name = 'requirement/add.html'
     form_class = forms.RequirementForm
     model = models.Requirement
@@ -48,7 +49,7 @@ class RequirementAdd(CreateView):
         return reverse('requirement:detail', kwargs={'pk': instance.pk})
 
 
-class RequirementEdit(UpdateView):
+class RequirementEdit(ProtectedUpdateView):
     template_name = 'requirement/edit.html'
     form_class = forms.RequirementForm
     model = models.Requirement
@@ -71,7 +72,8 @@ class RequirementEdit(UpdateView):
         return reverse('requirement:detail',
                        kwargs={'pk': instance.pk})
 
-class RequirementDelete(DeleteView):
+
+class RequirementDelete(ProtectedDeleteView):
 
     template_name = 'requirement/delete.html'
     form_class = forms.RequirementForm
