@@ -1,7 +1,7 @@
 from django.test import TestCase
 
 
-class CreateCheckTestCase(TestCase):
+class FormCheckTestCase(TestCase):
     fields = []
     related_fields = []
     many_to_many_fields = []
@@ -12,6 +12,16 @@ class CreateCheckTestCase(TestCase):
 
     def setUp(self):
         self.errors = {field: self.REQUIRED_ERROR for field in self.required_fields}
+
+    def check_user_redirect(self, url, redirect_url):
+        resp = self.client.get(url)
+        self.assertRedirects(resp, redirect_url)
+
+    def check_authenticated_user_redirect(self, username, password,
+                                          url, redirect_url):
+        self.client.login(username=username, password=password)
+        self.check_user_redirect(url, redirect_url)
+        self.client.logout()
 
     def check_required_errors(self, resp, errors):
         self.assertEqual(resp.status_code, 200)

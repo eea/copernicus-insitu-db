@@ -5,7 +5,7 @@ from insitu.documents import DataResponsibleDoc
 from insitu.tests import base
 
 
-class DataResponsibleTests(base.CreateCheckTestCase):
+class DataResponsibleTests(base.FormCheckTestCase):
     fields = ['name', 'is_network', 'description']
     many_to_many_fields = ['networks', 'countries']
     required_fields = ['name', 'is_network', 'countries']

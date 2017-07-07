@@ -5,7 +5,7 @@ from insitu.documents import RequirementDoc
 from insitu.tests import base
 
 
-class RequirementTests(base.CreateCheckTestCase):
+class RequirementTests(base.FormCheckTestCase):
     fields = ['name', 'note']
     related_fields = ['dissemination', 'quality']
     required_fields = ['name', 'dissemination', 'quality']

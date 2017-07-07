@@ -6,7 +6,7 @@ from insitu.tests import base
 REQUIRED_ERROR = ['This field is required.']
 
 
-class ProductRequirementTests(base.CreateCheckTestCase):
+class ProductRequirementTests(base.FormCheckTestCase):
     fields = ['note']
     related_fields = [
         'requirement', 'product', 'level_of_definition', 'distance_to_target',

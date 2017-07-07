@@ -6,7 +6,7 @@ from insitu.tests import base
 from insitu.utils import ALL_OPTIONS_LABEL
 
 
-class ProductTests(base.CreateCheckTestCase):
+class ProductTests(base.FormCheckTestCase):
     fields = ['acronym', 'name', 'note', 'description']
     related_fields = ['group', 'component', 'status', 'coverage']
     required_fields = ['acronym', 'name', 'group', 'component',

@@ -5,7 +5,7 @@ from insitu.tests import base
 
 REQUIRED_ERROR = ['This field is required.']
 
-class DataRequirementTests(base.CreateCheckTestCase):
+class DataRequirementTests(base.FormCheckTestCase):
 	fields = ['note', 'information_costs', 'handling_costs']
 	related_fields = ['data_group', 'requirement', 'level_of_compliance']
 	required_fields = ['data_group', 'requirement', 'level_of_compliance']

@@ -5,7 +5,7 @@ from insitu.tests import base
 from insitu.documents import DataGroupDoc
 
 
-class DataGroupTests(base.CreateCheckTestCase):
+class DataGroupTests(base.FormCheckTestCase):
     fields = ['name', 'note']
     related_fields = ['frequency', 'coverage', 'timeliness',
                       'policy', 'data_type', 'data_format',

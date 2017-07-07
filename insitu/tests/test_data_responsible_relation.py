@@ -6,7 +6,7 @@ from insitu.tests import base
 REQUIRED_ERROR = ['This field is required.']
 
 
-class DataResponsibleRelationTests(base.CreateCheckTestCase):
+class DataResponsibleRelationTests(base.FormCheckTestCase):
     fields = ['role']
     related_fields = ['data_group', 'responsible']
     required_fields = ['role', 'data_group', 'responsible']
