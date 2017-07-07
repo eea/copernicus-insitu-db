@@ -1,10 +1,12 @@
 <div class="row">
   <h3 class="col-sm-12">
     <span>Data Groups</span>
-    <span class="pull-right">
-        <a class="btn btn-primary pull-right"
-           href="{% url 'responsible:group:add' responsible.pk %}">Add data group</a>
+    {% if request.user.service_resp or request.user.is_superuser %}
+      <span class="pull-right">
+          <a class="btn btn-primary pull-right"
+             href="{% url 'responsible:group:add' responsible.pk %}">Add data group</a>
       </span>
+    {% endif %}
   </h3>
   <div class="col-sm-12">
     <table id="groups"
