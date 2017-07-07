@@ -175,7 +175,18 @@ class ProductPermissionTests(base.PermissionsCheckTestCase):
         self.redirect_product_url_auth = reverse('product:list')
         self.methods = ['GET', 'POST']
 
-    def test_product_ad_not_auth(self):
+    def test_product_list_not_auth(self):
+        self.check_user_redirect_all_methods(
+            redirect_url=self.redirect_product_url_non_auth,
+            url=reverse('product:list'))
+
+    def test_product_detail_not_auth(self):
+        product = base.ProductFactory()
+        self.check_user_redirect_all_methods(
+            redirect_url=self.redirect_product_url_non_auth,
+            url=reverse('product:detail', kwargs={'pk': product.pk}))
+
+    def test_product_add_not_auth(self):
         self.check_user_redirect_all_methods(
             redirect_url=self.redirect_product_url_non_auth,
             url=reverse('product:add'))
