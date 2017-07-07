@@ -19,6 +19,9 @@ class ProductTests(base.FormCheckTestCase):
         status = base.ProductStatusFactory()
         coverage = base.CoverageFactory()
 
+        responsible_user = base.UserFactory()
+        base.CopernicususResponsibleFactory(user=responsible_user)
+        self.client.force_login(responsible_user)
         self._DATA = {
             'acronym': 'TST',
             'name': 'TEST product',
@@ -163,3 +166,45 @@ class ProductTests(base.FormCheckTestCase):
             reverse('product:delete', kwargs={'pk': product.pk})
         )
         self.check_objects_are_soft_deleted(models.ProductRequirement)
+
+
+class ProductPermissionTests(base.PermissionsCheckTestCase):
+
+    def setUp(self):
+        self.redirect_product_url_non_auth = reverse('auth:login')
+        self.redirect_product_url_auth = reverse('product:list')
+        self.methods = ['GET', 'POST']
+
+    def test_product_ad_not_auth(self):
+        self.check_user_redirect_all_methods(
+            redirect_url=self.redirect_product_url_non_auth,
+            url=reverse('product:add'))
+
+    def test_product_edit_not_auth(self):
+        product = base.ProductFactory()
+        self.check_user_redirect_all_methods(
+            redirect_url=self.redirect_product_url_non_auth,
+            url=reverse('product:edit', kwargs={'pk': product.pk}))
+
+    def test_product_delete_not_auth(self):
+        product = base.ProductFactory()
+        self.check_user_redirect_all_methods(
+            redirect_url=self.redirect_product_url_non_auth,
+            url=reverse('product:delete', kwargs={'pk': product.pk}))
+
+    def test_product_relation_add_auth(self):
+        self.check_authenticated_user_redirect_all_methods(
+            redirect_url=self.redirect_product_url_auth,
+            url=reverse('product:add'))
+
+    def test_product_relation_edit_auth(self):
+        product = base.ProductFactory()
+        self.check_authenticated_user_redirect_all_methods(
+            redirect_url=self.redirect_product_url_auth,
+            url=reverse('product:edit', kwargs={'pk': product.pk}))
+
+    def test_product_relation_delete_auth(self):
+        product = base.ProductFactory()
+        self.check_authenticated_user_redirect_all_methods(
+            redirect_url=self.redirect_product_url_auth,
+            url=reverse('product:delete', kwargs={'pk': product.pk}))

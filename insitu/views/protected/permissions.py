@@ -57,3 +57,4 @@ class IsDataProvider(IsAuthenticated):
             except DataProvider.DoesNotExist:
                 return False
         return False
+
