@@ -67,9 +67,9 @@ class PermissionsCheckTestCase(TestCase):
     def check_user_redirect(self, method, url, redirect_url):
         resp = None
         if method == 'GET':
-            resp = self.client.get(url)
+            resp = self.client.get(url, follow=True)
         elif method == 'POST':
-            resp = self.client.post(url)
+            resp = self.client.post(url, follow=True)
         self.assertRedirects(resp, redirect_url)
 
     def check_authenticated_user_redirect(self, method, url, redirect_url):

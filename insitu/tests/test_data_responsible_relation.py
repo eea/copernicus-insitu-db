@@ -23,13 +23,9 @@ class DataResponsibleRelationTests(base.FormCheckTestCase):
             'data_group': data_group.pk,
             'responsible': responsible.pk
         }
-
-        user = models.User.objects.create_user(username='test',
-                                               password='test')
-        service = base.CopernicusServiceFactory()
-        models.CopernicusResponsible.objects.create(service=service,
-                                                    user=user)
-        self.client.login(username='test', password='test')
+        user = base.UserFactory()
+        base.CopernicususResponsibleFactory(user=user)
+        self.client.force_login(user)
 
     def test_responsible_relation_add_required_fields_from_data_group(self):
         data = {}
@@ -127,12 +123,6 @@ class DataResponsibleRelationPermissionsTests(base.PermissionsCheckTestCase):
     def setUp(self):
         self.redirect_data_group_url = reverse('data_group:list')
         self.redirect_data_responsible_url = reverse('responsible:list')
-        self.methods = ['GET', 'POST']
-
-    def _login_user(self):
-        models.User.objects.create_user(username='test',
-                                        password='test')
-        self.client.login(username='test', password='test')
 
     def test_responsible_relation_add_not_auth_from_data_group(self):
         data_group = base.DataGroupFactory()
@@ -189,7 +179,6 @@ class DataResponsibleRelationPermissionsTests(base.PermissionsCheckTestCase):
                                 'pk': responsible_relation.pk}))
 
     def test_responsible_relation_add_auth_from_data_group(self):
-        self._login_user()
         data_group = base.DataGroupFactory()
         self.check_user_redirect_all_methods(
             redirect_url=self.redirect_data_group_url,
@@ -197,7 +186,6 @@ class DataResponsibleRelationPermissionsTests(base.PermissionsCheckTestCase):
                         kwargs={'group_pk': data_group.pk}))
 
     def test_responsible_relation_delete_auth_from_data_group(self):
-        self._login_user()
         data_group = base.DataGroupFactory()
         responsible_relation = base.DataResponsibleRelationFactory(
             data_group=data_group)
@@ -208,7 +196,6 @@ class DataResponsibleRelationPermissionsTests(base.PermissionsCheckTestCase):
                                 'pk': responsible_relation.pk}))
 
     def test_responsible_relation_edit_auth_from_data_group(self):
-        self._login_user()
         data_group = base.DataGroupFactory()
         responsible_relation = base.DataResponsibleRelationFactory(
             data_group=data_group)
@@ -219,7 +206,6 @@ class DataResponsibleRelationPermissionsTests(base.PermissionsCheckTestCase):
                                 'pk': responsible_relation.pk}))
 
     def test_responsible_relation_add_auth_from_data_responsible(self):
-        self._login_user()
         data_responsible = base.DataResponsibleFactory()
         self.check_user_redirect_all_methods(
             redirect_url=self.redirect_data_responsible_url,
@@ -227,7 +213,6 @@ class DataResponsibleRelationPermissionsTests(base.PermissionsCheckTestCase):
                         kwargs={'responsible_pk': data_responsible.pk}))
 
     def test_responsible_relation_edit_auth_from_data_responsible(self):
-        self._login_user()
         data_responsible = base.DataResponsibleFactory()
         responsible_relation = base.DataResponsibleRelationFactory(
             responsible=data_responsible)
@@ -238,7 +223,6 @@ class DataResponsibleRelationPermissionsTests(base.PermissionsCheckTestCase):
                                 'pk': responsible_relation.pk}))
 
     def test_responsible_relation_delete_auth_from_data_responsible(self):
-        self._login_user()
         data_responsible = base.DataResponsibleFactory()
         responsible_relation = base.DataResponsibleRelationFactory(
             responsible=data_responsible)
