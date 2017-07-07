@@ -1,10 +1,25 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
+
+from django.contrib.auth import get_user_model
 from django.db import models
 from django.db.models.query import QuerySet
 
+from copernicus import settings
 from insitu import signals
 from picklists import models as pickmodels
+
+User = get_user_model()
+
+
+class _WithRelatedUserManager(models.Manager):
+    """
+    A manager whose default queryset pre-selects the related user object
+    for performance reasons.
+    """
+
+    def get_queryset(self):
+        return super().get_queryset().select_related('user')
 
 
 class SoftDeleteQuerySet(QuerySet):
@@ -314,3 +329,40 @@ class DataResponsibleRelation(SoftDeleteModel):
 
     def __str__(self):
         return '{} - {}'.format(self.data_group.name, self.responsible.name)
+
+
+class CopernicusResponsibleManager(_WithRelatedUserManager):
+    pass
+
+
+class CopernicusResponsible(models.Model):
+    user = models.OneToOneField(User,
+                                related_name='service_resp')
+    service = models.ForeignKey(CopernicusService,
+                                related_name='responsible')
+
+    objects = CopernicusResponsibleManager()
+
+
+class CountryResponsibleManager(_WithRelatedUserManager):
+    pass
+
+
+class CountryResponsible(models.Model):
+    user = models.OneToOneField(User,
+                                related_name='country_resp')
+    country = models.ForeignKey(pickmodels.Country,
+                                related_name='responsible')
+
+    objects = CountryResponsibleManager()
+
+
+class DataProviderManager(_WithRelatedUserManager):
+    pass
+
+
+class DataProvider(models.Model):
+    user = models.OneToOneField(User,
+                                related_name='data_resp')
+    responsible = models.ForeignKey(DataResponsible,
+                                    related_name='responsible')
