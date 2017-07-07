@@ -175,6 +175,7 @@ class ProductPermissionTests(base.PermissionsCheckTestCase):
         self.redirect_product_url_auth = reverse('product:list')
         self.methods = ['GET', 'POST']
 
+
     def test_list_product_json_non_auth(self):
         self.check_permission_denied(method='GET',
                                      url=reverse('product:json'))
