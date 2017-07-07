@@ -52,6 +52,7 @@ class ProductListJson(ESDatatableView):
     order_columns = columns
     filters = ['service', 'group', 'status', 'coverage', 'component', 'entity']
     document = documents.ProductDoc
+    permission_classes = (IsAuthenticated, )
 
 
 class ComponentsFilter(ProtectedView):

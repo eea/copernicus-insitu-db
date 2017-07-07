@@ -14,6 +14,7 @@ from insitu.views.protected.permissions import (
     IsCopernicusServiceResponsible,
 )
 
+
 class RequirementDetail(ProtectedDetailView):
     template_name = 'requirement/detail.html'
     model = models.Requirement
@@ -23,6 +24,7 @@ class RequirementDetail(ProtectedDetailView):
     def permission_denied(self, request):
         self.permission_denied_redirect = reverse('auth:login')
         return super().permission_denied(request)
+
 
 class RequirementList(ProtectedTemplateView):
     template_name = 'requirement/list.html'
@@ -49,6 +51,7 @@ class RequirementListJson(ESDatatableView):
     order_columns = columns
     filters = ['dissemination', 'quality']
     document = documents.RequirementDoc
+    permission_classes = (IsAuthenticated, )
 
 
 class RequirementAdd(ProtectedCreateView):

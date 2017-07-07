@@ -58,7 +58,6 @@ class DataGroupTests(base.FormCheckTestCase):
         self.assertIsNot(data['recordsTotal'], 0)
         self.assertEqual(data['recordsTotal'], data['recordsFiltered'])
 
-
     def test_list_data_group_json_filter(self):
         base.DataGroupFactory(name="Test data group")
         base.DataGroupFactory(name="Other data group")

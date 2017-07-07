@@ -111,6 +111,10 @@ class RequirementPermissionTests(base.PermissionsCheckTestCase):
         self.redirect_requirement_url_auth = reverse('requirement:list')
         self.methods = ['GET', 'POST']
 
+    def test_list_requirement_json_non_auth(self):
+        self.check_permission_denied(method='GET',
+                                     url=reverse('requirement:json'))
+
     def test_requirement_list_not_auth(self):
         self.check_user_redirect_all_methods(
             redirect_url=self.redirect_requirement_url_non_auth,
