@@ -118,8 +118,8 @@
             <th>Is network</th>
             <th>Role</th>
             {% if request.user.service_resp or request.user.is_superuser %}
-            <th></th>
-            <th></th>
+              <th></th>
+              <th></th>
             {% endif %}
           </tr>
         </thead>
@@ -201,10 +201,10 @@
             </td>
             {% if request.user.service_resp or request.user.is_superuser %}
               <td>
-              <a href="{% url 'data_group:requirement:edit' data_group_pk=data_group.pk pk=rel.pk %}">Edit</a>
+                <a href="{% url 'data_group:requirement:edit' data_group_pk=data_group.pk pk=rel.pk %}">Edit</a>
               </td>
               <td>
-              <a href="{% url 'data_group:requirement:delete' data_group_pk=data_group.pk pk=rel.pk %}">Delete</a>
+                <a href="{% url 'data_group:requirement:delete' data_group_pk=data_group.pk pk=rel.pk %}">Delete</a>
               </td>
             {% endif %}
           </tr>
