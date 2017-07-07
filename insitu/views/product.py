@@ -11,7 +11,6 @@ from insitu.views.protected import (
     ProtectedView,
     ProtectedTemplateView, ProtectedDetailView,
     ProtectedUpdateView, ProtectedCreateView, ProtectedDeleteView)
-from insitu.views.protected import permissions
 from picklists import models as pickmodels
 
 

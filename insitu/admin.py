@@ -17,3 +17,7 @@ admin.site.register(models.DataGroup)
 admin.site.register(models.DataRequirement)
 admin.site.register(models.DataResponsibleRelation)
 admin.site.register(models.Metric)
+
+admin.site.register(models.CopernicusResponsible)
+admin.site.register(models.DataProvider)
+admin.site.register(models.CountryResponsible)
