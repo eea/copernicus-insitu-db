@@ -1,5 +1,7 @@
 from django.test import TestCase
 
+from insitu.tests.base import UserFactory
+
 
 class FormCheckTestCase(TestCase):
     fields = []
@@ -58,6 +60,10 @@ class FormCheckTestCase(TestCase):
 
 class PermissionsCheckTestCase(TestCase):
 
+    def _login_user(self):
+        user = UserFactory()
+        self.client.force_login(user)
+
     def check_user_redirect(self, method, url, redirect_url):
         resp = None
         if method == 'GET':
@@ -66,9 +72,8 @@ class PermissionsCheckTestCase(TestCase):
             resp = self.client.post(url)
         self.assertRedirects(resp, redirect_url)
 
-    def check_authenticated_user_redirect(self, username, password,
-                                          method, url, redirect_url):
-        self.client.login(username=username, password=password)
+    def check_authenticated_user_redirect(self, method, url, redirect_url):
+        self._login_user()
         self.check_user_redirect(method, url, redirect_url)
         self.client.logout()
 
@@ -76,9 +81,8 @@ class PermissionsCheckTestCase(TestCase):
         for method in ['GET', 'POST']:
             self.check_user_redirect(method, url, redirect_url)
 
-    def check_authenticated_user_redirect_all_methods(self, username, password,
-                                                      url, redirect_url):
-        self.client.login(username=username, password=password)
+    def check_authenticated_user_redirect_all_methods(self, url, redirect_url):
+        self._login_user()
         for method in ['GET', 'POST']:
             self.check_user_redirect(method, url, redirect_url)
         self.client.logout()
