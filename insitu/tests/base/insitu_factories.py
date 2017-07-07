@@ -1,8 +1,16 @@
+from django.contrib.auth.models import User
+
 from factory import SubFactory, RelatedFactory, post_generation
 from factory.django import DjangoModelFactory
 
 from insitu import models
 from insitu.tests.base import picklist_factories as factories
+
+
+class UserFactory(DjangoModelFactory):
+
+    class Meta:
+        model = User
 
 
 class MetricFactory(DjangoModelFactory):
