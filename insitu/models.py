@@ -5,7 +5,6 @@ from django.contrib.auth import get_user_model
 from django.db import models
 from django.db.models.query import QuerySet
 
-from copernicus import settings
 from insitu import signals
 from picklists import models as pickmodels
 

@@ -48,4 +48,3 @@ class IsDataProvider(IsAuthenticated):
             return super().has_permission(request, view)
         except DataProvider.DoesNotExist:
             return False
-
