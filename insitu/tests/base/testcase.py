@@ -64,6 +64,18 @@ class PermissionsCheckTestCase(TestCase):
         user = UserFactory()
         self.client.force_login(user)
 
+    def check_permission_denied(self, method, url):
+        resp = None
+        if method == 'GET':
+            resp = self.client.get(url)
+        elif method == 'POST':
+            resp = self.client.post(url)
+        self.assertEqual(resp.status_code, 403)
+
+    def check_permission_all_methods_denied(self, url):
+        for method in ['GET', 'POST']:
+            self.check_permission_denied(method, url)
+
     def check_user_redirect(self, method, url, redirect_url):
         resp = None
         if method == 'GET':

@@ -1,9 +1,10 @@
 from django_datatables_view.base_datatable_view import BaseDatatableView
 
 from insitu.utils import ALL_OPTIONS_LABEL
+from insitu.views.protected.views import ProtectedView
 
 
-class ESDatatableView(BaseDatatableView):
+class ESDatatableView(BaseDatatableView, ProtectedView):
     def get_initial_queryset(self):
         return self.document.search()
 

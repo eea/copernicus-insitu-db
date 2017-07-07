@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from django.http import HttpResponseRedirect
-from django.urls import reverse
+from django.urls import reverse, reverse_lazy
 
 from insitu import documents
 from insitu import models
@@ -10,10 +10,14 @@ from insitu.views.base import ESDatatableView
 from insitu.views.protected import (
     ProtectedTemplateView, ProtectedDetailView,
     ProtectedUpdateView, ProtectedCreateView, ProtectedDeleteView)
+from insitu.views.protected import IsAuthenticated
+from insitu.views.protected.permissions import IsCopernicusServiceResponsible
 
 
 class DataResponsibleList(ProtectedTemplateView):
     template_name = 'data_responsible/list.html'
+    permission_classes = (IsAuthenticated, )
+    permission_denied_redirect = reverse_lazy('auth:login')
 
     def get_context_data(self):
         context = super().get_context_data()
@@ -33,11 +37,14 @@ class DataResponsibleListJson(ESDatatableView):
     order_columns = columns
     filters = ['is_network', 'responsible_type']
     document = documents.DataResponsibleDoc
+    permission_classes = (IsAuthenticated, )
 
 
 class DataResponsibleDetail(ProtectedDetailView):
     model = models.DataResponsible
     context_object_name = 'responsible'
+    permission_classes = (IsAuthenticated, )
+    permission_denied_redirect = reverse_lazy('responsible:list')
 
     def get_template_names(self):
         responsible = self.object
@@ -49,6 +56,8 @@ class DataResponsibleDetail(ProtectedDetailView):
 class DataResponsibleAddNetwork(ProtectedCreateView):
     template_name = 'data_responsible/network/add.html'
     form_class = forms.DataResponsibleNetworkForm
+    permission_classes = (IsCopernicusServiceResponsible, )
+    permission_denied_redirect = reverse_lazy('responsible:list')
 
     def get_success_url(self):
         return reverse('responsible:detail', kwargs={'pk': self.object.pk})
@@ -59,6 +68,8 @@ class DataResponsibleEditNetwork(ProtectedUpdateView):
     form_class = forms.DataResponsibleNetworkForm
     context_object_name = 'responsible'
     model = models.DataResponsible
+    permission_classes = (IsCopernicusServiceResponsible, )
+    permission_denied_redirect = reverse_lazy('responsible:list')
 
     def get_success_url(self):
         return reverse('responsible:detail', kwargs={'pk': self.object.pk})
@@ -69,6 +80,8 @@ class DataResponsibleDeleteNetwork(ProtectedDeleteView):
     form_class = forms.DataResponsibleNetworkForm
     context_object_name = 'responsible'
     model = models.DataResponsible
+    permission_classes = (IsCopernicusServiceResponsible, )
+    permission_denied_redirect = reverse_lazy('responsible:list')
 
     def get_success_url(self):
         return reverse('responsible:list')
@@ -77,6 +90,8 @@ class DataResponsibleDeleteNetwork(ProtectedDeleteView):
 class DataResponsibleAddNonNetwork(ProtectedCreateView):
     template_name = 'data_responsible/non_network/add.html'
     form_class = forms.DataResponsibleNonNetworkForm
+    permission_classes = (IsCopernicusServiceResponsible, )
+    permission_denied_redirect = reverse_lazy('responsible:list')
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -114,6 +129,8 @@ class DataResponsibleEditNonNetwork(ProtectedUpdateView):
     form_class = forms.DataResponsibleNonNetworkForm
     context_object_name = 'responsible'
     model = models.DataResponsible
+    permission_classes = (IsCopernicusServiceResponsible, )
+    permission_denied_redirect = reverse_lazy('responsible:list')
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -148,11 +165,14 @@ class DataResponsibleEditNonNetwork(ProtectedUpdateView):
     def get_success_url(self):
         return reverse('responsible:detail', kwargs={'pk': self.object.pk})
 
+
 class DataResponsibleDeleteNonNetwork(ProtectedDeleteView):
     template_name = 'data_responsible/non_network/delete.html'
     form_class = forms.DataResponsibleNonNetworkForm
     context_object_name = 'responsible'
     model = models.DataResponsible
+    permission_classes = (IsCopernicusServiceResponsible, )
+    permission_denied_redirect = reverse_lazy('responsible:list')
 
     def get_success_url(self):
         return reverse('responsible:list')
