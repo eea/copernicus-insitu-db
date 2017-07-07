@@ -34,6 +34,22 @@
           <a href="{{ responsible_list }}">Data responsibles</a>
         </li>
       </ul>
+      <ul class="pull-right nav navbar-nav">
+        {% if user.is_authenticated %}
+          {% url 'auth:logout' as logout %}
+          <li>
+            <a>Hello, {{ user.username }}</a>
+          </li>
+          <li class="{% active logout %}">
+            <a href="{{ logout }}">Logout</a>
+          </li>
+        {% else %}
+          {% url 'auth:login' as login %}
+          <li class="{% active login %}">
+            <a href="{{ login }}">Login</a>
+          </li>
+        {% endif %}
+      </ul>
     </div><!-- /.navbar-collapse -->
   </div><!-- /.container-fluid -->
 </nav>

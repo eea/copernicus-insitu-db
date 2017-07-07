@@ -189,6 +189,15 @@ responsible_patterns = [
                 namespace='group')),
 ]
 
+auth_patterns = [
+    url(r'^login/',
+        views.LoginView.as_view(),
+        name='login'),
+    url(r'^logout/',
+        views.LogoutView.as_view(),
+        name='logout'),
+]
+
 urlpatterns = [
     url(r'^$',
         views.HomeView.as_view(),
@@ -209,4 +218,7 @@ urlpatterns = [
     url(r'^responsible/',
         include(responsible_patterns,
                 namespace='responsible')),
+    url(r'',
+        include(auth_patterns,
+                namespace='auth')),
 ]
