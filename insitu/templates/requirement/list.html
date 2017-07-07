@@ -15,10 +15,12 @@
   <div class="row">
     <h1 class="col-sm-12">
       <span>Requirements</span>
-      <span class="pull-right">
-        <a class="btn btn-primary pull-right"
-           href="{% url 'requirement:add' %}">New requirement</a>
-      </span>
+      {% if request.user.service_resp or request.user.is_superuser %}
+        <span class="pull-right">
+          <a class="btn btn-primary pull-right"
+             href="{% url 'requirement:add' %}">New requirement</a>
+        </span>
+      {% endif %}
     </h1>
   </div>
 

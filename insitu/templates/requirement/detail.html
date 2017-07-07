@@ -14,14 +14,16 @@
   <div class="row">
     <h1 class="col-sm-12">
       <span>Requirement details</span>
-      <span class="pull-right delete-btn">
-      <a class="btn btn-primary pull-right" href="{% url 'requirement:delete' requirement.pk %}">Delete
-        requirement</a>
-      </span>
-      <span class="pull-right">
-      <a class="btn btn-primary pull-right"
-         href="{% url 'requirement:edit' requirement.pk %}">Edit requirement</a>
-      </span>
+      {% if request.user.service_resp or request.user.is_superuser %}
+        <span class="pull-right delete-btn">
+        <a class="btn btn-primary pull-right" href="{% url 'requirement:delete' requirement.pk %}">Delete
+          requirement</a>
+        </span>
+        <span class="pull-right">
+        <a class="btn btn-primary pull-right"
+           href="{% url 'requirement:edit' requirement.pk %}">Edit requirement</a>
+        </span>
+      {% endif %}
     </h1>
   </div>
 
@@ -80,10 +82,12 @@
   <div class="row">
     <h3 class="col-sm-12">
       <span>Products</span>
-      <span class="pull-right">
-        <a class="btn btn-primary pull-right"
-           href="{% url 'requirement:product:add' requirement.pk %}">Add product requirement</a>
-      </span>
+      {% if request.user.service_resp or request.user.is_superuser %}
+        <span class="pull-right">
+          <a class="btn btn-primary pull-right"
+             href="{% url 'requirement:product:add' requirement.pk %}">Add product requirement</a>
+        </span>
+      {% endif %}
     </h3>
     <div class="col-sm-12">
       <table id="products"
@@ -97,8 +101,10 @@
           <th>Criticality</th>
           <th>Barriers</th>
           <th>Note</th>
-          <th class="no-sort"></th>
-          <th class="no-sort"></th>
+          {% if request.user.service_resp or request.user.is_superuser %}
+            <th class="no-sort"></th>
+            <th class="no-sort"></th>
+          {% endif %}
         </tr>
         </thead>
         <tbody>
@@ -117,12 +123,14 @@
               {% endfor %}
             </td>
             <td>{{ rel.note }}</td>
-            <td>
-              <a href="{% url 'requirement:product:edit' requirement_pk=requirement.pk pk=rel.pk %}">Edit</a>
-            </td>
-            <td>
-              <a href="{% url 'requirement:product:delete' requirement_pk=requirement.pk pk=rel.pk %}">Delete</a>
-            </td>
+            {% if request.user.service_resp or request.user.is_superuser %}
+              <td>
+                <a href="{% url 'requirement:product:edit' requirement_pk=requirement.pk pk=rel.pk %}">Edit</a>
+              </td>
+              <td>
+                <a href="{% url 'requirement:product:delete' requirement_pk=requirement.pk pk=rel.pk %}">Delete</a>
+              </td>
+            {% endif %}
           </tr>
         {% endfor %}
         </tbody>
@@ -133,10 +141,12 @@
   <div class="row">
     <h3 class="col-sm-12">
       <span>Data Groups</span>
-      <span class="pull-right">
-        <a class="btn btn-primary pull-right"
-           href="{% url 'requirement:data_group:add' requirement.pk %}">Add data requirement</a>
-      </span>
+      {% if request.user.service_resp or request.user.is_superuser %}
+        <span class="pull-right">
+          <a class="btn btn-primary pull-right"
+             href="{% url 'requirement:data_group:add' requirement.pk %}">Add data requirement</a>
+        </span>
+      {% endif %}
     </h3>
     <div class="col-sm-12">
         <table id="data_groups"
@@ -148,8 +158,10 @@
             <th>Note</th>
             <th>Information costs</th>
             <th>Handling costs</th>
-            <th class="no-sort"></th>
-            <th class="no-sort"></th>
+            {% if request.user.service_resp or request.user.is_superuser %}
+              <th class="no-sort"></th>
+              <th class="no-sort"></th>
+            {% endif %}
           </tr>
           </thread>
           <tbody>
@@ -174,12 +186,14 @@
                   <span class='glyphicon glyphicon-remove-circle text-danger'></span>
                 {% endif %}
               </td>
-              <td>
-              <a href="{% url 'requirement:data_group:edit' requirement_pk=requirement.pk pk=rel.pk %}">Edit</a>
-              </td>
-              <td>
-              <a href="{% url 'requirement:data_group:delete' requirement_pk=requirement.pk pk=rel.pk %}">Delete</a>
-              </td>
+              {% if request.user.service_resp or request.user.is_superuser %}
+                <td>
+                  <a href="{% url 'requirement:data_group:edit' requirement_pk=requirement.pk pk=rel.pk %}">Edit</a>
+                </td>
+                <td>
+                  <a href="{% url 'requirement:data_group:delete' requirement_pk=requirement.pk pk=rel.pk %}">Delete</a>
+                </td>
+              {% endif %}
             </tr>
           {% endfor %}
           </tbody>

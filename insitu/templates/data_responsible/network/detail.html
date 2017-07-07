@@ -14,16 +14,18 @@
   <div class="row">
     <h1 class="col-sm-12">
       <span>Data responsible network</span>
-      <span class="pull-right delete-btn">
-      <a class="btn btn-primary pull-right" href="{% url 'responsible:delete_network' responsible.pk %}">Delete
-        data responsible</a>
-      </span>
-      <span class="pull-right">
-      <a class="btn btn-primary pull-right"
-         href="{% url 'responsible:edit_network' responsible.pk %}">
-        Edit data responsible
-      </a>
-      </span>
+      {% if request.user.service_resp or request.user.is_superuser %}
+        <span class="pull-right delete-btn">
+        <a class="btn btn-primary pull-right" href="{% url 'responsible:delete_network' responsible.pk %}">Delete
+          data responsible</a>
+        </span>
+        <span class="pull-right">
+        <a class="btn btn-primary pull-right"
+           href="{% url 'responsible:edit_network' responsible.pk %}">
+          Edit data responsible
+        </a>
+        </span>
+      {% endif %}
     </h1>
   </div>
 
