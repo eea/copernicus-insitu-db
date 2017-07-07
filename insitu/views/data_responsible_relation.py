@@ -2,13 +2,14 @@
 from __future__ import unicode_literals
 
 from django.core.urlresolvers import reverse
-from django.views.generic import CreateView, UpdateView, DeleteView
+from insitu.views.protected import (
+    ProtectedUpdateView, ProtectedCreateView, ProtectedDeleteView)
 
 from insitu import models
 from insitu import forms
 
 
-class DataGroupDataResponsibleAdd(CreateView):
+class DataGroupDataResponsibleAdd(ProtectedCreateView):
     template_name = 'data_group/data_responsible/add.html'
 
     def _set_model_used(self):
@@ -55,7 +56,7 @@ class DataGroupDataResponsibleAdd(CreateView):
         return super().post(self, request, *args, **kwargs)
 
 
-class DataGroupDataResponsibleEdit(UpdateView):
+class DataGroupDataResponsibleEdit(ProtectedUpdateView):
     model = models.DataResponsibleRelation
     template_name = 'data_group/data_responsible/edit.html'
     form_class = forms.DataResponsibleRelationEditForm
@@ -79,7 +80,7 @@ class DataGroupDataResponsibleEdit(UpdateView):
         return self._get_reverse_url()
 
 
-class DataGroupDataResponsibleDelete(DeleteView):
+class DataGroupDataResponsibleDelete(ProtectedDeleteView):
     model = models.DataResponsibleRelation
     template_name = 'data_group/data_responsible/delete.html'
     context_object_name = 'rel'

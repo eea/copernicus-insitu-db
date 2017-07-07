@@ -1,17 +1,17 @@
 from django.core.urlresolvers import reverse
 
-from django.views.generic import DetailView, TemplateView
-from django.views.generic import CreateView, UpdateView, DeleteView
-
 from insitu import documents
 from insitu import forms
 from insitu import models
 from insitu.utils import get_choices
 from insitu.views.base import ESDatatableView
+from insitu.views.protected import (
+    ProtectedTemplateView, ProtectedDetailView,
+    ProtectedUpdateView, ProtectedCreateView, ProtectedDeleteView)
 from picklists import models as pickmodels
 
 
-class DataGroupList(TemplateView):
+class DataGroupList(ProtectedTemplateView):
     template_name = 'data_group/list.html'
 
     def get_context_data(self):
@@ -44,7 +44,7 @@ class DataGroupListJson(ESDatatableView):
     document = documents.DataGroupDoc
 
 
-class DataGroupAdd(CreateView):
+class DataGroupAdd(ProtectedCreateView):
     template_name = 'data_group/add.html'
     form_class = forms.DataGroupForm
     model = models.DataGroup
@@ -54,7 +54,7 @@ class DataGroupAdd(CreateView):
         return reverse('data_group:detail', kwargs={'pk': instance.pk})
 
 
-class DataGroupEdit(UpdateView):
+class DataGroupEdit(ProtectedUpdateView):
     template_name = 'data_group/edit.html'
     form_class = forms.DataGroupForm
     model = models.DataGroup
@@ -64,13 +64,13 @@ class DataGroupEdit(UpdateView):
         return reverse('data_group:detail', kwargs={'pk': self.object.pk})
 
 
-class DataGroupDetail(DetailView):
+class DataGroupDetail(ProtectedDetailView):
     template_name = 'data_group/detail.html'
     model = models.DataGroup
     context_object_name = 'data_group'
 
 
-class DataGroupDelete(DeleteView):
+class DataGroupDelete(ProtectedDeleteView):
 
     template_name = 'data_group/delete.html'
     form_class = forms.DataGroupForm

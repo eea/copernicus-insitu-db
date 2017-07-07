@@ -1,20 +1,21 @@
 # -*- coding: utf-8 -*-
 from django.core.urlresolvers import reverse
 from django.http.response import JsonResponse
-from django.views.generic import View
-from django.views.generic import TemplateView, DetailView
-from django.views.generic import CreateView, UpdateView
-from django.views.generic import DeleteView
 
 from insitu import documents
 from insitu import forms
 from insitu import models
 from insitu.utils import get_choices, ALL_OPTIONS_LABEL
 from insitu.views.base import ESDatatableView
+from insitu.views.protected import (
+    ProtectedView,
+    ProtectedTemplateView, ProtectedDetailView,
+    ProtectedUpdateView, ProtectedCreateView, ProtectedDeleteView)
+from insitu.views.protected import permissions
 from picklists import models as pickmodels
 
 
-class ProductList(TemplateView):
+class ProductList(ProtectedTemplateView):
     template_name = 'product/list.html'
 
     def get_context_data(self):
@@ -44,7 +45,7 @@ class ProductListJson(ESDatatableView):
     document = documents.ProductDoc
 
 
-class ComponentsFilter(View):
+class ComponentsFilter(ProtectedView):
     def get(self, request, *args, **kwargs):
         service = request.GET.get('service', '')
         entity = request.GET.get('entity', '')
@@ -58,7 +59,7 @@ class ComponentsFilter(View):
         return JsonResponse(data)
 
 
-class ProductAdd(CreateView):
+class ProductAdd(ProtectedCreateView):
     template_name = 'product/add.html'
     form_class = forms.ProductForm
 
@@ -66,7 +67,7 @@ class ProductAdd(CreateView):
         return reverse('product:list')
 
 
-class ProductEdit(UpdateView):
+class ProductEdit(ProtectedUpdateView):
     template_name = 'product/edit.html'
     form_class = forms.ProductForm
     model = models.Product
@@ -76,13 +77,13 @@ class ProductEdit(UpdateView):
         return reverse('product:list')
 
 
-class ProductDetail(DetailView):
+class ProductDetail(ProtectedDetailView):
     template_name = 'product/detail.html'
     model = models.Product
     context_object_name = 'product'
 
 
-class ProductDelete(DeleteView):
+class ProductDelete(ProtectedDeleteView):
 
     template_name = 'product/delete.html'
     form_class = forms.ProductForm

@@ -1,17 +1,18 @@
 # -*- coding: utf-8 -*-
 from django.http import HttpResponseRedirect
 from django.urls import reverse
-from django.views.generic import CreateView, UpdateView, DeleteView
-from django.views.generic import TemplateView, DetailView
 
 from insitu import documents
 from insitu import models
 from insitu import forms
 from insitu.utils import ALL_OPTIONS_LABEL
 from insitu.views.base import ESDatatableView
+from insitu.views.protected import (
+    ProtectedTemplateView, ProtectedDetailView,
+    ProtectedUpdateView, ProtectedCreateView, ProtectedDeleteView)
 
 
-class DataResponsibleList(TemplateView):
+class DataResponsibleList(ProtectedTemplateView):
     template_name = 'data_responsible/list.html'
 
     def get_context_data(self):
@@ -34,7 +35,7 @@ class DataResponsibleListJson(ESDatatableView):
     document = documents.DataResponsibleDoc
 
 
-class DataResponsibleDetail(DetailView):
+class DataResponsibleDetail(ProtectedDetailView):
     model = models.DataResponsible
     context_object_name = 'responsible'
 
@@ -45,7 +46,7 @@ class DataResponsibleDetail(DetailView):
         return ['data_responsible/non_network/detail.html']
 
 
-class DataResponsibleAddNetwork(CreateView):
+class DataResponsibleAddNetwork(ProtectedCreateView):
     template_name = 'data_responsible/network/add.html'
     form_class = forms.DataResponsibleNetworkForm
 
@@ -53,7 +54,7 @@ class DataResponsibleAddNetwork(CreateView):
         return reverse('responsible:detail', kwargs={'pk': self.object.pk})
 
 
-class DataResponsibleEditNetwork(UpdateView):
+class DataResponsibleEditNetwork(ProtectedUpdateView):
     template_name = 'data_responsible/network/edit.html'
     form_class = forms.DataResponsibleNetworkForm
     context_object_name = 'responsible'
@@ -63,7 +64,7 @@ class DataResponsibleEditNetwork(UpdateView):
         return reverse('responsible:detail', kwargs={'pk': self.object.pk})
 
 
-class DataResponsibleDeleteNetwork(DeleteView):
+class DataResponsibleDeleteNetwork(ProtectedDeleteView):
     template_name = 'data_responsible/network/delete.html'
     form_class = forms.DataResponsibleNetworkForm
     context_object_name = 'responsible'
@@ -73,7 +74,7 @@ class DataResponsibleDeleteNetwork(DeleteView):
         return reverse('responsible:list')
 
 
-class DataResponsibleAddNonNetwork(CreateView):
+class DataResponsibleAddNonNetwork(ProtectedCreateView):
     template_name = 'data_responsible/non_network/add.html'
     form_class = forms.DataResponsibleNonNetworkForm
 
@@ -108,7 +109,7 @@ class DataResponsibleAddNonNetwork(CreateView):
         return reverse('responsible:detail', kwargs={'pk': self.object.pk})
 
 
-class DataResponsibleEditNonNetwork(UpdateView):
+class DataResponsibleEditNonNetwork(ProtectedUpdateView):
     template_name = 'data_responsible/non_network/edit.html'
     form_class = forms.DataResponsibleNonNetworkForm
     context_object_name = 'responsible'
@@ -147,7 +148,7 @@ class DataResponsibleEditNonNetwork(UpdateView):
     def get_success_url(self):
         return reverse('responsible:detail', kwargs={'pk': self.object.pk})
 
-class DataResponsibleDeleteNonNetwork(DeleteView):
+class DataResponsibleDeleteNonNetwork(ProtectedDeleteView):
     template_name = 'data_responsible/non_network/delete.html'
     form_class = forms.DataResponsibleNonNetworkForm
     context_object_name = 'responsible'

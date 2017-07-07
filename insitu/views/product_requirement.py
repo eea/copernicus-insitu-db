@@ -2,13 +2,14 @@
 from __future__ import unicode_literals
 
 from django.core.urlresolvers import reverse
-from django.views.generic import CreateView, UpdateView, DeleteView
 
 from insitu import models
 from insitu import forms
+from insitu.views.protected import (
+    ProtectedUpdateView, ProtectedCreateView, ProtectedDeleteView)
 
 
-class ProductRequirementAdd(CreateView):
+class ProductRequirementAdd(ProtectedCreateView):
     template_name = 'product/requirement/add.html'
 
     def _set_model_used(self):
@@ -55,7 +56,7 @@ class ProductRequirementAdd(CreateView):
         return super().post(self, request, *args, **kwargs)
 
 
-class ProductRequirementEdit(UpdateView):
+class ProductRequirementEdit(ProtectedUpdateView):
     model = models.ProductRequirement
     template_name = 'product/requirement/edit.html'
     form_class = forms.ProductRequirementEditForm
@@ -79,7 +80,7 @@ class ProductRequirementEdit(UpdateView):
         return self._get_reverse_url()
 
 
-class ProductRequirementDelete(DeleteView):
+class ProductRequirementDelete(ProtectedDeleteView):
     model = models.ProductRequirement
     template_name = 'product/requirement/delete.html'
     form_class = forms.ProductRequirementEditForm
