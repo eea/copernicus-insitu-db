@@ -1,6 +1,7 @@
 from django.core.urlresolvers import reverse
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth import login as auth_login, logout as auth_logout
+from django.shortcuts import redirect
 from django.views.generic import FormView, RedirectView
 
 
@@ -8,6 +9,11 @@ class LoginView(FormView):
     success_url = '/'
     form_class = AuthenticationForm
     template_name = 'auth/login.html'
+
+    def dispatch(self, request, *args, **kwargs):
+        if request.user.is_authenticated():
+            return redirect(reverse('home'))
+        return super(FormView, self).dispatch(request, *args, **kwargs)
 
     def form_valid(self, form):
         auth_login(self.request, form.get_user())
