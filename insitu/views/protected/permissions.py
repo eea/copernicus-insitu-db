@@ -31,7 +31,7 @@ class IsCopernicusServiceResponsible(IsAuthenticated):
                 request.user.service_resp
                 return True
             except CopernicusResponsible.DoesNotExist:
-                return False
+                return request.user.is_superuser
         return False
 
 
@@ -43,7 +43,7 @@ class IsCountryResponsible(IsAuthenticated):
                 request.user.country_resp
                 return True
             except CountryResponsible.DoesNotExist:
-                return False
+                return request.user.is_superuser
         return False
 
 
@@ -55,6 +55,6 @@ class IsDataProvider(IsAuthenticated):
                 request.user.data_resp
                 return True
             except DataProvider.DoesNotExist:
-                return False
+                return request.user.is_superuser
         return False
 
