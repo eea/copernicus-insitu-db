@@ -9,16 +9,30 @@ from insitu.views.protected import (
     ProtectedTemplateView, ProtectedDetailView,
     ProtectedUpdateView, ProtectedCreateView, ProtectedDeleteView)
 from picklists import models as pickmodels
+from insitu.views.protected.permissions import (
+    IsAuthenticated,
+    IsCopernicusServiceResponsible,
+)
 
 
 class RequirementDetail(ProtectedDetailView):
     template_name = 'requirement/detail.html'
     model = models.Requirement
     context_object_name = 'requirement'
+    permission_classes = (IsAuthenticated,)
+
+    def permission_denied(self, request):
+        self.permission_denied_redirect = reverse('auth:login')
+        return super().permission_denied(request)
 
 
 class RequirementList(ProtectedTemplateView):
     template_name = 'requirement/list.html'
+    permission_classes = (IsAuthenticated, )
+
+    def permission_denied(self, request):
+        self.permission_denied_redirect = reverse('auth:login')
+        return super().permission_denied(request)
 
     def get_context_data(self):
         context = super(RequirementList, self).get_context_data()
@@ -37,12 +51,18 @@ class RequirementListJson(ESDatatableView):
     order_columns = columns
     filters = ['dissemination', 'quality']
     document = documents.RequirementDoc
+    permission_classes = (IsAuthenticated, )
 
 
 class RequirementAdd(ProtectedCreateView):
     template_name = 'requirement/add.html'
     form_class = forms.RequirementForm
     model = models.Requirement
+    permission_classes = (IsCopernicusServiceResponsible, )
+
+    def permission_denied(self, request):
+        self.permission_denied_redirect = reverse('requirement:list')
+        return super().permission_denied(request)
 
     def get_success_url(self):
         instance = self.object
@@ -54,6 +74,11 @@ class RequirementEdit(ProtectedUpdateView):
     form_class = forms.RequirementForm
     model = models.Requirement
     context_object_name = 'requirement'
+    permission_classes = (IsCopernicusServiceResponsible, )
+
+    def permission_denied(self, request):
+        self.permission_denied_redirect = reverse('requirement:list')
+        return super().permission_denied(request)
 
     def get_initial(self):
         requirement = self.get_object()
@@ -79,6 +104,11 @@ class RequirementDelete(ProtectedDeleteView):
     form_class = forms.RequirementForm
     model = models.Requirement
     context_object_name = 'requirement'
+    permission_classes = (IsCopernicusServiceResponsible, )
+
+    def permission_denied(self, request):
+        self.permission_denied_redirect = reverse('requirement:list')
+        return super().permission_denied(request)
 
     def get_success_url(self):
         return reverse('requirement:list')

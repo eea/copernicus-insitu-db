@@ -6,14 +6,13 @@ from insitu.tests import base
 REQUIRED_ERROR = ['This field is required.']
 
 
-class ProductRequirementTests(base.CreateCheckTestCase):
+class ProductRequirementTests(base.FormCheckTestCase):
     fields = ['note']
-    related_fields = [
-        'requirement', 'product', 'level_of_definition', 'distance_to_target',
-        'relevance', 'criticality']
+    related_fields = ['requirement', 'product', 'level_of_definition', 
+                      'distance_to_target', 'relevance', 'criticality']
     many_to_many_fields = ['barriers']
     required_fields = ['requirement', 'product', 'level_of_definition',
-        'distance_to_target', 'relevance', 'criticality', 'barriers']
+                       'distance_to_target', 'relevance', 'criticality', 'barriers']
 
     def setUp(self):
         super().setUp()
@@ -35,6 +34,9 @@ class ProductRequirementTests(base.CreateCheckTestCase):
             'criticality': criticality.pk,
             'barriers': [barrier.pk for barrier in barriers]
         }
+        user = base.UserFactory()
+        self.client.force_login(user)
+        base.CopernicususResponsibleFactory(user=user)
 
     def test_product_requirement_add_required_fields_from_product(self):
         data = {}
@@ -125,3 +127,117 @@ class ProductRequirementTests(base.CreateCheckTestCase):
             data)
         self.assertEqual(resp.status_code, 302)
         self.check_single_object_deleted(models.ProductRequirement)
+
+
+class ProductRequirementPermissionsTests(base.PermissionsCheckTestCase):
+
+    def setUp(self):
+        self.login_url = reverse('auth:login')
+
+    def test_product_requirement_add_not_auth_from_product(self):
+        product = base.ProductFactory()
+        self.check_user_redirect_all_methods(
+            redirect_url=self.login_url,
+            url=reverse('product:requirement:add',
+                        kwargs={'product_pk': product.pk}))
+
+    def test_product_requirement_delete_not_auth_from_product(self):
+        product = base.ProductFactory()
+        product_requirement = base.ProductRequirementFactory(
+            product=product)
+        self.check_user_redirect_all_methods(
+            redirect_url=self.login_url,
+            url=reverse('product:requirement:edit',
+                        kwargs={'product_pk': product.pk,
+                                'pk': product_requirement.pk}))
+
+    def test_product_requirement_edit_not_auth_from_product(self):
+        product = base.ProductFactory()
+        product_requirement = base.ProductRequirementFactory(
+            product=product)
+        self.check_user_redirect_all_methods(
+            redirect_url=self.login_url,
+            url=reverse('product:requirement:delete',
+                        kwargs={'product_pk': product.pk,
+                                'pk': product_requirement.pk}))
+
+    def test_product_requirement_add_not_auth_from_data_requirement(self):
+        data_requirement = base.RequirementFactory()
+        self.check_user_redirect_all_methods(
+            redirect_url=self.login_url,
+            url=reverse('requirement:product:add',
+                        kwargs={'requirement_pk': data_requirement.pk}))
+
+    def test_product_requirement_edit_not_auth_from_data_requirement(self):
+        data_requirement = base.RequirementFactory()
+        product_requirement = base.ProductRequirementFactory(
+            requirement=data_requirement)
+        self.check_user_redirect_all_methods(
+            redirect_url=self.login_url,
+            url=reverse('requirement:product:edit',
+                        kwargs={'requirement_pk': data_requirement.pk,
+                                'pk': product_requirement.pk}))
+
+    def test_product_requirement_delete_not_auth_from_data_requirement(self):
+        data_requirement = base.RequirementFactory()
+        product_requirement = base.ProductRequirementFactory(
+            requirement=data_requirement)
+        self.check_user_redirect_all_methods(
+            redirect_url=self.login_url,
+            url=reverse('requirement:product:delete',
+                        kwargs={'requirement_pk': data_requirement.pk,
+                                'pk': product_requirement.pk}))
+
+    def test_product_requirement_add_auth_from_product(self):
+        product = base.ProductFactory()
+        self.check_user_redirect_all_methods(
+            redirect_url=self.login_url,
+            url=reverse('product:requirement:add',
+                        kwargs={'product_pk': product.pk}))
+
+    def test_product_requirement_delete_auth_from_product(self):
+        product = base.ProductFactory()
+        product_requirement = base.ProductRequirementFactory(
+            product=product)
+        self.check_user_redirect_all_methods(
+            redirect_url=self.login_url,
+            url=reverse('product:requirement:edit',
+                        kwargs={'product_pk': product.pk,
+                                'pk': product_requirement.pk}))
+
+    def test_product_requirement_edit_auth_from_product(self):
+        product = base.ProductFactory()
+        product_requirement = base.ProductRequirementFactory(
+            product=product)
+        self.check_user_redirect_all_methods(
+            redirect_url=self.login_url,
+            url=reverse('product:requirement:delete',
+                        kwargs={'product_pk': product.pk,
+                                'pk': product_requirement.pk}))
+
+    def test_product_requirement_add_auth_from_data_requirement(self):
+        data_requirement = base.RequirementFactory()
+        self.check_user_redirect_all_methods(
+            redirect_url=self.login_url,
+            url=reverse('requirement:product:add',
+                        kwargs={'requirement_pk': data_requirement.pk}))
+
+    def test_product_requirement_edit_auth_from_data_requirement(self):
+        data_requirement = base.RequirementFactory()
+        product_requirement = base.ProductRequirementFactory(
+            requirement=data_requirement)
+        self.check_user_redirect_all_methods(
+            redirect_url=self.login_url,
+            url=reverse('requirement:product:edit',
+                        kwargs={'requirement_pk': data_requirement.pk,
+                                'pk': product_requirement.pk}))
+
+    def test_product_requirement_delete_auth_from_data_requirement(self):
+        data_requirement = base.RequirementFactory()
+        product_requirement = base.ProductRequirementFactory(
+            requirement=data_requirement)
+        self.check_user_redirect_all_methods(
+            redirect_url=self.login_url,
+            url=reverse('requirement:product:delete',
+                        kwargs={'requirement_pk': data_requirement.pk,
+                                'pk': product_requirement.pk}))

@@ -7,10 +7,19 @@ from insitu import models
 from insitu import forms
 from insitu.views.protected import (
     ProtectedUpdateView, ProtectedCreateView, ProtectedDeleteView)
+from insitu.views.protected.permissions import IsCopernicusServiceResponsible
 
 
 class ProductRequirementAdd(ProtectedCreateView):
     template_name = 'product/requirement/add.html'
+    permission_classes = (IsCopernicusServiceResponsible, )
+
+    def permission_denied(self, request):
+        if 'product_pk' in self.kwargs:
+            self.permission_denied_redirect = reverse('product:list')
+        else:
+            self.permission_denied_redirect = reverse('requirement:list')
+        return super().permission_denied(request)
 
     def _set_model_used(self):
         if 'product_pk' in self.kwargs:
@@ -61,6 +70,14 @@ class ProductRequirementEdit(ProtectedUpdateView):
     template_name = 'product/requirement/edit.html'
     form_class = forms.ProductRequirementEditForm
     context_object_name = 'rel'
+    permission_classes = (IsCopernicusServiceResponsible, )
+
+    def permission_denied(self, request):
+        if 'product_pk' in self.kwargs:
+            self.permission_denied_redirect = reverse('product:list')
+        else:
+            self.permission_denied_redirect = reverse('requirement:list')
+        return super().permission_denied(request)
 
     def _get_reverse_url(self):
         if 'product_pk' in self.kwargs:
@@ -85,6 +102,14 @@ class ProductRequirementDelete(ProtectedDeleteView):
     template_name = 'product/requirement/delete.html'
     form_class = forms.ProductRequirementEditForm
     context_object_name = 'rel'
+    permission_classes = (IsCopernicusServiceResponsible, )
+
+    def permission_denied(self, request):
+        if 'product_pk' in self.kwargs:
+            self.permission_denied_redirect = reverse('product:list')
+        else:
+            self.permission_denied_redirect = reverse('requirement:list')
+        return super().permission_denied(request)
 
     def _get_reverse_url(self):
         if 'product_pk' in self.kwargs:

@@ -35,6 +35,12 @@
         </li>
       </ul>
       <ul class="pull-right nav navbar-nav">
+        {% if user.is_superuser %}
+          {% url 'admin:index' as admin %}
+          <li class="{% active admin %}">
+            <a href="{{ admin }}">Administration</a>
+          </li>
+        {% endif %}
         {% if user.is_authenticated %}
           {% url 'auth:logout' as logout %}
           <li>

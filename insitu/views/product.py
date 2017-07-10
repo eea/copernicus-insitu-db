@@ -11,11 +11,21 @@ from insitu.views.protected import (
     ProtectedView,
     ProtectedTemplateView, ProtectedDetailView,
     ProtectedUpdateView, ProtectedCreateView, ProtectedDeleteView)
+from insitu.views.protected.permissions import (
+    IsAuthenticated,
+    IsCopernicusServiceResponsible,
+)
 from picklists import models as pickmodels
 
 
 class ProductList(ProtectedTemplateView):
     template_name = 'product/list.html'
+    permission_classes = (IsAuthenticated, )
+    permission_denied_redirect = None
+
+    def permission_denied(self, request):
+        self.permission_denied_redirect = reverse('auth:login')
+        return super().permission_denied(request)
 
     def get_context_data(self):
         context = super(ProductList, self).get_context_data()
@@ -42,9 +52,12 @@ class ProductListJson(ESDatatableView):
     order_columns = columns
     filters = ['service', 'group', 'status', 'coverage', 'component', 'entity']
     document = documents.ProductDoc
+    permission_classes = (IsAuthenticated, )
 
 
 class ComponentsFilter(ProtectedView):
+    permission_classes = (IsAuthenticated, )
+
     def get(self, request, *args, **kwargs):
         service = request.GET.get('service', '')
         entity = request.GET.get('entity', '')
@@ -61,9 +74,16 @@ class ComponentsFilter(ProtectedView):
 class ProductAdd(ProtectedCreateView):
     template_name = 'product/add.html'
     form_class = forms.ProductForm
+    permission_classes = (IsCopernicusServiceResponsible, )
+
+    def permission_denied(self, request):
+        self.permission_denied_redirect = reverse('product:list')
+        return super().permission_denied(request)
 
     def get_success_url(self):
         return reverse('product:list')
+
+
 
 
 class ProductEdit(ProtectedUpdateView):
@@ -71,6 +91,11 @@ class ProductEdit(ProtectedUpdateView):
     form_class = forms.ProductForm
     model = models.Product
     context_object_name = 'product'
+    permission_classes = (IsCopernicusServiceResponsible, )
+
+    def permission_denied(self, request):
+        self.permission_denied_redirect = reverse('product:list')
+        return super().permission_denied(request)
 
     def get_success_url(self):
         product = self.get_object()
@@ -81,6 +106,11 @@ class ProductDetail(ProtectedDetailView):
     template_name = 'product/detail.html'
     model = models.Product
     context_object_name = 'product'
+    permission_classes = (IsAuthenticated, )
+
+    def permission_denied(self, request):
+        self.permission_denied_redirect = reverse('auth:login')
+        return super().permission_denied(request)
 
 
 class ProductDelete(ProtectedDeleteView):
@@ -89,6 +119,11 @@ class ProductDelete(ProtectedDeleteView):
     form_class = forms.ProductForm
     model = models.Product
     context_object_name = 'product'
+    permission_classes = (IsCopernicusServiceResponsible, )
+
+    def permission_denied(self, request):
+        self.permission_denied_redirect = reverse('product:list')
+        return super().permission_denied(request)
 
     def get_success_url(self):
         return reverse('product:list')

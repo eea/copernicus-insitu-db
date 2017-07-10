@@ -4,10 +4,19 @@ from insitu import models
 from insitu import forms
 from insitu.views.protected import (
     ProtectedUpdateView, ProtectedCreateView, ProtectedDeleteView)
+from insitu.views.protected.permissions import IsCopernicusServiceResponsible
 
 
 class DataRequirementAdd(ProtectedCreateView):
     template_name = 'data_group/requirement/add.html'
+    permission_classes = (IsCopernicusServiceResponsible, )
+
+    def permission_denied(self, request):
+        if 'data_group_pk' in self.kwargs:
+            self.permission_denied_redirect = reverse('data_group:list')
+        else:
+            self.permission_denied_redirect = reverse('requirement:list')
+        return super().permission_denied(request)
 
     def _set_model_used(self):
         if 'data_group_pk' in self.kwargs:
@@ -57,6 +66,14 @@ class DataRequirementEdit(ProtectedUpdateView):
     template_name = 'data_group/requirement/edit.html'
     form_class = forms.DataRequirementEditForm
     context_object_name = 'rel'
+    permission_classes = (IsCopernicusServiceResponsible, )
+
+    def permission_denied(self, request):
+        if 'data_group_pk' in self.kwargs:
+            self.permission_denied_redirect = reverse('data_group:list')
+        else:
+            self.permission_denied_redirect = reverse('requirement:list')
+        return super().permission_denied(request)
 
     def _get_reverse_url(self):
         if 'data_group_pk' in self.kwargs:
@@ -81,6 +98,14 @@ class DataRequirementDelete(ProtectedDeleteView):
     template_name = 'data_group/requirement/delete.html'
     form_class = forms.DataRequirementEditForm
     context_object_name = 'rel'
+    permission_classes = (IsCopernicusServiceResponsible, )
+
+    def permission_denied(self, request):
+        if 'data_group_pk' in self.kwargs:
+            self.permission_denied_redirect = reverse('data_group:list')
+        else:
+            self.permission_denied_redirect = reverse('requirement:list')
+        return super().permission_denied(request)
 
     def _get_reverse_url(self):
         if 'data_group_pk' in self.kwargs:

@@ -25,26 +25,36 @@ class IsSuperuser(IsAuthenticated):
 
 class IsCopernicusServiceResponsible(IsAuthenticated):
     def has_permission(self, request, view):
-        try:
-            request.user.service_resp
-            return super().has_permission(request, view)
-        except CopernicusResponsible.DoesNotExist:
-            return False
+        has_permission = super().has_permission(request, view)
+        if has_permission:
+            try:
+                request.user.service_resp
+                return True
+            except CopernicusResponsible.DoesNotExist:
+                return request.user.is_superuser
+        return False
 
 
 class IsCountryResponsible(IsAuthenticated):
     def has_permission(self, request, view):
-        try:
-            request.user.country_resp
-            return super().has_permission(request, view)
-        except CountryResponsible.DoesNotExist:
-            return False
+        has_permission = super().has_permission(request, view)
+        if has_permission:
+            try:
+                request.user.country_resp
+                return True
+            except CountryResponsible.DoesNotExist:
+                return request.user.is_superuser
+        return False
 
 
 class IsDataProvider(IsAuthenticated):
     def has_permission(self, request, view):
-        try:
-            request.user.data_resp
-            return super().has_permission(request, view)
-        except DataProvider.DoesNotExist:
-            return False
+        has_permission = super().has_permission(request, view)
+        if has_permission:
+            try:
+                request.user.data_resp
+                return True
+            except DataProvider.DoesNotExist:
+                return request.user.is_superuser
+        return False
+

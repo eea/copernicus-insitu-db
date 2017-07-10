@@ -5,7 +5,7 @@ from insitu.documents import DataResponsibleDoc
 from insitu.tests import base
 
 
-class DataResponsibleTests(base.CreateCheckTestCase):
+class DataResponsibleTests(base.FormCheckTestCase):
     fields = ['name', 'is_network', 'description']
     many_to_many_fields = ['networks', 'countries']
     required_fields = ['name', 'is_network', 'countries']
@@ -39,6 +39,9 @@ class DataResponsibleTests(base.CreateCheckTestCase):
             'contact_person': 'test person',
             'responsible_type': 1
         }
+        user = base.UserFactory()
+        self.client.force_login(user)
+        base.CopernicususResponsibleFactory(user=user)
 
     def test_list_responsible_json(self):
         base.DataResponsibleFactory()
@@ -177,7 +180,6 @@ class DataResponsibleTests(base.CreateCheckTestCase):
         self.check_objects_are_soft_deleted(models.DataResponsible,
                                             DataResponsibleDoc)
 
-
     def test_delete_data_responsible_network_related_objects(self):
         responsible = base.DataResponsibleFactory(is_network=True)
         base.DataResponsibleDetailsFactory(data_responsible=responsible)
@@ -188,7 +190,6 @@ class DataResponsibleTests(base.CreateCheckTestCase):
         )
         self.check_objects_are_soft_deleted(models.DataResponsibleDetails)
         self.check_objects_are_soft_deleted(models.DataResponsibleRelation)
-
 
     def test_delete_data_responsible_non_network(self):
         responsible = base.DataResponsibleFactory(is_network=False)
@@ -201,7 +202,6 @@ class DataResponsibleTests(base.CreateCheckTestCase):
         self.check_objects_are_soft_deleted(models.DataResponsible,
                                             DataResponsibleDoc)
 
-
     def test_delete_data_responsible_non_network_related_objects(self):
         responsible = base.DataResponsibleFactory(is_network=False)
         base.DataResponsibleDetailsFactory(data_responsible=responsible)
@@ -212,3 +212,101 @@ class DataResponsibleTests(base.CreateCheckTestCase):
         )
         self.check_objects_are_soft_deleted(models.DataResponsibleDetails)
         self.check_objects_are_soft_deleted(models.DataResponsibleRelation)
+
+
+class DataResponsiblePermissionsTests(base.PermissionsCheckTestCase):
+    def setUp(self):
+        self.redirect_responsible_url = reverse('responsible:list')
+        self.redirect_login_url = reverse('auth:login')
+
+    def test_list_responsible_json_non_auth(self):
+        self.check_permission_denied(method='GET',
+                                     url=reverse('responsible:json'))
+
+    def test_list_responsibles_non_auth(self):
+        self.check_user_redirect(method='GET',
+                                 url=reverse('responsible:list'),
+                                 redirect_url=self.redirect_login_url)
+
+    def test_detail_responsible_non_auth(self):
+        responsible = base.DataResponsibleFactory()
+        self.check_user_redirect(method='GET',
+                                 url=reverse('responsible:detail',
+                                             kwargs={'pk': responsible.pk}),
+                                 redirect_url=self.redirect_login_url)
+
+    def test_add_network_responsible_non_auth(self):
+        self.check_user_redirect_all_methods(
+            url=reverse('responsible:add_network'),
+            redirect_url=self.redirect_login_url)
+
+    def test_edit_network_responsible_non_auth(self):
+        responsible = base.DataResponsibleFactory()
+        self.check_user_redirect_all_methods(
+            url=reverse('responsible:edit_network',
+                        kwargs={'pk': responsible.pk}),
+            redirect_url=self.redirect_login_url)
+
+    def test_delete_network_responsible_non_auth(self):
+        responsible = base.DataResponsibleFactory()
+        self.check_user_redirect_all_methods(
+            url=reverse('responsible:delete_network',
+                        kwargs={'pk': responsible.pk}),
+            redirect_url=self.redirect_login_url)
+
+    def test_add_non_network_responsible_non_auth(self):
+        responsible = base.DataResponsibleFactory()
+        self.check_user_redirect_all_methods(
+            url=reverse('responsible:edit_network',
+                        kwargs={'pk': responsible.pk}),
+            redirect_url=self.redirect_login_url)
+
+    def test_edit_non_network_responsible_non_auth(self):
+        self.check_user_redirect_all_methods(
+            url=reverse('responsible:add_non_network'),
+            redirect_url=self.redirect_login_url)
+
+    def test_delete_non_network_responsible_non_auth(self):
+        responsible = base.DataResponsibleFactory()
+        self.check_user_redirect_all_methods(
+            url=reverse('responsible:delete_non_network',
+                        kwargs={'pk': responsible.pk}),
+            redirect_url=self.redirect_login_url)
+
+    def test_add_network_responsible_auth(self):
+        self.check_authenticated_user_redirect_all_methods(
+            url=reverse('responsible:add_network'),
+            redirect_url=self.redirect_responsible_url)
+
+    def test_edit_network_responsible_auth(self):
+        responsible = base.DataResponsibleFactory()
+        self.check_authenticated_user_redirect_all_methods(
+            url=reverse('responsible:edit_network',
+                        kwargs={'pk': responsible.pk}),
+            redirect_url=self.redirect_responsible_url)
+
+    def test_delete_network_responsible_auth(self):
+        responsible = base.DataResponsibleFactory()
+        self.check_authenticated_user_redirect_all_methods(
+            url=reverse('responsible:delete_network',
+                        kwargs={'pk': responsible.pk}),
+            redirect_url=self.redirect_responsible_url)
+
+    def test_add_non_network_responsible_auth(self):
+        self.check_authenticated_user_redirect_all_methods(
+            url=reverse('responsible:add_non_network'),
+            redirect_url=self.redirect_responsible_url)
+
+    def test_edit_non_network_responsible_auth(self):
+        responsible = base.DataResponsibleFactory()
+        self.check_authenticated_user_redirect_all_methods(
+            url=reverse('responsible:edit_non_network',
+                        kwargs={'pk': responsible.pk}),
+            redirect_url=self.redirect_responsible_url)
+
+    def test_delete_non_network_responsible_auth(self):
+        responsible = base.DataResponsibleFactory()
+        self.check_authenticated_user_redirect_all_methods(
+            url=reverse('responsible:delete_non_network',
+                        kwargs={'pk': responsible.pk}),
+            redirect_url=self.redirect_responsible_url)

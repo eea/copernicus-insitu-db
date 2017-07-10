@@ -139,3 +139,27 @@ class DataResponsibleRelationFactory(DjangoModelFactory):
 
     class Meta:
         model = models.DataResponsibleRelation
+
+
+class CopernicususResponsibleFactory(DjangoModelFactory):
+    user = SubFactory(UserFactory)
+    service = SubFactory(CopernicusServiceFactory)
+
+    class Meta:
+        model = models.CopernicusResponsible
+
+
+class CountryResponsible(DjangoModelFactory):
+    user = SubFactory(UserFactory)
+    country = SubFactory(factories.CountryFactory)
+
+    class Meta:
+        model = models.CountryResponsible
+
+
+class DataProviderManager(DjangoModelFactory):
+    user = SubFactory(UserFactory)
+    responsible = SubFactory(DataResponsibleFactory)
+
+    class Meta:
+        model = models.DataProvider

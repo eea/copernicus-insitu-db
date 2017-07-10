@@ -5,7 +5,7 @@ from insitu.tests import base
 from insitu.documents import DataGroupDoc
 
 
-class DataGroupTests(base.CreateCheckTestCase):
+class DataGroupTests(base.FormCheckTestCase):
     fields = ['name', 'note']
     related_fields = ['frequency', 'coverage', 'timeliness',
                       'policy', 'data_type', 'data_format',
@@ -33,7 +33,7 @@ class DataGroupTests(base.CreateCheckTestCase):
             'name': 'TEST data group',
             'note': 'TEST note',
             'frequency': frequency.pk,
-            'coverage': quality.pk,
+            'coverage': coverage.pk,
             'timeliness': timeliness.pk,
             'policy': policy.pk,
             'data_type': data_type.pk,
@@ -45,7 +45,9 @@ class DataGroupTests(base.CreateCheckTestCase):
                                             essential_climate_variable in
                                             essential_climate_variables]
         }
-
+        user = base.UserFactory()
+        base.CopernicususResponsibleFactory(user=user)
+        self.client.force_login(user)
 
     def test_list_data_group_json(self):
         base.DataGroupFactory()
@@ -55,7 +57,6 @@ class DataGroupTests(base.CreateCheckTestCase):
         data = resp.json()
         self.assertIsNot(data['recordsTotal'], 0)
         self.assertEqual(data['recordsTotal'], data['recordsFiltered'])
-
 
     def test_list_data_group_json_filter(self):
         base.DataGroupFactory(name="Test data group")
@@ -107,3 +108,63 @@ class DataGroupTests(base.CreateCheckTestCase):
         )
         self.check_objects_are_soft_deleted(models.DataRequirement)
         self.check_objects_are_soft_deleted(models.DataResponsibleRelation)
+
+
+class DataGroupPermissionsTests(base.PermissionsCheckTestCase):
+    def setUp(self):
+        self.redirect_group_url = reverse('data_group:list')
+        self.redirect_login_url = reverse('auth:login')
+
+    def test_list_data_group_json_non_auth(self):
+        self.check_permission_denied(method='GET',
+                                     url=reverse('data_group:json'))
+
+    def test_list_data_groups_non_auth(self):
+        self.check_user_redirect(method='GET',
+                                 url=reverse('data_group:list'),
+                                 redirect_url=self.redirect_login_url)
+
+    def test_detail_data_group_non_auth(self):
+        data_group = base.DataGroupFactory()
+        self.check_user_redirect(method='GET',
+                                 url=reverse('data_group:detail',
+                                             kwargs={'pk': data_group.pk}),
+                                 redirect_url=self.redirect_login_url)
+
+    def test_add_data_group_non_auth(self):
+        self.check_user_redirect_all_methods(
+            url=reverse('data_group:add'),
+            redirect_url=self.redirect_login_url)
+
+    def test_edit_network_data_group_non_auth(self):
+        data_group = base.DataGroupFactory()
+        self.check_user_redirect_all_methods(
+            url=reverse('data_group:edit',
+                        kwargs={'pk': data_group.pk}),
+            redirect_url=self.redirect_login_url)
+
+    def test_delete_network_data_group_non_auth(self):
+        data_group = base.DataGroupFactory()
+        self.check_user_redirect_all_methods(
+            url=reverse('data_group:delete',
+                        kwargs={'pk': data_group.pk}),
+            redirect_url=self.redirect_login_url)
+
+    def test_add_data_group_auth(self):
+        self.check_authenticated_user_redirect_all_methods(
+            url=reverse('data_group:add'),
+            redirect_url=self.redirect_group_url)
+
+    def test_edit_network_data_group_auth(self):
+        data_group = base.DataGroupFactory()
+        self.check_authenticated_user_redirect_all_methods(
+            url=reverse('data_group:edit',
+                        kwargs={'pk': data_group.pk}),
+            redirect_url=self.redirect_group_url)
+
+    def test_delete_network_data_group_auth(self):
+        data_group = base.DataGroupFactory()
+        self.check_authenticated_user_redirect_all_methods(
+            url=reverse('data_group:delete',
+                        kwargs={'pk': data_group.pk}),
+            redirect_url=self.redirect_group_url)

@@ -1,4 +1,4 @@
-from django.core.urlresolvers import reverse
+from django.core.urlresolvers import reverse, reverse_lazy
 
 from insitu import documents
 from insitu import forms
@@ -8,11 +8,14 @@ from insitu.views.base import ESDatatableView
 from insitu.views.protected import (
     ProtectedTemplateView, ProtectedDetailView,
     ProtectedUpdateView, ProtectedCreateView, ProtectedDeleteView)
+from insitu.views.protected import IsAuthenticated, IsCopernicusServiceResponsible
 from picklists import models as pickmodels
 
 
 class DataGroupList(ProtectedTemplateView):
     template_name = 'data_group/list.html'
+    permission_classes = (IsAuthenticated, )
+    permission_denied_redirect = reverse_lazy('auth:login')
 
     def get_context_data(self):
         context = super(DataGroupList, self).get_context_data()
@@ -42,12 +45,15 @@ class DataGroupListJson(ESDatatableView):
     filters = ['frequency', 'coverage', 'timeliness', 'policy',
                'data_type', 'data_format', 'quality']
     document = documents.DataGroupDoc
+    permission_classes = (IsAuthenticated, )
 
 
 class DataGroupAdd(ProtectedCreateView):
     template_name = 'data_group/add.html'
     form_class = forms.DataGroupForm
     model = models.DataGroup
+    permission_classes = (IsCopernicusServiceResponsible, )
+    permission_denied_redirect = reverse_lazy('data_group:list')
 
     def get_success_url(self):
         instance = self.object
@@ -59,6 +65,8 @@ class DataGroupEdit(ProtectedUpdateView):
     form_class = forms.DataGroupForm
     model = models.DataGroup
     context_object_name = 'data_group'
+    permission_classes = (IsCopernicusServiceResponsible, )
+    permission_denied_redirect = reverse_lazy('data_group:list')
 
     def get_success_url(self):
         return reverse('data_group:detail', kwargs={'pk': self.object.pk})
@@ -68,6 +76,8 @@ class DataGroupDetail(ProtectedDetailView):
     template_name = 'data_group/detail.html'
     model = models.DataGroup
     context_object_name = 'data_group'
+    permission_classes = (IsAuthenticated, )
+    permission_denied_redirect = reverse_lazy('auth:login')
 
 
 class DataGroupDelete(ProtectedDeleteView):
@@ -76,6 +86,8 @@ class DataGroupDelete(ProtectedDeleteView):
     form_class = forms.DataGroupForm
     model = models.DataGroup
     context_object_name = 'data_group'
+    permission_classes = (IsCopernicusServiceResponsible, )
+    permission_denied_redirect = reverse_lazy('data_group:list')
 
     def get_success_url(self):
         return reverse('data_group:list')

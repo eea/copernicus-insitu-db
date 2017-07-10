@@ -6,7 +6,7 @@ from insitu.tests import base
 REQUIRED_ERROR = ['This field is required.']
 
 
-class DataResponsibleRelationTests(base.CreateCheckTestCase):
+class DataResponsibleRelationTests(base.FormCheckTestCase):
     fields = ['role']
     related_fields = ['data_group', 'responsible']
     required_fields = ['role', 'data_group', 'responsible']
@@ -23,6 +23,9 @@ class DataResponsibleRelationTests(base.CreateCheckTestCase):
             'data_group': data_group.pk,
             'responsible': responsible.pk
         }
+        user = base.UserFactory()
+        self.client.force_login(user)
+        base.CopernicususResponsibleFactory(user=user)
 
     def test_responsible_relation_add_required_fields_from_data_group(self):
         data = {}
@@ -113,3 +116,117 @@ class DataResponsibleRelationTests(base.CreateCheckTestCase):
             data)
         self.assertEqual(resp.status_code, 302)
         self.check_single_object_deleted(models.DataResponsibleRelation)
+
+
+class DataResponsibleRelationPermissionsTests(base.PermissionsCheckTestCase):
+
+    def setUp(self):
+        self.login_url = reverse('auth:login')
+
+    def test_responsible_relation_add_not_auth_from_data_group(self):
+        data_group = base.DataGroupFactory()
+        self.check_user_redirect_all_methods(
+            redirect_url=self.login_url,
+            url=reverse('data_group:responsible:add',
+                        kwargs={'group_pk': data_group.pk}))
+
+    def test_responsible_relation_delete_not_auth_from_data_group(self):
+        data_group = base.DataGroupFactory()
+        responsible_relation = base.DataResponsibleRelationFactory(
+            data_group=data_group)
+        self.check_user_redirect_all_methods(
+            redirect_url=self.login_url,
+            url=reverse('data_group:responsible:edit',
+                        kwargs={'group_pk': data_group.pk,
+                                'pk': responsible_relation.pk}))
+
+    def test_responsible_relation_edit_not_auth_from_data_group(self):
+        data_group = base.DataGroupFactory()
+        responsible_relation = base.DataResponsibleRelationFactory(
+            data_group=data_group)
+        self.check_user_redirect_all_methods(
+            redirect_url=self.login_url,
+            url=reverse('data_group:responsible:delete',
+                        kwargs={'group_pk': data_group.pk,
+                                'pk': responsible_relation.pk}))
+
+    def test_responsible_relation_add_not_auth_from_data_responsible(self):
+        data_responsible = base.DataResponsibleFactory()
+        self.check_user_redirect_all_methods(
+            redirect_url=self.login_url,
+            url=reverse('responsible:group:add',
+                        kwargs={'responsible_pk': data_responsible.pk}))
+
+    def test_responsible_relation_edit_not_auth_from_data_responsible(self):
+        data_responsible = base.DataResponsibleFactory()
+        responsible_relation = base.DataResponsibleRelationFactory(
+            responsible=data_responsible)
+        self.check_user_redirect_all_methods(
+            redirect_url=self.login_url,
+            url=reverse('responsible:group:edit',
+                        kwargs={'responsible_pk': data_responsible.pk,
+                                'pk': responsible_relation.pk}))
+
+    def test_responsible_relation_delete_not_auth_from_data_responsible(self):
+        data_responsible = base.DataResponsibleFactory()
+        responsible_relation = base.DataResponsibleRelationFactory(
+            responsible=data_responsible)
+        self.check_user_redirect_all_methods(
+            redirect_url=self.login_url,
+            url=reverse('responsible:group:delete',
+                        kwargs={'responsible_pk': data_responsible.pk,
+                                'pk': responsible_relation.pk}))
+
+    def test_responsible_relation_add_auth_from_data_group(self):
+        data_group = base.DataGroupFactory()
+        self.check_user_redirect_all_methods(
+            redirect_url=self.login_url,
+            url=reverse('data_group:responsible:add',
+                        kwargs={'group_pk': data_group.pk}))
+
+    def test_responsible_relation_delete_auth_from_data_group(self):
+        data_group = base.DataGroupFactory()
+        responsible_relation = base.DataResponsibleRelationFactory(
+            data_group=data_group)
+        self.check_user_redirect_all_methods(
+            redirect_url=self.login_url,
+            url=reverse('data_group:responsible:edit',
+                        kwargs={'group_pk': data_group.pk,
+                                'pk': responsible_relation.pk}))
+
+    def test_responsible_relation_edit_auth_from_data_group(self):
+        data_group = base.DataGroupFactory()
+        responsible_relation = base.DataResponsibleRelationFactory(
+            data_group=data_group)
+        self.check_user_redirect_all_methods(
+            redirect_url=self.login_url,
+            url=reverse('data_group:responsible:delete',
+                        kwargs={'group_pk': data_group.pk,
+                                'pk': responsible_relation.pk}))
+
+    def test_responsible_relation_add_auth_from_data_responsible(self):
+        data_responsible = base.DataResponsibleFactory()
+        self.check_user_redirect_all_methods(
+            redirect_url=self.login_url,
+            url=reverse('responsible:group:add',
+                        kwargs={'responsible_pk': data_responsible.pk}))
+
+    def test_responsible_relation_edit_auth_from_data_responsible(self):
+        data_responsible = base.DataResponsibleFactory()
+        responsible_relation = base.DataResponsibleRelationFactory(
+            responsible=data_responsible)
+        self.check_user_redirect_all_methods(
+            redirect_url=self.login_url,
+            url=reverse('responsible:group:edit',
+                        kwargs={'responsible_pk': data_responsible.pk,
+                                'pk': responsible_relation.pk}))
+
+    def test_responsible_relation_delete_auth_from_data_responsible(self):
+        data_responsible = base.DataResponsibleFactory()
+        responsible_relation = base.DataResponsibleRelationFactory(
+            responsible=data_responsible)
+        self.check_user_redirect_all_methods(
+            redirect_url=self.login_url,
+            url=reverse('responsible:group:delete',
+                        kwargs={'responsible_pk': data_responsible.pk,
+                                'pk': responsible_relation.pk}))

@@ -5,7 +5,7 @@ from insitu.documents import RequirementDoc
 from insitu.tests import base
 
 
-class RequirementTests(base.CreateCheckTestCase):
+class RequirementTests(base.FormCheckTestCase):
     fields = ['name', 'note']
     related_fields = ['dissemination', 'quality']
     required_fields = ['name', 'dissemination', 'quality']
@@ -17,6 +17,9 @@ class RequirementTests(base.CreateCheckTestCase):
         super().setUp()
         dissemination = base.DisseminationFactory()
         quality = base.QualityFactory()
+        responsible_user = base.UserFactory()
+        base.CopernicususResponsibleFactory(user=responsible_user)
+        self.client.force_login(responsible_user)
 
         self._DATA = {
             'name': 'TEST requirement',
@@ -99,3 +102,60 @@ class RequirementTests(base.CreateCheckTestCase):
         )
         self.check_objects_are_soft_deleted(models.ProductRequirement)
         self.check_objects_are_soft_deleted(models.DataRequirement)
+
+
+class RequirementPermissionTests(base.PermissionsCheckTestCase):
+
+    def setUp(self):
+        self.redirect_requirement_url_non_auth = reverse('auth:login')
+        self.redirect_requirement_url_auth = reverse('requirement:list')
+        self.methods = ['GET', 'POST']
+
+    def test_list_requirement_json_non_auth(self):
+        self.check_permission_denied(method='GET',
+                                     url=reverse('requirement:json'))
+
+    def test_requirement_list_not_auth(self):
+        self.check_user_redirect_all_methods(
+            redirect_url=self.redirect_requirement_url_non_auth,
+            url=reverse('requirement:list'))
+
+    def test_requirement_detail_not_auth(self):
+        requirement = base.RequirementFactory()
+        self.check_user_redirect_all_methods(
+            redirect_url=self.redirect_requirement_url_non_auth,
+            url=reverse('requirement:detail', kwargs={'pk': requirement.pk}))
+
+    def test_requirement_add_not_auth(self):
+        self.check_user_redirect_all_methods(
+            redirect_url=self.redirect_requirement_url_non_auth,
+            url=reverse('requirement:add'))
+
+    def test_requirement_edit_not_auth(self):
+        requirement = base.RequirementFactory()
+        self.check_user_redirect_all_methods(
+            redirect_url=self.redirect_requirement_url_non_auth,
+            url=reverse('requirement:edit', kwargs={'pk': requirement.pk}))
+
+    def test_requirement_delete_not_auth(self):
+        requirement = base.RequirementFactory()
+        self.check_user_redirect_all_methods(
+            redirect_url=self.redirect_requirement_url_non_auth,
+            url=reverse('requirement:delete', kwargs={'pk': requirement.pk}))
+
+    def test_requirement_relation_add_auth(self):
+        self.check_authenticated_user_redirect_all_methods(
+            redirect_url=self.redirect_requirement_url_auth,
+            url=reverse('requirement:add'))
+
+    def test_requirement_relation_edit_auth(self):
+        requirement = base.RequirementFactory()
+        self.check_authenticated_user_redirect_all_methods(
+            redirect_url=self.redirect_requirement_url_auth,
+            url=reverse('requirement:edit', kwargs={'pk': requirement.pk}))
+
+    def test_requirement_relation_delete_auth(self):
+        requirement = base.RequirementFactory()
+        self.check_authenticated_user_redirect_all_methods(
+            redirect_url=self.redirect_requirement_url_auth,
+            url=reverse('requirement:delete', kwargs={'pk': requirement.pk}))

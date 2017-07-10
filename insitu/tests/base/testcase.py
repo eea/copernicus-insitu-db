@@ -1,7 +1,9 @@
 from django.test import TestCase
 
+from insitu.tests.base import UserFactory
 
-class CreateCheckTestCase(TestCase):
+
+class FormCheckTestCase(TestCase):
     fields = []
     related_fields = []
     many_to_many_fields = []
@@ -54,3 +56,45 @@ class CreateCheckTestCase(TestCase):
             if document:
                 resp = document.get(id=obj.id, ignore=404)
                 self.assertIsNone(resp)
+
+
+class PermissionsCheckTestCase(TestCase):
+
+    def _login_user(self):
+        user = UserFactory()
+        self.client.force_login(user)
+
+    def check_permission_denied(self, method, url):
+        resp = None
+        if method == 'GET':
+            resp = self.client.get(url)
+        elif method == 'POST':
+            resp = self.client.post(url)
+        self.assertEqual(resp.status_code, 403)
+
+    def check_permission_all_methods_denied(self, url):
+        for method in ['GET', 'POST']:
+            self.check_permission_denied(method, url)
+
+    def check_user_redirect(self, method, url, redirect_url):
+        resp = None
+        if method == 'GET':
+            resp = self.client.get(url, follow=True)
+        elif method == 'POST':
+            resp = self.client.post(url, follow=True)
+        self.assertRedirects(resp, redirect_url)
+
+    def check_authenticated_user_redirect(self, method, url, redirect_url):
+        self._login_user()
+        self.check_user_redirect(method, url, redirect_url)
+        self.client.logout()
+
+    def check_user_redirect_all_methods(self, url, redirect_url):
+        for method in ['GET', 'POST']:
+            self.check_user_redirect(method, url, redirect_url)
+
+    def check_authenticated_user_redirect_all_methods(self, url, redirect_url):
+        self._login_user()
+        for method in ['GET', 'POST']:
+            self.check_user_redirect(method, url, redirect_url)
+        self.client.logout()
