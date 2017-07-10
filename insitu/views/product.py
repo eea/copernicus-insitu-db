@@ -73,7 +73,8 @@ class ProductEdit(ProtectedUpdateView):
     context_object_name = 'product'
 
     def get_success_url(self):
-        return reverse('product:list')
+        product = self.get_object()
+        return reverse('product:detail', kwargs={'pk': product.pk})
 
 
 class ProductDetail(ProtectedDetailView):
