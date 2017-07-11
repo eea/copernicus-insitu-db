@@ -33,9 +33,6 @@ ALLOWED_HOSTS = ['localhost', '127.0.0.1', env('ALLOWED_HOSTS')]
 # Application definition
 
 INSTALLED_APPS = [
-    'insitu',
-    'suit',
-    'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
@@ -44,6 +41,9 @@ INSTALLED_APPS = [
     'django_elasticsearch_dsl',
     'bootstrap3',
     'picklists',
+    'insitu',
+    'suit',
+    'django.contrib.admin',
 ]
 
 MIDDLEWARE = [
