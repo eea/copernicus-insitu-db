@@ -33,7 +33,6 @@ ALLOWED_HOSTS = ['localhost', '127.0.0.1', env('ALLOWED_HOSTS')]
 # Application definition
 
 INSTALLED_APPS = [
-    'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
@@ -43,6 +42,8 @@ INSTALLED_APPS = [
     'bootstrap3',
     'picklists',
     'insitu',
+    'suit',
+    'django.contrib.admin',
 ]
 
 MIDDLEWARE = [
@@ -134,4 +135,10 @@ ELASTICSEARCH_DSL = {
         'hosts': env('ELASTICSEARCH_HOST'),
         'http_auth': env('ELASTICSEARCH_AUTH'),
     },
+}
+
+# Django Suit customizations
+
+SUIT_CONFIG = {
+    'ADMIN_NAME': 'Copernicus Insitu DB'
 }
