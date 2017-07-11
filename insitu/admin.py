@@ -19,17 +19,17 @@ class ComponentAdmin(admin.ModelAdmin):
 
 
 class CopernicusResponsibleAdmin(admin.ModelAdmin):
-    search_fields = ['user__username']
+    search_fields = ['user__username', 'service__name']
     list_display = ('user', 'service')
 
 
 class DataProviderAdmin(admin.ModelAdmin):
-    search_fields = ['user__username']
+    search_fields = ['user__username', 'responsible__name']
     list_display = ('user', 'responsible')
 
 
 class CountryResponsible(admin.ModelAdmin):
-    search_fields = ['user__username']
+    search_fields = ['user__username', 'country__name']
     list_display = ('user', 'country')
 
 
