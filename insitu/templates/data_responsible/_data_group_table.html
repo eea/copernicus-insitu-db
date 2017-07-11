@@ -15,8 +15,9 @@
       <tr>
         <th>Data group</th>
         <th>Role</th>
-        <th></th>
-        <th></th>
+        {% if request.user.is_superuser or request.user.service_resp %}
+          <th class="no-sort" width="10%"></th>
+        {% endif %}
       </tr>
       </thead>
       <tbody>
@@ -26,12 +27,18 @@
             <a href="{% url 'data_group:detail' rel.data_group.pk %}">{{ rel.data_group.name }}</a>
           </td>
           <td>{{ rel.get_role_display }}</td>
-          <td>
-            <a href="{% url 'responsible:group:edit' responsible_pk=responsible.pk pk=rel.pk %}">Edit</a>
-          </td>
-          <td>
-            <a href="{% url 'responsible:group:delete' responsible_pk=responsible.pk pk=rel.pk %}">Delete</a>
-          </td>
+          {% if request.user.is_superuser or request.user.service_resp %}
+            <td class="row">
+              <a href="{% url 'responsible:group:edit' responsible_pk=responsible.pk pk=rel.pk %}"
+                 class="col-sm-6">
+                <span class="glyphicon glyphicon-edit"></span>
+              </a>
+              <a href="{% url 'responsible:group:delete' responsible_pk=responsible.pk pk=rel.pk %}"
+                 class="col-sm-6">
+                <span class="glyphicon glyphicon-trash"></span>
+              </a>
+            </td>
+          {% endif %}
         </tr>
       {% endfor %}
       </tbody>

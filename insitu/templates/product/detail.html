@@ -72,6 +72,7 @@
                 title="{{ product.component.service }}"
                 data-content="{% include 'popovers/service.html' with service=product.component.service %}">
             {{ product.component.service }}
+            <span class="glyphicon glyphicon-info-sign small"></span>
           </span>
         </td>
       </tr>
@@ -83,6 +84,7 @@
                 title="{{ product.component }}"
                 data-content="{% include 'popovers/component.html' with component=product.component %}">
             {{ product.component }}
+            <span class="glyphicon glyphicon-info-sign small"></span>
           </span>
         </td>
       </tr>
@@ -114,7 +116,6 @@
           <th>Note</th>
           {% if request.user.service_resp or request.user.is_superuser %}
             <th class="no-sort"></th>
-            <th class="no-sort"></th>
           {% endif %}
         </tr>
         </thead>
@@ -135,11 +136,15 @@
             </td>
             <td>{{ rel.note }}</td>
             {% if request.user.service_resp or request.user.is_superuser %}
-              <td>
-                <a href="{% url 'product:requirement:edit' product_pk=product.pk pk=rel.pk %}">Edit</a>
-              </td>
-              <td>
-                <a href="{% url 'product:requirement:delete' product_pk=product.pk pk=rel.pk %}">Delete</a>
+              <td class="row">
+                <a href="{% url 'product:requirement:edit' product_pk=product.pk pk=rel.pk %}"
+                   class="col-sm-6">
+                  <span class="glyphicon glyphicon-edit"></span>
+                </a>
+                <a href="{% url 'product:requirement:delete' product_pk=product.pk pk=rel.pk %}"
+                   class="col-sm-6">
+                  <span class="glyphicon glyphicon-trash"></span>
+                </a>
               </td>
             {% endif %}
           </tr>
