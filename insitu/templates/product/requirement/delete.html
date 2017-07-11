@@ -9,7 +9,10 @@
 
   <div class="row">
     <h1 class="col-sm-12">
-      <span>Delete {{ rel.product.name }} - {{ rel.requirement.name }} relation</span>
+      <p class="col-sm-12">Delete relation</p>
+      <p class="col-sm-12">
+        <small>{{ rel.product.name }} - {{ rel.requirement.name }}</small>
+      </p>
     </h1>
   </div>
 
@@ -25,7 +28,7 @@
         {% csrf_token %}
         <input class="btn btn-danger" type="submit" value="Delete"/>
         <a href={{ url }}
-           class="btn btn-default">Cancel</a>
+             class="btn btn-default">Cancel</a>
       </form>
     </div>
   </div>
