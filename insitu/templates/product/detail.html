@@ -16,7 +16,8 @@
       <span>Product details</span>
       {% if request.user.service_resp or request.user.is_superuser %}
         <span class="pull-right delete-btn">
-        <a class="btn btn-primary pull-right" href="{% url 'product:delete' product.pk %}">Delete
+        <a class="btn btn-primary pull-right"
+           href="{% url 'product:delete' product.pk %}">Delete
           product</a>
         </span>
         <span class="pull-right">
@@ -66,6 +67,18 @@
       </tr>
 
       <tr class="row">
+        <th class="col-md-4 col-sm-6">Component</th>
+        <td class="col-md-8 col-sm-6">
+          <span data-toggle="popover"
+                title="{{ product.component }}"
+                data-content="{% include 'popovers/component.html' with component=product.component %}">
+            {{ product.component }}
+            <span class="glyphicon glyphicon-info-sign small"></span>
+          </span>
+        </td>
+      </tr>
+
+      <tr class="row">
         <th class="col-md-4 col-sm-6">Service</th>
         <td class="col-md-8 col-sm-6">
           <span data-toggle="popover"
@@ -78,12 +91,12 @@
       </tr>
 
       <tr class="row">
-        <th class="col-md-4 col-sm-6">Component</th>
+        <th class="col-md-4 col-sm-6">Entrusted Entity</th>
         <td class="col-md-8 col-sm-6">
           <span data-toggle="popover"
-                title="{{ product.component }}"
-                data-content="{% include 'popovers/component.html' with component=product.component %}">
-            {{ product.component }}
+                title="{{ product.component.entrusted_entity }}"
+                data-content="{% include 'popovers/entity.html' with entity=product.component.entrusted_entity %}">
+            {{ product.component.entrusted_entity }}
             <span class="glyphicon glyphicon-info-sign small"></span>
           </span>
         </td>
@@ -123,7 +136,8 @@
         {% for rel in product.productrequirement_set.all %}
           <tr>
             <td>
-              <a href="{% url 'requirement:detail' rel.requirement.pk %}">{{ rel.requirement.name }}</a>
+              <a
+                href="{% url 'requirement:detail' rel.requirement.pk %}">{{ rel.requirement.name }}</a>
             </td>
             <td>{{ rel.level_of_definition }}</td>
             <td>{{ rel.distance_to_target }}</td>
@@ -137,12 +151,14 @@
             <td>{{ rel.note }}</td>
             {% if request.user.service_resp or request.user.is_superuser %}
               <td class="row">
-                <a href="{% url 'product:requirement:edit' product_pk=product.pk pk=rel.pk %}"
-                   class="col-sm-6">
+                <a
+                  href="{% url 'product:requirement:edit' product_pk=product.pk pk=rel.pk %}"
+                  class="col-sm-6">
                   <span class="glyphicon glyphicon-edit"></span>
                 </a>
-                <a href="{% url 'product:requirement:delete' product_pk=product.pk pk=rel.pk %}"
-                   class="col-sm-6">
+                <a
+                  href="{% url 'product:requirement:delete' product_pk=product.pk pk=rel.pk %}"
+                  class="col-sm-6">
                   <span class="glyphicon glyphicon-trash"></span>
                 </a>
               </td>
@@ -172,8 +188,10 @@
 
       var table = $('#requirements').dataTable({
         columnDefs: [
-          { targets: 'no-sort',
-            orderable: false }
+          {
+            targets: 'no-sort',
+            orderable: false
+          }
         ]
       });
     });
