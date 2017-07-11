@@ -6,11 +6,19 @@ from picklists import models
 
 
 class CountryAdmin(admin.ModelAdmin):
-    search_fields = ('code', 'name')
+    search_fields = ['code', 'name']
+
+class InspireThemeAdmin(admin.ModelAdmin):
+    search_fields = ['name', 'annex']
+
+
+class EssentialClimateVariableAdmin(admin.ModelAdmin):
+    search_fields = ['parameter']
+
 
 admin.site.register(models.Country, CountryAdmin)
-admin.site.register(models.InspireTheme)
-admin.site.register(models.EssentialClimateVariable)
+admin.site.register(models.InspireTheme, InspireThemeAdmin)
+admin.site.register(models.EssentialClimateVariable, EssentialClimateVariableAdmin)
 admin.site.register(models.ProductStatus)
 admin.site.register(models.ProductGroup)
 admin.site.register(models.DefinitionLevel)
