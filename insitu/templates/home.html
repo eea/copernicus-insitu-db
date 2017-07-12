@@ -1,5 +1,24 @@
 {% extends '_layout.html' %}
 
 {% block content %}
-  <marquee>Nothing here yet but you can click on Products! :)</marquee>
+  <div class="jumbotron" style="background: #ffffff">
+    <h1>In Situ Component</h1>
+    <p> Copernicus In Situ Component Information System </p>
+  </div>
+   <body>
+    <div id="footer">
+      <img src="../static/images/logo-copernicus.png" alt="Copernicus Logo" hspace="150" style="width:205px;height:75px;">
+      <img src="../static/images/in-situ-logo.png" alt="In Situ Logo" style="width:126px;height:75px;">
+      <img src="../static/images/european_commission.png" alt="European Commission Logo" hspace="150" style="width:134px;height:100px;">
+    </div>
+    </body>
+
+  <style>
+    #footer{
+      width: inherit;
+      height: 10px;
+      bottom: 100px;
+      position: fixed;
+    }
+  </style>
 {% endblock %}
