@@ -13,27 +13,29 @@
 
     <!-- Collect the nav links, forms, and other content for toggling -->
     <div class="collapse navbar-collapse" id="main-menu">
-      <ul class="nav navbar-nav">
-        {% url 'product:list' as products_list %}
-        <li class="{% active products_list %}">
-          <a href="{{ products_list }}">Products</a>
-        </li>
+      {% if request.user.is_authenticated %}
+        <ul class="nav navbar-nav">
+          {% url 'product:list' as products_list %}
+          <li class="{% active products_list %}">
+            <a href="{{ products_list }}">Products</a>
+          </li>
 
-        {% url 'requirement:list' as requirements_list %}
-        <li class="{% active requirements_list %}">
-          <a href="{{ requirements_list }}">Requirements</a>
-        </li>
+          {% url 'requirement:list' as requirements_list %}
+          <li class="{% active requirements_list %}">
+            <a href="{{ requirements_list }}">Requirements</a>
+          </li>
 
-        {% url 'data_group:list' as data_group_list %}
-        <li class="{% active data_group_list %}">
-          <a href="{{ data_group_list }}">Data groups</a>
-        </li>
+          {% url 'data_group:list' as data_group_list %}
+          <li class="{% active data_group_list %}">
+            <a href="{{ data_group_list }}">Data groups</a>
+          </li>
 
-        {% url 'responsible:list' as responsible_list %}
-        <li class="{% active responsible_list %}">
-          <a href="{{ responsible_list }}">Data responsibles</a>
-        </li>
-      </ul>
+          {% url 'responsible:list' as responsible_list %}
+          <li class="{% active responsible_list %}">
+            <a href="{{ responsible_list }}">Data responsibles</a>
+          </li>
+        </ul>
+      {% endif %}
       <ul class="pull-right nav navbar-nav">
         {% if user.is_superuser %}
           {% url 'admin:index' as admin %}

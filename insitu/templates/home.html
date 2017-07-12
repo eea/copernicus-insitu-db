@@ -1,41 +1,22 @@
 {% extends '_layout.html' %}
 {% load static %}
 
+<head>
+  <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}"/>
+</head>
+
 {% block content %}
   <div class="jumbotron main-title">
     <h1>In Situ Component</h1>
     <p> Copernicus In Situ Component Information System </p>
   </div>
-   <body>
+  <body>
     <div id="footer">
       <img class="logo-copernicus" src="{% static "/images/logo-copernicus.png"  %}" alt="Copernicus Logo" hspace="150">
       <img class="in-situ-logo" src="{% static "/images/in-situ-logo.png" %}" alt="In Situ Logo">
       <img class="european_commission-logo" src="{% static "/images/european_commission.png" %}"
            alt="European Commission Logo" hspace="150">
     </div>
-   </body>
+  </body>
 
-  <style>
-    #footer{
-      width: inherit;
-      height: 10px;
-      bottom: 100px;
-      position: fixed;
-    }
-    .main-title{
-      background: #ffffff;
-    }
-    .logo-copernicus{
-      width:205px;
-      height:75px;
-    }
-    .in-situ-logo{
-      width:126px;
-      height:75px;
-    }
-    .european_commission-logo{
-      width:134px;
-      height:100px;
-    }
-  </style>
 {% endblock %}
