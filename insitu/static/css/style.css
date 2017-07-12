@@ -30,3 +30,29 @@
 .delete-btn{
     margin-left: 1%
 }
+
+.main-title{
+  background: #ffffff;
+}
+
+.logo-copernicus{
+  width:205px;
+  height:75px;
+}
+
+.in-situ-logo{
+  width:126px;
+  height:75px;
+}
+
+.european_commission-logo{
+  width:134px;
+  height:100px;
+}
+
+#footer{
+  width: inherit;
+  height: 10px;
+  bottom: 100px;
+  position: fixed;
+}

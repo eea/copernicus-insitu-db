@@ -1,5 +1,22 @@
 {% extends '_layout.html' %}
+{% load static %}
+
+<head>
+  <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}"/>
+</head>
 
 {% block content %}
-  <marquee>Nothing here yet but you can click on Products! :)</marquee>
+  <div class="jumbotron main-title">
+    <h1>In Situ Component</h1>
+    <p> Copernicus In Situ Component Information System </p>
+  </div>
+  <body>
+    <div id="footer">
+      <img class="logo-copernicus" src="{% static "/images/logo-copernicus.png"  %}" alt="Copernicus Logo" hspace="150">
+      <img class="in-situ-logo" src="{% static "/images/in-situ-logo.png" %}" alt="In Situ Logo">
+      <img class="european_commission-logo" src="{% static "/images/european_commission.png" %}"
+           alt="European Commission Logo" hspace="150">
+    </div>
+  </body>
+
 {% endblock %}
