@@ -16,7 +16,7 @@ local_settings.py
 
 # Docker conf
 env/*.env
-docker-compose.yaml
+docker-compose.yml
 
 # PyCharm conf
 .idea/
