@@ -11,10 +11,17 @@
 
 {# Additional header content like notifications or language switcher#}
 {% block header_content %}
-  {{ block.super }}
   <div class="header-content">
-    <!-- First icon column -->
-    <div class="header-column icon">
+    <div class="header-column">
+      <i class="icon-home"></i>
+    </div>
+    <div class="header-column" style="margin-right: 20px; margin-top: 1px">
+      <a href="/" class="grey"><b>Main page</b></a>
+    </div>
+  </div>
+
+  <div class="header-content">
+    <div class="header-column">
     </div>
   </div>
 {% endblock %}
