@@ -3745,24 +3745,6 @@
   }
 },
 {
-  "model": "picklists.policy",
-  "pk": 6,
-  "fields": {
-    "name": "Information cost",
-    "description": "",
-    "sort_order": 4
-  }
-},
-{
-  "model": "picklists.policy",
-  "pk": 7,
-  "fields": {
-    "name": "Handling cost",
-    "description": "",
-    "sort_order": 5
-  }
-},
-{
   "model": "picklists.datatype",
   "pk": 1,
   "fields": {
