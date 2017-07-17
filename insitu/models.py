@@ -9,6 +9,8 @@ from django.db.models.query import QuerySet
 from insitu import signals
 from picklists import models as pickmodels
 
+from datetime import datetime
+
 User = get_user_model()
 
 
@@ -72,6 +74,10 @@ class Metric(models.Model):
     threshold = models.CharField(max_length=100)
     breakthrough = models.CharField(max_length=100)
     goal = models.CharField(max_length=100)
+    created_at = models.DateTimeField(auto_now_add=True,
+                                      null=True)
+    updated_at = models.DateTimeField(auto_now=True,
+                                      null=True)
 
     def __str__(self):
         return 'T: {} - B: {} - G: {}'.format(
@@ -86,6 +92,10 @@ class CopernicusService(models.Model):
     name = models.CharField(max_length=100)
     description = models.TextField()
     website = models.CharField(max_length=255)
+    created_at = models.DateTimeField(auto_now_add=True,
+                                      null=True)
+    updated_at = models.DateTimeField(auto_now=True,
+                                      null=True)
 
     def __str__(self):
         return self.name
@@ -95,6 +105,10 @@ class EntrustedEntity(models.Model):
     acronym = models.CharField(max_length=10)
     name = models.CharField(max_length=100)
     website = models.CharField(max_length=255)
+    created_at = models.DateTimeField(auto_now_add=True,
+                                      null=True)
+    updated_at = models.DateTimeField(auto_now=True,
+                                      null=True)
 
     class Meta:
         verbose_name_plural = 'entrusted entities'
@@ -109,6 +123,10 @@ class Component(models.Model):
     service = models.ForeignKey(CopernicusService, on_delete=models.CASCADE)
     entrusted_entity = models.ForeignKey(EntrustedEntity,
                                          on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True,
+                                      null=True)
+    updated_at = models.DateTimeField(auto_now=True,
+                                      null=True)
 
     def __str__(self):
         return self.name
@@ -144,6 +162,10 @@ class Requirement(SoftDeleteModel):
     vertical_resolution = models.ForeignKey(Metric,
                                             on_delete=models.CASCADE,
                                             related_name='+')
+    created_at = models.DateTimeField(auto_now_add=True,
+                                      null=True)
+    updated_at = models.DateTimeField(auto_now=True,
+                                      null=True)
 
     def __str__(self):
         return self.name
@@ -171,6 +193,10 @@ class Product(SoftDeleteModel):
                                  related_name='+')
     requirements = models.ManyToManyField(Requirement,
                                           through='ProductRequirement')
+    created_at = models.DateTimeField(auto_now_add=True,
+                                      null=True)
+    updated_at = models.DateTimeField(auto_now=True,
+                                      null=True)
 
     def __str__(self):
         return self.name
@@ -193,6 +219,10 @@ class ProductRequirement(SoftDeleteModel):
                                     on_delete=models.CASCADE,
                                     related_name='+')
     barriers = models.ManyToManyField(pickmodels.Barrier)
+    created_at = models.DateTimeField(auto_now_add=True,
+                                      null=True)
+    updated_at = models.DateTimeField(auto_now=True,
+                                      null=True)
 
     def __str__(self):
         return '{} - {}'.format(self.product.name, self.requirement.name)
@@ -212,6 +242,10 @@ class DataResponsible(SoftDeleteModel):
                                       related_name='members',
                                       symmetrical=False)
     countries = models.ManyToManyField(pickmodels.Country)
+    created_at = models.DateTimeField(auto_now_add=True,
+                                      null=True)
+    updated_at = models.DateTimeField(auto_now=True,
+                                      null=True)
 
     def __str__(self):
         return self.name
@@ -246,6 +280,10 @@ class DataResponsibleDetails(SoftDeleteModel):
     data_responsible = models.ForeignKey(DataResponsible,
                                          on_delete=models.CASCADE,
                                          related_name='details')
+    created_at = models.DateTimeField(auto_now_add=True,
+                                      null=True)
+    updated_at = models.DateTimeField(auto_now=True,
+                                      null=True)
 
     class Meta:
         verbose_name_plural = 'data responsible details'
@@ -297,6 +335,11 @@ class DataGroup(SoftDeleteModel):
                                           through='DataRequirement')
     responsibles = models.ManyToManyField(DataResponsible,
                                           through='DataResponsibleRelation')
+    created_at = models.DateTimeField(auto_now_add=True,
+                                      null=True)
+    updated_at = models.DateTimeField(auto_now=True,
+                                      null=True)
+
 
     def __str__(self):
         return self.name
@@ -311,6 +354,10 @@ class DataRequirement(SoftDeleteModel):
     level_of_compliance = models.ForeignKey(pickmodels.ComplianceLevel,
                                             on_delete=models.CASCADE,
                                             related_name='+')
+    created_at = models.DateTimeField(auto_now_add=True,
+                                      null=True)
+    updated_at = models.DateTimeField(auto_now=True,
+                                      null=True)
 
     def __str__(self):
         return '{} - {}'.format(self.data_group.name, self.requirement.name)
@@ -326,6 +373,10 @@ class DataResponsibleRelation(SoftDeleteModel):
     data_group = models.ForeignKey(DataGroup, on_delete=models.CASCADE)
     responsible = models.ForeignKey(DataResponsible, on_delete=models.CASCADE)
     role = models.IntegerField(choices=ROLE_CHOICES, db_index=True)
+    created_at = models.DateTimeField(auto_now_add=True,
+                                      null=True)
+    updated_at = models.DateTimeField(auto_now=True,
+                                      null=True)
 
     def __str__(self):
         return '{} - {}'.format(self.data_group.name, self.responsible.name)
@@ -342,6 +393,10 @@ class CopernicusResponsible(models.Model):
                                 related_name='responsible')
 
     objects = CopernicusResponsibleManager()
+    created_at = models.DateTimeField(auto_now_add=True,
+                                      null=True)
+    updated_at = models.DateTimeField(auto_now=True,
+                                      null=True)
 
 
 class CountryResponsibleManager(_WithRelatedUserManager):
@@ -355,6 +410,10 @@ class CountryResponsible(models.Model):
                                 related_name='responsible')
 
     objects = CountryResponsibleManager()
+    created_at = models.DateTimeField(auto_now_add=True,
+                                      null=True)
+    updated_at = models.DateTimeField(auto_now=True,
+                                      null=True)
 
 
 class DataProviderManager(_WithRelatedUserManager):
@@ -366,3 +425,7 @@ class DataProvider(models.Model):
                                 related_name='data_resp')
     responsible = models.ForeignKey(DataResponsible,
                                     related_name='responsible')
+    created_at = models.DateTimeField(auto_now_add=True,
+                                      null=True)
+    updated_at = models.DateTimeField(auto_now=True,
+                                      null=True)
