@@ -96,7 +96,6 @@
         <tr>
           <th>Product</th>
           <th>Level of definition</th>
-          <th>Distance to target</th>
           <th>Relevant for</th>
           <th>Criticality</th>
           <th class="no-sort">Barriers</th>
@@ -113,7 +112,6 @@
               <a href="{% url 'product:detail' rel.product.pk %}">{{ rel.product.name }}</a>
             </td>
             <td>{{ rel.level_of_definition }}</td>
-            <td>{{ rel.distance_to_target }}</td>
             <td>{{ rel.relevance }}</td>
             <td>{{ rel.criticality }}</td>
             <td>

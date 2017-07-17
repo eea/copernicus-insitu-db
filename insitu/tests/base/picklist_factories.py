@@ -52,14 +52,6 @@ class DefinitionLevelFactory(DjangoModelFactory):
         model = models.DefinitionLevel
 
 
-class TargetDistanceFactory(DjangoModelFactory):
-    name = 'Test TargetDistance'
-    sort_order = 0
-
-    class Meta:
-        model = models.TargetDistance
-
-
 class RelevanceFactory(DjangoModelFactory):
     name = 'Test Relevance'
     sort_order = 0

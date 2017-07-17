@@ -107,19 +107,6 @@ class DefinitionLevel(models.Model):
         return self.name
 
 
-class TargetDistance(models.Model):
-    name = models.CharField(max_length=100)
-    description = models.TextField(blank=True)
-    sort_order = models.IntegerField()
-
-    class Meta:
-        ordering = ['sort_order']
-        verbose_name_plural = 'target distance'
-
-    def __str__(self):
-        return self.name
-
-
 class Relevance(models.Model):
     name = models.CharField(max_length=100)
     description = models.TextField(blank=True)
