@@ -30,8 +30,9 @@ class RequirementTests(base.FormCheckTestCase):
 
         for entity in self.related_entities_updated:
             for field in self.related_entities_fields:
-                self._DATA["_".join([entity, field])] = '5'
-                self.errors["_".join([entity, field])] = self.REQUIRED_ERROR
+                self._DATA["_".join([entity, field])] = ''
+        self._DATA['uncertainty_goal'] = '1'
+        self.errors['__all__'] = ['At least one metric is required.']
 
     def test_list_requirement_json(self):
         base.RequirementFactory()
