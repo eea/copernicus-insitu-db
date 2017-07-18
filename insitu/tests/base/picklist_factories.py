@@ -108,12 +108,12 @@ class ComplianceLevelFactory(DjangoModelFactory):
         model = models.ComplianceLevel
 
 
-class FrequencyFactory(DjangoModelFactory):
-    name = 'Test Frequency'
+class UpdateFrequencyFactory(DjangoModelFactory):
+    name = 'Test UpdateFrequency'
     sort_order = 0
 
     class Meta:
-        model = models.Frequency
+        model = models.UpdateFrequency
 
 
 class TimelinessFactory(DjangoModelFactory):

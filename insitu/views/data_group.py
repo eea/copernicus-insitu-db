@@ -19,7 +19,7 @@ class DataGroupList(ProtectedTemplateView):
 
     def get_context_data(self):
         context = super(DataGroupList, self).get_context_data()
-        frequencies = get_choices('name', model_cls=pickmodels.Frequency)
+        update_frequencies = get_choices('name', model_cls=pickmodels.UpdateFrequency)
         coverages = get_choices('name', model_cls=pickmodels.Coverage)
         timelinesses = get_choices('name', model_cls=pickmodels.Timeliness)
         policies = get_choices('name', model_cls=pickmodels.Policy)
@@ -27,7 +27,7 @@ class DataGroupList(ProtectedTemplateView):
         data_formats = get_choices('name', model_cls=pickmodels.DataFormat)
         qualities = get_choices('name', model_cls=pickmodels.Quality)
         context.update({
-            'frequencies': frequencies,
+            'update_frequencies': update_frequencies,
             'coverages': coverages,
             'timelinesses': timelinesses,
             'policies': policies,
@@ -39,10 +39,10 @@ class DataGroupList(ProtectedTemplateView):
 
 
 class DataGroupListJson(ESDatatableView):
-    columns = ['name', 'frequency', 'coverage', 'timeliness', 'policy',
+    columns = ['name', 'update_frequency', 'coverage', 'timeliness', 'policy',
                'data_type', 'data_format', 'quality']
     order_columns = columns
-    filters = ['frequency', 'coverage', 'timeliness', 'policy',
+    filters = ['update_frequency', 'coverage', 'timeliness', 'policy',
                'data_type', 'data_format', 'quality']
     document = documents.DataGroupDoc
     permission_classes = (IsAuthenticated, )

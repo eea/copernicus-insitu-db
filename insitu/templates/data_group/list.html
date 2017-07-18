@@ -31,7 +31,7 @@
         <thead>
         <tr>
           <th>Name</th>
-          <th>Frequency</th>
+          <th>Update Frequency</th>
           <th>Coverage</th>
           <th>Timeliness</th>
           <th>Policy</th>
@@ -49,10 +49,10 @@
         <div class="panel-body">
 
           <div class="form-group">
-            <label for="frequency">Frequency:</label>
-            <select id="frequency" class="form-control">
-              {% for frequency in frequencies %}
-                <option value="{{ frequency }}">{{ frequency }}</option>
+            <label for="update_frequency">Update Frequency:</label>
+            <select id="update_frequency" class="form-control">
+              {% for update_frequency in update_frequencies %}
+                <option value="{{ update_frequency }}">{{ update_frequency }}</option>
               {% endfor %}
             </select>
           </div>
@@ -142,7 +142,7 @@
           "url": "{% url 'data_group:json' %}",
           "data": function (d) {
             d.name = $('#name').val();
-            d.frequency = $('#frequency').val();
+            d.update_frequency = $('#update_frequency').val();
             d.coverage = $('#coverage').val();
             d.timeliness = $('#timeliness').val();
             d.policy = $('#policy').val();
@@ -159,7 +159,7 @@
       });
 
       $('#reset-btn').on('click', function () {
-        $('#name,#frequency,#coverage,#timeliness,#policy,#data_type,#data_format,#quality').val('All');
+        $('#name,#update_frequency,#coverage,#timeliness,#policy,#data_type,#data_format,#quality').val('All');
         var table = $table.DataTable();
         table.ajax.reload();
       });

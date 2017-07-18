@@ -2983,7 +2983,7 @@
   "model": "picklists.barrier",
   "pk": 8,
   "fields": {
-    "name": "Frequency",
+    "name": "Update Frequency",
     "description": "",
     "sort_order": 6
   }
@@ -3367,7 +3367,7 @@
   }
 },
 {
-  "model": "picklists.frequency",
+  "model": "picklists.updatefrequency",
   "pk": 1,
   "fields": {
     "name": "<1 hr",
@@ -3376,7 +3376,7 @@
   }
 },
 {
-  "model": "picklists.frequency",
+  "model": "picklists.updatefrequency",
   "pk": 2,
   "fields": {
     "name": "Hourly",
@@ -3385,7 +3385,7 @@
   }
 },
 {
-  "model": "picklists.frequency",
+  "model": "picklists.updatefrequency",
   "pk": 3,
   "fields": {
     "name": "Daily",
@@ -3394,7 +3394,7 @@
   }
 },
 {
-  "model": "picklists.frequency",
+  "model": "picklists.updatefrequency",
   "pk": 4,
   "fields": {
     "name": "Weekly",
@@ -3403,7 +3403,7 @@
   }
 },
 {
-  "model": "picklists.frequency",
+  "model": "picklists.updatefrequency",
   "pk": 5,
   "fields": {
     "name": "Monthly",
@@ -3412,7 +3412,7 @@
   }
 },
 {
-  "model": "picklists.frequency",
+  "model": "picklists.updatefrequency",
   "pk": 6,
   "fields": {
     "name": "Yearly",
@@ -3421,7 +3421,7 @@
   }
 },
 {
-  "model": "picklists.frequency",
+  "model": "picklists.updatefrequency",
   "pk": 7,
   "fields": {
     "name": "Irregular",
@@ -3430,7 +3430,7 @@
   }
 },
 {
-  "model": "picklists.frequency",
+  "model": "picklists.updatefrequency",
   "pk": 8,
   "fields": {
     "name": "N/A",
@@ -3439,7 +3439,7 @@
   }
 },
 {
-  "model": "picklists.frequency",
+  "model": "picklists.updatefrequency",
   "pk": 9,
   "fields": {
     "name": "TBD",
@@ -3448,7 +3448,7 @@
   }
 },
 {
-  "model": "picklists.frequency",
+  "model": "picklists.updatefrequency",
   "pk": 10,
   "fields": {
     "name": "Single Acquisition",
@@ -3457,7 +3457,7 @@
   }
 },
 {
-  "model": "picklists.frequency",
+  "model": "picklists.updatefrequency",
   "pk": 11,
   "fields": {
     "name": "Periodic Update",
@@ -3466,7 +3466,7 @@
   }
 },
 {
-  "model": "picklists.frequency",
+  "model": "picklists.updatefrequency",
   "pk": 12,
   "fields": {
     "name": "Continuous",
@@ -3475,7 +3475,7 @@
   }
 },
 {
-  "model": "picklists.frequency",
+  "model": "picklists.updatefrequency",
   "pk": 13,
   "fields": {
     "name": "30 min",
@@ -3484,7 +3484,7 @@
   }
 },
 {
-  "model": "picklists.frequency",
+  "model": "picklists.updatefrequency",
   "pk": 14,
   "fields": {
     "name": "15 min",
@@ -3493,7 +3493,7 @@
   }
 },
 {
-  "model": "picklists.frequency",
+  "model": "picklists.updatefrequency",
   "pk": 15,
   "fields": {
     "name": "5 min",
@@ -3502,7 +3502,7 @@
   }
 },
 {
-  "model": "picklists.frequency",
+  "model": "picklists.updatefrequency",
   "pk": 16,
   "fields": {
     "name": "<5 min",
@@ -3511,7 +3511,7 @@
   }
 },
 {
-  "model": "picklists.frequency",
+  "model": "picklists.updatefrequency",
   "pk": 17,
   "fields": {
     "name": "1-5 days",
@@ -3520,7 +3520,7 @@
   }
 },
 {
-  "model": "picklists.frequency",
+  "model": "picklists.updatefrequency",
   "pk": 18,
   "fields": {
     "name": "Twice a day",

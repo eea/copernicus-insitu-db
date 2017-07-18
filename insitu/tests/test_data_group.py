@@ -7,17 +7,17 @@ from insitu.documents import DataGroupDoc
 
 class DataGroupTests(base.FormCheckTestCase):
     fields = ['name', 'note']
-    related_fields = ['frequency', 'coverage', 'timeliness',
+    related_fields = ['update_frequency', 'coverage', 'timeliness',
                       'policy', 'data_type', 'data_format',
                       'quality']
     many_to_many_fields = ['inspire_themes', 'essential_variables']
-    required_fields = ['name', 'frequency', 'coverage', 'timeliness',
+    required_fields = ['name', 'update_frequency', 'coverage', 'timeliness',
                       'policy', 'data_type', 'data_format',
                       'quality', 'inspire_themes']
 
     def setUp(self):
         super().setUp()
-        frequency = base.FrequencyFactory()
+        update_frequency = base.UpdateFrequencyFactory()
         coverage = base.CoverageFactory()
         timeliness = base.TimelinessFactory()
         policy = base.PolicyFactory()
@@ -32,7 +32,7 @@ class DataGroupTests(base.FormCheckTestCase):
         self._DATA = {
             'name': 'TEST data group',
             'note': 'TEST note',
-            'frequency': frequency.pk,
+            'update_frequency': update_frequency.pk,
             'coverage': coverage.pk,
             'timeliness': timeliness.pk,
             'policy': policy.pk,

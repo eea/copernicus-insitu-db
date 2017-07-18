@@ -9,7 +9,7 @@ class RequirementTests(base.FormCheckTestCase):
     fields = ['name', 'note']
     related_fields = ['dissemination', 'quality']
     required_fields = ['name', 'dissemination', 'quality']
-    related_entities_updated = ['uncertainty', 'frequency', 'timeliness',
+    related_entities_updated = ['uncertainty', 'update_frequency', 'timeliness',
                                 'horizontal_resolution', 'vertical_resolution']
     related_entities_fields = ['threshold', 'breakthrough', 'goal']
 

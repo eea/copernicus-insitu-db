@@ -46,7 +46,7 @@ class RequirementList(ProtectedTemplateView):
 
 
 class RequirementListJson(ESDatatableView):
-    columns = ['name', 'dissemination', 'quality', 'uncertainty', 'frequency',
+    columns = ['name', 'dissemination', 'quality', 'uncertainty', 'update_frequency',
                'timeliness', 'horizontal_resolution', 'vertical_resolution']
     order_columns = columns
     filters = ['dissemination', 'quality']
@@ -85,7 +85,7 @@ class RequirementEdit(ProtectedUpdateView):
         initial_data = super().get_initial()
         for field in ['name', 'note', 'dissemination', 'quality']:
             initial_data[field] = getattr(requirement, field)
-        for field in ['uncertainty', 'frequency', 'timeliness',
+        for field in ['uncertainty', 'update_frequency', 'timeliness',
                       'horizontal_resolution', 'vertical_resolution']:
             for attr in ['threshold', 'breakthrough', 'goal']:
                 initial_data["_".join([field, attr])] = getattr(getattr(requirement,
