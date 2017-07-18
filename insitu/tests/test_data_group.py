@@ -26,8 +26,8 @@ class DataGroupTests(base.FormCheckTestCase):
         quality = base.QualityFactory()
         inspire_themes = [base.InspireThemeFactory(),base.InspireThemeFactory()]
         essential_variables = [base.EssentialVariableFactory(),
-                                       base.EssentialVariableFactory(),
-                                       base.EssentialVariableFactory()]
+                               base.EssentialVariableFactory(),
+                               base.EssentialVariableFactory()]
 
         self._DATA = {
             'name': 'TEST data group',
@@ -42,8 +42,8 @@ class DataGroupTests(base.FormCheckTestCase):
             'inspire_themes': [inspire_theme.pk for inspire_theme
                                in inspire_themes],
             'essential_variables': [essential_variable.pk for
-                                            essential_variable in
-                                            essential_variables]
+                                    essential_variable in
+                                    essential_variables]
         }
         user = base.UserFactory()
         base.CopernicususResponsibleFactory(user=user)
