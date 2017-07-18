@@ -7,7 +7,6 @@ from django.db import models
 class Country(models.Model):
     code = models.CharField(max_length=2, primary_key=True)
     name = models.CharField(max_length=100)
-    link = models.CharField(max_length=100)
 
     class Meta:
         ordering = ['name']
@@ -22,7 +21,7 @@ class InspireTheme(models.Model):
     annex = models.CharField(max_length=100, blank=True)
     description = models.TextField(blank=True)
     sort_order = models.IntegerField()
-    link = models.CharField(max_length=100)
+    link = models.CharField(max_length=100, blank=True)
 
     class Meta:
         ordering = ['sort_order']
@@ -59,7 +58,7 @@ class EssentialVariable(models.Model):
     parameter = models.CharField(max_length=100)
     description = models.TextField(blank=True)
     sort_order = models.IntegerField()
-    link = models.CharField(max_length=100)
+    link = models.CharField(max_length=100, blank=True)
 
     class Meta:
         ordering = ['sort_order']
@@ -77,7 +76,7 @@ class ProductStatus(models.Model):
     name = models.CharField(max_length=100)
     description = models.TextField(blank=True)
     sort_order = models.IntegerField()
-    link = models.CharField(max_length=100)
+    link = models.CharField(max_length=100, blank=True)
 
     class Meta:
         ordering = ['sort_order']
@@ -103,7 +102,7 @@ class DefinitionLevel(models.Model):
     name = models.CharField(max_length=100)
     description = models.TextField(blank=True)
     sort_order = models.IntegerField()
-    link = models.CharField(max_length=100)
+    link = models.CharField(max_length=100, blank=True)
 
     class Meta:
         ordering = ['sort_order']
@@ -116,7 +115,7 @@ class Relevance(models.Model):
     name = models.CharField(max_length=100)
     description = models.TextField(blank=True)
     sort_order = models.IntegerField()
-    link = models.CharField(max_length=100)
+    link = models.CharField(max_length=100, blank=True)
 
     class Meta:
         ordering = ['sort_order']
@@ -130,7 +129,7 @@ class Criticality(models.Model):
     name = models.CharField(max_length=100)
     description = models.TextField(blank=True)
     sort_order = models.IntegerField()
-    link = models.CharField(max_length=100)
+    link = models.CharField(max_length=100, blank=True)
 
     class Meta:
         ordering = ['sort_order']
@@ -156,7 +155,7 @@ class Dissemination(models.Model):
     name = models.CharField(max_length=100)
     description = models.TextField(blank=True)
     sort_order = models.IntegerField()
-    link = models.CharField(max_length=100)
+    link = models.CharField(max_length=100, blank=True)
 
     class Meta:
         ordering = ['sort_order']
@@ -170,7 +169,7 @@ class Coverage(models.Model):
     name = models.CharField(max_length=100)
     description = models.TextField(blank=True)
     sort_order = models.IntegerField()
-    link = models.CharField(max_length=100)
+    link = models.CharField(max_length=100, blank=True)
 
     class Meta:
         ordering = ['sort_order']
@@ -184,7 +183,7 @@ class Quality(models.Model):
     name = models.CharField(max_length=100)
     description = models.TextField(blank=True)
     sort_order = models.IntegerField()
-    link = models.CharField(max_length=100)
+    link = models.CharField(max_length=100, blank=True)
 
     class Meta:
         ordering = ['sort_order']
@@ -198,7 +197,7 @@ class ComplianceLevel(models.Model):
     name = models.CharField(max_length=100)
     description = models.TextField(blank=True)
     sort_order = models.IntegerField()
-    link = models.CharField(max_length=100)
+    link = models.CharField(max_length=100, blank=True)
 
     class Meta:
         ordering = ['sort_order']
@@ -211,7 +210,7 @@ class UpdateFrequency(models.Model):
     name = models.CharField(max_length=100)
     description = models.TextField(blank=True)
     sort_order = models.IntegerField()
-    link = models.CharField(max_length=100)
+    link = models.CharField(max_length=100, blank=True)
 
     class Meta:
         ordering = ['sort_order']
@@ -225,7 +224,7 @@ class Timeliness(models.Model):
     name = models.CharField(max_length=100)
     description = models.TextField(blank=True)
     sort_order = models.IntegerField()
-    link = models.CharField(max_length=100)
+    link = models.CharField(max_length=100, blank=True)
 
     class Meta:
         ordering = ['sort_order']
@@ -239,7 +238,7 @@ class Policy(models.Model):
     name = models.CharField(max_length=100)
     description = models.TextField(blank=True)
     sort_order = models.IntegerField()
-    link = models.CharField(max_length=100)
+    link = models.CharField(max_length=100, blank=True)
 
     class Meta:
         ordering = ['sort_order']
@@ -253,7 +252,7 @@ class DataType(models.Model):
     name = models.CharField(max_length=100)
     description = models.TextField(blank=True)
     sort_order = models.IntegerField()
-    link = models.CharField(max_length=100)
+    link = models.CharField(max_length=100, blank=True)
 
     class Meta:
         ordering = ['sort_order']
@@ -266,7 +265,7 @@ class DataFormat(models.Model):
     name = models.CharField(max_length=100)
     description = models.TextField(blank=True)
     sort_order = models.IntegerField()
-    link = models.CharField(max_length=100)
+    link = models.CharField(max_length=100, blank=True)
 
     class Meta:
         ordering = ['sort_order']
