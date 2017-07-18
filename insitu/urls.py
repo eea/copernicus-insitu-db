@@ -221,4 +221,8 @@ urlpatterns = [
     url(r'',
         include(auth_patterns,
                 namespace='auth')),
+
+    url(r'picklists$',
+        views.PicklistsManager.as_view(),
+        name='picklists')
 ]
