@@ -34,21 +34,36 @@ class ProductRequirementEditForm(ProductRequirementForm,
 
 
 class RequirementForm(forms.ModelForm):
-    uncertainty_threshold = forms.CharField(max_length=100)
-    uncertainty_breakthrough = forms.CharField(max_length=100)
-    uncertainty_goal = forms.CharField(max_length=100)
-    frequency_threshold = forms.CharField(max_length=100)
-    frequency_breakthrough = forms.CharField(max_length=100)
-    frequency_goal = forms.CharField(max_length=100)
-    timeliness_threshold = forms.CharField(max_length=100)
-    timeliness_breakthrough = forms.CharField(max_length=100)
-    timeliness_goal = forms.CharField(max_length=100)
-    horizontal_resolution_threshold = forms.CharField(max_length=100)
-    horizontal_resolution_breakthrough = forms.CharField(max_length=100)
-    horizontal_resolution_goal = forms.CharField(max_length=100)
-    vertical_resolution_threshold = forms.CharField(max_length=100)
-    vertical_resolution_breakthrough = forms.CharField(max_length=100)
-    vertical_resolution_goal = forms.CharField(max_length=100)
+    uncertainty_threshold = forms.CharField(max_length=100,
+                                            required=False)
+    uncertainty_breakthrough = forms.CharField(max_length=100,
+                                               required=False)
+    uncertainty_goal = forms.CharField(max_length=100,
+                                       required=False)
+    frequency_threshold = forms.CharField(max_length=100,
+                                          required=False)
+    frequency_breakthrough = forms.CharField(max_length=100,
+                                             required=False)
+    frequency_goal = forms.CharField(max_length=100,
+                                     required=False)
+    timeliness_threshold = forms.CharField(max_length=100,
+                                           required=False)
+    timeliness_breakthrough = forms.CharField(max_length=100,
+                                              required=False)
+    timeliness_goal = forms.CharField(max_length=100,
+                                      required=False)
+    horizontal_resolution_threshold = forms.CharField(max_length=100,
+                                                      required=False)
+    horizontal_resolution_breakthrough = forms.CharField(max_length=100,
+                                                         required=False)
+    horizontal_resolution_goal = forms.CharField(max_length=100,
+                                                 required=False)
+    vertical_resolution_threshold = forms.CharField(max_length=100,
+                                                    required=False)
+    vertical_resolution_breakthrough = forms.CharField(max_length=100,
+                                                       required=False)
+    vertical_resolution_goal = forms.CharField(max_length=100,
+                                               required=False)
 
     class Meta:
         model = models.Requirement
@@ -73,6 +88,20 @@ class RequirementForm(forms.ModelForm):
         for attr in ['threshold', 'breakthrough', 'goal']:
             result[attr] = data["_".join([metric, attr])]
         return result
+
+    def _clean_metric(self, metrics):
+        for metric in metrics:
+            metric_values = self._get_metric_data(metric, self.cleaned_data)
+            if "".join(metric_values.values()).strip():
+                return True
+        self.add_error(None, "At least one metric is required.")
+
+    def clean(self):
+        super(RequirementForm, self).clean()
+        metric_fields = ['uncertainty', 'frequency', 'timeliness',
+                         'horizontal_resolution', 'vertical_resolution']
+        self._clean_metric(metric_fields)
+        return self.cleaned_data
 
     def save(self, commit=True):
         uncertainty_data = self._get_metric_data('uncertainty', self.data)

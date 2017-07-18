@@ -1,28 +1,28 @@
 {% load metric %}
-
+{% load bootstrap3 %}
 {% if initial %}
   {% get_metric_value initial name 'threshold' as threshold %}
   {% get_metric_value initial name 'breakthrough' as breakthrough %}
   {% get_metric_value initial name 'goal' as goal %}
 {% endif %}
 
-<div class="form-group container">
+<div class="form-group container {% if form.non_field_errors %}has-error{% endif %}">
   <div class=" ">
     <div class="col-md-3">
       <input type="text" name="{{ name }}_threshold"
-             maxlength="100" class=" form-control" required=""
+             maxlength="100" class=" form-control"
              {% if threshold %} value="{{ threshold }}"{% endif %}
              id="id_{{ name }}_threshold" placeholder="Threshold">
     </div>
     <div class="col-md-3">
       <input type="text" name="{{ name }}_breakthrough"
-             maxlength="100" class=" form-control" required=""
+             maxlength="100" class=" form-control"
              {% if breakthrough %} value="{{ breakthrough }}"{% endif %}
              id="id_{{ name }}_breakthrough" placeholder="Breakthrough">
     </div>
     <div class="col-md-3">
       <input type="text" name="{{ name }}_goal" maxlength="100"
-             class=" form-control" required="" id="id_{{ name }}_goal"
+             class=" form-control" id="id_{{ name }}_goal"
              {% if goal %} value="{{ goal }}"{% endif %}
              placeholder="Goal">
     </div>

@@ -20,6 +20,8 @@
       <span>Add a new requirement</span>
     </h1>
   </div>
+
+{% bootstrap_form_errors form %}
 <form action="" method="post">
   {% csrf_token %}
   {% bootstrap_field form.name %}

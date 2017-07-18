@@ -21,6 +21,8 @@
       <p class="col-sm-12"><small>{{ requirement.name }}</small></p>
     </h1>
   </div>
+
+{% bootstrap_form_errors form %}
 <form action="" method="post">
   {% csrf_token %}
   {% bootstrap_field form.name %}
