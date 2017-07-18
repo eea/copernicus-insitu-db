@@ -33,19 +33,19 @@
   {% bootstrap_field form.quality %}
 
   <label class="control-label">Uncertainty</label>
-  {% include 'bits/metric_field.html' with name='uncertainty' %}
+  {% include 'bits/metric_field.html' with name='uncertainty' initial=form %}
 
   <label class="control-label">Frequency</label>
-  {% include 'bits/metric_field.html' with name='frequency' %}
+  {% include 'bits/metric_field.html' with name='frequency' initial=form%}
 
   <label class="control-label">Timeliness</label>
-  {% include 'bits/metric_field.html' with name='timeliness' %}
+  {% include 'bits/metric_field.html' with name='timeliness' initial=form %}
 
   <label class="control-label">Horizontal resolution</label>
-  {% include 'bits/metric_field.html' with name='horizontal_resolution' %}
+  {% include 'bits/metric_field.html' with name='horizontal_resolution' initial=form %}
 
   <label class="control-label">Vertical resolution</label>
-  {% include 'bits/metric_field.html' with name='vertical_resolution' %}
+  {% include 'bits/metric_field.html' with name='vertical_resolution' initial=form %}
 
   <input class="btn btn-primary" type="submit" value="Save" />
 </form>
