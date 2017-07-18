@@ -13,6 +13,7 @@ class CountryFactory(DjangoModelFactory):
 class InspireThemeFactory(DjangoModelFactory):
     name = 'Test Theme'
     sort_order = 0
+    link = ''
 
     class Meta:
         model = models.InspireTheme
@@ -23,6 +24,7 @@ class EssentialVariableFactory(DjangoModelFactory):
     component = models.EssentialVariable.COMPONENT_CHOICES[0][0]
     parameter = 'Test parameter'
     sort_order = 0
+    link = ''
 
     class Meta:
         model = models.EssentialVariable
@@ -31,6 +33,7 @@ class EssentialVariableFactory(DjangoModelFactory):
 class ProductStatusFactory(DjangoModelFactory):
     name = 'Test product status'
     sort_order = 0
+    link = ''
 
     class Meta:
         model = models.ProductStatus
@@ -47,6 +50,7 @@ class ProductGroupFactory(DjangoModelFactory):
 class DefinitionLevelFactory(DjangoModelFactory):
     name = 'Test DefinitionLevel'
     sort_order = 0
+    link = ''
 
     class Meta:
         model = models.DefinitionLevel
@@ -55,6 +59,7 @@ class DefinitionLevelFactory(DjangoModelFactory):
 class RelevanceFactory(DjangoModelFactory):
     name = 'Test Relevance'
     sort_order = 0
+    link = ''
 
     class Meta:
         model = models.Relevance
@@ -63,6 +68,7 @@ class RelevanceFactory(DjangoModelFactory):
 class CriticalityFactory(DjangoModelFactory):
     name = 'Test Criticality'
     sort_order = 0
+    link = ''
 
     class Meta:
         model = models.Criticality
@@ -79,6 +85,7 @@ class BarrierFactory(DjangoModelFactory):
 class DisseminationFactory(DjangoModelFactory):
     name = 'Test Dissemination'
     sort_order = 0
+    link = ''
 
     class Meta:
         model = models.Dissemination
@@ -87,6 +94,7 @@ class DisseminationFactory(DjangoModelFactory):
 class CoverageFactory(DjangoModelFactory):
     name = 'Test coverage'
     sort_order = 0
+    link = ''
 
     class Meta:
         model = models.Coverage
@@ -95,6 +103,7 @@ class CoverageFactory(DjangoModelFactory):
 class QualityFactory(DjangoModelFactory):
     name = 'Test Quality'
     sort_order = 0
+    link = ''
 
     class Meta:
         model = models.Quality
@@ -103,6 +112,7 @@ class QualityFactory(DjangoModelFactory):
 class ComplianceLevelFactory(DjangoModelFactory):
     name = 'Test ComplianceLevel'
     sort_order = 0
+    link = ''
 
     class Meta:
         model = models.ComplianceLevel
@@ -111,6 +121,7 @@ class ComplianceLevelFactory(DjangoModelFactory):
 class UpdateFrequencyFactory(DjangoModelFactory):
     name = 'Test UpdateFrequency'
     sort_order = 0
+    link = ''
 
     class Meta:
         model = models.UpdateFrequency
@@ -119,6 +130,7 @@ class UpdateFrequencyFactory(DjangoModelFactory):
 class TimelinessFactory(DjangoModelFactory):
     name = 'Test Timeliness'
     sort_order = 0
+    link = ''
 
     class Meta:
         model = models.Timeliness
@@ -127,6 +139,7 @@ class TimelinessFactory(DjangoModelFactory):
 class PolicyFactory(DjangoModelFactory):
     name = 'Test Policy'
     sort_order = 0
+    link = ''
 
     class Meta:
         model = models.Policy
@@ -135,6 +148,7 @@ class PolicyFactory(DjangoModelFactory):
 class DataTypeFactory(DjangoModelFactory):
     name = 'Test DataType'
     sort_order = 0
+    link = ''
 
     class Meta:
         model = models.DataType
@@ -143,14 +157,7 @@ class DataTypeFactory(DjangoModelFactory):
 class DataFormatFactory(DjangoModelFactory):
     name = 'Test DataFormat'
     sort_order = 0
+    link = ''
 
     class Meta:
         model = models.DataFormat
-
-
-class DefinitionLevelFactory(DjangoModelFactory):
-    name = 'Test DefinitionLevel'
-    sort_order = 0
-
-    class Meta:
-        model = models.DefinitionLevel
