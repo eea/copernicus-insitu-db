@@ -143,7 +143,7 @@ class DataGroupForm(forms.ModelForm):
         auto_created = True
         fields = ['name', 'note', 'frequency', 'coverage', 'timeliness',
                   'policy', 'data_type', 'data_format', 'quality',
-                  'inspire_themes', 'essential_climate_variables']
+                  'inspire_themes', 'essential_variables']
 
 
 class DataRequirementBaseForm(forms.ModelForm):

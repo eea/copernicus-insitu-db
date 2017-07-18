@@ -10,7 +10,7 @@ class DataGroupTests(base.FormCheckTestCase):
     related_fields = ['frequency', 'coverage', 'timeliness',
                       'policy', 'data_type', 'data_format',
                       'quality']
-    many_to_many_fields = ['inspire_themes', 'essential_climate_variables']
+    many_to_many_fields = ['inspire_themes', 'essential_variables']
     required_fields = ['name', 'frequency', 'coverage', 'timeliness',
                       'policy', 'data_type', 'data_format',
                       'quality', 'inspire_themes']
@@ -25,9 +25,9 @@ class DataGroupTests(base.FormCheckTestCase):
         data_format = base.DataFormatFactory()
         quality = base.QualityFactory()
         inspire_themes = [base.InspireThemeFactory(),base.InspireThemeFactory()]
-        essential_climate_variables = [base.EssentialClimateVariableFactory(),
-                                       base.EssentialClimateVariableFactory(),
-                                       base.EssentialClimateVariableFactory()]
+        essential_variables = [base.EssentialVariableFactory(),
+                               base.EssentialVariableFactory(),
+                               base.EssentialVariableFactory()]
 
         self._DATA = {
             'name': 'TEST data group',
@@ -41,9 +41,9 @@ class DataGroupTests(base.FormCheckTestCase):
             'quality': quality.pk,
             'inspire_themes': [inspire_theme.pk for inspire_theme
                                in inspire_themes],
-            'essential_climate_variables': [essential_climate_variable.pk for
-                                            essential_climate_variable in
-                                            essential_climate_variables]
+            'essential_variables': [essential_variable.pk for
+                                    essential_variable in
+                                    essential_variables]
         }
         user = base.UserFactory()
         base.CopernicususResponsibleFactory(user=user)

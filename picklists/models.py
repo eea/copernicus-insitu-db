@@ -33,7 +33,7 @@ class InspireTheme(models.Model):
         )
 
 
-class EssentialClimateVariable(models.Model):
+class EssentialVariable(models.Model):
     DOMAIN_CHOICES = (
         (0, 'ATMOSPHERIC'),
         (1, 'OCEANIC'),
