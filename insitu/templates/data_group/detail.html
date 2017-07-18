@@ -85,12 +85,12 @@
         </tr>
       {% endif %}
 
-      {% if data_group.essential_climate_variables.all|length %}
+      {% if data_group.essential_variables.all|length %}
         <tr class="row">
-          <th class="col-md-4 col-sm-6">Essential climate variables</th>
+          <th class="col-md-4 col-sm-6">Essential variables</th>
           <td class="col-md-8 col-sm-6">
-            {% for essential_climate_variable in data_group.essential_climate_variables.all %}
-              <p>{{ essential_climate_variable }}</p>
+            {% for essential_variable in data_group.essential_variables.all %}
+              <p>{{ essential_variable }}</p>
             {% endfor %}
           </td>
         </tr>

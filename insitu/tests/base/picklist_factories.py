@@ -18,14 +18,14 @@ class InspireThemeFactory(DjangoModelFactory):
         model = models.InspireTheme
 
 
-class EssentialClimateVariableFactory(DjangoModelFactory):
-    domain = models.EssentialClimateVariable.DOMAIN_CHOICES[0][0]
-    component = models.EssentialClimateVariable.COMPONENT_CHOICES[0][0]
+class EssentialVariableFactory(DjangoModelFactory):
+    domain = models.EssentialVariable.DOMAIN_CHOICES[0][0]
+    component = models.EssentialVariable.COMPONENT_CHOICES[0][0]
     parameter = 'Test parameter'
     sort_order = 0
 
     class Meta:
-        model = models.EssentialClimateVariable
+        model = models.EssentialVariable
 
 
 class ProductStatusFactory(DjangoModelFactory):

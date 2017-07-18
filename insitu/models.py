@@ -325,8 +325,8 @@ class DataGroup(SoftDeleteModel):
                                 on_delete=models.CASCADE,
                                 related_name='+')
     inspire_themes = models.ManyToManyField(pickmodels.InspireTheme)
-    essential_climate_variables = models.ManyToManyField(
-        pickmodels.EssentialClimateVariable
+    essential_variables = models.ManyToManyField(
+        pickmodels.EssentialVariable
     )
     requirements = models.ManyToManyField(Requirement,
                                           through='DataRequirement')
