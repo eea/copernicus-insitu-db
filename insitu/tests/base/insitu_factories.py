@@ -50,7 +50,7 @@ class RequirementFactory(DjangoModelFactory):
     dissemination = SubFactory(factories.DisseminationFactory)
     quality = SubFactory(factories.QualityFactory)
     uncertainty = SubFactory(MetricFactory)
-    frequency = SubFactory(MetricFactory)
+    update_frequency = SubFactory(MetricFactory)
     timeliness = SubFactory(MetricFactory)
     horizontal_resolution = SubFactory(MetricFactory)
     vertical_resolution = SubFactory(MetricFactory)
@@ -107,7 +107,7 @@ class DataResponsibleDetailsFactory(DjangoModelFactory):
 
 class DataGroupFactory(DjangoModelFactory):
     name = 'test DataGroup'
-    frequency = SubFactory(factories.FrequencyFactory)
+    update_frequency = SubFactory(factories.UpdateFrequencyFactory)
     coverage = SubFactory(factories.CoverageFactory)
     timeliness = SubFactory(factories.TimelinessFactory)
     policy = SubFactory(factories.PolicyFactory)

@@ -47,7 +47,7 @@ class RequirementDoc(DocType):
     dissemination = fields.KeywordField(attr='dissemination.name')
     quality = fields.KeywordField(attr='quality.name')
     uncertainty = fields.KeywordField(attr='uncertainty.to_elastic_search_format')
-    frequency = fields.KeywordField(attr='frequency.to_elastic_search_format')
+    update_frequency = fields.KeywordField(attr='update_frequency.to_elastic_search_format')
     timeliness = fields.KeywordField(attr='timeliness.to_elastic_search_format')
     horizontal_resolution = fields.KeywordField(
         attr='horizontal_resolution.to_elastic_search_format')
@@ -74,7 +74,7 @@ class RequirementDoc(DocType):
 @insitu.doc_type
 class DataGroupDoc(DocType):
     name = fields.KeywordField()
-    frequency = fields.KeywordField(attr='frequency.name')
+    update_frequency = fields.KeywordField(attr='update_frequency.name')
     coverage = fields.KeywordField(attr='coverage.name')
     timeliness = fields.KeywordField(attr='timeliness.name')
     policy = fields.KeywordField(attr='policy.name')

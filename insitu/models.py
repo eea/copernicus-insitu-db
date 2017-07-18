@@ -150,7 +150,7 @@ class Requirement(SoftDeleteModel):
     uncertainty = models.ForeignKey(Metric,
                                     on_delete=models.CASCADE,
                                     related_name='+')
-    frequency = models.ForeignKey(Metric,
+    update_frequency = models.ForeignKey(Metric,
                                   on_delete=models.CASCADE,
                                   related_name='+')
     timeliness = models.ForeignKey(Metric,
@@ -303,7 +303,7 @@ class DataGroup(SoftDeleteModel):
 
     name = models.CharField(max_length=100)
     note = models.TextField(blank=True)
-    frequency = models.ForeignKey(pickmodels.Frequency,
+    update_frequency = models.ForeignKey(pickmodels.UpdateFrequency,
                                   on_delete=models.CASCADE,
                                   related_name='+')
     coverage = models.ForeignKey(pickmodels.Coverage,

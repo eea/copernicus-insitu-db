@@ -40,12 +40,12 @@ class RequirementForm(forms.ModelForm):
                                                required=False)
     uncertainty_goal = forms.CharField(max_length=100,
                                        required=False)
-    frequency_threshold = forms.CharField(max_length=100,
-                                          required=False)
-    frequency_breakthrough = forms.CharField(max_length=100,
-                                             required=False)
-    frequency_goal = forms.CharField(max_length=100,
-                                     required=False)
+    update_frequency_threshold = forms.CharField(max_length=100,
+                                                 required=False)
+    update_frequency_breakthrough = forms.CharField(max_length=100,
+                                                    required=False)
+    update_frequency_goal = forms.CharField(max_length=100,
+                                            required=False)
     timeliness_threshold = forms.CharField(max_length=100,
                                            required=False)
     timeliness_breakthrough = forms.CharField(max_length=100,
@@ -98,14 +98,14 @@ class RequirementForm(forms.ModelForm):
 
     def clean(self):
         super(RequirementForm, self).clean()
-        metric_fields = ['uncertainty', 'frequency', 'timeliness',
+        metric_fields = ['uncertainty', 'update_frequency', 'timeliness',
                          'horizontal_resolution', 'vertical_resolution']
         self._clean_metric(metric_fields)
         return self.cleaned_data
 
     def save(self, commit=True):
         uncertainty_data = self._get_metric_data('uncertainty', self.data)
-        frequency_data = self._get_metric_data('frequency', self.data)
+        update_frequency_data = self._get_metric_data('update_frequency', self.data)
         timeliness_data = self._get_metric_data('timeliness', self.data)
         horizontal_resolution_data = self._get_metric_data('horizontal_resolution',
                                                            self.data)
@@ -120,7 +120,7 @@ class RequirementForm(forms.ModelForm):
 
         if not self.initial:
             data['uncertainty'] = self._create_metric(**uncertainty_data)
-            data['frequency'] = self._create_metric(**frequency_data)
+            data['update_frequency'] = self._create_metric(**update_frequency_data)
             data['timeliness'] = self._create_metric(**timeliness_data)
             data['horizontal_resolution'] = self._create_metric(
                 **horizontal_resolution_data)
@@ -128,7 +128,7 @@ class RequirementForm(forms.ModelForm):
             return models.Requirement.objects.create(**data)
         else:
             self._update_metric(self.instance.uncertainty, **uncertainty_data)
-            self._update_metric(self.instance.frequency, **frequency_data)
+            self._update_metric(self.instance.update_frequency, **update_frequency_data)
             self._update_metric(self.instance.timeliness, **timeliness_data)
             self._update_metric(self.instance.horizontal_resolution,
                                 **horizontal_resolution_data)
@@ -141,7 +141,7 @@ class DataGroupForm(forms.ModelForm):
     class Meta:
         model = models.DataGroup
         auto_created = True
-        fields = ['name', 'note', 'frequency', 'coverage', 'timeliness',
+        fields = ['name', 'note', 'update_frequency', 'coverage', 'timeliness',
                   'policy', 'data_type', 'data_format', 'quality',
                   'inspire_themes', 'essential_variables']
 

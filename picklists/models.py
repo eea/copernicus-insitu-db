@@ -196,14 +196,14 @@ class ComplianceLevel(models.Model):
         return self.name
 
 
-class Frequency(models.Model):
+class UpdateFrequency(models.Model):
     name = models.CharField(max_length=100)
     description = models.TextField(blank=True)
     sort_order = models.IntegerField()
 
     class Meta:
         ordering = ['sort_order']
-        verbose_name_plural = 'frequency'
+        verbose_name_plural = 'update_frequency'
 
     def __str__(self):
         return self.name
