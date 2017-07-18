@@ -1728,7 +1728,8 @@
     "name": "Coordinate reference systems",
     "annex": "Annex I",
     "description": "Systems for uniquely referencing spatial information in space as a set of coordinates (x,y,z) and/or latitude and longitude and height, based on a geodetic horizontal and vertical datum",
-    "sort_order": 1
+    "sort_order": 1,
+    "link": ""
   }
 },
 {
@@ -1738,7 +1739,8 @@
     "name": "Geographical grid systems",
     "annex": "Annex I",
     "description": "Harmonised multi-resolution grid with a common point of origin and standardised location and size of grid cells",
-    "sort_order": 2
+    "sort_order": 2,
+    "link": ""
   }
 },
 {
@@ -1748,7 +1750,8 @@
     "name": "Geographical names",
     "annex": "Annex I",
     "description": "Names of areas, regions, localities, cities, suburbs, towns or settlements, or any geographical or topographical feature of public or historical interest",
-    "sort_order": 3
+    "sort_order": 3,
+    "link": ""
   }
 },
 {
@@ -1758,7 +1761,8 @@
     "name": "Administrative units",
     "annex": "Annex I",
     "description": "Units of administration, dividing areas where Member States have and/or exercise jurisdictional rights, for local, regional and national governance, separated by administrative boundaries",
-    "sort_order": 4
+    "sort_order": 4,
+    "link": ""
   }
 },
 {
@@ -1768,7 +1772,8 @@
     "name": "Addresses",
     "annex": "Annex I",
     "description": "Location of properties based on address identifiers, usually by road name, house number, postal code",
-    "sort_order": 5
+    "sort_order": 5,
+    "link": ""
   }
 },
 {
@@ -1778,7 +1783,8 @@
     "name": "Cadastral parcels",
     "annex": "Annex I",
     "description": "Areas defined by cadastral registers or equivalent",
-    "sort_order": 6
+    "sort_order": 6,
+    "link": ""
   }
 },
 {
@@ -1788,7 +1794,8 @@
     "name": "Transport networks",
     "annex": "Annex I",
     "description": "Road, rail, air and water transport networks and related infrastructure. Includes links between different networks. Also includes the trans-European transport network as defined in Decision 1692/96/EC of the European Parliament and of the Council of 23 July 1996 on Community guidelines for the development of the trans-European transport network and future revisions of that decision",
-    "sort_order": 7
+    "sort_order": 7,
+    "link": ""
   }
 },
 {
@@ -1798,7 +1805,8 @@
     "name": "Hydrography",
     "annex": "Annex I",
     "description": "Hydrographic elements, including marine areas and all other water bodies and items related to them, including river basins and sub-basins. Where appropriate, according to the definitions set out in Directive 2000/60/EC of the European Parliament and of the Council of 23 October 2000 establishing a framework for Community action in the field of water policy, and in the form of networks",
-    "sort_order": 8
+    "sort_order": 8,
+    "link": ""
   }
 },
 {
@@ -1808,7 +1816,8 @@
     "name": "Protected sites",
     "annex": "Annex I",
     "description": "Area designated or managed within a framework of international, Community and Member States' legislation to achieve specific conservation objectives",
-    "sort_order": 9
+    "sort_order": 9,
+    "link": ""
   }
 },
 {
@@ -1818,7 +1827,8 @@
     "name": "Elevation",
     "annex": "Annex II",
     "description": "Digital elevation models for land, ice and ocean surfaces. Includes terrestrial elevation, bathymetry and shoreline",
-    "sort_order": 10
+    "sort_order": 10,
+    "link": ""
   }
 },
 {
@@ -1828,7 +1838,8 @@
     "name": "Land cover",
     "annex": "Annex II",
     "description": "Physical and biological cover of the earth's surface including artificial surfaces, agricultural areas, forests, (semi-)natural areas, wetlands, water bodies",
-    "sort_order": 11
+    "sort_order": 11,
+    "link": ""
   }
 },
 {
@@ -1838,7 +1849,8 @@
     "name": "Orthoimagery",
     "annex": "Annex II",
     "description": "Geo-referenced image data of the Earth's surface, from either satellite or airborne sensors",
-    "sort_order": 12
+    "sort_order": 12,
+    "link": ""
   }
 },
 {
@@ -1848,7 +1860,8 @@
     "name": "Geology",
     "annex": "Annex II",
     "description": "Geology characterised according to composition and structure. Includes bedrock, aquifers and geomorphology",
-    "sort_order": 13
+    "sort_order": 13,
+    "link": ""
   }
 },
 {
@@ -1858,7 +1871,8 @@
     "name": "Statistical units",
     "annex": "Annex III",
     "description": "Units for dissemination or use of statistical information",
-    "sort_order": 14
+    "sort_order": 14,
+    "link": ""
   }
 },
 {
@@ -1868,7 +1882,8 @@
     "name": "Buildings",
     "annex": "Annex III",
     "description": "Geographical location of buildings",
-    "sort_order": 15
+    "sort_order": 15,
+    "link": ""
   }
 },
 {
@@ -1878,7 +1893,8 @@
     "name": "Soil",
     "annex": "Annex III",
     "description": "Soils and subsoil characterised according to depth, texture, structure and content of particles and organic material, stoniness, erosion, where appropriate mean slope and anticipated water storage capacity",
-    "sort_order": 16
+    "sort_order": 16,
+    "link": ""
   }
 },
 {
@@ -1888,7 +1904,8 @@
     "name": "Land use",
     "annex": "Annex III",
     "description": "Territory characterised according to its current and future planned functional dimension or socio\u2013economic purpose (e.g. residential, industrial, commercial, agricultural, forestry, recreational)",
-    "sort_order": 17
+    "sort_order": 17,
+    "link": ""
   }
 },
 {
@@ -1898,7 +1915,8 @@
     "name": "Human health and safety",
     "annex": "Annex III",
     "description": "Geographical distribution of dominance of pathologies (allergies, cancers, respiratory diseases, etc.), information indicating the effect on health ( biomarkers, decline of fertility, epidemics) or well-being of humans (fatigue, stress, etc.) linked directly (air pollution, chemicals, depletion of the ozone layer, noise, etc.) or indirectly (food, genetically modified organisms, etc.) to the quality of the environment",
-    "sort_order": 18
+    "sort_order": 18,
+    "link": ""
   }
 },
 {
@@ -1908,7 +1926,8 @@
     "name": "Utility and governmental services",
     "annex": "Annex III",
     "description": "Includes utility facilities such as sewage, waste management, energy supply and water supply, administrative and social governmental services such as public administrations, civil protection sites, schools and hospitals",
-    "sort_order": 19
+    "sort_order": 19,
+    "link": ""
   }
 },
 {
@@ -1918,7 +1937,8 @@
     "name": "Environmental monitoring facilities",
     "annex": "Annex III",
     "description": "Location and operation of environmental monitoring facilities includes observation and measurement of emissions, of the state of environmental media and of other ecosystem parameters (biodiversity, ecological conditions of vegetation, etc.) by or on behalf of public authorities",
-    "sort_order": 20
+    "sort_order": 20,
+    "link": ""
   }
 },
 {
@@ -1928,7 +1948,8 @@
     "name": "Production and industrial facilities",
     "annex": "Annex III",
     "description": "Industrial production sites, including installations covered by Directive 96/61/EC of 24 September 1996 concerning integrated pollution prevention and control and water abstraction facilities, mining, storage sites",
-    "sort_order": 21
+    "sort_order": 21,
+    "link": ""
   }
 },
 {
@@ -1938,7 +1959,8 @@
     "name": "Agricultural and aquaculture facilities",
     "annex": "Annex III",
     "description": "Farming equipment and production facilities (including irrigation systems, greenhouses and stables)",
-    "sort_order": 22
+    "sort_order": 22,
+    "link": ""
   }
 },
 {
@@ -1948,7 +1970,8 @@
     "name": "Population distribution and demography",
     "annex": "Annex III",
     "description": "Geographical distribution of people, including population characteristics and activity levels, aggregated by grid, region, administrative unit or other analytical unit",
-    "sort_order": 23
+    "sort_order": 23,
+    "link": ""
   }
 },
 {
@@ -1958,7 +1981,8 @@
     "name": "Area management/restriction/regulation zones & reporting units",
     "annex": "Annex III",
     "description": "Areas managed, regulated or used for reporting at international, European, national, regional and local levels. Includes dumping sites, restricted areas around drinking water sources, nitrate-vulnerable zones, regulated fairways at sea or large inland waters, areas for the dumping of waste, noise restriction zones, prospecting and mining permit areas, river basin districts, relevant reporting units and coastal zone management areas",
-    "sort_order": 24
+    "sort_order": 24,
+    "link": ""
   }
 },
 {
@@ -1968,7 +1992,8 @@
     "name": "Natural risk zones",
     "annex": "Annex III",
     "description": "Vulnerable areas characterised according to natural hazards (all atmospheric, hydrologic, seismic, volcanic and wildfire phenomena that, because of their location, severity, and frequency, have the potential to seriously affect society), e.g. floods, landslides and subsidence, avalanches, forest fires, earthquakes, volcanic eruptions",
-    "sort_order": 25
+    "sort_order": 25,
+    "link": ""
   }
 },
 {
@@ -1978,7 +2003,8 @@
     "name": "Atmospheric conditions",
     "annex": "Annex III",
     "description": "Physical conditions in the atmosphere. Includes spatial data based on measurements, on models or on a combination thereof and includes measurement locations",
-    "sort_order": 26
+    "sort_order": 26,
+    "link": ""
   }
 },
 {
@@ -1988,7 +2014,8 @@
     "name": "Meteorological geographical features",
     "annex": "Annex III",
     "description": "Weather conditions and their measurements; precipitation, temperature, evapotranspiration, wind speed and direction",
-    "sort_order": 27
+    "sort_order": 27,
+    "link": ""
   }
 },
 {
@@ -1998,7 +2025,8 @@
     "name": "Oceanographic geographical features",
     "annex": "Annex III",
     "description": "Physical conditions of oceans (currents, salinity, wave heights, etc.)",
-    "sort_order": 28
+    "sort_order": 28,
+    "link": ""
   }
 },
 {
@@ -2008,7 +2036,8 @@
     "name": "Sea regions",
     "annex": "Annex III",
     "description": "Physical conditions of seas and saline water bodies divided into regions and sub-regions with common characteristics",
-    "sort_order": 29
+    "sort_order": 29,
+    "link": ""
   }
 },
 {
@@ -2018,7 +2047,8 @@
     "name": "Bio-geographical regions",
     "annex": "Annex III",
     "description": "Areas of relatively homogeneous ecological conditions with common characteristics",
-    "sort_order": 30
+    "sort_order": 30,
+    "link": ""
   }
 },
 {
@@ -2028,7 +2058,8 @@
     "name": "Habitats and biotopes",
     "annex": "Annex III",
     "description": "Geographical areas characterised by specific ecological conditions, processes, structure, and (life support) functions that physically support the organisms that live there. Includes terrestrial and aquatic areas distinguished by geographical, abiotic and biotic features, whether entirely natural or semi-natural",
-    "sort_order": 31
+    "sort_order": 31,
+    "link": ""
   }
 },
 {
@@ -2038,7 +2069,8 @@
     "name": "Species distribution",
     "annex": "Annex III",
     "description": "Geographical distribution of occurrence of animal and plant species aggregated by grid, region, administrative unit or other analytical unit",
-    "sort_order": 32
+    "sort_order": 32,
+    "link": ""
   }
 },
 {
@@ -2048,7 +2080,8 @@
     "name": "Energy resources",
     "annex": "Annex III",
     "description": "Energy resources including hydrocarbons, hydropower, bio-energy, solar, wind, etc., where relevant including depth/height information on the extent of the resource",
-    "sort_order": 33
+    "sort_order": 33,
+    "link": ""
   }
 },
 {
@@ -2058,7 +2091,8 @@
     "name": "Mineral resources",
     "annex": "Annex III",
     "description": "Mineral resources including metal ores, industrial minerals, etc., where relevant including depth/height information on the extent of the resource",
-    "sort_order": 34
+    "sort_order": 34,
+    "link": ""
   }
 },
 {
@@ -2068,7 +2102,8 @@
     "name": "N/A",
     "annex": "",
     "description": "",
-    "sort_order": 99
+    "sort_order": 99,
+    "link": ""
   }
 },
 {
@@ -2078,7 +2113,8 @@
     "name": "TBD",
     "annex": "",
     "description": "",
-    "sort_order": 100
+    "sort_order": 100,
+    "link": ""
   }
 },
 {
@@ -2089,7 +2125,8 @@
     "component": 0,
     "parameter": "Air temperature",
     "description": "",
-    "sort_order": 1
+    "sort_order": 1,
+    "link": ""
   }
 },
 {
@@ -2100,7 +2137,8 @@
     "component": 0,
     "parameter": "Wind speed and direction",
     "description": "",
-    "sort_order": 2
+    "sort_order": 2,
+    "link": ""
   }
 },
 {
@@ -2111,7 +2149,8 @@
     "component": 0,
     "parameter": "Water vapor",
     "description": "",
-    "sort_order": 3
+    "sort_order": 3,
+    "link": ""
   }
 },
 {
@@ -2122,7 +2161,8 @@
     "component": 0,
     "parameter": "Pressure",
     "description": "",
-    "sort_order": 4
+    "sort_order": 4,
+    "link": ""
   }
 },
 {
@@ -2133,7 +2173,8 @@
     "component": 0,
     "parameter": "Precipitation",
     "description": "",
-    "sort_order": 5
+    "sort_order": 5,
+    "link": ""
   }
 },
 {
@@ -2144,7 +2185,8 @@
     "component": 0,
     "parameter": "Surface radiation budget",
     "description": "",
-    "sort_order": 6
+    "sort_order": 6,
+    "link": ""
   }
 },
 {
@@ -2155,7 +2197,8 @@
     "component": 1,
     "parameter": "Lightning",
     "description": "",
-    "sort_order": 7
+    "sort_order": 7,
+    "link": ""
   }
 },
 {
@@ -2166,7 +2209,8 @@
     "component": 1,
     "parameter": "Temperature",
     "description": "",
-    "sort_order": 8
+    "sort_order": 8,
+    "link": ""
   }
 },
 {
@@ -2177,7 +2221,8 @@
     "component": 1,
     "parameter": "Wind speed and direction",
     "description": "",
-    "sort_order": 9
+    "sort_order": 9,
+    "link": ""
   }
 },
 {
@@ -2188,7 +2233,8 @@
     "component": 1,
     "parameter": "Water vapor",
     "description": "",
-    "sort_order": 10
+    "sort_order": 10,
+    "link": ""
   }
 },
 {
@@ -2199,7 +2245,8 @@
     "component": 1,
     "parameter": "Cloud properties",
     "description": "",
-    "sort_order": 11
+    "sort_order": 11,
+    "link": ""
   }
 },
 {
@@ -2210,7 +2257,8 @@
     "component": 1,
     "parameter": "Earth radiation budget (including solar irradiance)",
     "description": "",
-    "sort_order": 12
+    "sort_order": 12,
+    "link": ""
   }
 },
 {
@@ -2221,7 +2269,8 @@
     "component": 2,
     "parameter": "Carbon Dioxide, Methane and other long-lived greenhouse gases",
     "description": "",
-    "sort_order": 13
+    "sort_order": 13,
+    "link": ""
   }
 },
 {
@@ -2232,7 +2281,8 @@
     "component": 2,
     "parameter": "Ozone and aerosol",
     "description": "",
-    "sort_order": 14
+    "sort_order": 14,
+    "link": ""
   }
 },
 {
@@ -2243,7 +2293,8 @@
     "component": 3,
     "parameter": "Subsurface temperature",
     "description": "",
-    "sort_order": 15
+    "sort_order": 15,
+    "link": ""
   }
 },
 {
@@ -2254,7 +2305,8 @@
     "component": 3,
     "parameter": "Subsurface salinity",
     "description": "",
-    "sort_order": 16
+    "sort_order": 16,
+    "link": ""
   }
 },
 {
@@ -2265,7 +2317,8 @@
     "component": 3,
     "parameter": "Subsurface currents",
     "description": "",
-    "sort_order": 17
+    "sort_order": 17,
+    "link": ""
   }
 },
 {
@@ -2276,7 +2329,8 @@
     "component": 3,
     "parameter": "Ocean surface stress",
     "description": "",
-    "sort_order": 18
+    "sort_order": 18,
+    "link": ""
   }
 },
 {
@@ -2287,7 +2341,8 @@
     "component": 3,
     "parameter": "Ocean surface heat flux",
     "description": "",
-    "sort_order": 19
+    "sort_order": 19,
+    "link": ""
   }
 },
 {
@@ -2298,7 +2353,8 @@
     "component": 3,
     "parameter": "Sea surface temperature",
     "description": "",
-    "sort_order": 20
+    "sort_order": 20,
+    "link": ""
   }
 },
 {
@@ -2309,7 +2365,8 @@
     "component": 3,
     "parameter": "Surface currents",
     "description": "",
-    "sort_order": 21
+    "sort_order": 21,
+    "link": ""
   }
 },
 {
@@ -2320,7 +2377,8 @@
     "component": 3,
     "parameter": "Sea-surface salinity",
     "description": "",
-    "sort_order": 22
+    "sort_order": 22,
+    "link": ""
   }
 },
 {
@@ -2331,7 +2389,8 @@
     "component": 3,
     "parameter": "Sea level",
     "description": "",
-    "sort_order": 23
+    "sort_order": 23,
+    "link": ""
   }
 },
 {
@@ -2342,7 +2401,8 @@
     "component": 3,
     "parameter": "Sea state",
     "description": "",
-    "sort_order": 24
+    "sort_order": 24,
+    "link": ""
   }
 },
 {
@@ -2353,7 +2413,8 @@
     "component": 3,
     "parameter": "Sea-ice",
     "description": "",
-    "sort_order": 25
+    "sort_order": 25,
+    "link": ""
   }
 },
 {
@@ -2364,7 +2425,8 @@
     "component": 4,
     "parameter": "Inorganic carbon",
     "description": "",
-    "sort_order": 26
+    "sort_order": 26,
+    "link": ""
   }
 },
 {
@@ -2375,7 +2437,8 @@
     "component": 4,
     "parameter": "Oxygen",
     "description": "",
-    "sort_order": 27
+    "sort_order": 27,
+    "link": ""
   }
 },
 {
@@ -2386,7 +2449,8 @@
     "component": 4,
     "parameter": "Nutrients",
     "description": "",
-    "sort_order": 28
+    "sort_order": 28,
+    "link": ""
   }
 },
 {
@@ -2397,7 +2461,8 @@
     "component": 4,
     "parameter": "Transient tracers",
     "description": "",
-    "sort_order": 29
+    "sort_order": 29,
+    "link": ""
   }
 },
 {
@@ -2408,7 +2473,8 @@
     "component": 4,
     "parameter": "Suspended particulates",
     "description": "",
-    "sort_order": 30
+    "sort_order": 30,
+    "link": ""
   }
 },
 {
@@ -2419,7 +2485,8 @@
     "component": 4,
     "parameter": "Stable carbon isotopes",
     "description": "",
-    "sort_order": 31
+    "sort_order": 31,
+    "link": ""
   }
 },
 {
@@ -2430,7 +2497,8 @@
     "component": 4,
     "parameter": "Dissolved Organic carbon",
     "description": "",
-    "sort_order": 32
+    "sort_order": 32,
+    "link": ""
   }
 },
 {
@@ -2441,7 +2509,8 @@
     "component": 4,
     "parameter": "Nitrous Oxide (N2O)",
     "description": "",
-    "sort_order": 33
+    "sort_order": 33,
+    "link": ""
   }
 },
 {
@@ -2452,7 +2521,8 @@
     "component": 4,
     "parameter": "Ocean colour",
     "description": "",
-    "sort_order": 34
+    "sort_order": 34,
+    "link": ""
   }
 },
 {
@@ -2463,7 +2533,8 @@
     "component": 5,
     "parameter": "Plankton",
     "description": "",
-    "sort_order": 35
+    "sort_order": 35,
+    "link": ""
   }
 },
 {
@@ -2474,7 +2545,8 @@
     "component": 5,
     "parameter": "Marine habitat properties",
     "description": "",
-    "sort_order": 36
+    "sort_order": 36,
+    "link": ""
   }
 },
 {
@@ -2485,7 +2557,8 @@
     "component": 6,
     "parameter": "River discharge",
     "description": "",
-    "sort_order": 37
+    "sort_order": 37,
+    "link": ""
   }
 },
 {
@@ -2496,7 +2569,8 @@
     "component": 6,
     "parameter": "Groundwater",
     "description": "",
-    "sort_order": 38
+    "sort_order": 38,
+    "link": ""
   }
 },
 {
@@ -2507,7 +2581,8 @@
     "component": 6,
     "parameter": "Lakes",
     "description": "",
-    "sort_order": 39
+    "sort_order": 39,
+    "link": ""
   }
 },
 {
@@ -2518,7 +2593,8 @@
     "component": 6,
     "parameter": "Soil moisture",
     "description": "",
-    "sort_order": 40
+    "sort_order": 40,
+    "link": ""
   }
 },
 {
@@ -2529,7 +2605,8 @@
     "component": 7,
     "parameter": "Snow",
     "description": "",
-    "sort_order": 41
+    "sort_order": 41,
+    "link": ""
   }
 },
 {
@@ -2540,7 +2617,8 @@
     "component": 7,
     "parameter": "Glaciers",
     "description": "",
-    "sort_order": 42
+    "sort_order": 42,
+    "link": ""
   }
 },
 {
@@ -2551,7 +2629,8 @@
     "component": 7,
     "parameter": "Ice sheets",
     "description": "",
-    "sort_order": 43
+    "sort_order": 43,
+    "link": ""
   }
 },
 {
@@ -2562,7 +2641,8 @@
     "component": 7,
     "parameter": "Permafrost",
     "description": "",
-    "sort_order": 44
+    "sort_order": 44,
+    "link": ""
   }
 },
 {
@@ -2573,7 +2653,8 @@
     "component": 8,
     "parameter": "Albedo",
     "description": "",
-    "sort_order": 45
+    "sort_order": 45,
+    "link": ""
   }
 },
 {
@@ -2584,7 +2665,8 @@
     "component": 9,
     "parameter": "FAPAR",
     "description": "",
-    "sort_order": 46
+    "sort_order": 46,
+    "link": ""
   }
 },
 {
@@ -2595,7 +2677,8 @@
     "component": 9,
     "parameter": "Leaf Area Index",
     "description": "",
-    "sort_order": 47
+    "sort_order": 47,
+    "link": ""
   }
 },
 {
@@ -2606,7 +2689,8 @@
     "component": 9,
     "parameter": "Land surface temperature",
     "description": "",
-    "sort_order": 48
+    "sort_order": 48,
+    "link": ""
   }
 },
 {
@@ -2617,7 +2701,8 @@
     "component": 9,
     "parameter": "Land cover",
     "description": "",
-    "sort_order": 49
+    "sort_order": 49,
+    "link": ""
   }
 },
 {
@@ -2628,7 +2713,8 @@
     "component": 9,
     "parameter": "Above ground biomass",
     "description": "",
-    "sort_order": 50
+    "sort_order": 50,
+    "link": ""
   }
 },
 {
@@ -2639,7 +2725,8 @@
     "component": 9,
     "parameter": "Soil carbon",
     "description": "",
-    "sort_order": 51
+    "sort_order": 51,
+    "link": ""
   }
 },
 {
@@ -2650,7 +2737,8 @@
     "component": 10,
     "parameter": "Anthropogenic water use",
     "description": "",
-    "sort_order": 52
+    "sort_order": 52,
+    "link": ""
   }
 },
 {
@@ -2661,7 +2749,8 @@
     "component": 10,
     "parameter": "Anthropogenic greenhouse gas fluxes",
     "description": "",
-    "sort_order": 53
+    "sort_order": 53,
+    "link": ""
   }
 },
 {
@@ -2670,7 +2759,8 @@
   "fields": {
     "name": "Demonstrational",
     "description": "",
-    "sort_order": 1
+    "sort_order": 1,
+    "link": ""
   }
 },
 {
@@ -2679,7 +2769,8 @@
   "fields": {
     "name": "Operational",
     "description": "",
-    "sort_order": 2
+    "sort_order": 2,
+    "link": ""
   }
 },
 {
@@ -2688,7 +2779,8 @@
   "fields": {
     "name": "Pre-operational",
     "description": "",
-    "sort_order": 3
+    "sort_order": 3,
+    "link": ""
   }
 },
 {
@@ -2697,7 +2789,8 @@
   "fields": {
     "name": "N/A",
     "description": "",
-    "sort_order": 99
+    "sort_order": 99,
+    "link": ""
   }
 },
 {
@@ -2706,7 +2799,8 @@
   "fields": {
     "name": "TBD",
     "description": "",
-    "sort_order": 100
+    "sort_order": 100,
+    "link": ""
   }
 },
 {
@@ -2778,7 +2872,8 @@
   "fields": {
     "name": "Firm",
     "description": "",
-    "sort_order": 1
+    "sort_order": 1,
+    "link": ""
   }
 },
 {
@@ -2787,7 +2882,8 @@
   "fields": {
     "name": "Resonable",
     "description": "",
-    "sort_order": 2
+    "sort_order": 2,
+    "link": ""
   }
 },
 {
@@ -2796,7 +2892,8 @@
   "fields": {
     "name": "Tentative",
     "description": "",
-    "sort_order": 3
+    "sort_order": 3,
+    "link": ""
   }
 },
 {
@@ -2805,7 +2902,8 @@
   "fields": {
     "name": "Speculative",
     "description": "",
-    "sort_order": 4
+    "sort_order": 4,
+    "link": ""
   }
 },
 {
@@ -2814,7 +2912,8 @@
   "fields": {
     "name": "N/A",
     "description": "",
-    "sort_order": 99
+    "sort_order": 99,
+    "link": ""
   }
 },
 {
@@ -2823,7 +2922,8 @@
   "fields": {
     "name": "TBD",
     "description": "",
-    "sort_order": 100
+    "sort_order": 100,
+    "link": ""
   }
 },
 {
@@ -2832,7 +2932,8 @@
   "fields": {
     "name": "Product generation",
     "description": "",
-    "sort_order": 1
+    "sort_order": 1,
+    "link": ""
   }
 },
 {
@@ -2841,7 +2942,8 @@
   "fields": {
     "name": "Calibration and validation",
     "description": "",
-    "sort_order": 2
+    "sort_order": 2,
+    "link": ""
   }
 },
 {
@@ -2850,7 +2952,8 @@
   "fields": {
     "name": "Supporting exploitation",
     "description": "",
-    "sort_order": 3
+    "sort_order": 3,
+    "link": ""
   }
 },
 {
@@ -2859,7 +2962,8 @@
   "fields": {
     "name": "N/A",
     "description": "",
-    "sort_order": 99
+    "sort_order": 99,
+    "link": ""
   }
 },
 {
@@ -2868,7 +2972,8 @@
   "fields": {
     "name": "TBD",
     "description": "",
-    "sort_order": 100
+    "sort_order": 100,
+    "link": ""
   }
 },
 {
@@ -2877,7 +2982,8 @@
   "fields": {
     "name": "Essential",
     "description": "Product specifications will not be met if essential data are unavailable.",
-    "sort_order": 1
+    "sort_order": 1,
+    "link": ""
   }
 },
 {
@@ -2886,7 +2992,8 @@
   "fields": {
     "name": "Desirable",
     "description": "Availability of data could improve the product. Data are included for redundancy purposes",
-    "sort_order": 2
+    "sort_order": 2,
+    "link": ""
   }
 },
 {
@@ -2895,7 +3002,8 @@
   "fields": {
     "name": "Useful",
     "description": "Additional in situ data not directly linked to product generation, validation or calibration are considered as useful.",
-    "sort_order": 3
+    "sort_order": 3,
+    "link": ""
   }
 },
 {
@@ -2904,7 +3012,8 @@
   "fields": {
     "name": "N/A",
     "description": "",
-    "sort_order": 99
+    "sort_order": 99,
+    "link": ""
   }
 },
 {
@@ -2913,7 +3022,8 @@
   "fields": {
     "name": "TBD",
     "description": "",
-    "sort_order": 100
+    "sort_order": 100,
+    "link": ""
   }
 },
 {
@@ -3039,7 +3149,8 @@
   "fields": {
     "name": "NRT Service",
     "description": "",
-    "sort_order": 3
+    "sort_order": 3,
+    "link": ""
   }
 },
 {
@@ -3048,7 +3159,8 @@
   "fields": {
     "name": "View and Download Service",
     "description": "",
-    "sort_order": 2
+    "sort_order": 2,
+    "link": ""
   }
 },
 {
@@ -3057,7 +3169,8 @@
   "fields": {
     "name": "OGC Service",
     "description": "",
-    "sort_order": 5
+    "sort_order": 5,
+    "link": ""
   }
 },
 {
@@ -3066,7 +3179,8 @@
   "fields": {
     "name": "Client Service",
     "description": "",
-    "sort_order": 1
+    "sort_order": 1,
+    "link": ""
   }
 },
 {
@@ -3075,7 +3189,8 @@
   "fields": {
     "name": "Offline",
     "description": "",
-    "sort_order": 4
+    "sort_order": 4,
+    "link": ""
   }
 },
 {
@@ -3084,7 +3199,8 @@
   "fields": {
     "name": "N/A",
     "description": "",
-    "sort_order": 99
+    "sort_order": 99,
+    "link": ""
   }
 },
 {
@@ -3093,7 +3209,8 @@
   "fields": {
     "name": "TBD",
     "description": "",
-    "sort_order": 100
+    "sort_order": 100,
+    "link": ""
   }
 },
 {
@@ -3102,7 +3219,8 @@
   "fields": {
     "name": "Global",
     "description": "",
-    "sort_order": 1
+    "sort_order": 1,
+    "link": ""
   }
 },
 {
@@ -3111,7 +3229,8 @@
   "fields": {
     "name": "European",
     "description": "",
-    "sort_order": 3
+    "sort_order": 3,
+    "link": ""
   }
 },
 {
@@ -3120,7 +3239,8 @@
   "fields": {
     "name": "Regional",
     "description": "",
-    "sort_order": 10
+    "sort_order": 10,
+    "link": ""
   }
 },
 {
@@ -3129,7 +3249,8 @@
   "fields": {
     "name": "National",
     "description": "",
-    "sort_order": 9
+    "sort_order": 9,
+    "link": ""
   }
 },
 {
@@ -3138,7 +3259,8 @@
   "fields": {
     "name": "Local",
     "description": "",
-    "sort_order": 11
+    "sort_order": 11,
+    "link": ""
   }
 },
 {
@@ -3147,7 +3269,8 @@
   "fields": {
     "name": "N/A",
     "description": "",
-    "sort_order": 99
+    "sort_order": 99,
+    "link": ""
   }
 },
 {
@@ -3156,7 +3279,8 @@
   "fields": {
     "name": "Other - see notes",
     "description": "",
-    "sort_order": 100
+    "sort_order": 100,
+    "link": ""
   }
 },
 {
@@ -3165,7 +3289,8 @@
   "fields": {
     "name": "Continental",
     "description": "",
-    "sort_order": 2
+    "sort_order": 2,
+    "link": ""
   }
 },
 {
@@ -3174,7 +3299,8 @@
   "fields": {
     "name": "EU member states",
     "description": "",
-    "sort_order": 4
+    "sort_order": 4,
+    "link": ""
   }
 },
 {
@@ -3183,7 +3309,8 @@
   "fields": {
     "name": "Disaster affected areas",
     "description": "",
-    "sort_order": 12
+    "sort_order": 12,
+    "link": ""
   }
 },
 {
@@ -3192,7 +3319,8 @@
   "fields": {
     "name": "EU27",
     "description": "",
-    "sort_order": 5
+    "sort_order": 5,
+    "link": ""
   }
 },
 {
@@ -3201,7 +3329,8 @@
   "fields": {
     "name": "EEA33",
     "description": "",
-    "sort_order": 6
+    "sort_order": 6,
+    "link": ""
   }
 },
 {
@@ -3210,7 +3339,8 @@
   "fields": {
     "name": "Disaster risk hotspots",
     "description": "",
-    "sort_order": 13
+    "sort_order": 13,
+    "link": ""
   }
 },
 {
@@ -3219,7 +3349,8 @@
   "fields": {
     "name": "EEA38",
     "description": "",
-    "sort_order": 7
+    "sort_order": 7,
+    "link": ""
   }
 },
 {
@@ -3228,7 +3359,8 @@
   "fields": {
     "name": "EEA39",
     "description": "",
-    "sort_order": 8
+    "sort_order": 8,
+    "link": ""
   }
 },
 {
@@ -3237,7 +3369,8 @@
   "fields": {
     "name": "Arctic",
     "description": "",
-    "sort_order": 14
+    "sort_order": 14,
+    "link": ""
   }
 },
 {
@@ -3246,7 +3379,8 @@
   "fields": {
     "name": "Baltic Sea",
     "description": "",
-    "sort_order": 17
+    "sort_order": 17,
+    "link": ""
   }
 },
 {
@@ -3255,7 +3389,8 @@
   "fields": {
     "name": "Black Sea",
     "description": "",
-    "sort_order": 18
+    "sort_order": 18,
+    "link": ""
   }
 },
 {
@@ -3264,7 +3399,8 @@
   "fields": {
     "name": "North Atlantic, North West shelf",
     "description": "",
-    "sort_order": 15
+    "sort_order": 15,
+    "link": ""
   }
 },
 {
@@ -3273,7 +3409,8 @@
   "fields": {
     "name": "Atlantic Iberic Biscay Irish area",
     "description": "",
-    "sort_order": 16
+    "sort_order": 16,
+    "link": ""
   }
 },
 {
@@ -3282,7 +3419,8 @@
   "fields": {
     "name": "Mediterranean Sea",
     "description": "",
-    "sort_order": 19
+    "sort_order": 19,
+    "link": ""
   }
 },
 {
@@ -3291,7 +3429,8 @@
   "fields": {
     "name": "Manual",
     "description": "",
-    "sort_order": 1
+    "sort_order": 1,
+    "link": ""
   }
 },
 {
@@ -3300,7 +3439,8 @@
   "fields": {
     "name": "Automatic",
     "description": "",
-    "sort_order": 2
+    "sort_order": 2,
+    "link": ""
   }
 },
 {
@@ -3309,7 +3449,8 @@
   "fields": {
     "name": "Extended",
     "description": "",
-    "sort_order": 3
+    "sort_order": 3,
+    "link": ""
   }
 },
 {
@@ -3318,7 +3459,8 @@
   "fields": {
     "name": "N/A",
     "description": "",
-    "sort_order": 99
+    "sort_order": 99,
+    "link": ""
   }
 },
 {
@@ -3327,7 +3469,8 @@
   "fields": {
     "name": "TBD",
     "description": "",
-    "sort_order": 100
+    "sort_order": 100,
+    "link": ""
   }
 },
 {
@@ -3336,7 +3479,8 @@
   "fields": {
     "name": "Fully",
     "description": "",
-    "sort_order": 1
+    "sort_order": 1,
+    "link": ""
   }
 },
 {
@@ -3345,7 +3489,8 @@
   "fields": {
     "name": "Partially",
     "description": "",
-    "sort_order": 2
+    "sort_order": 2,
+    "link": ""
   }
 },
 {
@@ -3354,7 +3499,8 @@
   "fields": {
     "name": "N/A",
     "description": "",
-    "sort_order": 99
+    "sort_order": 99,
+    "link": ""
   }
 },
 {
@@ -3363,7 +3509,8 @@
   "fields": {
     "name": "TBD",
     "description": "",
-    "sort_order": 100
+    "sort_order": 100,
+    "link": ""
   }
 },
 {
@@ -3372,7 +3519,8 @@
   "fields": {
     "name": "<1 hr",
     "description": "",
-    "sort_order": 5
+    "sort_order": 5,
+    "link": ""
   }
 },
 {
@@ -3381,7 +3529,8 @@
   "fields": {
     "name": "Hourly",
     "description": "",
-    "sort_order": 6
+    "sort_order": 6,
+    "link": ""
   }
 },
 {
@@ -3390,7 +3539,8 @@
   "fields": {
     "name": "Daily",
     "description": "",
-    "sort_order": 8
+    "sort_order": 8,
+    "link": ""
   }
 },
 {
@@ -3399,7 +3549,8 @@
   "fields": {
     "name": "Weekly",
     "description": "",
-    "sort_order": 10
+    "sort_order": 10,
+    "link": ""
   }
 },
 {
@@ -3408,7 +3559,8 @@
   "fields": {
     "name": "Monthly",
     "description": "",
-    "sort_order": 11
+    "sort_order": 11,
+    "link": ""
   }
 },
 {
@@ -3417,7 +3569,8 @@
   "fields": {
     "name": "Yearly",
     "description": "",
-    "sort_order": 12
+    "sort_order": 12,
+    "link": ""
   }
 },
 {
@@ -3426,7 +3579,8 @@
   "fields": {
     "name": "Irregular",
     "description": "",
-    "sort_order": 13
+    "sort_order": 13,
+    "link": ""
   }
 },
 {
@@ -3435,7 +3589,8 @@
   "fields": {
     "name": "N/A",
     "description": "",
-    "sort_order": 99
+    "sort_order": 99,
+    "link": ""
   }
 },
 {
@@ -3444,7 +3599,8 @@
   "fields": {
     "name": "TBD",
     "description": "",
-    "sort_order": 100
+    "sort_order": 100,
+    "link": ""
   }
 },
 {
@@ -3453,7 +3609,8 @@
   "fields": {
     "name": "Single Acquisition",
     "description": "",
-    "sort_order": 14
+    "sort_order": 14,
+    "link": ""
   }
 },
 {
@@ -3462,7 +3619,8 @@
   "fields": {
     "name": "Periodic Update",
     "description": "",
-    "sort_order": 16
+    "sort_order": 16,
+    "link": ""
   }
 },
 {
@@ -3471,7 +3629,8 @@
   "fields": {
     "name": "Continuous",
     "description": "",
-    "sort_order": 15
+    "sort_order": 15,
+    "link": ""
   }
 },
 {
@@ -3480,7 +3639,8 @@
   "fields": {
     "name": "30 min",
     "description": "",
-    "sort_order": 4
+    "sort_order": 4,
+    "link": ""
   }
 },
 {
@@ -3489,7 +3649,8 @@
   "fields": {
     "name": "15 min",
     "description": "",
-    "sort_order": 3
+    "sort_order": 3,
+    "link": ""
   }
 },
 {
@@ -3498,7 +3659,8 @@
   "fields": {
     "name": "5 min",
     "description": "",
-    "sort_order": 2
+    "sort_order": 2,
+    "link": ""
   }
 },
 {
@@ -3507,7 +3669,8 @@
   "fields": {
     "name": "<5 min",
     "description": "",
-    "sort_order": 1
+    "sort_order": 1,
+    "link": ""
   }
 },
 {
@@ -3516,7 +3679,8 @@
   "fields": {
     "name": "1-5 days",
     "description": "",
-    "sort_order": 9
+    "sort_order": 9,
+    "link": ""
   }
 },
 {
@@ -3525,7 +3689,8 @@
   "fields": {
     "name": "Twice a day",
     "description": "",
-    "sort_order": 7
+    "sort_order": 7,
+    "link": ""
   }
 },
 {
@@ -3534,7 +3699,8 @@
   "fields": {
     "name": "< 1 hr",
     "description": "",
-    "sort_order": 1
+    "sort_order": 1,
+    "link": ""
   }
 },
 {
@@ -3543,7 +3709,8 @@
   "fields": {
     "name": "1 hour",
     "description": "",
-    "sort_order": 2
+    "sort_order": 2,
+    "link": ""
   }
 },
 {
@@ -3552,7 +3719,8 @@
   "fields": {
     "name": "6 hours",
     "description": "",
-    "sort_order": 4
+    "sort_order": 4,
+    "link": ""
   }
 },
 {
@@ -3561,7 +3729,8 @@
   "fields": {
     "name": "12 hours",
     "description": "",
-    "sort_order": 5
+    "sort_order": 5,
+    "link": ""
   }
 },
 {
@@ -3570,7 +3739,8 @@
   "fields": {
     "name": "1 day",
     "description": "",
-    "sort_order": 6
+    "sort_order": 6,
+    "link": ""
   }
 },
 {
@@ -3579,7 +3749,8 @@
   "fields": {
     "name": "1 week",
     "description": "",
-    "sort_order": 9
+    "sort_order": 9,
+    "link": ""
   }
 },
 {
@@ -3588,7 +3759,8 @@
   "fields": {
     "name": "1 month",
     "description": "",
-    "sort_order": 10
+    "sort_order": 10,
+    "link": ""
   }
 },
 {
@@ -3597,7 +3769,8 @@
   "fields": {
     "name": "N/A",
     "description": "",
-    "sort_order": 99
+    "sort_order": 99,
+    "link": ""
   }
 },
 {
@@ -3606,7 +3779,8 @@
   "fields": {
     "name": "TBD",
     "description": "",
-    "sort_order": 100
+    "sort_order": 100,
+    "link": ""
   }
 },
 {
@@ -3615,7 +3789,8 @@
   "fields": {
     "name": "3 hours",
     "description": "",
-    "sort_order": 3
+    "sort_order": 3,
+    "link": ""
   }
 },
 {
@@ -3624,7 +3799,8 @@
   "fields": {
     "name": "Latest version available",
     "description": "",
-    "sort_order": 11
+    "sort_order": 11,
+    "link": ""
   }
 },
 {
@@ -3633,7 +3809,8 @@
   "fields": {
     "name": "2 days",
     "description": "",
-    "sort_order": 7
+    "sort_order": 7,
+    "link": ""
   }
 },
 {
@@ -3642,7 +3819,8 @@
   "fields": {
     "name": "6 months",
     "description": "",
-    "sort_order": 10
+    "sort_order": 10,
+    "link": ""
   }
 },
 {
@@ -3651,7 +3829,8 @@
   "fields": {
     "name": "3 days",
     "description": "",
-    "sort_order": 8
+    "sort_order": 8,
+    "link": ""
   }
 },
 {
@@ -3660,7 +3839,8 @@
   "fields": {
     "name": "Free",
     "description": "",
-    "sort_order": 1
+    "sort_order": 1,
+    "link": ""
   }
 },
 {
@@ -3669,7 +3849,8 @@
   "fields": {
     "name": "Payment Required",
     "description": "",
-    "sort_order": 2
+    "sort_order": 2,
+    "link": ""
   }
 },
 {
@@ -3678,7 +3859,8 @@
   "fields": {
     "name": "Only available commercially",
     "description": "",
-    "sort_order": 3
+    "sort_order": 3,
+    "link": ""
   }
 },
 {
@@ -3687,7 +3869,8 @@
   "fields": {
     "name": "N/A",
     "description": "",
-    "sort_order": 99
+    "sort_order": 99,
+    "link": ""
   }
 },
 {
@@ -3696,7 +3879,8 @@
   "fields": {
     "name": "TBD",
     "description": "",
-    "sort_order": 100
+    "sort_order": 100,
+    "link": ""
   }
 },
 {
@@ -3705,7 +3889,8 @@
   "fields": {
     "name": "Observation",
     "description": "",
-    "sort_order": 3
+    "sort_order": 3,
+    "link": ""
   }
 },
 {
@@ -3714,7 +3899,8 @@
   "fields": {
     "name": "Map",
     "description": "",
-    "sort_order": 2
+    "sort_order": 2,
+    "link": ""
   }
 },
 {
@@ -3723,7 +3909,8 @@
   "fields": {
     "name": "Forecast",
     "description": "",
-    "sort_order": 1
+    "sort_order": 1,
+    "link": ""
   }
 },
 {
@@ -3732,7 +3919,8 @@
   "fields": {
     "name": "N/A",
     "description": "",
-    "sort_order": 99
+    "sort_order": 99,
+    "link": ""
   }
 },
 {
@@ -3741,7 +3929,8 @@
   "fields": {
     "name": "TBD",
     "description": "",
-    "sort_order": 100
+    "sort_order": 100,
+    "link": ""
   }
 },
 {
@@ -3750,7 +3939,8 @@
   "fields": {
     "name": "Re-analysis",
     "description": "",
-    "sort_order": 4
+    "sort_order": 4,
+    "link": ""
   }
 },
 {
@@ -3759,7 +3949,8 @@
   "fields": {
     "name": "Analysis",
     "description": "",
-    "sort_order": 5
+    "sort_order": 5,
+    "link": ""
   }
 },
 {
@@ -3768,7 +3959,8 @@
   "fields": {
     "name": "Time series",
     "description": "",
-    "sort_order": 6
+    "sort_order": 6,
+    "link": ""
   }
 },
 {
@@ -3777,7 +3969,8 @@
   "fields": {
     "name": "Composite",
     "description": "",
-    "sort_order": 7
+    "sort_order": 7,
+    "link": ""
   }
 },
 {
@@ -3786,7 +3979,8 @@
   "fields": {
     "name": "Image",
     "description": "",
-    "sort_order": 8
+    "sort_order": 8,
+    "link": ""
   }
 },
 {
@@ -3795,7 +3989,8 @@
   "fields": {
     "name": "Geospatial data",
     "description": "",
-    "sort_order": 9
+    "sort_order": 9,
+    "link": ""
   }
 },
 {
@@ -3804,7 +3999,8 @@
   "fields": {
     "name": "Sounding",
     "description": "",
-    "sort_order": 10
+    "sort_order": 10,
+    "link": ""
   }
 },
 {
@@ -3813,7 +4009,8 @@
   "fields": {
     "name": "Profile",
     "description": "",
-    "sort_order": 11
+    "sort_order": 11,
+    "link": ""
   }
 },
 {
@@ -3822,7 +4019,8 @@
   "fields": {
     "name": "N/A",
     "description": "",
-    "sort_order": 99
+    "sort_order": 99,
+    "link": ""
   }
 },
 {
@@ -3831,7 +4029,8 @@
   "fields": {
     "name": "TBD",
     "description": "",
-    "sort_order": 100
+    "sort_order": 100,
+    "link": ""
   }
 },
 {
@@ -3840,7 +4039,8 @@
   "fields": {
     "name": "Raster dataset",
     "description": "",
-    "sort_order": 1
+    "sort_order": 1,
+    "link": ""
   }
 },
 {
@@ -3849,7 +4049,8 @@
   "fields": {
     "name": "Vector dataset",
     "description": "",
-    "sort_order": 2
+    "sort_order": 2,
+    "link": ""
   }
 },
 {
@@ -3858,7 +4059,8 @@
   "fields": {
     "name": "ASCII",
     "description": "",
-    "sort_order": 3
+    "sort_order": 3,
+    "link": ""
   }
 },
 {
@@ -3867,7 +4069,8 @@
   "fields": {
     "name": "Spreadsheet",
     "description": "",
-    "sort_order": 4
+    "sort_order": 4,
+    "link": ""
   }
 },
 {
@@ -3876,7 +4079,8 @@
   "fields": {
     "name": "Scanned",
     "description": "",
-    "sort_order": 5
+    "sort_order": 5,
+    "link": ""
   }
 },
 {
@@ -3885,7 +4089,8 @@
   "fields": {
     "name": "Grid",
     "description": "",
-    "sort_order": 6
+    "sort_order": 6,
+    "link": ""
   }
 },
 {
@@ -3894,7 +4099,8 @@
   "fields": {
     "name": "WMS",
     "description": "",
-    "sort_order": 7
+    "sort_order": 7,
+    "link": ""
   }
 },
 {
@@ -3903,7 +4109,8 @@
   "fields": {
     "name": "WFS",
     "description": "",
-    "sort_order": 8
+    "sort_order": 8,
+    "link": ""
   }
 },
 {
@@ -3912,7 +4119,8 @@
   "fields": {
     "name": "Binary",
     "description": "",
-    "sort_order": 9
+    "sort_order": 9,
+    "link": ""
   }
 },
 {
@@ -3921,7 +4129,8 @@
   "fields": {
     "name": "Graphics",
     "description": "",
-    "sort_order": 10
+    "sort_order": 10,
+    "link": ""
   }
 }
 ]
