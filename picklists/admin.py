@@ -22,7 +22,6 @@ admin.site.register(models.EssentialClimateVariable, EssentialClimateVariableAdm
 admin.site.register(models.ProductStatus)
 admin.site.register(models.ProductGroup)
 admin.site.register(models.DefinitionLevel)
-admin.site.register(models.TargetDistance)
 admin.site.register(models.Relevance)
 admin.site.register(models.Criticality)
 admin.site.register(models.Barrier)

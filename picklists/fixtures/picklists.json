@@ -2827,51 +2827,6 @@
   }
 },
 {
-  "model": "picklists.targetdistance",
-  "pk": 1,
-  "fields": {
-    "name": "Gap is closing",
-    "description": "",
-    "sort_order": 1
-  }
-},
-{
-  "model": "picklists.targetdistance",
-  "pk": 2,
-  "fields": {
-    "name": "Gap is static",
-    "description": "",
-    "sort_order": 2
-  }
-},
-{
-  "model": "picklists.targetdistance",
-  "pk": 3,
-  "fields": {
-    "name": "Gap is widening",
-    "description": "",
-    "sort_order": 3
-  }
-},
-{
-  "model": "picklists.targetdistance",
-  "pk": 4,
-  "fields": {
-    "name": "N/A",
-    "description": "",
-    "sort_order": 99
-  }
-},
-{
-  "model": "picklists.targetdistance",
-  "pk": 5,
-  "fields": {
-    "name": "TBD",
-    "description": "",
-    "sort_order": 100
-  }
-},
-{
   "model": "picklists.relevance",
   "pk": 1,
   "fields": {

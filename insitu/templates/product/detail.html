@@ -122,7 +122,6 @@
         <tr>
           <th>Requirement</th>
           <th>Level of definition</th>
-          <th>Distance to target</th>
           <th>Relevant for</th>
           <th>Criticality</th>
           <th class="no-sort">Barriers</th>
@@ -140,7 +139,6 @@
                 href="{% url 'requirement:detail' rel.requirement.pk %}">{{ rel.requirement.name }}</a>
             </td>
             <td>{{ rel.level_of_definition }}</td>
-            <td>{{ rel.distance_to_target }}</td>
             <td>{{ rel.relevance }}</td>
             <td>{{ rel.criticality }}</td>
             <td>

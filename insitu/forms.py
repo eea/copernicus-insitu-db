@@ -15,8 +15,7 @@ class ProductRequirementBaseForm(forms.ModelForm):
     class Meta:
         model = models.ProductRequirement
         fields = ['requirement', 'product', 'note', 'level_of_definition',
-                  'distance_to_target', 'relevance', 'criticality',
-                  'barriers']
+                  'relevance', 'criticality', 'barriers']
 
 
 class ProductRequirementForm(ProductRequirementBaseForm):

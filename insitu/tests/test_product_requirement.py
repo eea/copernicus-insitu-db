@@ -9,17 +9,16 @@ REQUIRED_ERROR = ['This field is required.']
 class ProductRequirementTests(base.FormCheckTestCase):
     fields = ['note']
     related_fields = ['requirement', 'product', 'level_of_definition', 
-                      'distance_to_target', 'relevance', 'criticality']
+                      'relevance', 'criticality']
     many_to_many_fields = ['barriers']
     required_fields = ['requirement', 'product', 'level_of_definition',
-                       'distance_to_target', 'relevance', 'criticality', 'barriers']
+                       'relevance', 'criticality', 'barriers']
 
     def setUp(self):
         super().setUp()
         requirement = base.RequirementFactory()
         product = base.ProductFactory()
         level_of_definition = base.DefinitionLevelFactory()
-        distance_to_target = base.TargetDistanceFactory()
         relevance = base.RelevanceFactory()
         criticality = base.CriticalityFactory()
         barriers = [base.BarrierFactory(), base.BarrierFactory()]
@@ -29,7 +28,6 @@ class ProductRequirementTests(base.FormCheckTestCase):
             'requirement': requirement.pk,
             'product': product.pk,
             'level_of_definition': level_of_definition.pk,
-            'distance_to_target': distance_to_target.pk,
             'relevance': relevance.pk,
             'criticality': criticality.pk,
             'barriers': [barrier.pk for barrier in barriers]

@@ -75,7 +75,6 @@ class ProductRequirementFactory(DjangoModelFactory):
     product = SubFactory(ProductFactory)
     requirement = SubFactory(RequirementFactory)
     level_of_definition = SubFactory(factories.DefinitionLevelFactory)
-    distance_to_target = SubFactory(factories.TargetDistanceFactory)
     relevance = SubFactory(factories.RelevanceFactory)
     criticality = SubFactory(factories.CriticalityFactory)
     barriers = RelatedFactory(factories.BarrierFactory)

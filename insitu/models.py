@@ -209,9 +209,6 @@ class ProductRequirement(SoftDeleteModel):
     level_of_definition = models.ForeignKey(pickmodels.DefinitionLevel,
                                             on_delete=models.CASCADE,
                                             related_name='+')
-    distance_to_target = models.ForeignKey(pickmodels.TargetDistance,
-                                           on_delete=models.CASCADE,
-                                           related_name='+')
     relevance = models.ForeignKey(pickmodels.Relevance,
                                   on_delete=models.CASCADE,
                                   related_name='+')
