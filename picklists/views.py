@@ -13,7 +13,7 @@ from picklists import models
 PICKLISTS = [
     models.Barrier, models.ComplianceLevel, models.Coverage, models.Criticality,
     models.Country, models.DataFormat, models.DataType, models.DefinitionLevel,
-    models.Dissemination, models.EssentialClimateVariable, models.Frequency,
+    models.Dissemination, models.EssentialVariable, models.UpdateFrequency,
     models.InspireTheme, models.ProductGroup, models.ProductStatus,
     models.Relevance, models.Quality, models.Timeliness, models.Policy
 ]
