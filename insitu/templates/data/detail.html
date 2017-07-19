@@ -7,20 +7,19 @@
 {% endblock %}
 
 {% block title %}
-  Data group details
+  Data details
 {% endblock %}
 
 {% block content %}
   <div class="row">
     <h1 class="col-sm-12">
-      <span>Data group details</span>
+      <span>Data details</span>
       {% if request.user.service_resp or request.user.is_superuser %}
         <span class="pull-right delete-btn">
-        <a class="btn btn-primary pull-right" href="{% url 'data_group:delete' data_group.pk %}">Delete
-          data group</a>
+        <a class="btn btn-primary pull-right" href="{% url 'data:delete' data.pk %}">Delete data</a>
         </span>
         <span class="pull-right">
-        <a class="btn btn-primary pull-right" href="{% url 'data_group:edit' data_group.pk %}">Edit data group</a>
+        <a class="btn btn-primary pull-right" href="{% url 'data:edit' data.pk %}">Edit data</a>
         </span>
       {% endif %}
     </h1>
@@ -31,65 +30,65 @@
       <tbody>
       <tr class="row">
         <th class="col-md-4 col-sm-6">Name</th>
-        <td class="col-md-8 col-sm-6">{{ data_group.name }}</td>
+        <td class="col-md-8 col-sm-6">{{ data.name }}</td>
       </tr>
 
       <tr class="row">
         <th class="col-md-4 col-sm-6">Note</th>
-        <td class="col-md-8 col-sm-6">{{ data_group.note }}</td>
+        <td class="col-md-8 col-sm-6">{{ data.note }}</td>
       </tr>
 
       <tr class="row">
         <th class="col-md-4 col-sm-6">Update Frequency</th>
-        <td class="col-md-8 col-sm-6">{{ data_group.update_frequency }}</td>
+        <td class="col-md-8 col-sm-6">{{ data.update_frequency }}</td>
       </tr>
 
       <tr class="row">
         <th class="col-md-4 col-sm-6">Coverage</th>
-        <td class="col-md-8 col-sm-6">{{ data_group.coverage }}</td>
+        <td class="col-md-8 col-sm-6">{{ data.coverage }}</td>
       </tr>
 
       <tr class="row">
         <th class="col-md-4 col-sm-6">Timeliness</th>
-        <td class="col-md-8 col-sm-6">{{ data_group.timeliness }}</td>
+        <td class="col-md-8 col-sm-6">{{ data.timeliness }}</td>
       </tr>
 
       <tr class="row">
         <th class="col-md-4 col-sm-6">Policy</th>
-        <td class="col-md-8 col-sm-6">{{ data_group.policy }}</td>
+        <td class="col-md-8 col-sm-6">{{ data.policy }}</td>
       </tr>
 
       <tr class="row">
         <th class="col-md-4 col-sm-6">Data type</th>
-        <td class="col-md-8 col-sm-6">{{ data_group.data_type }}</td>
+        <td class="col-md-8 col-sm-6">{{ data.data_type }}</td>
       </tr>
 
       <tr class="row">
         <th class="col-md-4 col-sm-6">Data format</th>
-        <td class="col-md-8 col-sm-6">{{ data_group.data_format }}</td>
+        <td class="col-md-8 col-sm-6">{{ data.data_format }}</td>
       </tr>
 
       <tr class="row">
         <th class="col-md-4 col-sm-6">Quality</th>
-        <td class="col-md-8 col-sm-6">{{ data_group.quality }}</td>
+        <td class="col-md-8 col-sm-6">{{ data.quality }}</td>
       </tr>
 
-      {% if data_group.inspire_themes.all|length %}
+      {% if data.inspire_themes.all|length %}
         <tr class="row">
           <th class="col-md-4 col-sm-6">Inspire themes</th>
           <td class="col-md-8 col-sm-6">
-            {% for inspire_theme in data_group.inspire_themes.all %}
+            {% for inspire_theme in data.inspire_themes.all %}
               <p>{{ inspire_theme }}</p>
             {% endfor %}
           </td>
         </tr>
       {% endif %}
 
-      {% if data_group.essential_variables.all|length %}
+      {% if data.essential_variables.all|length %}
         <tr class="row">
           <th class="col-md-4 col-sm-6">Essential variables</th>
           <td class="col-md-8 col-sm-6">
-            {% for essential_variable in data_group.essential_variables.all %}
+            {% for essential_variable in data.essential_variables.all %}
               <p>{{ essential_variable }}</p>
             {% endfor %}
           </td>
@@ -104,7 +103,7 @@
       {% if request.user.service_resp or request.user.is_superuser %}
         <span class="pull-right">
           <a class="btn btn-primary pull-right"
-             href="{% url 'data_group:responsible:add' data_group.pk %}">Add data
+             href="{% url 'data:responsible:add' data.pk %}">Add data
             responsible</a>
         </span>
       {% endif %}
@@ -123,7 +122,7 @@
           </tr>
         </thead>
         <tbody>
-        {% for rel in data_group.dataresponsiblerelation_set.all %}
+        {% for rel in data.dataresponsiblerelation_set.all %}
           <tr>
             <td>
               <a href="{% url 'responsible:detail' rel.responsible.pk %}">{{ rel.responsible.name }}</a>
@@ -138,11 +137,11 @@
             </td>
             {% if request.user.service_resp or request.user.is_superuser %}
               <td class="row">
-                <a href="{% url 'data_group:responsible:edit' group_pk=data_group.pk pk=rel.pk %}"
+                <a href="{% url 'data:responsible:edit' group_pk=data.pk pk=rel.pk %}"
                    class="col-sm-6">
                   <span class="glyphicon glyphicon-edit"></span>
                 </a>
-                <a href="{% url 'data_group:responsible:delete' group_pk=data_group.pk pk=rel.pk %}"
+                <a href="{% url 'data:responsible:delete' group_pk=data.pk pk=rel.pk %}"
                    class="col-sm-6">
                   <span class="glyphicon glyphicon-trash"></span>
                 </a>
@@ -160,7 +159,7 @@
       {% if request.user.service_resp or request.user.is_superuser %}
         <span class="pull-right">
           <a class="btn btn-primary pull-right"
-             href="{% url 'data_group:requirement:add' data_group.pk %}">Add data requirement</a>
+             href="{% url 'data:requirement:add' data.pk %}">Add data requirement</a>
         </span>
       {% endif %}
     </h3>
@@ -180,7 +179,7 @@
         </tr>
         </thead>
         <tbody>
-        {% for rel in data_group.datarequirement_set.all %}
+        {% for rel in data.datarequirement_set.all %}
           <tr>
             <td> 
               <a href="{% url 'requirement:detail' rel.requirement.pk %}">{{ rel.requirement }}</a>
@@ -203,11 +202,11 @@
             </td>
             {% if request.user.service_resp or request.user.is_superuser %}
               <td class="row">
-                <a href="{% url 'data_group:requirement:edit' data_group_pk=data_group.pk pk=rel.pk %}"
+                <a href="{% url 'data:requirement:edit' data_pk=data.pk pk=rel.pk %}"
                    class="col-sm-6">
                   <span class="glyphicon glyphicon-edit"></span>
                 </a>
-                <a href="{% url 'data_group:requirement:delete' data_group_pk=data_group.pk pk=rel.pk %}"
+                <a href="{% url 'data:requirement:delete' data_pk=data.pk pk=rel.pk %}"
                   class="col-sm-6">
                   <span class="glyphicon glyphicon-trash"></span>
                 </a>

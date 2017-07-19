@@ -7,18 +7,18 @@
 {% endblock %}
 
 {% block title %}
-  Data groups
+  Data
 {% endblock %}
 
 {% block content %}
 
   <div class="row">
     <h1 class="col-sm-12">
-      <span>Data groups</span>
+      <span>Data</span>
       {% if request.user.service_resp or request.user.is_superuser %}
         <span class="pull-right">
           <a class="btn btn-primary pull-right"
-             href="{% url 'data_group:add' %}">New data group</a>
+             href="{% url 'data:add' %}">New data</a>
         </span>
       {% endif %}
     </h1>
@@ -26,7 +26,7 @@
 
   <div class="row">
     <div class="col-lg-10">
-      <table id="data_groups" width="100%"
+      <table id="data" width="100%"
              class="table table-condensed table-bordered table-hover">
         <thead>
         <tr>
@@ -135,11 +135,11 @@
   <script src="{% static 'js/fnFilterOnReturn.js' %}"></script>
   <script>
     $(document).ready(function () {
-      var $table = $('#data_groups').dataTable({
+      var $table = $('#data').dataTable({
         "processing": true,
         "serverSide": true,
         "ajax": {
-          "url": "{% url 'data_group:json' %}",
+          "url": "{% url 'data:json' %}",
           "data": function (d) {
             d.name = $('#name').val();
             d.update_frequency = $('#update_frequency').val();

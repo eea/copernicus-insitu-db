@@ -137,9 +137,9 @@ class RequirementForm(forms.ModelForm):
             return models.Requirement.objects.filter(pk=self.instance.pk).update(**data)
 
 
-class DataGroupForm(forms.ModelForm):
+class DataForm(forms.ModelForm):
     class Meta:
-        model = models.DataGroup
+        model = models.Data
         auto_created = True
         fields = ['name', 'note', 'update_frequency', 'coverage', 'timeliness',
                   'policy', 'data_type', 'data_format', 'quality',
@@ -149,14 +149,14 @@ class DataGroupForm(forms.ModelForm):
 class DataRequirementBaseForm(forms.ModelForm):
     class Meta:
         model = models.DataRequirement
-        fields = ['data_group', 'requirement', 'information_costs', 'handling_costs',
+        fields = ['data', 'requirement', 'information_costs', 'handling_costs',
                   'note', 'level_of_compliance']
 
 
 class DataRequirementForm(DataRequirementBaseForm):
-    data_group = forms.ModelChoiceField(
+    data = forms.ModelChoiceField(
         disabled=True,
-        queryset=models.DataGroup.objects.all())
+        queryset=models.Data.objects.all())
 
 
 class RequirementDataRequirementForm(DataRequirementBaseForm):
@@ -213,7 +213,7 @@ class DataResponsibleNonNetworkForm(forms.ModelForm):
 class DataResponsibleRelationBaseForm(forms.ModelForm):
     class Meta:
         model = models.DataResponsibleRelation
-        fields = ['data_group', 'responsible', 'role']
+        fields = ['data', 'responsible', 'role']
 
 
 class DataResponsibleRelationResponsibleForm(DataResponsibleRelationBaseForm):
@@ -223,9 +223,9 @@ class DataResponsibleRelationResponsibleForm(DataResponsibleRelationBaseForm):
 
 
 class DataResponsibleRelationGroupForm(DataResponsibleRelationBaseForm):
-    data_group = forms.ModelChoiceField(
+    data = forms.ModelChoiceField(
         disabled=True,
-        queryset=models.DataGroup.objects.all())
+        queryset=models.Data.objects.all())
 
 
 class DataResponsibleRelationEditForm(DataResponsibleRelationResponsibleForm,

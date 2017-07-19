@@ -1,10 +1,10 @@
 <div class="row">
   <h3 class="col-sm-12">
-    <span>Data Groups</span>
+    <span>Data</span>
     {% if request.user.service_resp or request.user.is_superuser %}
       <span class="pull-right">
           <a class="btn btn-primary pull-right"
-             href="{% url 'responsible:group:add' responsible.pk %}">Add data group</a>
+             href="{% url 'responsible:group:add' responsible.pk %}">Add data</a>
       </span>
     {% endif %}
   </h3>
@@ -13,7 +13,7 @@
            class="table table-condensed table-bordered table-hover">
       <thead>
       <tr>
-        <th>Data group</th>
+        <th>Data</th>
         <th>Role</th>
         {% if request.user.is_superuser or request.user.service_resp %}
           <th class="no-sort" width="10%"></th>
@@ -24,7 +24,7 @@
       {% for rel in responsible.dataresponsiblerelation_set.all %}
         <tr>
           <td>
-            <a href="{% url 'data_group:detail' rel.data_group.pk %}">{{ rel.data_group.name }}</a>
+            <a href="{% url 'data:detail' rel.data.pk %}">{{ rel.data.name }}</a>
           </td>
           <td>{{ rel.get_role_display }}</td>
           {% if request.user.is_superuser or request.user.service_resp %}

@@ -2,6 +2,10 @@
 {% load bootstrap3 %}
 {% load static %}
 
+{% block title %}
+  Edit {{ rel.data.name }} - {{ rel.requirement.name }} relation
+{% endblock %}
+
 {% block style %}
   <link rel="stylesheet" type="text/css"
         href="{% static 'css/select2.min.css' %}"/>
@@ -9,24 +13,23 @@
         href="{% static 'css/select2-bootstrap.min.css' %}"/>
 {% endblock %}
 
-{% block title %}
-  Edit data group {{ object.name }}
-{% endblock %}
-
 {% block content %}
 
   <div class="row">
     <h1>
-      <p class="col-sm-12">Edit data group</p>
-      <p class="col-sm-12"><small>{{ object.name }}</small></p>
+      <p class="col-sm-12">Edit relation</p>
+      <p class="col-sm-12">
+        <small>{{ rel.data.name }} - {{ rel.requirement.name }}</small>
+      </p>
     </h1>
   </div>
 
   <form action="" method="POST">
     {% csrf_token %}
     {% bootstrap_form form %}
-    <input class="btn btn-primary" type="submit" value="Save" />
-    <a href="{% url 'data_group:detail' object.pk %}"
+    <input type="hidden" name="data" value="{{ rel.data.pk }}"/>
+    <input class="btn btn-primary" type="submit" value="Save"/>
+    <a href="{{ url }}"
        class="btn btn-default">Cancel</a>
   </form>
 {% endblock %}

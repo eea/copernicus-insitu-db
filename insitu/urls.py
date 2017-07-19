@@ -93,56 +93,56 @@ requirement_patterns = [
         views.RequirementAdd.as_view(),
         name='add'),
 
-    url(r'^(?P<requirement_pk>[0-9]+)/data-group/',
+    url(r'^(?P<requirement_pk>[0-9]+)/data/',
         include(data_requirement_patterns,
-                namespace='data_group')),
+                namespace='data')),
 ]
 
-data_group_data_responsible_patterns = [
+data_data_responsible_patterns = [
     url(r'^add/$',
-        views.DataGroupDataResponsibleAdd.as_view(),
+        views.DataDataResponsibleAdd.as_view(),
         name='add'),
 
     url(r'^(?P<pk>[0-9]+)/$',
-        views.DataGroupDataResponsibleEdit.as_view(),
+        views.DataDataResponsibleEdit.as_view(),
         name='edit'),
 
     url(r'^(?P<pk>[0-9]+)/delete$',
-        views.DataGroupDataResponsibleDelete.as_view(),
+        views.DataDataResponsibleDelete.as_view(),
         name='delete'),
 ]
 
 
-data_group_patterns = [
+data_patterns = [
     url(r'^list/$',
-        views.DataGroupList.as_view(),
+        views.DataList.as_view(),
         name='list'),
 
     url(r'^data/$',
-        views.DataGroupListJson.as_view(),
+        views.DataListJson.as_view(),
         name='json'),
 
     url(r'^add/$',
-        views.DataGroupAdd.as_view(),
+        views.DataAdd.as_view(),
         name='add'),
 
     url(r'^(?P<pk>[0-9]+)/$',
-        views.DataGroupDetail.as_view(),
+        views.DataDetail.as_view(),
         name='detail'),
 
     url(r'^(?P<pk>[0-9]+)/edit$',
-        views.DataGroupEdit.as_view(),
+        views.DataEdit.as_view(),
         name='edit'),
 
     url(r'^(?P<pk>[0-9]+)/delete/$',
-        views.DataGroupDelete.as_view(),
+        views.DataDelete.as_view(),
         name='delete'),
 
     url(r'^(?P<group_pk>[0-9]+)/responsible/',
-        include(data_group_data_responsible_patterns,
+        include(data_data_responsible_patterns,
                 namespace='responsible')),
 
-    url(r'^(?P<data_group_pk>[0-9]+)/requirement/',
+    url(r'^(?P<data_pk>[0-9]+)/requirement/',
         include(data_requirement_patterns,
                 namespace='requirement')),
 ]
@@ -185,7 +185,7 @@ responsible_patterns = [
         name='delete_non_network'),
 
     url(r'^(?P<responsible_pk>[0-9]+)/group/',
-        include(data_group_data_responsible_patterns,
+        include(data_data_responsible_patterns,
                 namespace='group')),
 ]
 
@@ -211,9 +211,9 @@ urlpatterns = [
         include(requirement_patterns,
                 namespace='requirement')),
 
-    url(r'^data-group/',
-        include(data_group_patterns,
-                namespace='data_group')),
+    url(r'^data/',
+        include(data_patterns,
+                namespace='data')),
 
     url(r'^responsible/',
         include(responsible_patterns,

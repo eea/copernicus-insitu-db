@@ -8,17 +8,17 @@ REQUIRED_ERROR = ['This field is required.']
 
 class DataRequirementTests(base.FormCheckTestCase):
     fields = ['note', 'information_costs', 'handling_costs']
-    related_fields = ['data_group', 'requirement', 'level_of_compliance']
-    required_fields = ['data_group', 'requirement', 'level_of_compliance']
+    related_fields = ['data', 'requirement', 'level_of_compliance']
+    required_fields = ['data', 'requirement', 'level_of_compliance']
 
     def setUp(self):
         super().setUp()
-        data_group = base.DataGroupFactory()
+        data = base.DataFactory()
         requirement = base.RequirementFactory()
         level_of_compliance = base.ComplianceLevelFactory()
 
         self._DATA = {
-            'data_group': data_group.pk,
+            'data': data.pk,
             'requirement': requirement.pk,
             'level_of_compliance': level_of_compliance.pk,
             'note': 'TEST note',
@@ -29,16 +29,16 @@ class DataRequirementTests(base.FormCheckTestCase):
         self.client.force_login(user)
         base.CopernicususResponsibleFactory(user=user)
 
-    def test_data_requirement_add_required_fields_from_data_group(self):
+    def test_data_requirement_add_required_fields_from_data(self):
         data = {}
-        data_group = base.DataGroupFactory()
-        errors_data_group = self.errors.copy()
-        errors_data_group.pop('data_group')
+        data = base.DataFactory()
+        errors_data = self.errors.copy()
+        errors_data.pop('data')
         resp = self.client.post(
-            reverse('data_group:requirement:add',
-                    kwargs={'data_group_pk': data_group.pk}),
+            reverse('data:requirement:add',
+                    kwargs={'data_pk': data.pk}),
             data)
-        self.check_required_errors(resp, errors_data_group)
+        self.check_required_errors(resp, errors_data)
 
     def test_data_requirement_add_required_fields_from_requirement(self):
         data = {}
@@ -47,16 +47,16 @@ class DataRequirementTests(base.FormCheckTestCase):
         errors_requirement.pop('requirement')
 
         resp = self.client.post(
-            reverse('requirement:data_group:add',
+            reverse('requirement:data:add',
                     kwargs={'requirement_pk': requirement.pk}),
             data)
         self.check_required_errors(resp, errors_requirement)
 
-    def test_data_requirement_add_from_data_group(self):
+    def test_data_requirement_add_from_data(self):
         data = self._DATA
         resp = self.client.post(
-            reverse('data_group:requirement:add',
-                    kwargs={'data_group_pk': self._DATA['data_group']}),
+            reverse('data:requirement:add',
+                    kwargs={'data_pk': self._DATA['data']}),
             data)
         self.assertEqual(resp.status_code, 302)
         self.check_single_object(models.DataRequirement, data)
@@ -64,48 +64,48 @@ class DataRequirementTests(base.FormCheckTestCase):
     def test_data_requirement_add_from_requirement(self):
         data = self._DATA
         resp = self.client.post(
-            reverse('requirement:data_group:add',
+            reverse('requirement:data:add',
                     kwargs={'requirement_pk': self._DATA['requirement']}),
             data)
         self.assertEqual(resp.status_code, 302)
         self.check_single_object(models.DataRequirement, data)
 
-    def test_data_requirement_edit_from_data_group(self):
+    def test_data_requirement_edit_from_data(self):
         data_requirement = base.DataRequirementFactory()
         data = self._DATA
-        data.pop('data_group')
+        data.pop('data')
         data.pop('requirement')
         resp = self.client.post(
-            reverse('data_group:requirement:edit',
-                    kwargs={'data_group_pk': data_requirement.data_group.pk,
+            reverse('data:requirement:edit',
+                    kwargs={'data_pk': data_requirement.data.pk,
                             'pk': data_requirement.pk}),
             data)
         self.assertEqual(resp.status_code, 302)
-        data['data_group'] = data_requirement.data_group.pk
+        data['data'] = data_requirement.data.pk
         data['requirement'] = data_requirement.requirement.pk
         self.check_single_object(models.DataRequirement, data)
 
     def test_data_requirement_edit_from_requirement(self):
         data_requirement = base.DataRequirementFactory()
         data = self._DATA
-        data.pop('data_group')
+        data.pop('data')
         data.pop('requirement')
         resp = self.client.post(
-            reverse('requirement:data_group:edit',
+            reverse('requirement:data:edit',
                     kwargs={'requirement_pk': data_requirement.requirement.pk,
                             'pk': data_requirement.pk}),
             data)
         self.assertEqual(resp.status_code, 302)
-        data['data_group'] = data_requirement.data_group.pk
+        data['data'] = data_requirement.data.pk
         data['requirement'] = data_requirement.requirement.pk
         self.check_single_object(models.DataRequirement, data)
 
-    def test_data_requirement_delete_from_data_group(self):
+    def test_data_requirement_delete_from_data(self):
         data = {}
         data_requirement = base.DataRequirementFactory()
         resp = self.client.post(
-            reverse('data_group:requirement:delete',
-                    kwargs={'data_group_pk': data_requirement.data_group.pk,
+            reverse('data:requirement:delete',
+                    kwargs={'data_pk': data_requirement.data.pk,
                             'pk': data_requirement.pk}),
             data)
         self.assertEqual(resp.status_code, 302)
@@ -115,7 +115,7 @@ class DataRequirementTests(base.FormCheckTestCase):
         data = {}
         data_requirement = base.DataRequirementFactory()
         resp = self.client.post(
-            reverse('requirement:data_group:delete',
+            reverse('requirement:data:delete',
                     kwargs={'requirement_pk': data_requirement.requirement.pk,
                             'pk': data_requirement.pk}),
             data)
@@ -123,43 +123,43 @@ class DataRequirementTests(base.FormCheckTestCase):
         self.check_single_object_deleted(models.DataRequirement)
 
 
-class DataGroupRequirementPermissionsTests(base.PermissionsCheckTestCase):
+class DataRequirementPermissionsTests(base.PermissionsCheckTestCase):
 
     def setUp(self):
         self.login_url = reverse('auth:login')
 
-    def test_data_requirement_add_not_auth_from_data_group(self):
-        data_group = base.DataGroupFactory()
+    def test_data_requirement_add_not_auth_from_data(self):
+        data = base.DataFactory()
         self.check_user_redirect_all_methods(
             redirect_url=self.login_url,
-            url=reverse('data_group:requirement:add',
-                        kwargs={'data_group_pk': data_group.pk}))
+            url=reverse('data:requirement:add',
+                        kwargs={'data_pk': data.pk}))
 
-    def test_data_requirement_delete_not_auth_from_data_group(self):
-        data_group = base.DataGroupFactory()
+    def test_data_requirement_delete_not_auth_from_data(self):
+        data = base.DataFactory()
         data_requirement = base.DataRequirementFactory(
-            data_group=data_group)
+            data=data)
         self.check_user_redirect_all_methods(
             redirect_url=self.login_url,
-            url=reverse('data_group:requirement:edit',
-                        kwargs={'data_group_pk': data_group.pk,
+            url=reverse('data:requirement:edit',
+                        kwargs={'data_pk': data.pk,
                                 'pk': data_requirement.pk}))
 
-    def test_data_requirement_edit_not_auth_from_data_group(self):
-        data_group = base.DataGroupFactory()
+    def test_data_requirement_edit_not_auth_from_data(self):
+        data = base.DataFactory()
         data_requirement = base.DataRequirementFactory(
-            data_group=data_group)
+            data=data)
         self.check_user_redirect_all_methods(
             redirect_url=self.login_url,
-            url=reverse('data_group:requirement:delete',
-                        kwargs={'data_group_pk': data_group.pk,
+            url=reverse('data:requirement:delete',
+                        kwargs={'data_pk': data.pk,
                                 'pk': data_requirement.pk}))
 
     def test_data_requirement_add_not_auth_from_data_requirement(self):
         data_requirement = base.RequirementFactory()
         self.check_user_redirect_all_methods(
             redirect_url=self.login_url,
-            url=reverse('requirement:data_group:add',
+            url=reverse('requirement:data:add',
                         kwargs={'requirement_pk': data_requirement.pk}))
 
     def test_data_requirement_edit_not_auth_from_data_requirement(self):
@@ -168,7 +168,7 @@ class DataGroupRequirementPermissionsTests(base.PermissionsCheckTestCase):
             requirement=data_requirement)
         self.check_user_redirect_all_methods(
             redirect_url=self.login_url,
-            url=reverse('requirement:data_group:edit',
+            url=reverse('requirement:data:edit',
                         kwargs={'requirement_pk': data_requirement.pk,
                                 'pk': data_requirement.pk}))
 
@@ -178,42 +178,42 @@ class DataGroupRequirementPermissionsTests(base.PermissionsCheckTestCase):
             requirement=data_requirement)
         self.check_user_redirect_all_methods(
             redirect_url=self.login_url,
-            url=reverse('requirement:data_group:delete',
+            url=reverse('requirement:data:delete',
                         kwargs={'requirement_pk': data_requirement.pk,
                                 'pk': data_requirement.pk}))
 
-    def test_data_requirement_add_auth_from_data_group(self):
-        data_group = base.DataGroupFactory()
+    def test_data_requirement_add_auth_from_data(self):
+        data = base.DataFactory()
         self.check_user_redirect_all_methods(
             redirect_url=self.login_url,
-            url=reverse('data_group:requirement:add',
-                        kwargs={'data_group_pk': data_group.pk}))
+            url=reverse('data:requirement:add',
+                        kwargs={'data_pk': data.pk}))
 
-    def test_data_requirement_delete_auth_from_data_group(self):
-        data_group = base.DataGroupFactory()
+    def test_data_requirement_delete_auth_from_data(self):
+        data = base.DataFactory()
         data_requirement = base.DataRequirementFactory(
-            data_group=data_group)
+            data=data)
         self.check_user_redirect_all_methods(
             redirect_url=self.login_url,
-            url=reverse('data_group:requirement:edit',
-                        kwargs={'data_group_pk': data_group.pk,
+            url=reverse('data:requirement:edit',
+                        kwargs={'data_pk': data.pk,
                                 'pk': data_requirement.pk}))
 
-    def test_data_requirement_edit_auth_from_data_group(self):
-        data_group = base.DataGroupFactory()
+    def test_data_requirement_edit_auth_from_data(self):
+        data = base.DataFactory()
         data_requirement = base.DataRequirementFactory(
-            data_group=data_group)
+            data=data)
         self.check_user_redirect_all_methods(
             redirect_url=self.login_url,
-            url=reverse('data_group:requirement:delete',
-                        kwargs={'data_group_pk': data_group.pk,
+            url=reverse('data:requirement:delete',
+                        kwargs={'data_pk': data.pk,
                                 'pk': data_requirement.pk}))
 
     def test_data_requirement_add_auth_from_data_requirement(self):
         data_requirement = base.RequirementFactory()
         self.check_user_redirect_all_methods(
             redirect_url=self.login_url,
-            url=reverse('requirement:data_group:add',
+            url=reverse('requirement:data:add',
                         kwargs={'requirement_pk': data_requirement.pk}))
 
     def test_data_requirement_edit_auth_from_data_requirement(self):
@@ -222,7 +222,7 @@ class DataGroupRequirementPermissionsTests(base.PermissionsCheckTestCase):
             requirement=data_requirement)
         self.check_user_redirect_all_methods(
             redirect_url=self.login_url,
-            url=reverse('requirement:data_group:edit',
+            url=reverse('requirement:data:edit',
                         kwargs={'requirement_pk': data_requirement.pk,
                                 'pk': data_requirement.pk}))
 
@@ -232,6 +232,6 @@ class DataGroupRequirementPermissionsTests(base.PermissionsCheckTestCase):
             requirement=data_requirement)
         self.check_user_redirect_all_methods(
             redirect_url=self.login_url,
-            url=reverse('requirement:data_group:delete',
+            url=reverse('requirement:data:delete',
                         kwargs={'requirement_pk': data_requirement.pk,
                                 'pk': data_requirement.pk}))

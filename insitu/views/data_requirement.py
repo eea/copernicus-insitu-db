@@ -8,28 +8,28 @@ from insitu.views.protected.permissions import IsCopernicusServiceResponsible
 
 
 class DataRequirementAdd(ProtectedCreateView):
-    template_name = 'data_group/requirement/add.html'
+    template_name = 'data/requirement/add.html'
     permission_classes = (IsCopernicusServiceResponsible, )
 
     def permission_denied(self, request):
-        if 'data_group_pk' in self.kwargs:
-            self.permission_denied_redirect = reverse('data_group:list')
+        if 'data_pk' in self.kwargs:
+            self.permission_denied_redirect = reverse('data:list')
         else:
             self.permission_denied_redirect = reverse('requirement:list')
         return super().permission_denied(request)
 
     def _set_model_used(self):
-        if 'data_group_pk' in self.kwargs:
+        if 'data_pk' in self.kwargs:
             self.form_class = forms.DataRequirementForm
-            self.form_field = 'data_group'
-            self.model = models.DataGroup
+            self.form_field = 'data'
+            self.model = models.Data
             self.title = "Add a new requirement for {}"
-            self.pk = self.kwargs['data_group_pk']
+            self.pk = self.kwargs['data_pk']
         else:
             self.form_class = forms.RequirementDataRequirementForm
             self.form_field = 'requirement'
             self.model = models.Requirement
-            self.title = "Add a new data_group for {}"
+            self.title = "Add a new data for {}"
             self.pk = self.kwargs['requirement_pk']
 
     def get_form(self):
@@ -45,9 +45,9 @@ class DataRequirementAdd(ProtectedCreateView):
         return context
 
     def get_success_url(self):
-        if 'data_group_pk' in self.kwargs:
-            return reverse('data_group:detail',
-                           kwargs={'pk': self.kwargs['data_group_pk']})
+        if 'data_pk' in self.kwargs:
+            return reverse('data:detail',
+                           kwargs={'pk': self.kwargs['data_pk']})
         else:
             return reverse('requirement:detail',
                            kwargs={'pk': self.kwargs['requirement_pk']})
@@ -63,22 +63,22 @@ class DataRequirementAdd(ProtectedCreateView):
 
 class DataRequirementEdit(ProtectedUpdateView):
     model = models.DataRequirement
-    template_name = 'data_group/requirement/edit.html'
+    template_name = 'data/requirement/edit.html'
     form_class = forms.DataRequirementEditForm
     context_object_name = 'rel'
     permission_classes = (IsCopernicusServiceResponsible, )
 
     def permission_denied(self, request):
-        if 'data_group_pk' in self.kwargs:
-            self.permission_denied_redirect = reverse('data_group:list')
+        if 'data_pk' in self.kwargs:
+            self.permission_denied_redirect = reverse('data:list')
         else:
             self.permission_denied_redirect = reverse('requirement:list')
         return super().permission_denied(request)
 
     def _get_reverse_url(self):
-        if 'data_group_pk' in self.kwargs:
-            url = reverse('data_group:detail',
-                          kwargs={'pk': self.kwargs['data_group_pk']})
+        if 'data_pk' in self.kwargs:
+            url = reverse('data:detail',
+                          kwargs={'pk': self.kwargs['data_pk']})
         else:
             url = reverse('requirement:detail',
                           kwargs={'pk': self.kwargs['requirement_pk']})
@@ -95,22 +95,22 @@ class DataRequirementEdit(ProtectedUpdateView):
 
 class DataRequirementDelete(ProtectedDeleteView):
     model = models.DataRequirement
-    template_name = 'data_group/requirement/delete.html'
+    template_name = 'data/requirement/delete.html'
     form_class = forms.DataRequirementEditForm
     context_object_name = 'rel'
     permission_classes = (IsCopernicusServiceResponsible, )
 
     def permission_denied(self, request):
-        if 'data_group_pk' in self.kwargs:
-            self.permission_denied_redirect = reverse('data_group:list')
+        if 'data_pk' in self.kwargs:
+            self.permission_denied_redirect = reverse('data:list')
         else:
             self.permission_denied_redirect = reverse('requirement:list')
         return super().permission_denied(request)
 
     def _get_reverse_url(self):
-        if 'data_group_pk' in self.kwargs:
-            url = reverse('data_group:detail',
-                          kwargs={'pk': self.kwargs['data_group_pk']})
+        if 'data_pk' in self.kwargs:
+            url = reverse('data:detail',
+                          kwargs={'pk': self.kwargs['data_pk']})
         else:
             url = reverse('requirement:detail',
                           kwargs={'pk': self.kwargs['requirement_pk']})
