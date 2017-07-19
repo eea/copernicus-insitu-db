@@ -20,7 +20,7 @@ PICKLISTS = [
 
 
 class ExportPicklistsView(protected.ProtectedView):
-    permission_classes = (protected.IsCopernicusServiceResponsible, )
+    permission_classes = (protected.IsSuperuser, )
 
     def get(self, request, *args, **kwargs):
         response = HttpResponse(content_type='application/ms-excel')
@@ -60,7 +60,7 @@ class ExportPicklistsView(protected.ProtectedView):
 
 
 class ImportPicklistsView(protected.ProtectedView):
-    permission_classes = (protected.IsCopernicusServiceResponsible, )
+    permission_classes = (protected.IsSuperuser, )
 
     def post(self, request, *args, **kwargs):
         if not 'workbook' in request.FILES:

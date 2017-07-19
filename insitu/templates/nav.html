@@ -35,7 +35,7 @@
             <a href="{{ responsible_list }}">Data responsibles</a>
           </li>
 
-          {% if request.user.service_resp or request.user.is_superuser %}
+          {% if request.user.is_superuser %}
             {% url 'picklists' as picklists %}
             <li class="{% active picklists %}">
               <a href="{{ picklists }}">Manage picklists</a>
