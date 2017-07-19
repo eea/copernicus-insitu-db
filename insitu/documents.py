@@ -63,6 +63,12 @@ class RequirementDoc(DocType):
         document = RequirementDoc.get(id=sender.id)
         document.delete()
 
+    @staticmethod
+    def update_index(sender, **kwargs):
+        requirement = sender
+        document = RequirementDoc.get(id=requirement.id)
+        document.update(requirement)
+
     class Meta:
         model = Requirement
         fields = [
@@ -135,6 +141,7 @@ class DataResponsibleDoc(DocType):
         document.update(data_responsible)
 
 signals.data_resposible_updated.connect(DataResponsibleDoc.update_index)
+signals.requirement_updated.connect(RequirementDoc.update_index)
 signals.product_deleted.connect(ProductDoc.delete_index)
 signals.requirement_deleted.connect(RequirementDoc.delete_index)
 signals.data_deleted.connect(DataDoc.delete_index)

@@ -1,6 +1,7 @@
 from django import forms
 
 from insitu import models
+from insitu import signals
 from picklists.models import Dissemination, Quality
 
 
@@ -134,8 +135,12 @@ class RequirementForm(forms.ModelForm):
                                 **horizontal_resolution_data)
             self._update_metric(self.instance.vertical_resolution,
                                 **vertical_resolution_data)
-            return models.Requirement.objects.filter(pk=self.instance.pk).update(**data)
 
+            reqs = models.Requirement.objects.filter(pk=self.instance.pk)
+            result = reqs.update(**data)
+            for requirement in reqs:
+                signals.requirement_updated.send(sender=requirement)
+            return result
 
 class DataForm(forms.ModelForm):
     class Meta:
