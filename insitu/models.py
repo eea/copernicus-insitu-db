@@ -147,6 +147,8 @@ class Requirement(SoftDeleteModel):
     quality = models.ForeignKey(pickmodels.Quality,
                                 on_delete=models.CASCADE,
                                 related_name='+')
+    group = models.ForeignKey(pickmodels.RequirementGroup,
+                              on_delete=models.CASCADE)
     uncertainty = models.ForeignKey(Metric,
                                     on_delete=models.CASCADE,
                                     related_name='+')

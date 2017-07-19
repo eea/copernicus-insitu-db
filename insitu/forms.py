@@ -2,7 +2,7 @@ from django import forms
 
 from insitu import models
 from insitu import signals
-from picklists.models import Dissemination, Quality
+from picklists.models import Dissemination, Quality, RequirementGroup
 
 
 class ProductForm(forms.ModelForm):
@@ -68,7 +68,7 @@ class RequirementForm(forms.ModelForm):
 
     class Meta:
         model = models.Requirement
-        fields = ['name', 'note', 'dissemination', 'quality']
+        fields = ['name', 'note', 'dissemination', 'quality', 'group']
 
     def _create_metric(self, threshold, breakthrough, goal):
         return models.Metric.objects.create(
@@ -116,7 +116,8 @@ class RequirementForm(forms.ModelForm):
             'name': self.data['name'],
             'note': self.data['note'],
             'dissemination': Dissemination.objects.get(id=self.data['dissemination']),
-            'quality': Quality.objects.get(id=self.data['quality'])
+            'quality': Quality.objects.get(id=self.data['quality']),
+            'group': RequirementGroup.objects.get(id=self.data['group']),
         }
 
         if not self.initial:

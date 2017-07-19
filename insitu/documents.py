@@ -46,6 +46,7 @@ class RequirementDoc(DocType):
     name = fields.KeywordField()
     dissemination = fields.KeywordField(attr='dissemination.name')
     quality = fields.KeywordField(attr='quality.name')
+    group = fields.KeywordField(attr='group.name')
     uncertainty = fields.KeywordField(attr='uncertainty.to_elastic_search_format')
     update_frequency = fields.KeywordField(attr='update_frequency.to_elastic_search_format')
     timeliness = fields.KeywordField(attr='timeliness.to_elastic_search_format')

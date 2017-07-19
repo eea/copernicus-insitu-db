@@ -98,6 +98,18 @@ class ProductGroup(models.Model):
         return self.name
 
 
+class RequirementGroup(models.Model):
+    name = models.CharField(max_length=100)
+    description = models.TextField(blank=True)
+    sort_order = models.IntegerField()
+
+    class Meta:
+        ordering = ['sort_order']
+
+    def __str__(self):
+        return self.name
+
+
 class DefinitionLevel(models.Model):
     name = models.CharField(max_length=100)
     description = models.TextField(blank=True)

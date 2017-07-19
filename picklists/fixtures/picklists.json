@@ -2867,6 +2867,24 @@
   }
 },
 {
+  "model": "picklists.requirementgroup",
+  "pk": 1,
+  "fields": {
+    "name": "N/A",
+    "description": "",
+    "sort_order": 100
+  }
+},
+{
+  "model": "picklists.requirementgroup",
+  "pk": 2,
+  "fields": {
+    "name": "TBD",
+    "description": "",
+    "sort_order": 100
+  }
+},
+{
   "model": "picklists.definitionlevel",
   "pk": 1,
   "fields": {
