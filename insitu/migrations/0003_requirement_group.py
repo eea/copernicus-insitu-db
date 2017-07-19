@@ -10,7 +10,7 @@ class Migration(migrations.Migration):
 
     dependencies = [
         ('picklists', '0002_requirementgroup'),
-        ('insitu', '0001_initial'),
+        ('insitu', '0002_rename_data_group'),
     ]
 
     operations = [
