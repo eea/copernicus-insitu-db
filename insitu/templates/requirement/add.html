@@ -32,6 +32,8 @@
 
   {% bootstrap_field form.quality %}
 
+  {% bootstrap_field form.group %}
+
   <label class="control-label">Uncertainty</label>
   {% include 'bits/metric_field.html' with name='uncertainty' initial=form %}
 
