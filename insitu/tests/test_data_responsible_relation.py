@@ -29,11 +29,11 @@ class DataResponsibleRelationTests(base.FormCheckTestCase):
 
     def test_responsible_relation_add_required_fields_from_data(self):
         data = {}
-        data = base.DataFactory()
+        data_factory = base.DataFactory()
         errors_data = self.errors.copy()
         errors_data.pop('data')
         resp = self.client.post(reverse('data:responsible:add',
-                                        kwargs={'group_pk': data.pk}),
+                                        kwargs={'group_pk': data_factory.pk}),
                                 data)
         self.check_required_errors(resp, errors_data)
 

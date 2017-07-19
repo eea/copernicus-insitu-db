@@ -31,12 +31,12 @@ class DataRequirementTests(base.FormCheckTestCase):
 
     def test_data_requirement_add_required_fields_from_data(self):
         data = {}
-        data = base.DataFactory()
+        data_factory = base.DataFactory()
         errors_data = self.errors.copy()
         errors_data.pop('data')
         resp = self.client.post(
             reverse('data:requirement:add',
-                    kwargs={'data_pk': data.pk}),
+                    kwargs={'data_pk': data_factory.pk}),
             data)
         self.check_required_errors(resp, errors_data)
 

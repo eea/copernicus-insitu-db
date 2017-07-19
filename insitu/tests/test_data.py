@@ -83,10 +83,10 @@ class DataTests(base.FormCheckTestCase):
 
 
     def test_edit_data(self):
-        data = base.DataFactory()
+        data_factory = base.DataFactory()
         data = self._DATA
         resp = self.client.post(
-            reverse('data:edit', kwargs={'pk': data.pk}), data
+            reverse('data:edit', kwargs={'pk': data_factory.pk}), data
         )
         self.assertEqual(resp.status_code, 302)
         self.check_single_object(models.Data, data)
