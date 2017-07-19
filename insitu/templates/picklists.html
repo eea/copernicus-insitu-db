@@ -1,0 +1,68 @@
+{% extends '_layout.html' %}
+{% load static %}
+
+{% block title %}Manage picklists{% endblock %}
+
+{% block content %}
+  <h1>Manage picklists</h1>
+
+  <div class="row">
+    <h3>Export picklists</h3>
+    <a class="btn btn-primary" href="{% url 'pick:export' %}">
+      Download all picklists
+    </a>
+  </div>
+
+  <div class="row">
+    <h3>Import picklists</h3>
+    <form id="import-form"
+          class="form-inline"
+          method="post"
+          enctype="multipart/form-data"
+          action="{% url 'pick:import' %}">
+      {% csrf_token %}
+
+      <div class="form-group">
+        <label class="control-label" for="workbook">Workbook</label>
+        <input id="workbook" name="workbook" class="form-control-static"
+               type="file" accept=".xlsx" required>
+      </div>
+
+      <input type="submit" class="btn btn-primary" value="Import data">
+    </form>
+
+    <p id="error" class="alert alert-danger" hidden>
+      File upload unsuccessful. Please check workbook has the right template.
+    </p>
+    <p id="success" class="alert alert-success" hidden>
+      File upload succesful.
+    </p>
+
+  </div>
+{% endblock %}
+
+{% block scripts %}
+  <script src="{% static 'js/jquery-3.2.1.min.js' %}"></script>
+  <script>
+    $(document).ready(function () {
+      $('#import-form').on('submit', function (e) {
+        e.preventDefault();
+        $('#error').hide(); $('#success').hide();
+        $.ajax({
+          url: $(this).attr('action'),
+          data: new FormData(this),
+          cache: false,
+          contentType: false,
+          processData: false,
+          type: $(this).attr('method'),
+          error: function (data) {
+            $('#error').show();
+          },
+          success: function (data) {
+            $('#success').show();
+          }
+        });
+      });
+    });
+  </script>
+{% endblock %}
