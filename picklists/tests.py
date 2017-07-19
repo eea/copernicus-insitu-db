@@ -9,9 +9,8 @@ from django.urls import reverse
 class ManagementTestCase(TestCase):
 
     def setUp(self):
-        user = base.UserFactory()
+        user = base.UserFactory(is_superuser=True)
         self.client.force_login(user)
-        base.CopernicususResponsibleFactory(user=user)
 
     def test_export(self):
         url = reverse('pick:export')
