@@ -2,10 +2,10 @@ from django.core.urlresolvers import reverse
 
 from insitu import models
 from insitu.tests import base
-from insitu.documents import DataGroupDoc
+from insitu.documents import DataDoc
 
 
-class DataGroupTests(base.FormCheckTestCase):
+class DataTests(base.FormCheckTestCase):
     fields = ['name', 'note']
     related_fields = ['update_frequency', 'coverage', 'timeliness',
                       'policy', 'data_type', 'data_format',
@@ -30,7 +30,7 @@ class DataGroupTests(base.FormCheckTestCase):
                                base.EssentialVariableFactory()]
 
         self._DATA = {
-            'name': 'TEST data group',
+            'name': 'TEST data',
             'note': 'TEST note',
             'update_frequency': update_frequency.pk,
             'coverage': coverage.pk,
@@ -49,19 +49,19 @@ class DataGroupTests(base.FormCheckTestCase):
         base.CopernicususResponsibleFactory(user=user)
         self.client.force_login(user)
 
-    def test_list_data_group_json(self):
-        base.DataGroupFactory()
-        resp = self.client.get(reverse('data_group:json'))
+    def test_list_data_json(self):
+        base.DataFactory()
+        resp = self.client.get(reverse('data:json'))
         self.assertEqual(resp.status_code, 200)
 
         data = resp.json()
         self.assertIsNot(data['recordsTotal'], 0)
         self.assertEqual(data['recordsTotal'], data['recordsFiltered'])
 
-    def test_list_data_group_json_filter(self):
-        base.DataGroupFactory(name="Test data group")
-        base.DataGroupFactory(name="Other data group")
-        resp = self.client.get(reverse('data_group:json'),
+    def test_list_data_json_filter(self):
+        base.DataFactory(name="Test data")
+        base.DataFactory(name="Other data")
+        resp = self.client.get(reverse('data:json'),
                                {'search[value]': 'Other'})
         self.assertEqual(resp.status_code, 200)
 
@@ -70,101 +70,101 @@ class DataGroupTests(base.FormCheckTestCase):
         self.assertFalse(data['recordsTotal'] < 2)
         self.assertIs(data['recordsFiltered'], 1)
 
-    def test_list_data_groups(self):
-        base.DataGroupFactory()
-        resp = self.client.get(reverse('data_group:list'))
-        self.assertTemplateUsed(resp, 'data_group/list.html')
+    def test_list_data(self):
+        base.DataFactory()
+        resp = self.client.get(reverse('data:list'))
+        self.assertTemplateUsed(resp, 'data/list.html')
 
-    def test_detail_data_group(self):
-        data_group = base.DataGroupFactory()
-        resp = self.client.get(reverse('data_group:detail',
-                                       kwargs={'pk': data_group.pk}))
-        self.assertEqual(resp.context['data_group'], data_group)
+    def test_detail_data(self):
+        data = base.DataFactory()
+        resp = self.client.get(reverse('data:detail',
+                                       kwargs={'pk': data.pk}))
+        self.assertEqual(resp.context['data'], data)
 
 
-    def test_edit_data_group(self):
-        data_group = base.DataGroupFactory()
+    def test_edit_data(self):
+        data_factory = base.DataFactory()
         data = self._DATA
         resp = self.client.post(
-            reverse('data_group:edit', kwargs={'pk': data_group.pk}), data
+            reverse('data:edit', kwargs={'pk': data_factory.pk}), data
         )
         self.assertEqual(resp.status_code, 302)
-        self.check_single_object(models.DataGroup, data)
+        self.check_single_object(models.Data, data)
 
-    def test_delete_data_group(self):
-        data_group = base.DataGroupFactory()
+    def test_delete_data(self):
+        data = base.DataFactory()
         resp = self.client.post(
-            reverse('data_group:delete', kwargs={'pk': data_group.pk}))
+            reverse('data:delete', kwargs={'pk': data.pk}))
         self.assertEqual(resp.status_code, 302)
-        self.check_single_object_deleted(models.DataGroup)
-        self.check_objects_are_soft_deleted(models.DataGroup, DataGroupDoc)
+        self.check_single_object_deleted(models.Data)
+        self.check_objects_are_soft_deleted(models.Data, DataDoc)
 
-    def test_delete_data_group_related_objects(self):
-        data_group = base.DataGroupFactory()
-        base.DataRequirementFactory(data_group=data_group)
-        base.DataResponsibleRelationFactory(data_group=data_group)
+    def test_delete_data_related_objects(self):
+        data = base.DataFactory()
+        base.DataRequirementFactory(data=data)
+        base.DataResponsibleRelationFactory(data=data)
         self.client.post(
-            reverse('data_group:delete', kwargs={'pk': data_group.pk})
+            reverse('data:delete', kwargs={'pk': data.pk})
         )
         self.check_objects_are_soft_deleted(models.DataRequirement)
         self.check_objects_are_soft_deleted(models.DataResponsibleRelation)
 
 
-class DataGroupPermissionsTests(base.PermissionsCheckTestCase):
+class DataPermissionsTests(base.PermissionsCheckTestCase):
     def setUp(self):
-        self.redirect_group_url = reverse('data_group:list')
+        self.redirect_group_url = reverse('data:list')
         self.redirect_login_url = reverse('auth:login')
 
-    def test_list_data_group_json_non_auth(self):
+    def test_list_data_json_non_auth(self):
         self.check_permission_denied(method='GET',
-                                     url=reverse('data_group:json'))
+                                     url=reverse('data:json'))
 
-    def test_list_data_groups_non_auth(self):
+    def test_list_data_non_auth(self):
         self.check_user_redirect(method='GET',
-                                 url=reverse('data_group:list'),
+                                 url=reverse('data:list'),
                                  redirect_url=self.redirect_login_url)
 
-    def test_detail_data_group_non_auth(self):
-        data_group = base.DataGroupFactory()
+    def test_detail_data_non_auth(self):
+        data = base.DataFactory()
         self.check_user_redirect(method='GET',
-                                 url=reverse('data_group:detail',
-                                             kwargs={'pk': data_group.pk}),
+                                 url=reverse('data:detail',
+                                             kwargs={'pk': data.pk}),
                                  redirect_url=self.redirect_login_url)
 
-    def test_add_data_group_non_auth(self):
+    def test_add_data_non_auth(self):
         self.check_user_redirect_all_methods(
-            url=reverse('data_group:add'),
+            url=reverse('data:add'),
             redirect_url=self.redirect_login_url)
 
-    def test_edit_network_data_group_non_auth(self):
-        data_group = base.DataGroupFactory()
+    def test_edit_network_data_non_auth(self):
+        data = base.DataFactory()
         self.check_user_redirect_all_methods(
-            url=reverse('data_group:edit',
-                        kwargs={'pk': data_group.pk}),
+            url=reverse('data:edit',
+                        kwargs={'pk': data.pk}),
             redirect_url=self.redirect_login_url)
 
-    def test_delete_network_data_group_non_auth(self):
-        data_group = base.DataGroupFactory()
+    def test_delete_network_data_non_auth(self):
+        data = base.DataFactory()
         self.check_user_redirect_all_methods(
-            url=reverse('data_group:delete',
-                        kwargs={'pk': data_group.pk}),
+            url=reverse('data:delete',
+                        kwargs={'pk': data.pk}),
             redirect_url=self.redirect_login_url)
 
-    def test_add_data_group_auth(self):
+    def test_add_data_auth(self):
         self.check_authenticated_user_redirect_all_methods(
-            url=reverse('data_group:add'),
+            url=reverse('data:add'),
             redirect_url=self.redirect_group_url)
 
-    def test_edit_network_data_group_auth(self):
-        data_group = base.DataGroupFactory()
+    def test_edit_network_data_auth(self):
+        data = base.DataFactory()
         self.check_authenticated_user_redirect_all_methods(
-            url=reverse('data_group:edit',
-                        kwargs={'pk': data_group.pk}),
+            url=reverse('data:edit',
+                        kwargs={'pk': data.pk}),
             redirect_url=self.redirect_group_url)
 
-    def test_delete_network_data_group_auth(self):
-        data_group = base.DataGroupFactory()
+    def test_delete_network_data_auth(self):
+        data = base.DataFactory()
         self.check_authenticated_user_redirect_all_methods(
-            url=reverse('data_group:delete',
-                        kwargs={'pk': data_group.pk}),
+            url=reverse('data:delete',
+                        kwargs={'pk': data.pk}),
             redirect_url=self.redirect_group_url)

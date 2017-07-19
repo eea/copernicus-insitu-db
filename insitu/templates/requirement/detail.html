@@ -141,20 +141,20 @@
 
   <div class="row">
     <h3 class="col-sm-12">
-      <span>Data Groups</span>
+      <span>Data</span>
       {% if request.user.service_resp or request.user.is_superuser %}
         <span class="pull-right">
           <a class="btn btn-primary pull-right"
-             href="{% url 'requirement:data_group:add' requirement.pk %}">Add data requirement</a>
+             href="{% url 'requirement:data:add' requirement.pk %}">Add data requirement</a>
         </span>
       {% endif %}
     </h3>
     <div class="col-sm-12">
-        <table id="data_groups"
+        <table id="data"
              class="table table-condensed table-bordered table-hover">
           <thead>
           <tr>
-            <th>Data Group</th>
+            <th>Data</th>
             <th>Level of compliace</th>
             <th class="no-sort">Note</th>
             <th class="no-sort">Information costs</th>
@@ -168,7 +168,7 @@
           {% for rel in requirement.datarequirement_set.all %}
             <tr>
               <td> 
-                <a href="{% url 'data_group:detail' rel.data_group.pk %}">{{ rel.data_group }}</a>
+                <a href="{% url 'data:detail' rel.data.pk %}">{{ rel.data }}</a>
               </td>
               <td> {{ rel.level_of_compliance }} </td>
               <td> {{ rel.note }} </td>
@@ -188,11 +188,11 @@
               </td>
               {% if request.user.service_resp or request.user.is_superuser %}
                 <td class="row">
-                  <a href="{% url 'requirement:data_group:edit' requirement_pk=requirement.pk pk=rel.pk %}"
+                  <a href="{% url 'requirement:data:edit' requirement_pk=requirement.pk pk=rel.pk %}"
                      class="col-sm-6">
                     <span class="glyphicon glyphicon-edit"></span>
                   </a>
-                  <a href="{% url 'requirement:data_group:delete' requirement_pk=requirement.pk pk=rel.pk %}"
+                  <a href="{% url 'requirement:data:delete' requirement_pk=requirement.pk pk=rel.pk %}"
                      class="col-sm-6">
                     <span class="glyphicon glyphicon-trash"></span>
                   </a>
@@ -226,7 +226,7 @@
   </script>
   <script>
     $(function () {
-      var table = $('#data_groups').dataTable({
+      var table = $('#data').dataTable({
         columnDefs: [
           { targets: 'no-sort',
             orderable: false }

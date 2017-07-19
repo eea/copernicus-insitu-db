@@ -294,12 +294,12 @@ class DataResponsibleDetails(SoftDeleteModel):
         signals.data_resposible_updated.send(sender=self)
 
 
-class DataGroup(SoftDeleteModel):
+class Data(SoftDeleteModel):
     related_objects = [
-        ('DataRequirement', 'data_group'),
-        ('DataResponsibleRelation', 'data_group'),
+        ('DataRequirement', 'data'),
+        ('DataResponsibleRelation', 'data'),
     ]
-    elastic_delete_signal = signals.data_group_deleted
+    elastic_delete_signal = signals.data_deleted
 
     name = models.CharField(max_length=100)
     note = models.TextField(blank=True)
@@ -343,7 +343,7 @@ class DataGroup(SoftDeleteModel):
 
 
 class DataRequirement(SoftDeleteModel):
-    data_group = models.ForeignKey(DataGroup, on_delete=models.CASCADE)
+    data = models.ForeignKey(Data, on_delete=models.CASCADE)
     requirement = models.ForeignKey(Requirement, on_delete=models.CASCADE)
     information_costs = models.BooleanField(default=False)
     handling_costs = models.BooleanField(default=False)
@@ -357,7 +357,7 @@ class DataRequirement(SoftDeleteModel):
                                       null=True)
 
     def __str__(self):
-        return '{} - {}'.format(self.data_group.name, self.requirement.name)
+        return '{} - {}'.format(self.data.name, self.requirement.name)
 
 
 class DataResponsibleRelation(SoftDeleteModel):
@@ -367,7 +367,7 @@ class DataResponsibleRelation(SoftDeleteModel):
         (ORIGINATOR, 'Originator'),
         (DISTRIBUTOR, 'Distributor'),
     )
-    data_group = models.ForeignKey(DataGroup, on_delete=models.CASCADE)
+    data = models.ForeignKey(Data, on_delete=models.CASCADE)
     responsible = models.ForeignKey(DataResponsible, on_delete=models.CASCADE)
     role = models.IntegerField(choices=ROLE_CHOICES, db_index=True)
     created_at = models.DateTimeField(auto_now_add=True,
@@ -376,7 +376,7 @@ class DataResponsibleRelation(SoftDeleteModel):
                                       null=True)
 
     def __str__(self):
-        return '{} - {}'.format(self.data_group.name, self.responsible.name)
+        return '{} - {}'.format(self.data.name, self.responsible.name)
 
 
 class CopernicusResponsibleManager(_WithRelatedUserManager):

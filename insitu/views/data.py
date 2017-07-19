@@ -12,13 +12,13 @@ from insitu.views.protected import IsAuthenticated, IsCopernicusServiceResponsib
 from picklists import models as pickmodels
 
 
-class DataGroupList(ProtectedTemplateView):
-    template_name = 'data_group/list.html'
+class DataList(ProtectedTemplateView):
+    template_name = 'data/list.html'
     permission_classes = (IsAuthenticated, )
     permission_denied_redirect = reverse_lazy('auth:login')
 
     def get_context_data(self):
-        context = super(DataGroupList, self).get_context_data()
+        context = super(DataList, self).get_context_data()
         update_frequencies = get_choices('name', model_cls=pickmodels.UpdateFrequency)
         coverages = get_choices('name', model_cls=pickmodels.Coverage)
         timelinesses = get_choices('name', model_cls=pickmodels.Timeliness)
@@ -38,56 +38,56 @@ class DataGroupList(ProtectedTemplateView):
         return context
 
 
-class DataGroupListJson(ESDatatableView):
+class DataListJson(ESDatatableView):
     columns = ['name', 'update_frequency', 'coverage', 'timeliness', 'policy',
                'data_type', 'data_format', 'quality']
     order_columns = columns
     filters = ['update_frequency', 'coverage', 'timeliness', 'policy',
                'data_type', 'data_format', 'quality']
-    document = documents.DataGroupDoc
+    document = documents.DataDoc
     permission_classes = (IsAuthenticated, )
 
 
-class DataGroupAdd(ProtectedCreateView):
-    template_name = 'data_group/add.html'
-    form_class = forms.DataGroupForm
-    model = models.DataGroup
+class DataAdd(ProtectedCreateView):
+    template_name = 'data/add.html'
+    form_class = forms.DataForm
+    model = models.Data
     permission_classes = (IsCopernicusServiceResponsible, )
-    permission_denied_redirect = reverse_lazy('data_group:list')
+    permission_denied_redirect = reverse_lazy('data:list')
 
     def get_success_url(self):
         instance = self.object
-        return reverse('data_group:detail', kwargs={'pk': instance.pk})
+        return reverse('data:detail', kwargs={'pk': instance.pk})
 
 
-class DataGroupEdit(ProtectedUpdateView):
-    template_name = 'data_group/edit.html'
-    form_class = forms.DataGroupForm
-    model = models.DataGroup
-    context_object_name = 'data_group'
+class DataEdit(ProtectedUpdateView):
+    template_name = 'data/edit.html'
+    form_class = forms.DataForm
+    model = models.Data
+    context_object_name = 'data'
     permission_classes = (IsCopernicusServiceResponsible, )
-    permission_denied_redirect = reverse_lazy('data_group:list')
+    permission_denied_redirect = reverse_lazy('data:list')
 
     def get_success_url(self):
-        return reverse('data_group:detail', kwargs={'pk': self.object.pk})
+        return reverse('data:detail', kwargs={'pk': self.object.pk})
 
 
-class DataGroupDetail(ProtectedDetailView):
-    template_name = 'data_group/detail.html'
-    model = models.DataGroup
-    context_object_name = 'data_group'
+class DataDetail(ProtectedDetailView):
+    template_name = 'data/detail.html'
+    model = models.Data
+    context_object_name = 'data'
     permission_classes = (IsAuthenticated, )
     permission_denied_redirect = reverse_lazy('auth:login')
 
 
-class DataGroupDelete(ProtectedDeleteView):
+class DataDelete(ProtectedDeleteView):
 
-    template_name = 'data_group/delete.html'
-    form_class = forms.DataGroupForm
-    model = models.DataGroup
-    context_object_name = 'data_group'
+    template_name = 'data/delete.html'
+    form_class = forms.DataForm
+    model = models.Data
+    context_object_name = 'data'
     permission_classes = (IsCopernicusServiceResponsible, )
-    permission_denied_redirect = reverse_lazy('data_group:list')
+    permission_denied_redirect = reverse_lazy('data:list')
 
     def get_success_url(self):
-        return reverse('data_group:list')
+        return reverse('data:list')

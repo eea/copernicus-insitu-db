@@ -10,15 +10,15 @@ from insitu import models
 from insitu import forms
 
 
-class DataGroupDataResponsibleAdd(ProtectedCreateView):
-    template_name = 'data_group/data_responsible/add.html'
+class DataDataResponsibleAdd(ProtectedCreateView):
+    template_name = 'data/data_responsible/add.html'
     permission_classes = (IsCopernicusServiceResponsible, )
 
     def permission_denied(self, request):
         if 'responsible_pk' in self.kwargs:
             self.permission_denied_redirect = reverse('responsible:list')
         else:
-            self.permission_denied_redirect = reverse('data_group:list')
+            self.permission_denied_redirect = reverse('data:list')
         return super().permission_denied(request)
 
     def _set_model_used(self):
@@ -30,8 +30,8 @@ class DataGroupDataResponsibleAdd(ProtectedCreateView):
             self.pk = self.kwargs['responsible_pk']
         else:
             self.form_class = forms.DataResponsibleRelationGroupForm
-            self.form_field = 'data_group'
-            self.model = models.DataGroup
+            self.form_field = 'data'
+            self.model = models.Data
             self.title = "Add a new responsible for {}"
             self.pk = self.kwargs['group_pk']
 
@@ -53,7 +53,7 @@ class DataGroupDataResponsibleAdd(ProtectedCreateView):
                            kwargs={'pk': self.kwargs['responsible_pk']})
         else:
 
-            return reverse('data_group:detail',
+            return reverse('data:detail',
                            kwargs={'pk': self.kwargs['group_pk']})
 
     def get(self, request, *args, **kwargs):
@@ -65,9 +65,9 @@ class DataGroupDataResponsibleAdd(ProtectedCreateView):
         return super().post(self, request, *args, **kwargs)
 
 
-class DataGroupDataResponsibleEdit(ProtectedUpdateView):
+class DataDataResponsibleEdit(ProtectedUpdateView):
     model = models.DataResponsibleRelation
-    template_name = 'data_group/data_responsible/edit.html'
+    template_name = 'data/data_responsible/edit.html'
     form_class = forms.DataResponsibleRelationEditForm
     context_object_name = 'rel'
     permission_classes = (IsCopernicusServiceResponsible, )
@@ -76,7 +76,7 @@ class DataGroupDataResponsibleEdit(ProtectedUpdateView):
         if 'responsible_pk' in self.kwargs:
             self.permission_denied_redirect = reverse('responsible:list')
         else:
-            self.permission_denied_redirect = reverse('data_group:list')
+            self.permission_denied_redirect = reverse('data:list')
         return super().permission_denied(request)
 
     def _get_reverse_url(self):
@@ -84,7 +84,7 @@ class DataGroupDataResponsibleEdit(ProtectedUpdateView):
             url = reverse('responsible:detail',
                        kwargs={'pk': self.kwargs['responsible_pk']})
         else:
-            url = reverse('data_group:detail',
+            url = reverse('data:detail',
                        kwargs={'pk': self.kwargs['group_pk']})
         return url
 
@@ -97,9 +97,9 @@ class DataGroupDataResponsibleEdit(ProtectedUpdateView):
         return self._get_reverse_url()
 
 
-class DataGroupDataResponsibleDelete(ProtectedDeleteView):
+class DataDataResponsibleDelete(ProtectedDeleteView):
     model = models.DataResponsibleRelation
-    template_name = 'data_group/data_responsible/delete.html'
+    template_name = 'data/data_responsible/delete.html'
     context_object_name = 'rel'
     permission_classes = (IsCopernicusServiceResponsible, )
 
@@ -107,7 +107,7 @@ class DataGroupDataResponsibleDelete(ProtectedDeleteView):
         if 'responsible_pk' in self.kwargs:
             self.permission_denied_redirect = reverse('responsible:list')
         else:
-            self.permission_denied_redirect = reverse('data_group:list')
+            self.permission_denied_redirect = reverse('data:list')
         return super().permission_denied(request)
 
     def _get_reverse_url(self):
@@ -115,7 +115,7 @@ class DataGroupDataResponsibleDelete(ProtectedDeleteView):
             url = reverse('responsible:detail',
                           kwargs={'pk': self.kwargs['responsible_pk']})
         else:
-            url = reverse('data_group:detail',
+            url = reverse('data:detail',
                           kwargs={'pk': self.kwargs['group_pk']})
         return url
 

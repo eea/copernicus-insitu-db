@@ -25,9 +25,9 @@
             <a href="{{ requirements_list }}">Requirements</a>
           </li>
 
-          {% url 'data_group:list' as data_group_list %}
-          <li class="{% active data_group_list %}">
-            <a href="{{ data_group_list }}">Data groups</a>
+          {% url 'data:list' as data_list %}
+          <li class="{% active data_list %}">
+            <a href="{{ data_list }}">Data</a>
           </li>
 
           {% url 'responsible:list' as responsible_list %}

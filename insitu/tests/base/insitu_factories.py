@@ -105,8 +105,8 @@ class DataResponsibleDetailsFactory(DjangoModelFactory):
         model = models.DataResponsibleDetails
 
 
-class DataGroupFactory(DjangoModelFactory):
-    name = 'test DataGroup'
+class DataFactory(DjangoModelFactory):
+    name = 'test Data'
     update_frequency = SubFactory(factories.UpdateFrequencyFactory)
     coverage = SubFactory(factories.CoverageFactory)
     timeliness = SubFactory(factories.TimelinessFactory)
@@ -119,11 +119,11 @@ class DataGroupFactory(DjangoModelFactory):
     # responsibles = SubFactory(DataResponsibleFactory)
 
     class Meta:
-        model = models.DataGroup
+        model = models.Data
 
 
 class DataRequirementFactory(DjangoModelFactory):
-    data_group = SubFactory(DataGroupFactory)
+    data = SubFactory(DataFactory)
     requirement = SubFactory(RequirementFactory)
     level_of_compliance = SubFactory(factories.ComplianceLevelFactory)
 
@@ -132,7 +132,7 @@ class DataRequirementFactory(DjangoModelFactory):
 
 
 class DataResponsibleRelationFactory(DjangoModelFactory):
-    data_group = SubFactory(DataGroupFactory)
+    data = SubFactory(DataFactory)
     responsible = SubFactory(DataResponsibleFactory)
     role = models.DataResponsibleRelation.ROLE_CHOICES[0][0]
 

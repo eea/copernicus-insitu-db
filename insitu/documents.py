@@ -2,7 +2,7 @@ from django.core.urlresolvers import reverse
 from django_elasticsearch_dsl import DocType, Index, fields
 from elasticsearch_dsl.search import Search
 
-from insitu.models import Product, Requirement, DataResponsible, DataGroup
+from insitu.models import Product, Requirement, DataResponsible, Data
 from insitu import signals
 
 insitu = Index('insitu')
@@ -72,7 +72,7 @@ class RequirementDoc(DocType):
 
 
 @insitu.doc_type
-class DataGroupDoc(DocType):
+class DataDoc(DocType):
     name = fields.KeywordField()
     update_frequency = fields.KeywordField(attr='update_frequency.name')
     coverage = fields.KeywordField(attr='coverage.name')
@@ -83,16 +83,16 @@ class DataGroupDoc(DocType):
     quality = fields.KeywordField(attr='quality.name')
 
     def get_name_display(self):
-        url = reverse('data_group:detail', kwargs={'pk': self.id})
+        url = reverse('data:detail', kwargs={'pk': self.id})
         return '<a href="{url}">{name}</a>'.format(url=url, name=self.name)
 
     @staticmethod
     def delete_index(sender, **kwargs):
-        document = DataGroupDoc.get(id=sender.id)
+        document = DataDoc.get(id=sender.id)
         document.delete()
 
     class Meta:
-        model = DataGroup
+        model = Data
         fields = [
             'id',
             'note'
@@ -137,5 +137,5 @@ class DataResponsibleDoc(DocType):
 signals.data_resposible_updated.connect(DataResponsibleDoc.update_index)
 signals.product_deleted.connect(ProductDoc.delete_index)
 signals.requirement_deleted.connect(RequirementDoc.delete_index)
-signals.data_group_deleted.connect(DataGroupDoc.delete_index)
+signals.data_deleted.connect(DataDoc.delete_index)
 signals.data_responsible_deleted.connect(DataResponsibleDoc.delete_index)
