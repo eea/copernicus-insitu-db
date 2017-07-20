@@ -252,28 +252,22 @@ class DataResponsible(SoftDeleteModel):
         details = self.details.first()
         for field in ['acronym', 'address', 'phone', 'email', 'contact_person']:
             data[field] = getattr(details, field) if details else '-'
-        data['responsible_type'] = details.get_responsible_type_display if details \
-            else '-'
+        data['responsible_type'] = (
+            getattr(details, 'responsible_type').name if details else '-'
+        )
         return data
 
 
 class DataResponsibleDetails(SoftDeleteModel):
-
-    COMMERCIAL = 1
-    PUBLIC = 2
-    INSTITUTIONAL = 3
-    TYPE_CHOICES = (
-        (COMMERCIAL, 'Commercial'),
-        (PUBLIC, 'Public'),
-        (INSTITUTIONAL, 'Institutional'),
-    )
     acronym = models.CharField(max_length=10)
     website = models.CharField(max_length=255)
     address = models.TextField()
     phone = models.CharField(max_length=20)
     email = models.CharField(max_length=100)
     contact_person = models.CharField(max_length=100)
-    responsible_type = models.IntegerField(choices=TYPE_CHOICES, db_index=True)
+    responsible_type = models.ForeignKey(pickmodels.ResponsibleType,
+                                         on_delete=models.CASCADE,
+                                         related_name='+')
     data_responsible = models.ForeignKey(DataResponsible,
                                          on_delete=models.CASCADE,
                                          related_name='details')
