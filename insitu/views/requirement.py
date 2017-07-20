@@ -38,18 +38,21 @@ class RequirementList(ProtectedTemplateView):
         context = super(RequirementList, self).get_context_data()
         disseminations = get_choices('name', model_cls=pickmodels.Dissemination)
         qualities = get_choices('name', model_cls=pickmodels.Quality)
+        groups = get_choices('name', model_cls=pickmodels.RequirementGroup)
         context.update({
             'disseminations': disseminations,
             'qualities': qualities,
+            'groups': groups,
         })
         return context
 
 
 class RequirementListJson(ESDatatableView):
-    columns = ['name', 'dissemination', 'quality', 'uncertainty', 'update_frequency',
-               'timeliness', 'horizontal_resolution', 'vertical_resolution']
+    columns = ['name', 'dissemination', 'quality', 'group', 'uncertainty',
+               'update_frequency', 'timeliness', 'horizontal_resolution',
+               'vertical_resolution']
     order_columns = columns
-    filters = ['dissemination', 'quality']
+    filters = ['dissemination', 'quality', 'group']
     document = documents.RequirementDoc
     permission_classes = (IsAuthenticated, )
 

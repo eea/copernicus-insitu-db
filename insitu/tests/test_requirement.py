@@ -8,7 +8,7 @@ from insitu.tests import base
 class RequirementTests(base.FormCheckTestCase):
     fields = ['name', 'note']
     related_fields = ['dissemination', 'quality']
-    required_fields = ['name', 'dissemination', 'quality']
+    required_fields = ['name', 'dissemination', 'quality', 'group']
     related_entities_updated = ['uncertainty', 'update_frequency', 'timeliness',
                                 'horizontal_resolution', 'vertical_resolution']
     related_entities_fields = ['threshold', 'breakthrough', 'goal']
@@ -17,6 +17,7 @@ class RequirementTests(base.FormCheckTestCase):
         super().setUp()
         dissemination = base.DisseminationFactory()
         quality = base.QualityFactory()
+        group = base.RequirementGroupFactory()
         responsible_user = base.UserFactory()
         base.CopernicususResponsibleFactory(user=responsible_user)
         self.client.force_login(responsible_user)
@@ -26,6 +27,7 @@ class RequirementTests(base.FormCheckTestCase):
             'note': 'TEST note',
             'dissemination': dissemination.pk,
             'quality': quality.pk,
+            'group': group.pk,
         }
 
         for entity in self.related_entities_updated:

@@ -56,3 +56,9 @@
   bottom: 100px;
   position: fixed;
 }
+
+@media (min-width: 1200px){
+  .container {
+    width: 1250px;
+  }
+}

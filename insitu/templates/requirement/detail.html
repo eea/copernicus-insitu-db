@@ -52,6 +52,11 @@
       </tr>
 
       <tr class="row">
+        <th class="col-md-4 col-sm-6">Group</th>
+        <td class="col-md-8 col-sm-6">{{ requirement.group }}</td>
+      </tr>
+
+      <tr class="row">
         <th class="col-md-4 col-sm-6">Uncertainty</th>
         {% include 'bits/metric.html' with metric=requirement.uncertainty %}
       </tr>

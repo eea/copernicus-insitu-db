@@ -49,6 +49,7 @@ class RequirementFactory(DjangoModelFactory):
     name = 'Test requirement'
     dissemination = SubFactory(factories.DisseminationFactory)
     quality = SubFactory(factories.QualityFactory)
+    group = SubFactory(factories.RequirementGroupFactory)
     uncertainty = SubFactory(MetricFactory)
     update_frequency = SubFactory(MetricFactory)
     timeliness = SubFactory(MetricFactory)

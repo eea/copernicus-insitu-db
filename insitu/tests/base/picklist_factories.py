@@ -47,6 +47,14 @@ class ProductGroupFactory(DjangoModelFactory):
         model = models.ProductGroup
 
 
+class RequirementGroupFactory(DjangoModelFactory):
+    name = 'Test requirement group'
+    sort_order = 0
+
+    class Meta:
+        model = models.RequirementGroup
+
+
 class DefinitionLevelFactory(DjangoModelFactory):
     name = 'Test DefinitionLevel'
     sort_order = 0

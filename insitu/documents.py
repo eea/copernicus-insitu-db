@@ -46,6 +46,7 @@ class RequirementDoc(DocType):
     name = fields.KeywordField()
     dissemination = fields.KeywordField(attr='dissemination.name')
     quality = fields.KeywordField(attr='quality.name')
+    group = fields.KeywordField(attr='group.name')
     uncertainty = fields.KeywordField(attr='uncertainty.to_elastic_search_format')
     update_frequency = fields.KeywordField(attr='update_frequency.to_elastic_search_format')
     timeliness = fields.KeywordField(attr='timeliness.to_elastic_search_format')
@@ -62,6 +63,12 @@ class RequirementDoc(DocType):
     def delete_index(sender, **kwargs):
         document = RequirementDoc.get(id=sender.id)
         document.delete()
+
+    @staticmethod
+    def update_index(sender, **kwargs):
+        requirement = sender
+        document = RequirementDoc.get(id=requirement.id)
+        document.update(requirement)
 
     class Meta:
         model = Requirement
@@ -135,6 +142,7 @@ class DataResponsibleDoc(DocType):
         document.update(data_responsible)
 
 signals.data_resposible_updated.connect(DataResponsibleDoc.update_index)
+signals.requirement_updated.connect(RequirementDoc.update_index)
 signals.product_deleted.connect(ProductDoc.delete_index)
 signals.requirement_deleted.connect(RequirementDoc.delete_index)
 signals.data_deleted.connect(DataDoc.delete_index)
