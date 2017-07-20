@@ -169,3 +169,12 @@ class DataFormatFactory(DjangoModelFactory):
 
     class Meta:
         model = models.DataFormat
+
+
+class ResponsibleTypeFactory(DjangoModelFactory):
+    name = 'Test DataResponsible'
+    sort_order = 0
+    link = ''
+
+    class Meta:
+        model = models.ResponsibleType

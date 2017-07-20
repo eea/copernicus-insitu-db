@@ -5,14 +5,15 @@ from django.urls import reverse, reverse_lazy
 from insitu import documents
 from insitu import models
 from insitu import forms
-from insitu.utils import ALL_OPTIONS_LABEL
 from insitu.views.base import ESDatatableView
 from insitu.views.protected import (
     ProtectedTemplateView, ProtectedDetailView,
     ProtectedUpdateView, ProtectedCreateView, ProtectedDeleteView)
 from insitu.views.protected import IsAuthenticated
 from insitu.views.protected.permissions import IsCopernicusServiceResponsible
+from insitu.utils import get_choices
 
+from picklists import models as pickmodels
 
 class DataResponsibleList(ProtectedTemplateView):
     template_name = 'data_responsible/list.html'
@@ -21,11 +22,9 @@ class DataResponsibleList(ProtectedTemplateView):
 
     def get_context_data(self):
         context = super().get_context_data()
-        responsible_types = (
-            ((0, ALL_OPTIONS_LABEL), ) +
-            models.DataResponsibleDetails.TYPE_CHOICES)
+        responsible_types = get_choices(
+            'name', model_cls=pickmodels.ResponsibleType)
         context.update({
-            'ALL_OPTIONS_LABEL': ALL_OPTIONS_LABEL,
             'responsible_types': responsible_types,
         })
         return context
