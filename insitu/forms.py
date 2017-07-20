@@ -147,7 +147,8 @@ class DataForm(forms.ModelForm):
     class Meta:
         model = models.Data
         auto_created = True
-        fields = ['name', 'note', 'update_frequency', 'coverage', 'timeliness',
+        fields = ['name', 'note', 'update_frequency', 'coverage',
+                  'start_time_coverage', 'end_time_coverage', 'timeliness',
                   'policy', 'data_type', 'data_format', 'quality',
                   'inspire_themes', 'essential_variables']
 

@@ -7,6 +7,8 @@
         href="{% static 'css/select2.min.css' %}"/>
   <link rel="stylesheet" type="text/css"
         href="{% static 'css/select2-bootstrap.min.css' %}"/>
+  <link rel="stylesheet" type="text/css"
+        href="{% static 'css/bootstrap-datetime-picker.min.css' %}"/>
 {% endblock %}
 
 {% block title %}
@@ -18,14 +20,44 @@
   <div class="row">
     <h1>
       <p class="col-sm-12">Edit data</p>
-      <p class="col-sm-12"><small>{{ object.name }}</small></p>
+      <p class="col-sm-12">
+        <small>{{ object.name }}</small>
+      </p>
     </h1>
   </div>
 
   <form action="" method="POST">
     {% csrf_token %}
-    {% bootstrap_form form %}
-    <input class="btn btn-primary" type="submit" value="Save" />
+
+    {% bootstrap_field form.name %}
+    {% bootstrap_field form.note %}
+    {% bootstrap_field form.update_frequency %}
+    {% bootstrap_field form.coverage %}
+
+    <div class="form-group">
+      <div class="input-group input-daterange">
+        <input type="text" class="input-sm form-control" name="start_time_coverage"
+               id="id_start_time_coverage" data-provide="datepicker"
+               value="{{ form.start_time_coverage.value|date:'m/d/Y'}}"/>
+        <span class="input-group-addon">to</span>
+        <input type="text" class="input-sm form-control" name="end_time_coverage"
+               id="id_end_time_coverage" data-provide="datepicker"
+               value="{{ form.end_time_coverage.value|date:'m/d/Y'}}"/>
+        <div class="input-group-addon">
+          <span class="glyphicon glyphicon-th"></span>
+        </div>
+      </div>
+    </div>
+
+    {% bootstrap_field form.timeliness %}
+    {% bootstrap_field form.policy %}
+    {% bootstrap_field form.data_type %}
+    {% bootstrap_field form.data_format %}
+    {% bootstrap_field form.quality %}
+    {% bootstrap_field form.inspire_themes %}
+    {% bootstrap_field form.essential_variables %}
+
+    <input class="btn btn-primary" type="submit" value="Save"/>
     <a href="{% url 'data:detail' object.pk %}"
        class="btn btn-default">Cancel</a>
   </form>
@@ -34,6 +66,8 @@
 {% block scripts %}
   <script src="{% static 'js/jquery-3.2.1.min.js' %}"></script>
   <script src="{% static 'js/select2.min.js' %}"></script>
+  <script src="{% static 'js/bootstrap.min.js' %}"></script>
+  <script src="{% static 'js/bootstrap-datetime-picker.min.js' %}"></script>
   <script>
     $(document).ready(function () {
       $('select').select2();

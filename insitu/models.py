@@ -2,14 +2,12 @@
 from __future__ import unicode_literals
 
 from django.contrib.auth import get_user_model
-from django.contrib.auth.models import User
 from django.db import models
 from django.db.models.query import QuerySet
 
 from insitu import signals
 from picklists import models as pickmodels
 
-from datetime import datetime
 
 User = get_user_model()
 
@@ -311,6 +309,8 @@ class Data(SoftDeleteModel):
     coverage = models.ForeignKey(pickmodels.Coverage,
                                  on_delete=models.CASCADE,
                                  related_name='+')
+    start_time_coverage = models.DateField(null=True)
+    end_time_coverage = models.DateField(null=True)
     timeliness = models.ForeignKey(pickmodels.Timeliness,
                                    on_delete=models.CASCADE,
                                    related_name='+')
