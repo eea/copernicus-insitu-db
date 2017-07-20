@@ -4,9 +4,11 @@ from insitu import models
 from insitu.tests import base
 from insitu.documents import DataDoc
 
+import datetime
+
 
 class DataTests(base.FormCheckTestCase):
-    fields = ['name', 'note']
+    fields = ['name', 'note', 'start_time_coverage', 'end_time_coverage']
     related_fields = ['update_frequency', 'coverage', 'timeliness',
                       'policy', 'data_type', 'data_format',
                       'quality']
@@ -41,6 +43,8 @@ class DataTests(base.FormCheckTestCase):
             'quality': quality.pk,
             'inspire_themes': [inspire_theme.pk for inspire_theme
                                in inspire_themes],
+            'start_time_coverage': datetime.date(day=1, month=1, year=2000),
+            'end_time_coverage': datetime.date(day=1, month=1, year=2000),
             'essential_variables': [essential_variable.pk for
                                     essential_variable in
                                     essential_variables]

@@ -7,6 +7,8 @@
         href="{% static 'css/select2.min.css' %}"/>
   <link rel="stylesheet" type="text/css"
         href="{% static 'css/select2-bootstrap.min.css' %}"/>
+  <link rel="stylesheet" type="text/css"
+        href="{% static 'css/bootstrap-datetime-picker.min.css' %}"/>
 {% endblock %}
 
 {% block title %}
@@ -14,7 +16,6 @@
 {% endblock %}
 
 {% block content %}
-
   <div class="row">
     <h1 class="col-sm-12">
       <span>Add a new data</span>
@@ -23,14 +24,42 @@
 
   <form action="" method="POST">
     {% csrf_token %}
-    {% bootstrap_form form %}
-    <input class="btn btn-primary" type="submit" value="Save" />
+
+    {% bootstrap_field form.name %}
+    {% bootstrap_field form.note %}
+    {% bootstrap_field form.update_frequency %}
+    {% bootstrap_field form.coverage %}
+
+    <div class="form-group">
+      <div class="input-group input-daterange">
+        <input type="text" class="input-sm form-control" name="start_time_coverage"
+               id="id_start_time_coverage" data-provide="datepicker"/>
+        <span class="input-group-addon">to</span>
+        <input type="text" class="input-sm form-control" name="end_time_coverage"
+               id="id_end_time_coverage" data-provide="datepicker"/>
+        <div class="input-group-addon">
+          <span class="glyphicon glyphicon-th"></span>
+        </div>
+      </div>
+    </div>
+
+    {% bootstrap_field form.timeliness %}
+    {% bootstrap_field form.policy %}
+    {% bootstrap_field form.data_type %}
+    {% bootstrap_field form.data_format %}
+    {% bootstrap_field form.quality %}
+    {% bootstrap_field form.inspire_themes %}
+    {% bootstrap_field form.essential_variables %}
+
+    <input class="btn btn-primary" type="submit" value="Save"/>
   </form>
 {% endblock %}
 
 {% block scripts %}
   <script src="{% static 'js/jquery-3.2.1.min.js' %}"></script>
   <script src="{% static 'js/select2.min.js' %}"></script>
+  <script src="{% static 'js/bootstrap.min.js' %}"></script>
+  <script src="{% static 'js/bootstrap-datetime-picker.min.js' %}"></script>
   <script>
     $(document).ready(function () {
       $('select').select2();
