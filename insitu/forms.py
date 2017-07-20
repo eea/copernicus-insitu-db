@@ -209,9 +209,8 @@ class DataResponsibleNonNetworkForm(forms.ModelForm):
 
     def save(self, commit=True):
         instance = super().save(commit)
-        if 'networks' in self.data:
-            for pk in self.data['networks']:
-                network = models.DataResponsible.objects.get(pk=pk)
+        if 'networks' in self.cleaned_data:
+            for network in self.cleaned_data['networks']:
                 instance.networks.add(network)
         return instance
 
