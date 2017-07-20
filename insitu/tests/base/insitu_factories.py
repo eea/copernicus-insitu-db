@@ -99,7 +99,7 @@ class DataResponsibleDetailsFactory(DjangoModelFactory):
     phone = 'test phone'
     email = 'test email'
     contact_person = 'test contact'
-    responsible_type = models.DataResponsibleDetails.TYPE_CHOICES[0][0]
+    responsible_type = SubFactory(factories.ResponsibleTypeFactory)
     data_responsible = SubFactory(DataResponsibleFactory)
 
     class Meta:

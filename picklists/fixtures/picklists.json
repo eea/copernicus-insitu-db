@@ -4150,5 +4150,35 @@
     "sort_order": 10,
     "link": ""
   }
+},
+{
+  "model": "picklists.responsibletype",
+  "pk": 1,
+  "fields": {
+    "name": "Commercial",
+    "description":"",
+    "sort_order": 1,
+    "link": ""
+  }
+},
+{
+  "model": "picklists.responsibletype",
+  "pk": 2,
+  "fields": {
+    "name": "Public",
+    "description":"",
+    "sort_order": 2,
+    "link": ""
+  }
+},
+{
+  "model": "picklists.responsibletype",
+  "pk": 3,
+  "fields": {
+    "name": "Institutional",
+    "description":"",
+    "sort_order": 3,
+    "link": ""
+  }
 }
 ]

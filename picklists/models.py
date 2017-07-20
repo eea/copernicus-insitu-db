@@ -284,3 +284,13 @@ class DataFormat(models.Model):
 
     def __str__(self):
         return self.name
+
+
+class ResponsibleType(models.Model):
+    name = models.CharField(max_length=100)
+    description = models.TextField(blank=True)
+    sort_order = models.IntegerField()
+    link = models.CharField(max_length=100, blank=True)
+
+    def __str__(self):
+        return self.name

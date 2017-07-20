@@ -30,6 +30,7 @@ class DataResponsibleTests(base.FormCheckTestCase):
         self.details_required_fields = ['acronym', 'website', 'address', 'phone',
                                         'email', 'contact_person', 'responsible_type']
 
+        responsible_type = base.ResponsibleTypeFactory()
         self._DETAILS_DATA = {
             'acronym': 'acronym',
             'website': 'test website',
@@ -37,7 +38,7 @@ class DataResponsibleTests(base.FormCheckTestCase):
             'phone': 'test phone',
             'email': 'test email',
             'contact_person': 'test person',
-            'responsible_type': 1
+            'responsible_type': responsible_type.pk
         }
         user = base.UserFactory()
         self.client.force_login(user)
@@ -146,8 +147,11 @@ class DataResponsibleTests(base.FormCheckTestCase):
         self.assertIn(network_2, responsible.networks.all())
 
         self.assertEqual(responsible.details.count(), 1)
+        details_data.pop('responsible_type')
         for attr in details_data.keys():
             self.assertEqual(getattr(details, attr), data[attr])
+        self.assertEqual(getattr(details, 'responsible_type').pk,
+                         data['responsible_type'])
 
     def test_edit_non_network_responsible(self):
         data = self._DATA
@@ -166,8 +170,11 @@ class DataResponsibleTests(base.FormCheckTestCase):
         data['networks'] = []
         self.check_object(responsible, data)
         details.refresh_from_db()
+        details_data.pop('responsible_type')
         for attr in details_data.keys():
             self.assertEqual(getattr(details, attr), data[attr])
+        self.assertEqual(getattr(details, 'responsible_type').pk,
+                         data['responsible_type'])
 
     def test_delete_data_responsible_network(self):
         responsible = base.DataResponsibleFactory(is_network=False)
