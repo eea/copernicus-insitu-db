@@ -224,5 +224,9 @@ urlpatterns = [
 
     url(r'picklists$',
         views.PicklistsManager.as_view(),
-        name='picklists')
+        name='picklists'),
+
+    url(r'help$',
+        views.HelpPage.as_view(),
+        name='help')
 ]

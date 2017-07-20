@@ -1,0 +1,36 @@
+{% extends '_layout.html' %}
+{% load utils %}
+{% load static %}
+
+<head>
+  <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}"/>
+</head>
+
+{% block title %}Help{% endblock %}
+
+{% block content %}
+  {% for model, data in models.items %}
+    <div class="row" id="{{ model }}">
+      <h1>{{ data.nice_name|capfirst }}</h1>
+      <table class="table table-bordered">
+        <thead>
+          <tr>
+            {% for field in data.fields %}
+              <td><strong>{{ field }}</strong></td>
+            {% endfor %}
+          </tr>
+        </thead>
+        <tbody>
+          {% for entry in data.manager.all %}
+             <tr>
+              {% for field in data.fields %}
+                <td>{{ entry|get_field_nice_value:field }}</td>
+              {% endfor %}
+             </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  {% endfor %}
+
+{% endblock %}

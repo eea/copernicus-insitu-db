@@ -4,7 +4,8 @@
   <div class="container-fluid">
     <!-- Brand and toggle get grouped for better mobile display -->
     <div class="navbar-header">
-      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#main-menu"
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
+              data-target="#main-menu"
               aria-expanded="false">
         <span class="sr-only">Toggle navigation</span>
       </button>
@@ -44,13 +45,19 @@
         </ul>
       {% endif %}
       <ul class="pull-right nav navbar-nav">
-        {% if user.is_superuser %}
-          {% url 'admin:index' as admin %}
-          <li class="{% active admin %}">
-            <a href="{{ admin }}">Administration</a>
-          </li>
-        {% endif %}
         {% if user.is_authenticated %}
+          {% url 'help' as help %}
+          <li class="{% active help %}">
+            <a href="{{ help }}">
+              <span class="glyphicon glyphicon-question-sign"></span> Help
+            </a>
+          </li>
+          {% if user.is_superuser %}
+            {% url 'admin:index' as admin %}
+            <li class="{% active admin %}">
+              <a href="{{ admin }}">Administration</a>
+            </li>
+          {% endif %}
           {% url 'auth:logout' as logout %}
           <li>
             <a>Hello, {{ user.username }}</a>
