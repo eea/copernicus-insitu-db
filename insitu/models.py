@@ -326,6 +326,9 @@ class Data(SoftDeleteModel):
     quality = models.ForeignKey(pickmodels.Quality,
                                 on_delete=models.CASCADE,
                                 related_name='+')
+    dissemination = models.ForeignKey(pickmodels.Dissemination,
+                                      on_delete=models.CASCADE,
+                                      related_name='+')
     inspire_themes = models.ManyToManyField(pickmodels.InspireTheme)
     essential_variables = models.ManyToManyField(
         pickmodels.EssentialVariable
@@ -338,9 +341,6 @@ class Data(SoftDeleteModel):
                                       null=True)
     updated_at = models.DateTimeField(auto_now=True,
                                       null=True)
-    dissemination = models.ForeignKey(pickmodels.Dissemination,
-                                      on_delete=models.CASCADE,
-                                      related_name='+')
 
 
     def __str__(self):
