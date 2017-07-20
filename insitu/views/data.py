@@ -26,6 +26,7 @@ class DataList(ProtectedTemplateView):
         data_types = get_choices('name', model_cls=pickmodels.DataType)
         data_formats = get_choices('name', model_cls=pickmodels.DataFormat)
         qualities = get_choices('name', model_cls=pickmodels.Quality)
+        disseminations = get_choices('name', model_cls=pickmodels.Dissemination)
         context.update({
             'update_frequencies': update_frequencies,
             'coverages': coverages,
@@ -34,16 +35,17 @@ class DataList(ProtectedTemplateView):
             'data_types': data_types,
             'data_formats': data_formats,
             'qualities': qualities,
+            'disseminations': disseminations,
         })
         return context
 
 
 class DataListJson(ESDatatableView):
     columns = ['name', 'update_frequency', 'coverage', 'timeliness', 'policy',
-               'data_type', 'data_format', 'quality']
+               'data_type', 'data_format', 'quality', 'dissemination']
     order_columns = columns
     filters = ['update_frequency', 'coverage', 'timeliness', 'policy',
-               'data_type', 'data_format', 'quality']
+               'data_type', 'data_format', 'quality', 'dissemination']
     document = documents.DataDoc
     permission_classes = (IsAuthenticated, )
 

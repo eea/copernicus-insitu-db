@@ -88,6 +88,8 @@ class DataDoc(DocType):
     data_type = fields.KeywordField(attr='data_type.name')
     data_format = fields.KeywordField(attr='data_format.name')
     quality = fields.KeywordField(attr='quality.name')
+    dissemination = fields.KeywordField(attr='dissemination.name')
+
 
     def get_name_display(self):
         url = reverse('data:detail', kwargs={'pk': self.id})

@@ -326,6 +326,9 @@ class Data(SoftDeleteModel):
     quality = models.ForeignKey(pickmodels.Quality,
                                 on_delete=models.CASCADE,
                                 related_name='+')
+    dissemination = models.ForeignKey(pickmodels.Dissemination,
+                                      on_delete=models.CASCADE,
+                                      related_name='+')
     inspire_themes = models.ManyToManyField(pickmodels.InspireTheme)
     essential_variables = models.ManyToManyField(
         pickmodels.EssentialVariable

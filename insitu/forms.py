@@ -150,7 +150,7 @@ class DataForm(forms.ModelForm):
         fields = ['name', 'note', 'update_frequency', 'coverage',
                   'start_time_coverage', 'end_time_coverage', 'timeliness',
                   'policy', 'data_type', 'data_format', 'quality',
-                  'inspire_themes', 'essential_variables']
+                  'dissemination', 'inspire_themes', 'essential_variables']
 
 
 class DataRequirementBaseForm(forms.ModelForm):

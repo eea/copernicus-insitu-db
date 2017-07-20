@@ -11,11 +11,11 @@ class DataTests(base.FormCheckTestCase):
     fields = ['name', 'note', 'start_time_coverage', 'end_time_coverage']
     related_fields = ['update_frequency', 'coverage', 'timeliness',
                       'policy', 'data_type', 'data_format',
-                      'quality']
+                      'quality', 'dissemination']
     many_to_many_fields = ['inspire_themes', 'essential_variables']
     required_fields = ['name', 'update_frequency', 'coverage', 'timeliness',
                       'policy', 'data_type', 'data_format',
-                      'quality', 'inspire_themes']
+                      'quality', 'inspire_themes', 'dissemination']
 
     def setUp(self):
         super().setUp()
@@ -30,6 +30,7 @@ class DataTests(base.FormCheckTestCase):
         essential_variables = [base.EssentialVariableFactory(),
                                base.EssentialVariableFactory(),
                                base.EssentialVariableFactory()]
+        dissemination = base.DisseminationFactory()
 
         self._DATA = {
             'name': 'TEST data',
@@ -47,7 +48,8 @@ class DataTests(base.FormCheckTestCase):
             'end_time_coverage': datetime.date(day=1, month=1, year=2000),
             'essential_variables': [essential_variable.pk for
                                     essential_variable in
-                                    essential_variables]
+                                    essential_variables],
+            'dissemination': dissemination.pk
         }
         user = base.UserFactory()
         base.CopernicususResponsibleFactory(user=user)
