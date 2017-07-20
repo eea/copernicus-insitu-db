@@ -338,6 +338,9 @@ class Data(SoftDeleteModel):
                                       null=True)
     updated_at = models.DateTimeField(auto_now=True,
                                       null=True)
+    dissemination = models.ForeignKey(pickmodels.Dissemination,
+                                      on_delete=models.CASCADE,
+                                      related_name='+')
 
 
     def __str__(self):

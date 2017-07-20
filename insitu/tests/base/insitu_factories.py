@@ -116,6 +116,7 @@ class DataFactory(DjangoModelFactory):
     data_format = SubFactory(factories.DataFormatFactory)
     quality = SubFactory(factories.QualityFactory)
     inspire_themes = RelatedFactory(factories.InspireThemeFactory)
+    dissemination = SubFactory(factories.DisseminationFactory)
     # requirements = SubFactory(RequirementFactory)
     # responsibles = SubFactory(DataResponsibleFactory)
 
