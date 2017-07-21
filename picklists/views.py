@@ -7,21 +7,28 @@ from django.http import HttpResponse
 from openpyxl import Workbook, load_workbook
 from openpyxl.styles import Font
 
+from insitu import models as insitu_models
 from insitu.views import protected
 from picklists import models
 
 PICKLISTS = [
-    models.Barrier, models.ComplianceLevel, models.Coverage, models.Criticality,
-    models.Country, models.DataFormat, models.DataType, models.DefinitionLevel,
-    models.Dissemination, models.EssentialVariable, models.UpdateFrequency,
-    models.InspireTheme, models.ProductGroup, models.ProductStatus,
-    models.Relevance, models.RequirementGroup, models.ResponsibleType,
-    models.Quality, models.Timeliness, models.Policy
+    insitu_models.CopernicusService, insitu_models.EntrustedEntity,
+    insitu_models.Component, models.Barrier, models.ComplianceLevel,
+    models.Coverage, models.Criticality, models.Country, models.DataFormat,
+    models.DataType, models.DefinitionLevel, models.Dissemination,
+    models.EssentialVariable, models.UpdateFrequency, models.InspireTheme,
+    models.ProductGroup, models.ProductStatus, models.Relevance, models.RequirementGroup,
+    models.ResponsibleType, models.Quality, models.Timeliness, models.Policy
 ]
+
+SKIP_FIELDS = ['created_at', 'updated_at']
+
+RELATED_FIELDS = {'entrusted_entity': insitu_models.EntrustedEntity,
+                  'service': insitu_models.CopernicusService}
 
 
 class ExportPicklistsView(protected.ProtectedView):
-    permission_classes = (protected.IsSuperuser, )
+    permission_classes = (protected.IsSuperuser,)
 
     def get(self, request, *args, **kwargs):
         response = HttpResponse(content_type='application/ms-excel')
@@ -35,12 +42,13 @@ class ExportPicklistsView(protected.ProtectedView):
 
             # Header
             current_row = 1
-            columns = [field.name for field in model._meta.get_fields()
-                       if not isinstance(field, ForeignObjectRel)]
+            columns = [field for field in model._meta.get_fields()
+                       if not isinstance(field, ForeignObjectRel) and field.name not
+                       in SKIP_FIELDS]
             for col in columns:
                 cell = ws.cell(row=current_row,
                                column=columns.index(col) + 1,
-                               value=col)
+                               value=col.name)
                 cell.font = Font(bold=True)
 
             # Data
@@ -48,20 +56,23 @@ class ExportPicklistsView(protected.ProtectedView):
             for entry in data:
                 current_row += 1
                 for col in columns:
+                    value = getattr(entry, col.name)
+                    if col.related_model:
+                        value = value.pk
                     ws.cell(row=current_row,
                             column=columns.index(col) + 1,
-                            value=getattr(entry, col))
-            if 'id' == columns[0]:
-                ws.column_dimensions.group(start='A',
-                                           end='A',
-                                           hidden=True)
+                            value=value)
+            # if 'id' == columns[0]:
+            #     ws.column_dimensions.group(start='A',
+            #                                end='A',
+            #                                hidden=True)
             ws.freeze_panes = 'A2'
         wb.save(response)
         return response
 
 
 class ImportPicklistsView(protected.ProtectedView):
-    permission_classes = (protected.IsSuperuser, )
+    permission_classes = (protected.IsSuperuser,)
 
     def post(self, request, *args, **kwargs):
         if not 'workbook' in request.FILES:
@@ -70,9 +81,8 @@ class ImportPicklistsView(protected.ProtectedView):
         try:
             wb = load_workbook(workbook_file)
             models = {model._meta.model_name: model for model in PICKLISTS}
-
-            with transaction.atomic():
-                for sheet_name in wb.get_sheet_names():
+            for sheet_name in wb.get_sheet_names():
+                with transaction.atomic():
                     ws = wb.get_sheet_by_name(sheet_name)
                     model = models.get(sheet_name)
                     fields = [col[0].value for col in ws.iter_cols(min_row=1, max_row=1)]
@@ -81,9 +91,11 @@ class ImportPicklistsView(protected.ProtectedView):
                         data = {}
                         pk = row[0].value
                         for i in range(1, len(row)):
-                            data[fields[i]] = (
-                                row[i].value if row[i].value is not None else ''
-                            )
+                            field = fields[i]
+                            value = row[i].value if row[i].value is not None else ''
+                            if field in RELATED_FIELDS.keys():
+                                value = RELATED_FIELDS[field].objects.get(pk=value)
+                            data[field] = value
                         if pk is not None:
                             model.objects.filter(pk=pk).update(**data)
                         else:
