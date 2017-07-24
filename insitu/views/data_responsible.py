@@ -82,7 +82,6 @@ class DataResponsibleEditNetworkMembers(ProtectedUpdateView):
     permission_classes = (IsCopernicusServiceResponsible, )
     permission_denied_redirect = reverse_lazy('responsible:list')
 
-
     def get_success_url(self):
         return reverse('responsible:detail', kwargs={'pk': self.object.pk})
 
