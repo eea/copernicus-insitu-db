@@ -20,6 +20,12 @@
           data responsible</a>
         </span>
         <span class="pull-right">
+        <a class="btn btn-primary"
+           href="{% url 'responsible:edit_network_members' responsible.pk %}">
+          Edit network members
+        </a>
+        </span>
+        <span class="pull-right">
         <a class="btn btn-primary pull-right"
            href="{% url 'responsible:edit_network' responsible.pk %}">
           Edit data responsible
@@ -54,8 +60,8 @@
         <tr class="row">
           <th class="col-md-4 col-sm-6">Members</th>
           <td class="col-md-8 col-sm-6">
-            {% for member in responsible.members.all %}
-                <a href="{% url 'responsible:detail' member.pk %}">{{ member.name }}</a>
+            {% for network in responsible.networks.all %}
+                <a href="{% url 'responsible:detail' network.pk %}">{{ network.name }}</a>
             {% endfor %}
           </td>
         </tr>

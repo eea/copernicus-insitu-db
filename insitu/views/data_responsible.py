@@ -74,6 +74,19 @@ class DataResponsibleEditNetwork(ProtectedUpdateView):
         return reverse('responsible:detail', kwargs={'pk': self.object.pk})
 
 
+class DataResponsibleEditNetworkMembers(ProtectedUpdateView):
+    template_name = 'data_responsible/network/edit_members.html'
+    form_class = forms.DataResponsibleNetworkMembersForm
+    context_object_name = 'responsible'
+    model = models.DataResponsible
+    permission_classes = (IsCopernicusServiceResponsible, )
+    permission_denied_redirect = reverse_lazy('responsible:list')
+
+
+    def get_success_url(self):
+        return reverse('responsible:detail', kwargs={'pk': self.object.pk})
+
+
 class DataResponsibleDeleteNetwork(ProtectedDeleteView):
     template_name = 'data_responsible/network/delete.html'
     form_class = forms.DataResponsibleNetworkForm

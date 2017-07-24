@@ -186,6 +186,24 @@ class DataResponsibleNetworkForm(forms.ModelForm):
         fields = ['name', 'description', 'countries', 'is_network']
 
 
+class DataResponsibleNetworkMembersForm(forms.ModelForm):
+    networks = forms.ModelMultipleChoiceField(
+        required=False,
+        queryset=models.DataResponsible.objects.all(),
+        label='Networks')
+
+    class Meta:
+        model = models.DataResponsible
+        fields = ['networks']
+
+    def save(self, commit=True):
+        instance = super().save(commit)
+        if 'networks' in self.cleaned_data:
+            for network in self.cleaned_data['networks']:
+                instance.networks.add(network)
+        return instance
+
+
 class DataResponsibleDetailsForm(forms.ModelForm):
     data_responsible = forms.ModelChoiceField(
         widget=forms.HiddenInput,
