@@ -1,4 +1,5 @@
 from django import forms
+from django.db import transaction
 
 from insitu import models
 from insitu import signals
@@ -187,20 +188,27 @@ class DataResponsibleNetworkForm(forms.ModelForm):
 
 
 class DataResponsibleNetworkMembersForm(forms.ModelForm):
-    networks = forms.ModelMultipleChoiceField(
+    members = forms.ModelMultipleChoiceField(
         required=False,
         queryset=models.DataResponsible.objects.all(),
-        label='Networks')
+        label='Members')
 
     class Meta:
         model = models.DataResponsible
-        fields = ['networks']
+        fields = ['members']
+
+    def __init__(self, *args, **kwargs):
+       super(DataResponsibleNetworkMembersForm, self).__init__(*args, **kwargs)
+       self.initial['members'] = self.instance.members.all()
 
     def save(self, commit=True):
         instance = super().save(commit)
-        if 'networks' in self.cleaned_data:
-            for network in self.cleaned_data['networks']:
-                instance.networks.add(network)
+        if 'members' in self.cleaned_data:
+            with transaction.atomic():
+                instance.members.clear()
+
+                for member in self.cleaned_data['members']:
+                    instance.members.add(member)
         return instance
 
 
