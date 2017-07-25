@@ -95,10 +95,41 @@ class DataResponsibleTests(base.FormCheckTestCase):
         network = base.DataResponsibleFactory(is_network=True)
         resp = self.client.post(reverse('responsible:edit_network',
                                        kwargs={'pk': network.pk}),
-                               data)
+                                data)
         self.assertEqual(resp.status_code, 302)
         data['networks'] = []
         self.check_single_object(models.DataResponsible, data)
+
+    def test_edit_network_members_responsible(self):
+        data = self._DATA
+        network = base.DataResponsibleFactory(is_network=True)
+        resp = self.client.post(reverse('responsible:edit_network_members',
+                                        kwargs={'pk': network.pk}),
+                                data)
+        self.assertEqual(resp.status_code, 302)
+
+    def test_delete_network_members_responsible(self):
+        responsible = base.DataResponsibleFactory(is_network=True)
+        resp = self.client.post(
+            reverse('responsible:edit_network_members',
+                    kwargs={'pk': responsible.pk})
+        )
+        self.assertEqual(resp.status_code, 302)
+
+        network_1 = base.DataResponsibleFactory(id=111,
+                                                name='test network',
+                                                is_network=True,
+                                                countries=[
+                                                    base.CountryFactory(code="T1").pk])
+        network_2 = base.DataResponsibleFactory(id=112,
+                                                name='test network 2',
+                                                is_network=True,
+                                                countries=[
+                                                    base.CountryFactory(code="T2").pk],
+                                                networks=[network_1.pk])
+        network_2.networks.clear()
+        self.assertFalse(network_2.networks.exists())
+
 
     def test_add_non_network_responsible_required_fields(self):
         data = {}

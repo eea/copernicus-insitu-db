@@ -198,8 +198,8 @@ class DataResponsibleNetworkMembersForm(forms.ModelForm):
         fields = ['members']
 
     def __init__(self, *args, **kwargs):
-       super(DataResponsibleNetworkMembersForm, self).__init__(*args, **kwargs)
-       self.initial['members'] = self.instance.members.all()
+        super(DataResponsibleNetworkMembersForm, self).__init__(*args, **kwargs)
+        self.initial['members'] = self.instance.members.all()
 
     def save(self, commit=True):
         instance = super().save(commit)
