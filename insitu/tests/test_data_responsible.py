@@ -131,6 +131,20 @@ class DataResponsibleTests(base.FormCheckTestCase):
         self.assertEqual(network.members.get(id=member_2.pk).name, member_2.name)
         self.assertEqual(network.members.get(id=member_3.pk).name, member_3.name)
 
+    def test_edit_network_members_validation_responsible(self):
+        network = base.DataResponsibleFactory(id=1,
+                                              is_network=True)
+        data = dict()
+        data['members'] = [1]
+        resp = self.client.post(reverse('responsible:edit_network_members',
+                                         kwargs={'pk': network.pk}),
+                                data)
+
+        network.refresh_from_db()
+
+        self.assertEqual(resp.status_code, 200)
+        self.assertEqual(resp.context['form'].errors['__all__'][0], 'Members should be different than the network.')
+
     def test_delete_network_members_responsible(self):
         member_1 = base.DataResponsibleFactory(id=1,
                                                name='test member 1',
