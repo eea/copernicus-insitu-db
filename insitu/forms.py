@@ -201,6 +201,14 @@ class DataResponsibleNetworkMembersForm(forms.ModelForm):
         super(DataResponsibleNetworkMembersForm, self).__init__(*args, **kwargs)
         self.initial['members'] = self.instance.members.all()
 
+    def clean_members(self):
+        instance = self.instance
+        clean_members = self.cleaned_data['members']
+        for member in clean_members:
+            if instance.pk == member.pk:
+                self.add_error(None, 'Members should be different than the network.')
+        return clean_members
+
     def save(self, commit=True):
         instance = self.instance
         if 'members' in self.cleaned_data:
@@ -210,7 +218,6 @@ class DataResponsibleNetworkMembersForm(forms.ModelForm):
                 for member in self.cleaned_data['members']:
                     instance.members.add(member)
         return instance
-
 
 class DataResponsibleDetailsForm(forms.ModelForm):
     data_responsible = forms.ModelChoiceField(
