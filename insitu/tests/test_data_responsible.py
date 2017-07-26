@@ -101,35 +101,61 @@ class DataResponsibleTests(base.FormCheckTestCase):
         self.check_single_object(models.DataResponsible, data)
 
     def test_edit_network_members_responsible(self):
-        data = self._DATA
+        member_1 = base.DataResponsibleFactory(id=1,
+                                               name='test member 1',
+                                               is_network=True,
+                                               countries=[
+                                                    base.CountryFactory(code="T1").pk])
+        member_2 = base.DataResponsibleFactory(id=2,
+                                               name='test member 2',
+                                               is_network=False,
+                                               countries=[
+                                                    base.CountryFactory(code="T2").pk])
+        member_3 = base.DataResponsibleFactory(id=3,
+                                               name='test member 3',
+                                               is_network=True,
+                                               countries=[
+                                                    base.CountryFactory(code="T3").pk])
         network = base.DataResponsibleFactory(is_network=True)
+        data = dict()
+        data['members'] = [member_1.pk, member_2.pk, member_3.pk]
         resp = self.client.post(reverse('responsible:edit_network_members',
                                         kwargs={'pk': network.pk}),
                                 data)
+
+        network.refresh_from_db()
+
         self.assertEqual(resp.status_code, 302)
+        self.assertEqual(len(network.members.all()), 3)
+        self.assertEqual(network.members.get(id=1).name, 'test member 1')
+        self.assertEqual(network.members.get(id=2).name, 'test member 2')
+        self.assertEqual(network.members.get(id=3).name, 'test member 3')
 
     def test_delete_network_members_responsible(self):
-        responsible = base.DataResponsibleFactory(is_network=True)
-        resp = self.client.post(
-            reverse('responsible:edit_network_members',
-                    kwargs={'pk': responsible.pk})
-        )
+        member_1 = base.DataResponsibleFactory(id=1,
+                                               name='test member 1',
+                                               is_network=True,
+                                               countries=[
+                                                   base.CountryFactory(code="T1").pk])
+        member_2 = base.DataResponsibleFactory(id=2,
+                                               name='test member 2',
+                                               is_network=False,
+                                               countries=[
+                                                   base.CountryFactory(code="T2").pk])
+        network = base.DataResponsibleFactory(id=3,
+                                              is_network=True,
+                                              members=[member_1.pk, member_2.pk])
+        data = dict()
+        data['members'] = [member_1.pk]
+        resp = self.client.post(reverse('responsible:edit_network_members',
+                                        kwargs={'pk': network.pk}),
+                                data)
+
+        network.refresh_from_db()
+
         self.assertEqual(resp.status_code, 302)
-
-        network_1 = base.DataResponsibleFactory(id=111,
-                                                name='test network',
-                                                is_network=True,
-                                                countries=[
-                                                    base.CountryFactory(code="T1").pk])
-        network_2 = base.DataResponsibleFactory(id=112,
-                                                name='test network 2',
-                                                is_network=True,
-                                                countries=[
-                                                    base.CountryFactory(code="T2").pk],
-                                                networks=[network_1.pk])
-        network_2.networks.clear()
-        self.assertFalse(network_2.networks.exists())
-
+        self.assertEqual(len(network.members.all()), 1)
+        self.assertEqual(network.members.get(id=1).name, 'test member 1')
 
     def test_add_non_network_responsible_required_fields(self):
         data = {}

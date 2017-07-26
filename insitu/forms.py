@@ -202,7 +202,7 @@ class DataResponsibleNetworkMembersForm(forms.ModelForm):
         self.initial['members'] = self.instance.members.all()
 
     def save(self, commit=True):
-        instance = super().save(commit)
+        instance = self.instance
         if 'members' in self.cleaned_data:
             with transaction.atomic():
                 instance.members.clear()
