@@ -8,7 +8,6 @@ RUN runDeps="vim netcat libpq-dev" \
  && apt-get install -y --no-install-recommends $runDeps \
  && rm -vrf /var/lib/apt/lists/*
 
-
 RUN mkdir -p $PROJ_DIR
 COPY . $PROJ_DIR
 WORKDIR $PROJ_DIR

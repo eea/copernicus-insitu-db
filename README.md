@@ -1,72 +1,100 @@
-# copernicus-insitu-db
 Copernicus In Situ Component Information System
+===============================================
 
-## Prerequisites
+The Copernicus In-Situ Coordination (GISC) project aimed at linking in-situ data providers and Copernicus service providers to ensure access to in-situ data for Copernicus services.
 
-* Install [Docker](https://www.docker.com)
-* Install [Docker Compose](https://docs.docker.com/compose/)
+The application provides up-to-date information across the
+Copernicus services on in situ data requirements (current and expected), data used, gaps, data providers, access arrangements, and partnerships.
 
-## Installation
+[![Travis](https://travis-ci.org/eea/copernicus-insitu-db.svg?branch=master)](https://travis-ci.org/eea/copernicus-insitu-db)
+[![Coverage](https://coveralls.io/github/eea/copernicus-insitu-db/badge.svg?branch=master)](https://coveralls.io/github/eea/copernicus-insitu-db?branch=master)
+[![Docker]( https://dockerbuildbadges.quelltext.eu/status.svg?organization=eeacms&repository=copernicus-insitu-db)](https://hub.docker.com/r/eeacms/copernicus-insitu-db/builds)
 
-### Production
 
-TO DO
+### Prerequisites
 
-### Development
+* Install [Docker](https://docs.docker.com/engine/installation/)
+* Install [Docker Compose](https://docs.docker.com/compose/install/)
 
-1. Clone the repository:
 
-  ```
-  $ git clone https://github.com/eea/copernicus-insitu-db.git
-  $ cd copernicus-insitu-db
-  ```
+### Installing the application
 
-2. Create a local build:
+1. Get the source code:
 
-  ```
-  $ docker build -t insitu:devel .
-  ```
+        $ git clone https://github.com/eea/copernicus-insitu-db.git
+        $ cd copernicus-insitu-db
 
-3. Create and fill in the configuration files:
+2. Customize env files:
 
-  ```
-  $ cd env/
-  $ cp app.env.example app.env
-  $ cp postgres.env.example postgres.env
-  ```
+        $ cp docker/app.env.example docker/app.env
+        $ vim docker/app.env
+        $ cp docker/postgres.env.example docker/postgres.env
+        $ vim docker/postgres.env
 
-4. Create a `docker-compose.yml` file similar to [this example](https://gist.github.com/iuliachiriac/638e7f33b19368133a3fb6d815f44bac).
+3. Start application stack:
 
-5. Start stack:
+        $ docker-compose up -d
+        $ docker-compose logs
 
-  ```
-  $ docker-compose up -d
-  ```
+4. Create a superuser:
 
-6. Run migrations, create elasticsearch index, and start the development server:
+        $ docker exec -it insitu.app bash
+        $ ./manage.py createsuperuser
 
-  ```
-  $ docker exec -it insitu_app bash
-  $ pip install -r requirements-dev.txt
-  $ ./manage.py migrate
-  $ ./manage.py loaddata picklists
-  $ ./manage.py search_index --rebuild
-  $ ./manage.py runserver 0.0.0.0:8000
-  ```
+5. Run migrations, create elasticsearch index, and start the development server:
 
-7. Visit [http://localhost:8000/](http://localhost:8000/) to see if the app is up and running.
+        $ docker exec -it insitu.app bash
+        $ pip install -r requirements-dev.txt
+        $ ./manage.py migrate
+        $ ./manage.py loaddata picklists
+        $ ./manage.py search_index --rebuild
+        $ ./manage.py runserver 0.0.0.0:8000
 
-### Running tests
+6. Run tests:
 
-1. Run tests:
+        $ docker exec -it insitu.app bash
+        # pip install -r requirements-dev.txt
+        $ ./manage.py test --settings=copernicus.testsettings
 
-    ```
-    $ ./manage.py test --settings=copernicus.testsettings
-    ```
+7. Check coverage:
 
-2. Check coverage:
+        $ docker exec -it insitu.app bash
+        $ coverage run --source='.' ./manage.py test --settings=copernicus.testsettings
+        $ coverage html
 
-    ```
-    $ coverage run --source='.' ./manage.py test --settings=copernicus.testsettings
-    $ coverage html
-    ```
+8. See it in action: [http://localhost:8000](http://localhost:8000)
+
+### Upgrading the application
+
+1. Get the latest version of source code:
+
+        $ cd copernicus-insitu-db
+        $ git pull origin master
+
+2. Update the application stack, all services should be "Up":
+
+        $ docker-compose pull
+        $ docker-compose up -d
+        $ docker-compose ps
+
+3. See it in action: [http://localhost:8000](http://localhost:8000)
+
+### Debugging
+
+Customize docker orchestration for local development:
+
+        $ cp docker-compose.override.yml.example docker-compose.override.yml
+
+* Please make sure that `DEBUG=True` in `app.env` file.
+
+* Update docker-compose.override.yml file `app` section with the following so that `docker-entrypoint.sh`
+is not executed:
+
+        entrypoint: ["/usr/bin/tail", "-f", "/dev/null"]
+
+* Attach to docker container and start the server in debug mode:
+
+        $ docker exec -it insitu.app bash
+        # ./manage.py runserver 0.0.0.0:8000
+
+* See it in action: [http://localhost:8000](http://localhost:8000)
