@@ -7,7 +7,7 @@ The application provides up-to-date information across the
 Copernicus services on in situ data requirements (current and expected), data used, gaps, data providers, access arrangements, and partnerships.
 
 [![Travis](https://travis-ci.org/eea/copernicus-insitu-db.svg?branch=master)](https://travis-ci.org/eea/copernicus-insitu-db)
-[![Coverage](https://coveralls.io/github/eea/copernicus-insitu-db/badge.svg?branch=master)](https://coveralls.io/github/eea/copernicus-insitu-db?branch=master)
+[![Coverage](https://coveralls.io/repos/github/eea/copernicus-insitu-db/badge.svg?branch=master)](https://coveralls.io/github/eea/copernicus-insitu-db?branch=master)
 [![Docker]( https://dockerbuildbadges.quelltext.eu/status.svg?organization=eeacms&repository=copernicus-insitu-db)](https://hub.docker.com/r/eeacms/copernicus-insitu-db/builds)
 
 
