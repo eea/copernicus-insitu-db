@@ -95,10 +95,81 @@ class DataResponsibleTests(base.FormCheckTestCase):
         network = base.DataResponsibleFactory(is_network=True)
         resp = self.client.post(reverse('responsible:edit_network',
                                        kwargs={'pk': network.pk}),
-                               data)
+                                data)
         self.assertEqual(resp.status_code, 302)
         data['networks'] = []
         self.check_single_object(models.DataResponsible, data)
+
+    def test_edit_network_members_responsible(self):
+        member_1 = base.DataResponsibleFactory(id=1,
+                                               name='test member 1',
+                                               is_network=True,
+                                               countries=[
+                                                    base.CountryFactory(code="T1").pk])
+        member_2 = base.DataResponsibleFactory(id=2,
+                                               name='test member 2',
+                                               is_network=False,
+                                               countries=[
+                                                    base.CountryFactory(code="T2").pk])
+        member_3 = base.DataResponsibleFactory(id=3,
+                                               name='test member 3',
+                                               is_network=True,
+                                               countries=[
+                                                    base.CountryFactory(code="T3").pk])
+        network = base.DataResponsibleFactory(is_network=True)
+        data = dict()
+        data['members'] = [member_1.pk, member_2.pk, member_3.pk]
+        resp = self.client.post(reverse('responsible:edit_network_members',
+                                        kwargs={'pk': network.pk}),
+                                data)
+
+        network.refresh_from_db()
+
+        self.assertEqual(resp.status_code, 302)
+        self.assertEqual(network.members.count(), 3)
+        self.assertEqual(network.members.get(id=member_1.pk).name, member_1.name)
+        self.assertEqual(network.members.get(id=member_2.pk).name, member_2.name)
+        self.assertEqual(network.members.get(id=member_3.pk).name, member_3.name)
+
+    def test_edit_network_members_validation_responsible(self):
+        network = base.DataResponsibleFactory(id=1,
+                                              is_network=True)
+        data = dict()
+        data['members'] = [1]
+        resp = self.client.post(reverse('responsible:edit_network_members',
+                                         kwargs={'pk': network.pk}),
+                                data)
+
+        network.refresh_from_db()
+
+        self.assertEqual(resp.status_code, 200)
+        self.assertEqual(resp.context['form'].errors['__all__'][0], 'Members should be different than the network.')
+
+    def test_delete_network_members_responsible(self):
+        member_1 = base.DataResponsibleFactory(id=1,
+                                               name='test member 1',
+                                               is_network=True,
+                                               countries=[
+                                                   base.CountryFactory(code="T1").pk])
+        member_2 = base.DataResponsibleFactory(id=2,
+                                               name='test member 2',
+                                               is_network=False,
+                                               countries=[
+                                                   base.CountryFactory(code="T2").pk])
+        network = base.DataResponsibleFactory(id=3,
+                                              is_network=True,
+                                              members=[member_1.pk, member_2.pk])
+        data = dict()
+        data['members'] = [member_1.pk]
+        resp = self.client.post(reverse('responsible:edit_network_members',
+                                        kwargs={'pk': network.pk}),
+                                data)
+
+        network.refresh_from_db()
+
+        self.assertEqual(resp.status_code, 302)
+        self.assertEqual(network.members.count(), 1)
+        self.assertEqual(network.members.get(id=member_1.pk).name, member_1.name)
 
     def test_add_non_network_responsible_required_fields(self):
         data = {}

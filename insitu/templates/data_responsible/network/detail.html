@@ -20,6 +20,12 @@
           data responsible</a>
         </span>
         <span class="pull-right">
+        <a class="btn btn-primary"
+           href="{% url 'responsible:edit_network_members' responsible.pk %}">
+          Edit network members
+        </a>
+        </span>
+        <span class="pull-right">
         <a class="btn btn-primary pull-right"
            href="{% url 'responsible:edit_network' responsible.pk %}">
           Edit data responsible

@@ -168,6 +168,10 @@ responsible_patterns = [
         views.DataResponsibleEditNetwork.as_view(),
         name='edit_network'),
 
+    url(r'^(?P<pk>[0-9]+)/edit-network-members/$',
+        views.DataResponsibleEditNetworkMembers.as_view(),
+        name='edit_network_members'),
+
     url(r'^(?P<pk>[0-9]+)/delete-network/$',
         views.DataResponsibleDeleteNetwork.as_view(),
         name='delete_network'),
