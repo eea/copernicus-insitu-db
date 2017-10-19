@@ -19,13 +19,17 @@ class DataList(ProtectedTemplateView):
 
     def get_context_data(self):
         context = super(DataList, self).get_context_data()
-        update_frequencies = get_choices('name', model_cls=pickmodels.UpdateFrequency)
+        update_frequencies = get_choices('name',
+                                         model_cls=pickmodels.UpdateFrequency)
         coverages = get_choices('name', model_cls=pickmodels.Coverage)
         timelinesses = get_choices('name', model_cls=pickmodels.Timeliness)
         policies = get_choices('name', model_cls=pickmodels.Policy)
         data_types = get_choices('name', model_cls=pickmodels.DataType)
         data_formats = get_choices('name', model_cls=pickmodels.DataFormat)
-        qualities = get_choices('name', model_cls=pickmodels.Quality)
+        quality_control_procedures = get_choices(
+            'name',
+            model_cls=pickmodels.QualityControlProcedure
+        )
         disseminations = get_choices('name', model_cls=pickmodels.Dissemination)
         context.update({
             'update_frequencies': update_frequencies,
@@ -34,7 +38,7 @@ class DataList(ProtectedTemplateView):
             'policies': policies,
             'data_types': data_types,
             'data_formats': data_formats,
-            'qualities': qualities,
+            'quality_control_procedures': quality_control_procedures,
             'disseminations': disseminations,
         })
         return context
@@ -42,10 +46,12 @@ class DataList(ProtectedTemplateView):
 
 class DataListJson(ESDatatableView):
     columns = ['name', 'update_frequency', 'coverage', 'timeliness', 'policy',
-               'data_type', 'data_format', 'quality', 'dissemination']
+               'data_type', 'data_format', 'quality_control_procedure',
+               'dissemination']
     order_columns = columns
     filters = ['update_frequency', 'coverage', 'timeliness', 'policy',
-               'data_type', 'data_format', 'quality', 'dissemination']
+               'data_type', 'data_format', 'quality_control_procedure',
+               'dissemination']
     document = documents.DataDoc
     permission_classes = (IsAuthenticated, )
 

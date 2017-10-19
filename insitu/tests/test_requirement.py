@@ -7,8 +7,9 @@ from insitu.tests import base
 
 class RequirementTests(base.FormCheckTestCase):
     fields = ['name', 'note']
-    related_fields = ['dissemination', 'quality']
-    required_fields = ['name', 'dissemination', 'quality', 'group']
+    related_fields = ['dissemination', 'quality_control_procedure']
+    required_fields = ['name', 'dissemination', 'quality_control_procedure',
+                       'group']
     related_entities_updated = ['uncertainty', 'update_frequency', 'timeliness',
                                 'horizontal_resolution', 'vertical_resolution']
     related_entities_fields = ['threshold', 'breakthrough', 'goal']
@@ -16,7 +17,7 @@ class RequirementTests(base.FormCheckTestCase):
     def setUp(self):
         super().setUp()
         dissemination = base.DisseminationFactory()
-        quality = base.QualityFactory()
+        quality_control_procedure = base.QualityControlProcedureFactory()
         group = base.RequirementGroupFactory()
         responsible_user = base.UserFactory()
         base.CopernicususResponsibleFactory(user=responsible_user)
@@ -26,7 +27,7 @@ class RequirementTests(base.FormCheckTestCase):
             'name': 'TEST requirement',
             'note': 'TEST note',
             'dissemination': dissemination.pk,
-            'quality': quality.pk,
+            'quality_control_procedure': quality_control_procedure.pk,
             'group': group.pk,
         }
 

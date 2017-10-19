@@ -3,8 +3,9 @@ from django.db import transaction
 
 from insitu import models
 from insitu import signals
-from picklists.models import Dissemination, Quality, RequirementGroup
-
+from picklists.models import (
+    Dissemination, QualityControlProcedure, RequirementGroup
+)
 
 class ProductForm(forms.ModelForm):
     class Meta:
@@ -69,7 +70,8 @@ class RequirementForm(forms.ModelForm):
 
     class Meta:
         model = models.Requirement
-        fields = ['name', 'note', 'dissemination', 'quality', 'group']
+        fields = ['name', 'note', 'dissemination',
+                  'quality_control_procedure', 'group']
 
     def _create_metric(self, threshold, breakthrough, goal):
         return models.Metric.objects.create(
@@ -117,7 +119,10 @@ class RequirementForm(forms.ModelForm):
             'name': self.data['name'],
             'note': self.data['note'],
             'dissemination': Dissemination.objects.get(id=self.data['dissemination']),
-            'quality': Quality.objects.get(id=self.data['quality']),
+            'quality_control_procedure':
+                QualityControlProcedure.objects.get(
+                    id=self.data['quality_control_procedure']
+                ),
             'group': RequirementGroup.objects.get(id=self.data['group']),
         }
 
@@ -150,8 +155,9 @@ class DataForm(forms.ModelForm):
         auto_created = True
         fields = ['name', 'note', 'update_frequency', 'coverage',
                   'start_time_coverage', 'end_time_coverage', 'timeliness',
-                  'policy', 'data_type', 'data_format', 'quality',
-                  'dissemination', 'inspire_themes', 'essential_variables']
+                  'policy', 'data_type', 'data_format',
+                  'quality_control_procedure', 'dissemination',
+                  'inspire_themes', 'essential_variables']
 
 
 class DataRequirementBaseForm(forms.ModelForm):

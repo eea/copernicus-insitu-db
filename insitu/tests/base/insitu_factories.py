@@ -48,7 +48,9 @@ class ComponentFactory(DjangoModelFactory):
 class RequirementFactory(DjangoModelFactory):
     name = 'Test requirement'
     dissemination = SubFactory(factories.DisseminationFactory)
-    quality = SubFactory(factories.QualityFactory)
+    quality_control_procedure = SubFactory(
+        factories.QualityControlProcedureFactory
+    )
     group = SubFactory(factories.RequirementGroupFactory)
     uncertainty = SubFactory(MetricFactory)
     update_frequency = SubFactory(MetricFactory)
@@ -114,7 +116,9 @@ class DataFactory(DjangoModelFactory):
     policy = SubFactory(factories.PolicyFactory)
     data_type = SubFactory(factories.DataTypeFactory)
     data_format = SubFactory(factories.DataFormatFactory)
-    quality = SubFactory(factories.QualityFactory)
+    quality_control_procedure = SubFactory(
+        factories.QualityControlProcedureFactory
+    )
     inspire_themes = RelatedFactory(factories.InspireThemeFactory)
     dissemination = SubFactory(factories.DisseminationFactory)
     # requirements = SubFactory(RequirementFactory)

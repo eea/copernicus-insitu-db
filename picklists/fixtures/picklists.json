@@ -3442,7 +3442,7 @@
   }
 },
 {
-  "model": "picklists.quality",
+  "model": "picklists.qualitycontrolprocedure",
   "pk": 1,
   "fields": {
     "name": "Manual",
@@ -3452,7 +3452,7 @@
   }
 },
 {
-  "model": "picklists.quality",
+  "model": "picklists.qualitycontrolprocedure",
   "pk": 2,
   "fields": {
     "name": "Automatic",
@@ -3462,7 +3462,7 @@
   }
 },
 {
-  "model": "picklists.quality",
+  "model": "picklists.qualitycontrolprocedure",
   "pk": 3,
   "fields": {
     "name": "Extended",
@@ -3472,7 +3472,7 @@
   }
 },
 {
-  "model": "picklists.quality",
+  "model": "picklists.qualitycontrolprocedure",
   "pk": 4,
   "fields": {
     "name": "N/A",
@@ -3482,7 +3482,7 @@
   }
 },
 {
-  "model": "picklists.quality",
+  "model": "picklists.qualitycontrolprocedure",
   "pk": 5,
   "fields": {
     "name": "TBD",

@@ -45,7 +45,9 @@ class ProductDoc(DocType):
 class RequirementDoc(DocType):
     name = fields.KeywordField()
     dissemination = fields.KeywordField(attr='dissemination.name')
-    quality = fields.KeywordField(attr='quality.name')
+    quality_control_procedure = fields.KeywordField(
+        attr='quality_control_procedure.name'
+    )
     group = fields.KeywordField(attr='group.name')
     uncertainty = fields.KeywordField(attr='uncertainty.to_elastic_search_format')
     update_frequency = fields.KeywordField(attr='update_frequency.to_elastic_search_format')
@@ -87,7 +89,9 @@ class DataDoc(DocType):
     policy = fields.KeywordField(attr='policy.name')
     data_type = fields.KeywordField(attr='data_type.name')
     data_format = fields.KeywordField(attr='data_format.name')
-    quality = fields.KeywordField(attr='quality.name')
+    quality_control_procedure = fields.KeywordField(
+        attr='quality_control_procedure.name'
+    )
     dissemination = fields.KeywordField(attr='dissemination.name')
 
 

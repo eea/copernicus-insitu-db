@@ -17,8 +17,9 @@ PICKLISTS = [
     models.Coverage, models.Criticality, models.Country, models.DataFormat,
     models.DataType, models.DefinitionLevel, models.Dissemination,
     models.EssentialVariable, models.UpdateFrequency, models.InspireTheme,
-    models.ProductGroup, models.ProductStatus, models.Relevance, models.RequirementGroup,
-    models.ResponsibleType, models.Quality, models.Timeliness, models.Policy
+    models.ProductGroup, models.ProductStatus, models.Relevance,
+    models.RequirementGroup, models.ResponsibleType,
+    models.QualityControlProcedure, models.Timeliness, models.Policy
 ]
 
 SKIP_FIELDS = ['created_at', 'updated_at']

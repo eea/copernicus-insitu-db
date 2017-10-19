@@ -108,13 +108,13 @@ class CoverageFactory(DjangoModelFactory):
         model = models.Coverage
 
 
-class QualityFactory(DjangoModelFactory):
+class QualityControlProcedureFactory(DjangoModelFactory):
     name = 'Test Quality'
     sort_order = 0
     link = ''
 
     class Meta:
-        model = models.Quality
+        model = models.QualityControlProcedure
 
 
 class ComplianceLevelFactory(DjangoModelFactory):

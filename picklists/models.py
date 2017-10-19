@@ -191,7 +191,7 @@ class Coverage(models.Model):
         return self.name
 
 
-class Quality(models.Model):
+class QualityControlProcedure(models.Model):
     name = models.CharField(max_length=100)
     description = models.TextField(blank=True)
     sort_order = models.IntegerField()
@@ -199,7 +199,7 @@ class Quality(models.Model):
 
     class Meta:
         ordering = ['sort_order']
-        verbose_name_plural = 'quality'
+        verbose_name_plural = 'quality_control_procedure'
 
     def __str__(self):
         return self.name

@@ -142,9 +142,11 @@ class Requirement(SoftDeleteModel):
     dissemination = models.ForeignKey(pickmodels.Dissemination,
                                       on_delete=models.CASCADE,
                                       related_name='+')
-    quality = models.ForeignKey(pickmodels.Quality,
-                                on_delete=models.CASCADE,
-                                related_name='+')
+    quality_control_procedure = models.ForeignKey(
+        pickmodels.QualityControlProcedure,
+        on_delete=models.CASCADE,
+        related_name='+'
+    )
     group = models.ForeignKey(pickmodels.RequirementGroup,
                               on_delete=models.CASCADE)
     uncertainty = models.ForeignKey(Metric,
@@ -317,9 +319,11 @@ class Data(SoftDeleteModel):
     data_format = models.ForeignKey(pickmodels.DataFormat,
                                     on_delete=models.CASCADE,
                                     related_name='+')
-    quality = models.ForeignKey(pickmodels.Quality,
-                                on_delete=models.CASCADE,
-                                related_name='+')
+    quality_control_procedure = models.ForeignKey(
+        pickmodels.QualityControlProcedure,
+        on_delete=models.CASCADE,
+        related_name='+'
+    )
     dissemination = models.ForeignKey(pickmodels.Dissemination,
                                       on_delete=models.CASCADE,
                                       related_name='+')
