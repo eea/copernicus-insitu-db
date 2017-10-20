@@ -86,10 +86,10 @@ class Metric(models.Model):
 
 
 class CopernicusService(models.Model):
-    acronym = models.CharField(max_length=10)
+    acronym = models.CharField(max_length=10, null=True)
     name = models.CharField(max_length=100)
-    description = models.TextField()
-    website = models.CharField(max_length=255)
+    description = models.TextField(null=True)
+    website = models.CharField(max_length=255, null=True)
     created_at = models.DateTimeField(auto_now_add=True,
                                       null=True)
     updated_at = models.DateTimeField(auto_now=True,
@@ -100,9 +100,9 @@ class CopernicusService(models.Model):
 
 
 class EntrustedEntity(models.Model):
-    acronym = models.CharField(max_length=10)
+    acronym = models.CharField(max_length=10, blank=True)
     name = models.CharField(max_length=100)
-    website = models.CharField(max_length=255)
+    website = models.CharField(max_length=255, blank=True)
     created_at = models.DateTimeField(auto_now_add=True,
                                       null=True)
     updated_at = models.DateTimeField(auto_now=True,
@@ -116,7 +116,7 @@ class EntrustedEntity(models.Model):
 
 
 class Component(models.Model):
-    acronym = models.CharField(max_length=10)
+    acronym = models.CharField(max_length=10, blank=True)
     name = models.CharField(max_length=100)
     service = models.ForeignKey(CopernicusService, on_delete=models.CASCADE)
     entrusted_entity = models.ForeignKey(EntrustedEntity,
@@ -179,7 +179,7 @@ class Product(SoftDeleteModel):
     ]
     elastic_delete_signal = signals.product_deleted
 
-    acronym = models.CharField(max_length=10)
+    acronym = models.CharField(max_length=10, blank=True)
     name = models.CharField(max_length=100)
     description = models.TextField(blank=True)
     note = models.TextField(blank=True)
@@ -261,12 +261,12 @@ class DataResponsible(SoftDeleteModel):
 
 
 class DataResponsibleDetails(SoftDeleteModel):
-    acronym = models.CharField(max_length=10)
-    website = models.CharField(max_length=255)
-    address = models.TextField()
-    phone = models.CharField(max_length=20)
-    email = models.CharField(max_length=100)
-    contact_person = models.CharField(max_length=100)
+    acronym = models.CharField(max_length=10, blank=True)
+    website = models.CharField(max_length=255, blank=True)
+    address = models.TextField(blank=True)
+    phone = models.CharField(max_length=20, blank=True)
+    email = models.CharField(max_length=100, blank=True)
+    contact_person = models.CharField(max_length=100, blank=True)
     responsible_type = models.ForeignKey(pickmodels.ResponsibleType,
                                          on_delete=models.CASCADE,
                                          related_name='+')
