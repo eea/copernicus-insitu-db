@@ -27,8 +27,7 @@ class DataResponsibleTests(base.FormCheckTestCase):
         self.details_fields = ['acronym', 'website', 'address', 'phone', 'email',
                                'contact_person', 'responsible_type', 'data_responsible']
 
-        self.details_required_fields = ['acronym', 'website', 'address', 'phone',
-                                        'email', 'contact_person', 'responsible_type']
+        self.details_required_fields = ['responsible_type']
 
         responsible_type = base.ResponsibleTypeFactory()
         self._DETAILS_DATA = {
