@@ -162,9 +162,9 @@ class CountryResponsible(DjangoModelFactory):
         model = models.CountryResponsible
 
 
-class DataProviderManager(DjangoModelFactory):
+class DataProviderUserManager(DjangoModelFactory):
     user = SubFactory(UserFactory)
     responsible = SubFactory(DataResponsibleFactory)
 
     class Meta:
-        model = models.DataProvider
+        model = models.DataProviderUser

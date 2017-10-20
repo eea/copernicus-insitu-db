@@ -23,7 +23,7 @@ class CopernicusResponsibleAdmin(admin.ModelAdmin):
     list_display = ('user', 'service')
 
 
-class DataProviderAdmin(admin.ModelAdmin):
+class DataProviderUserAdmin(admin.ModelAdmin):
     search_fields = ['user__username', 'responsible__name']
     list_display = ('user', 'responsible')
 
@@ -47,5 +47,5 @@ admin.site.register(models.DataResponsibleRelation)
 admin.site.register(models.Metric)
 
 admin.site.register(models.CopernicusResponsible, CopernicusResponsibleAdmin)
-admin.site.register(models.DataProvider, DataProviderAdmin)
+admin.site.register(models.DataProviderUser, DataProviderUserAdmin)
 admin.site.register(models.CountryResponsible, CountryResponsible)

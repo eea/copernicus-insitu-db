@@ -416,11 +416,11 @@ class CountryResponsible(models.Model):
                                       null=True)
 
 
-class DataProviderManager(_WithRelatedUserManager):
+class DataProviderUserManager(_WithRelatedUserManager):
     pass
 
 
-class DataProvider(models.Model):
+class DataProviderUser(models.Model):
     user = models.OneToOneField(User,
                                 related_name='data_resp')
     responsible = models.ForeignKey(DataResponsible,
