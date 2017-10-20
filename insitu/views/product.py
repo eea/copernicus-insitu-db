@@ -14,6 +14,7 @@ from insitu.views.protected import (
 from insitu.views.protected.permissions import (
     IsAuthenticated,
     IsCopernicusServiceResponsible,
+    IsSuperuser
 )
 from picklists import models as pickmodels
 
@@ -74,7 +75,7 @@ class ComponentsFilter(ProtectedView):
 class ProductAdd(ProtectedCreateView):
     template_name = 'product/add.html'
     form_class = forms.ProductForm
-    permission_classes = (IsCopernicusServiceResponsible, )
+    permission_classes = (IsSuperuser, )
 
     def permission_denied(self, request):
         self.permission_denied_redirect = reverse('product:list')
@@ -91,7 +92,7 @@ class ProductEdit(ProtectedUpdateView):
     form_class = forms.ProductForm
     model = models.Product
     context_object_name = 'product'
-    permission_classes = (IsCopernicusServiceResponsible, )
+    permission_classes = (IsSuperuser, )
 
     def permission_denied(self, request):
         self.permission_denied_redirect = reverse('product:list')
@@ -119,7 +120,7 @@ class ProductDelete(ProtectedDeleteView):
     form_class = forms.ProductForm
     model = models.Product
     context_object_name = 'product'
-    permission_classes = (IsCopernicusServiceResponsible, )
+    permission_classes = (IsSuperuser, )
 
     def permission_denied(self, request):
         self.permission_denied_redirect = reverse('product:list')
