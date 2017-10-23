@@ -149,6 +149,21 @@ class RequirementForm(forms.ModelForm):
                 signals.requirement_updated.send(sender=requirement)
             return result
 
+
+class RequirementCloneForm(RequirementForm):
+
+    def clean(self):
+        super(RequirementForm, self).clean()
+        if self.cleaned_data == self.initial:
+            self.add_error(None, "You must modify at least one field of the cloned requirement.")
+        return self.cleaned_data
+
+    def save(self, commit=True):
+        self.initial = None
+        return super().save()
+
+
+
 class DataForm(forms.ModelForm):
     class Meta:
         model = models.Data
