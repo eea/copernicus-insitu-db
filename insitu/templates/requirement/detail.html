@@ -15,11 +15,11 @@
     <h1 class="col-sm-12">
       <span>Requirement details</span>
       {% if request.user.service_resp or request.user.is_superuser %}
-        <span class="pull-right delete-btn">
+        <span class="pull-right margin-left-btn">
         <a class="btn btn-primary pull-right" href="{% url 'requirement:delete' requirement.pk %}">Delete
           requirement</a>
         </span>
-        <span class="pull-right">
+        <span class="pull-right margin-left-btn">
         <a class="btn btn-primary pull-right" href="{% url 'requirement:add' %}?pk={{ requirement.pk }}">
           Clone requirement
         </a>
