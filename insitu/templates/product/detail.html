@@ -14,7 +14,7 @@
   <div class="row">
     <h1 class="col-sm-12">
       <span>Product details</span>
-      {% if request.user.service_resp or request.user.is_superuser %}
+      {% if request.user.is_superuser %}
         <span class="pull-right delete-btn">
         <a class="btn btn-primary pull-right"
            href="{% url 'product:delete' product.pk %}">Delete
@@ -108,7 +108,7 @@
   <div class="row">
     <h3 class="col-sm-12">
       <span>Requirements</span>
-      {% if request.user.service_resp or request.user.is_superuser %}
+      {% if request.user.is_superuser %}
         <span class="pull-right">
           <a class="btn btn-primary pull-right"
              href="{% url 'product:requirement:add' product.pk %}">Add requirement</a>
@@ -126,7 +126,7 @@
           <th>Criticality</th>
           <th class="no-sort">Barriers</th>
           <th class="no-sort">Note</th>
-          {% if request.user.service_resp or request.user.is_superuser %}
+          {% if request.user.is_superuser %}
             <th class="no-sort"></th>
           {% endif %}
         </tr>

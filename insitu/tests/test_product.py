@@ -19,8 +19,7 @@ class ProductTests(base.FormCheckTestCase):
         status = base.ProductStatusFactory()
         coverage = base.CoverageFactory()
 
-        responsible_user = base.UserFactory()
-        base.CopernicususResponsibleFactory(user=responsible_user)
+        responsible_user = base.UserFactory(is_superuser=True)
         self.client.force_login(responsible_user)
         self._DATA = {
             'acronym': 'TST',
