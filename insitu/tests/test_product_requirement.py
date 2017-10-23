@@ -34,7 +34,7 @@ class ProductRequirementTests(base.FormCheckTestCase):
         }
         user = base.UserFactory()
         self.client.force_login(user)
-        base.CopernicususResponsibleFactory(user=user)
+        base.CopernicususProviderFactory(user=user)
 
     def test_product_requirement_add_required_fields_from_product(self):
         data = {}

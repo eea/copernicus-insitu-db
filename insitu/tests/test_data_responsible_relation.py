@@ -6,227 +6,226 @@ from insitu.tests import base
 REQUIRED_ERROR = ['This field is required.']
 
 
-class DataResponsibleRelationTests(base.FormCheckTestCase):
+class DataProviderRelationTests(base.FormCheckTestCase):
     fields = ['role']
-    related_fields = ['data', 'responsible']
-    required_fields = ['role', 'data', 'responsible']
+    related_fields = ['data', 'provider']
+    required_fields = ['role', 'data', 'provider']
 
     def setUp(self):
         super().setUp()
         data = base.DataFactory()
         countries = [base.CountryFactory(code='T1'),
                      base.CountryFactory(code='T2')]
-        responsible = base.DataResponsibleFactory(countries=countries)
+        provider = base.DataProviderFactory(countries=countries)
 
         self._DATA = {
             'role': 1,
             'data': data.pk,
-            'responsible': responsible.pk
+            'provider': provider.pk
         }
         user = base.UserFactory()
         self.client.force_login(user)
-        base.CopernicususResponsibleFactory(user=user)
+        base.CopernicususProviderFactory(user=user)
 
-    def test_responsible_relation_add_required_fields_from_data(self):
+    def test_provider_relation_add_required_fields_from_data(self):
         data = {}
         data_factory = base.DataFactory()
         errors_data = self.errors.copy()
         errors_data.pop('data')
-        resp = self.client.post(reverse('data:responsible:add',
+        resp = self.client.post(reverse('data:provider:add',
                                         kwargs={'group_pk': data_factory.pk}),
                                 data)
         self.check_required_errors(resp, errors_data)
 
-    def test_responsible_relation_add_required_fields_from_data_responsible(self):
+    def test_provider_relation_add_required_fields_from_data_provider(self):
         data = {}
-        data_responsible = base.DataResponsibleFactory()
-        errors_data_responsible = self.errors.copy()
-        errors_data_responsible.pop('responsible')
+        data_provider = base.DataProviderFactory()
+        errors_data_provider = self.errors.copy()
+        errors_data_provider.pop('provider')
 
-        resp = self.client.post(reverse('responsible:group:add',
-                                        kwargs={'responsible_pk': data_responsible.pk}),
+        resp = self.client.post(reverse('provider:group:add',
+                                        kwargs={'provider_pk': data_provider.pk}),
                                 data)
-        self.check_required_errors(resp, errors_data_responsible)
+        self.check_required_errors(resp, errors_data_provider)
 
-    def test_responsible_relation_add_from_data(self):
+    def test_provider_relation_add_from_data(self):
         data = self._DATA
-        resp = self.client.post(reverse('data:responsible:add',
+        resp = self.client.post(reverse('data:provider:add',
                                         kwargs={'group_pk': self._DATA['data']}),
                                 data)
         self.assertEqual(resp.status_code, 302)
-        self.check_single_object(models.DataResponsibleRelation, data)
+        self.check_single_object(models.DataProviderRelation, data)
 
-    def test_responsible_relation_add_from_data_responsible(self):
+    def test_provider_relation_add_from_data_provider(self):
         data = self._DATA
         resp = self.client.post(
-            reverse('responsible:group:add',
-                    kwargs={'responsible_pk': self._DATA['responsible']}),
+            reverse('provider:group:add',
+                    kwargs={'provider_pk': self._DATA['provider']}),
             data)
         self.assertEqual(resp.status_code, 302)
-        self.check_single_object(models.DataResponsibleRelation, data)
+        self.check_single_object(models.DataProviderRelation, data)
 
-    def test_responsible_relation_edit_from_data(self):
-        responsible_relation = base.DataResponsibleRelationFactory()
-        data = self._DATA
-        data.pop('data')
-        data.pop('responsible')
-        resp = self.client.post(
-            reverse('data:responsible:edit',
-                    kwargs={'group_pk': responsible_relation.data.pk,
-                            'pk': responsible_relation.pk}),
-            data)
-        self.assertEqual(resp.status_code, 302)
-        data['data'] = responsible_relation.data.pk
-        data['responsible'] = responsible_relation.responsible.pk
-        self.check_single_object(models.DataResponsibleRelation, data)
-
-    def test_responsible_relation_edit_from_data_responsible(self):
-        responsible_relation =base.DataResponsibleRelationFactory()
+    def test_provider_relation_edit_from_data(self):
+        provider_relation = base.DataProviderRelationFactory()
         data = self._DATA
         data.pop('data')
-        data.pop('responsible')
+        data.pop('provider')
         resp = self.client.post(
-            reverse('responsible:group:edit',
-                    kwargs={'responsible_pk': responsible_relation.responsible.pk,
-                            'pk': responsible_relation.pk}),
+            reverse('data:provider:edit',
+                    kwargs={'group_pk': provider_relation.data.pk,
+                            'pk': provider_relation.pk}),
             data)
         self.assertEqual(resp.status_code, 302)
-        data['data'] = responsible_relation.data.pk
-        data['responsible'] = responsible_relation.responsible.pk
-        self.check_single_object(models.DataResponsibleRelation, data)
+        data['data'] = provider_relation.data.pk
+        data['provider'] = provider_relation.provider.pk
+        self.check_single_object(models.DataProviderRelation, data)
 
-    def test_responsible_relation_delete_from_data(self):
+    def test_provider_relation_edit_from_data_provider(self):
+        provider_relation =base.DataProviderRelationFactory()
+        data = self._DATA
+        data.pop('data')
+        data.pop('provider')
+        resp = self.client.post(
+            reverse('provider:group:edit',
+                    kwargs={'provider_pk': provider_relation.provider.pk,
+                            'pk': provider_relation.pk}),
+            data)
+        self.assertEqual(resp.status_code, 302)
+        data['data'] = provider_relation.data.pk
+        data['provider'] = provider_relation.provider.pk
+        self.check_single_object(models.DataProviderRelation, data)
+
+    def test_provider_relation_delete_from_data(self):
         data = {}
-        responsible_relation =base.DataResponsibleRelationFactory()
+        provider_relation =base.DataProviderRelationFactory()
         resp = self.client.post(
-            reverse('data:responsible:delete',
-                    kwargs={'group_pk': responsible_relation.data.pk,
-                            'pk': responsible_relation.pk}),
+            reverse('data:provider:delete',
+                    kwargs={'group_pk': provider_relation.data.pk,
+                            'pk': provider_relation.pk}),
             data)
         self.assertEqual(resp.status_code, 302)
-        self.check_single_object_deleted(models.DataResponsibleRelation)
+        self.check_single_object_deleted(models.DataProviderRelation)
 
-    def test_responsible_relation_delete_from_data_responsible(self):
+    def test_provider_relation_delete_from_data_provider(self):
         data = {}
-        responsible_relation =base.DataResponsibleRelationFactory()
+        provider_relation =base.DataProviderRelationFactory()
         resp = self.client.post(
-            reverse('responsible:group:delete',
-                    kwargs={'responsible_pk': responsible_relation.responsible.pk,
-                            'pk': responsible_relation.pk}),
+            reverse('provider:group:delete',
+                    kwargs={'provider_pk': provider_relation.provider.pk,
+                            'pk': provider_relation.pk}),
             data)
         self.assertEqual(resp.status_code, 302)
-        self.check_single_object_deleted(models.DataResponsibleRelation)
+        self.check_single_object_deleted(models.DataProviderRelation)
 
 
-class DataResponsibleRelationPermissionsTests(base.PermissionsCheckTestCase):
+class DataProviderRelationPermissionsTests(base.PermissionsCheckTestCase):
 
     def setUp(self):
         self.login_url = reverse('auth:login')
 
-    def test_responsible_relation_add_not_auth_from_data(self):
+    def test_provider_relation_add_not_auth_from_data(self):
         data = base.DataFactory()
         self.check_user_redirect_all_methods(
             redirect_url=self.login_url,
-            url=reverse('data:responsible:add',
+            url=reverse('data:provider:add',
                         kwargs={'group_pk': data.pk}))
 
-    def test_responsible_relation_delete_not_auth_from_data(self):
+    def test_provider_relation_delete_not_auth_from_data(self):
         data = base.DataFactory()
-        responsible_relation = base.DataResponsibleRelationFactory(
+        provider_relation = base.DataProviderRelationFactory(
             data=data)
         self.check_user_redirect_all_methods(
             redirect_url=self.login_url,
-            url=reverse('data:responsible:edit',
+            url=reverse('data:provider:edit',
                         kwargs={'group_pk': data.pk,
-                                'pk': responsible_relation.pk}))
+                                'pk': provider_relation.pk}))
 
-    def test_responsible_relation_edit_not_auth_from_data(self):
+    def test_provider_relation_edit_not_auth_from_data(self):
         data = base.DataFactory()
-        responsible_relation = base.DataResponsibleRelationFactory(
-            data=data)
+        provider_relation = base.DataProviderRelationFactory(data=data)
         self.check_user_redirect_all_methods(
             redirect_url=self.login_url,
-            url=reverse('data:responsible:delete',
+            url=reverse('data:provider:delete',
                         kwargs={'group_pk': data.pk,
-                                'pk': responsible_relation.pk}))
+                                'pk': provider_relation.pk}))
 
-    def test_responsible_relation_add_not_auth_from_data_responsible(self):
-        data_responsible = base.DataResponsibleFactory()
+    def test_provider_relation_add_not_auth_from_data_provider(self):
+        data_provider = base.DataProviderFactory()
         self.check_user_redirect_all_methods(
             redirect_url=self.login_url,
-            url=reverse('responsible:group:add',
-                        kwargs={'responsible_pk': data_responsible.pk}))
+            url=reverse('provider:group:add',
+                        kwargs={'provider_pk': data_provider.pk}))
 
-    def test_responsible_relation_edit_not_auth_from_data_responsible(self):
-        data_responsible = base.DataResponsibleFactory()
-        responsible_relation = base.DataResponsibleRelationFactory(
-            responsible=data_responsible)
+    def test_provider_relation_edit_not_auth_from_data_provider(self):
+        data_provider = base.DataProviderFactory()
+        provider_relation = base.DataProviderRelationFactory(
+            provider=data_provider)
         self.check_user_redirect_all_methods(
             redirect_url=self.login_url,
-            url=reverse('responsible:group:edit',
-                        kwargs={'responsible_pk': data_responsible.pk,
-                                'pk': responsible_relation.pk}))
+            url=reverse('provider:group:edit',
+                        kwargs={'provider_pk': data_provider.pk,
+                                'pk': provider_relation.pk}))
 
-    def test_responsible_relation_delete_not_auth_from_data_responsible(self):
-        data_responsible = base.DataResponsibleFactory()
-        responsible_relation = base.DataResponsibleRelationFactory(
-            responsible=data_responsible)
+    def test_provider_relation_delete_not_auth_from_data_provider(self):
+        data_provider = base.DataProviderFactory()
+        provider_relation = base.DataProviderRelationFactory(
+            provider=data_provider)
         self.check_user_redirect_all_methods(
             redirect_url=self.login_url,
-            url=reverse('responsible:group:delete',
-                        kwargs={'responsible_pk': data_responsible.pk,
-                                'pk': responsible_relation.pk}))
+            url=reverse('provider:group:delete',
+                        kwargs={'provider_pk': data_provider.pk,
+                                'pk': provider_relation.pk}))
 
-    def test_responsible_relation_add_auth_from_data(self):
+    def test_provider_relation_add_auth_from_data(self):
         data = base.DataFactory()
         self.check_user_redirect_all_methods(
             redirect_url=self.login_url,
-            url=reverse('data:responsible:add',
+            url=reverse('data:provider:add',
                         kwargs={'group_pk': data.pk}))
 
-    def test_responsible_relation_delete_auth_from_data(self):
+    def test_provider_relation_delete_auth_from_data(self):
         data = base.DataFactory()
-        responsible_relation = base.DataResponsibleRelationFactory(
+        provider_relation = base.DataProviderRelationFactory(
             data=data)
         self.check_user_redirect_all_methods(
             redirect_url=self.login_url,
-            url=reverse('data:responsible:edit',
+            url=reverse('data:provider:edit',
                         kwargs={'group_pk': data.pk,
-                                'pk': responsible_relation.pk}))
+                                'pk': provider_relation.pk}))
 
-    def test_responsible_relation_edit_auth_from_data(self):
+    def test_provider_relation_edit_auth_from_data(self):
         data = base.DataFactory()
-        responsible_relation = base.DataResponsibleRelationFactory(
+        provider_relation = base.DataProviderRelationFactory(
             data=data)
         self.check_user_redirect_all_methods(
             redirect_url=self.login_url,
-            url=reverse('data:responsible:delete',
+            url=reverse('data:provider:delete',
                         kwargs={'group_pk': data.pk,
-                                'pk': responsible_relation.pk}))
+                                'pk': provider_relation.pk}))
 
-    def test_responsible_relation_add_auth_from_data_responsible(self):
-        data_responsible = base.DataResponsibleFactory()
+    def test_provider_relation_add_auth_from_data_provider(self):
+        data_provider = base.DataProviderFactory()
         self.check_user_redirect_all_methods(
             redirect_url=self.login_url,
-            url=reverse('responsible:group:add',
-                        kwargs={'responsible_pk': data_responsible.pk}))
+            url=reverse('provider:group:add',
+                        kwargs={'provider_pk': data_provider.pk}))
 
-    def test_responsible_relation_edit_auth_from_data_responsible(self):
-        data_responsible = base.DataResponsibleFactory()
-        responsible_relation = base.DataResponsibleRelationFactory(
-            responsible=data_responsible)
+    def test_provider_relation_edit_auth_from_data_provider(self):
+        data_provider = base.DataProviderFactory()
+        provider_relation = base.DataProviderRelationFactory(
+            provider=data_provider)
         self.check_user_redirect_all_methods(
             redirect_url=self.login_url,
-            url=reverse('responsible:group:edit',
-                        kwargs={'responsible_pk': data_responsible.pk,
-                                'pk': responsible_relation.pk}))
+            url=reverse('provider:group:edit',
+                        kwargs={'provider_pk': data_provider.pk,
+                                'pk': provider_relation.pk}))
 
-    def test_responsible_relation_delete_auth_from_data_responsible(self):
-        data_responsible = base.DataResponsibleFactory()
-        responsible_relation = base.DataResponsibleRelationFactory(
-            responsible=data_responsible)
+    def test_provider_relation_delete_auth_from_data_provider(self):
+        data_provider = base.DataProviderFactory()
+        provider_relation = base.DataProviderRelationFactory(
+            provider=data_provider)
         self.check_user_redirect_all_methods(
             redirect_url=self.login_url,
-            url=reverse('responsible:group:delete',
-                        kwargs={'responsible_pk': data_responsible.pk,
-                                'pk': responsible_relation.pk}))
+            url=reverse('provider:group:delete',
+                        kwargs={'provider_pk': data_provider.pk,
+                                'pk': provider_relation.pk}))

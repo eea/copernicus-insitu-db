@@ -171,10 +171,10 @@ class DataFormatFactory(DjangoModelFactory):
         model = models.DataFormat
 
 
-class ResponsibleTypeFactory(DjangoModelFactory):
-    name = 'Test DataResponsible'
+class ProviderTypeFactory(DjangoModelFactory):
+    name = 'Test DataProvider'
     sort_order = 0
     link = ''
 
     class Meta:
-        model = models.ResponsibleType
+        model = models.ProviderType

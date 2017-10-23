@@ -14,14 +14,14 @@
 
   <div class="row">
     <h1 class="col-sm-12">
-      <span class="">Data responsibles </span>
+      <span class="">Data providers </span>
       {% if request.user.service_resp or request.user.is_superuser %}
         <span class="pull-right">
           <a class="btn btn-primary pull-right"
-             href="{% url 'responsible:add_network' %}">New data responsible network</a>
+             href="{% url 'provider:add_network' %}">New data provider network</a>
           <br>
           <a class="btn btn-primary pull-right"
-             href="{% url 'responsible:add_non_network' %}">New data responsible</a>
+             href="{% url 'provider:add_non_network' %}">New data provider</a>
         </span>
       {% endif %}
     </h1>
@@ -29,7 +29,7 @@
 
   <div class="row">
     <div class="col-lg-10">
-      <table id="responsibles" width="100%"
+      <table id="providers" width="100%"
              class="table table-condensed table-bordered table-hover">
         <thead>
         <tr>
@@ -39,7 +39,7 @@
           <th>Phone</th>
           <th>Email</th>
           <th>Contact person</th>
-          <th>Responsible type</th>
+          <th>Provider type</th>
           <th>Is network?</th>
         </tr>
         </thead>
@@ -61,11 +61,11 @@
           </div>
 
           <div class="form-group">
-            <label for="responsible_type">Responsible type:</label>
-            <select id="responsible_type" class="form-control">
-              {% for responsible_type in responsible_types %}
-                <option value="{{ responsible_type }}">
-                  {{ responsible_type }}</option>
+            <label for="provider_type">Provider type:</label>
+            <select id="provider_type" class="form-control">
+              {% for provider_type in provider_types %}
+                <option value="{{ provider_type }}">
+                  {{ provider_type }}</option>
               {% endfor %}
             </select>
           </div>
@@ -95,14 +95,14 @@
   <script src="{% static 'js/fnFilterOnReturn.js' %}"></script>
   <script>
     $(document).ready(function () {
-      var $table = $('#responsibles').dataTable({
+      var $table = $('#providers').dataTable({
         "processing": true,
         "serverSide": true,
         "ajax": {
-          "url": "{% url 'responsible:json' %}",
+          "url": "{% url 'provider:json' %}",
           "data": function (d) {
             d.is_network = $('#is_network').val();
-            d.responsible_type = $('#responsible_type').val();
+            d.provider_type = $('#provider_type').val();
           }
         },
         "columnDefs": [
@@ -129,7 +129,7 @@
       });
 
       $('#reset-btn').on('click', function () {
-        $('#is_network, #responsible_type').val('All');
+        $('#is_network, #provider_type').val('All');
         var table = $table.DataTable();
         table.ajax.reload();
       });

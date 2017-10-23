@@ -2,7 +2,7 @@
 {% load bootstrap3 %}
 
 {% block title %}
-  Delete {{ rel.data.name }} - {{ rel.responsible.name }} relation
+  Delete {{ rel.data.name }} - {{ rel.provider.name }} relation
 {% endblock %}
 
 {% block content %}
@@ -11,7 +11,7 @@
     <h1 class="col-sm-12">
       <p class="col-sm-12">Delete relation</p>
       <p class="col-sm-12">
-        <small>{{ rel.data.name }} - {{ rel.responsible.name }}</small>
+        <small>{{ rel.data.name }} - {{ rel.provider.name }}</small>
       </p>
     </h1>
   </div>

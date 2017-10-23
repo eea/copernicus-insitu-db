@@ -18,7 +18,7 @@ PICKLISTS = [
     models.DataType, models.DefinitionLevel, models.Dissemination,
     models.EssentialVariable, models.UpdateFrequency, models.InspireTheme,
     models.ProductGroup, models.ProductStatus, models.Relevance,
-    models.RequirementGroup, models.ResponsibleType,
+    models.RequirementGroup, models.ProviderType,
     models.QualityControlProcedure, models.Timeliness, models.Policy
 ]
 

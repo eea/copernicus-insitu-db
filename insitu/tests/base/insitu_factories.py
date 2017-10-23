@@ -86,26 +86,26 @@ class ProductRequirementFactory(DjangoModelFactory):
         model = models.ProductRequirement
 
 
-class DataResponsibleFactory(DjangoModelFactory):
-    name = 'test data responsible'
+class DataProviderFactory(DjangoModelFactory):
+    name = 'test data provider'
     countries = RelatedFactory(factories.CountryFactory)
 
     class Meta:
-        model = models.DataResponsible
+        model = models.DataProvider
 
 
-class DataResponsibleDetailsFactory(DjangoModelFactory):
+class DataProviderDetailsFactory(DjangoModelFactory):
     acronym = 'TST'
     website = 'test website'
     address = 'test address'
     phone = 'test phone'
     email = 'test email'
     contact_person = 'test contact'
-    responsible_type = SubFactory(factories.ResponsibleTypeFactory)
-    data_responsible = SubFactory(DataResponsibleFactory)
+    provider_type = SubFactory(factories.ProviderTypeFactory)
+    data_provider = SubFactory(DataProviderFactory)
 
     class Meta:
-        model = models.DataResponsibleDetails
+        model = models.DataProviderDetails
 
 
 class DataFactory(DjangoModelFactory):
@@ -122,7 +122,7 @@ class DataFactory(DjangoModelFactory):
     inspire_themes = RelatedFactory(factories.InspireThemeFactory)
     dissemination = SubFactory(factories.DisseminationFactory)
     # requirements = SubFactory(RequirementFactory)
-    # responsibles = SubFactory(DataResponsibleFactory)
+    # providers = SubFactory(DataProviderFactory)
 
     class Meta:
         model = models.Data
@@ -137,34 +137,34 @@ class DataRequirementFactory(DjangoModelFactory):
         model = models.DataRequirement
 
 
-class DataResponsibleRelationFactory(DjangoModelFactory):
+class DataProviderRelationFactory(DjangoModelFactory):
     data = SubFactory(DataFactory)
-    responsible = SubFactory(DataResponsibleFactory)
-    role = models.DataResponsibleRelation.ROLE_CHOICES[0][0]
+    provider = SubFactory(DataProviderFactory)
+    role = models.DataProviderRelation.ROLE_CHOICES[0][0]
 
     class Meta:
-        model = models.DataResponsibleRelation
+        model = models.DataProviderRelation
 
 
-class CopernicususResponsibleFactory(DjangoModelFactory):
+class CopernicususProviderFactory(DjangoModelFactory):
     user = SubFactory(UserFactory)
     service = SubFactory(CopernicusServiceFactory)
 
     class Meta:
-        model = models.CopernicusResponsible
+        model = models.CopernicusProvider
 
 
-class CountryResponsible(DjangoModelFactory):
+class CountryProvider(DjangoModelFactory):
     user = SubFactory(UserFactory)
     country = SubFactory(factories.CountryFactory)
 
     class Meta:
-        model = models.CountryResponsible
+        model = models.CountryProvider
 
 
 class DataProviderUserManager(DjangoModelFactory):
     user = SubFactory(UserFactory)
-    responsible = SubFactory(DataResponsibleFactory)
+    provider = SubFactory(DataProviderFactory)
 
     class Meta:
         model = models.DataProviderUser

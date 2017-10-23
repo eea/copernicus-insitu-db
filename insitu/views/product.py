@@ -13,8 +13,7 @@ from insitu.views.protected import (
     ProtectedUpdateView, ProtectedCreateView, ProtectedDeleteView)
 from insitu.views.protected.permissions import (
     IsAuthenticated,
-    IsCopernicusServiceResponsible,
-    IsSuperuser
+    IsSuperuser,
 )
 from picklists import models as pickmodels
 

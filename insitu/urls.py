@@ -98,17 +98,17 @@ requirement_patterns = [
                 namespace='data')),
 ]
 
-data_data_responsible_patterns = [
+data_data_provider_patterns = [
     url(r'^add/$',
-        views.DataDataResponsibleAdd.as_view(),
+        views.DataDataProviderAdd.as_view(),
         name='add'),
 
     url(r'^(?P<pk>[0-9]+)/$',
-        views.DataDataResponsibleEdit.as_view(),
+        views.DataDataProviderEdit.as_view(),
         name='edit'),
 
     url(r'^(?P<pk>[0-9]+)/delete$',
-        views.DataDataResponsibleDelete.as_view(),
+        views.DataDataProviderDelete.as_view(),
         name='delete'),
 ]
 
@@ -138,58 +138,58 @@ data_patterns = [
         views.DataDelete.as_view(),
         name='delete'),
 
-    url(r'^(?P<group_pk>[0-9]+)/responsible/',
-        include(data_data_responsible_patterns,
-                namespace='responsible')),
+    url(r'^(?P<group_pk>[0-9]+)/provider/',
+        include(data_data_provider_patterns,
+                namespace='provider')),
 
     url(r'^(?P<data_pk>[0-9]+)/requirement/',
         include(data_requirement_patterns,
                 namespace='requirement')),
 ]
 
-responsible_patterns = [
+provider_patterns = [
     url(r'^list/$',
-        views.DataResponsibleList.as_view(),
+        views.DataProviderList.as_view(),
         name='list'),
 
     url(r'^data/$',
-        views.DataResponsibleListJson.as_view(),
+        views.DataProviderListJson.as_view(),
         name='json'),
 
     url(r'^(?P<pk>[0-9]+)/$',
-        views.DataResponsibleDetail.as_view(),
+        views.DataProviderDetail.as_view(),
         name='detail'),
 
     url(r'^add-network/$',
-        views.DataResponsibleAddNetwork.as_view(),
+        views.DataProviderAddNetwork.as_view(),
         name='add_network'),
 
     url(r'^(?P<pk>[0-9]+)/edit-network/$',
-        views.DataResponsibleEditNetwork.as_view(),
+        views.DataProviderEditNetwork.as_view(),
         name='edit_network'),
 
     url(r'^(?P<pk>[0-9]+)/edit-network-members/$',
-        views.DataResponsibleEditNetworkMembers.as_view(),
+        views.DataProviderEditNetworkMembers.as_view(),
         name='edit_network_members'),
 
     url(r'^(?P<pk>[0-9]+)/delete-network/$',
-        views.DataResponsibleDeleteNetwork.as_view(),
+        views.DataProviderDeleteNetwork.as_view(),
         name='delete_network'),
 
     url(r'^add/$',
-        views.DataResponsibleAddNonNetwork.as_view(),
+        views.DataProviderAddNonNetwork.as_view(),
         name='add_non_network'),
 
     url(r'^(?P<pk>[0-9]+)/edit/$',
-        views.DataResponsibleEditNonNetwork.as_view(),
+        views.DataProviderEditNonNetwork.as_view(),
         name='edit_non_network'),
 
     url(r'^(?P<pk>[0-9]+)/delete/$',
-        views.DataResponsibleDeleteNonNetwork.as_view(),
+        views.DataProviderDeleteNonNetwork.as_view(),
         name='delete_non_network'),
 
-    url(r'^(?P<responsible_pk>[0-9]+)/group/',
-        include(data_data_responsible_patterns,
+    url(r'^(?P<provider_pk>[0-9]+)/group/',
+        include(data_data_provider_patterns,
                 namespace='group')),
 ]
 
@@ -219,9 +219,9 @@ urlpatterns = [
         include(data_patterns,
                 namespace='data')),
 
-    url(r'^responsible/',
-        include(responsible_patterns,
-                namespace='responsible')),
+    url(r'^provider/',
+        include(provider_patterns,
+                namespace='provider')),
     url(r'',
         include(auth_patterns,
                 namespace='auth')),

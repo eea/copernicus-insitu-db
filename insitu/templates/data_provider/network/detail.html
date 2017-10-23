@@ -2,7 +2,7 @@
 {% load static %}
 
 {% block title %}
-  Data Responsible Network
+  Data Provider Network
 {% endblock %}
 
 {% block style %}
@@ -13,22 +13,22 @@
 {% block content %}
   <div class="row">
     <h1 class="col-sm-12">
-      <span>Data responsible network</span>
+      <span>Data provider network</span>
       {% if request.user.service_resp or request.user.is_superuser %}
         <span class="pull-right delete-btn">
-        <a class="btn btn-primary pull-right" href="{% url 'responsible:delete_network' responsible.pk %}">Delete
-          data responsible</a>
+        <a class="btn btn-primary pull-right" href="{% url 'provider:delete_network' provider.pk %}">Delete
+          data provider</a>
         </span>
         <span class="pull-right">
         <a class="btn btn-primary"
-           href="{% url 'responsible:edit_network_members' responsible.pk %}">
+           href="{% url 'provider:edit_network_members' provider.pk %}">
           Edit network members
         </a>
         </span>
         <span class="pull-right">
         <a class="btn btn-primary pull-right"
-           href="{% url 'responsible:edit_network' responsible.pk %}">
-          Edit data responsible
+           href="{% url 'provider:edit_network' provider.pk %}">
+          Edit data provider
         </a>
         </span>
       {% endif %}
@@ -40,18 +40,18 @@
       <tbody>
       <tr class="row">
         <th class="col-md-4 col-sm-6">Name</th>
-        <td class="col-md-8 col-sm-6">{{ responsible.name }}</td>
+        <td class="col-md-8 col-sm-6">{{ provider.name }}</td>
       </tr>
 
       <tr class="row">
         <th class="col-md-4 col-sm-6">Description</th>
-        <td class="col-md-8 col-sm-6">{{ responsible.description }}</td>
+        <td class="col-md-8 col-sm-6">{{ provider.description }}</td>
       </tr>
 
       <tr class="row">
         <th class="col-md-4 col-sm-6">Countries</th>
         <td class="col-md-8 col-sm-6">
-          {% for country in responsible.countries.all %}
+          {% for country in provider.countries.all %}
             <span class="col-sm-12 no-padding-left">{{ country }}</span>
           {% endfor %}
         </td>
@@ -60,8 +60,8 @@
         <tr class="row">
           <th class="col-md-4 col-sm-6">Members</th>
           <td class="col-md-8 col-sm-6">
-            {% for member in responsible.members.all %}
-                <a href="{% url 'responsible:detail' member.pk %}">{{ member.name }}</a>
+            {% for member in provider.members.all %}
+                <a href="{% url 'provider:detail' member.pk %}">{{ member.name }}</a>
             {% endfor %}
           </td>
         </tr>
@@ -69,7 +69,7 @@
     </table>
   </div>
 
-  {% include 'data_responsible/_data_table.html' %}
+  {% include 'data_provider/_data_table.html' %}
 
 {% endblock %}
 

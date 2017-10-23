@@ -27,7 +27,7 @@ class DataRequirementTests(base.FormCheckTestCase):
         }
         user = base.UserFactory()
         self.client.force_login(user)
-        base.CopernicususResponsibleFactory(user=user)
+        base.CopernicususProviderFactory(user=user)
 
     def test_data_requirement_add_required_fields_from_data(self):
         data = {}

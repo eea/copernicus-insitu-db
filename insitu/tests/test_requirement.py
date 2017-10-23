@@ -19,9 +19,9 @@ class RequirementTests(base.FormCheckTestCase):
         dissemination = base.DisseminationFactory()
         quality_control_procedure = base.QualityControlProcedureFactory()
         group = base.RequirementGroupFactory()
-        responsible_user = base.UserFactory()
-        base.CopernicususResponsibleFactory(user=responsible_user)
-        self.client.force_login(responsible_user)
+        provider_user = base.UserFactory()
+        base.CopernicususProviderFactory(user=provider_user)
+        self.client.force_login(provider_user)
 
         self._DATA = {
             'name': 'TEST requirement',

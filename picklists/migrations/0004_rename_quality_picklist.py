@@ -9,6 +9,7 @@ class Migration(migrations.Migration):
 
     dependencies = [
         ('picklists', '0003_responsibletype'),
+        ('insitu', '0008_set_optional_fields'),
     ]
 
     operations = [
@@ -18,6 +19,8 @@ class Migration(migrations.Migration):
         ),
         migrations.AlterModelOptions(
             name='qualitycontrolprocedure',
-            options={'ordering': ['sort_order'], 'verbose_name_plural': 'quality_control_procedure'},
+            options={'ordering': ['sort_order'],
+                     'verbose_name_plural': 'quality_control_procedure'
+            },
         ),
     ]

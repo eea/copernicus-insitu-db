@@ -286,7 +286,7 @@ class DataFormat(models.Model):
         return self.name
 
 
-class ResponsibleType(models.Model):
+class ProviderType(models.Model):
     name = models.CharField(max_length=100)
     description = models.TextField(blank=True)
     sort_order = models.IntegerField()

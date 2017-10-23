@@ -18,9 +18,8 @@ class ProductTests(base.FormCheckTestCase):
         component = base.ComponentFactory()
         status = base.ProductStatusFactory()
         coverage = base.CoverageFactory()
-
-        responsible_user = base.UserFactory(is_superuser=True)
-        self.client.force_login(responsible_user)
+        provider_user = base.UserFactory(is_superuser=True)
+        self.client.force_login(provider_user)
         self._DATA = {
             'acronym': 'TST',
             'name': 'TEST product',

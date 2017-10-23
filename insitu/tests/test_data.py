@@ -53,7 +53,7 @@ class DataTests(base.FormCheckTestCase):
             'dissemination': dissemination.pk
         }
         user = base.UserFactory()
-        base.CopernicususResponsibleFactory(user=user)
+        base.CopernicususProviderFactory(user=user)
         self.client.force_login(user)
 
     def test_list_data_json(self):
@@ -109,12 +109,12 @@ class DataTests(base.FormCheckTestCase):
     def test_delete_data_related_objects(self):
         data = base.DataFactory()
         base.DataRequirementFactory(data=data)
-        base.DataResponsibleRelationFactory(data=data)
+        base.DataProviderRelationFactory(data=data)
         self.client.post(
             reverse('data:delete', kwargs={'pk': data.pk})
         )
         self.check_objects_are_soft_deleted(models.DataRequirement)
-        self.check_objects_are_soft_deleted(models.DataResponsibleRelation)
+        self.check_objects_are_soft_deleted(models.DataProviderRelation)
 
 
 class DataPermissionsTests(base.PermissionsCheckTestCase):

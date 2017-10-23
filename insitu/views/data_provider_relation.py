@@ -2,7 +2,7 @@
 from __future__ import unicode_literals
 
 from django.core.urlresolvers import reverse
-from insitu.views.protected import IsCopernicusServiceResponsible
+from insitu.views.protected import IsCopernicusServiceProvider
 from insitu.views.protected import (
     ProtectedUpdateView, ProtectedCreateView, ProtectedDeleteView)
 
@@ -10,29 +10,29 @@ from insitu import models
 from insitu import forms
 
 
-class DataDataResponsibleAdd(ProtectedCreateView):
-    template_name = 'data/data_responsible/add.html'
-    permission_classes = (IsCopernicusServiceResponsible, )
+class DataDataProviderAdd(ProtectedCreateView):
+    template_name = 'data/data_provider/add.html'
+    permission_classes = (IsCopernicusServiceProvider, )
 
     def permission_denied(self, request):
-        if 'responsible_pk' in self.kwargs:
-            self.permission_denied_redirect = reverse('responsible:list')
+        if 'provider_pk' in self.kwargs:
+            self.permission_denied_redirect = reverse('provider:list')
         else:
             self.permission_denied_redirect = reverse('data:list')
         return super().permission_denied(request)
 
     def _set_model_used(self):
-        if 'responsible_pk' in self.kwargs:
-            self.form_class = forms.DataResponsibleRelationResponsibleForm
-            self.form_field = 'responsible'
-            self.model = models.DataResponsible
+        if 'provider_pk' in self.kwargs:
+            self.form_class = forms.DataProviderRelationProviderForm
+            self.form_field = 'provider'
+            self.model = models.DataProvider
             self.title = "Add a new group for {}"
-            self.pk = self.kwargs['responsible_pk']
+            self.pk = self.kwargs['provider_pk']
         else:
-            self.form_class = forms.DataResponsibleRelationGroupForm
+            self.form_class = forms.DataProviderRelationGroupForm
             self.form_field = 'data'
             self.model = models.Data
-            self.title = "Add a new responsible for {}"
+            self.title = "Add a new provider for {}"
             self.pk = self.kwargs['group_pk']
 
     def get_form(self):
@@ -48,9 +48,9 @@ class DataDataResponsibleAdd(ProtectedCreateView):
         return context
 
     def get_success_url(self):
-        if 'responsible_pk' in self.kwargs:
-            return reverse('responsible:detail',
-                           kwargs={'pk': self.kwargs['responsible_pk']})
+        if 'provider_pk' in self.kwargs:
+            return reverse('provider:detail',
+                           kwargs={'pk': self.kwargs['provider_pk']})
         else:
 
             return reverse('data:detail',
@@ -65,24 +65,24 @@ class DataDataResponsibleAdd(ProtectedCreateView):
         return super().post(self, request, *args, **kwargs)
 
 
-class DataDataResponsibleEdit(ProtectedUpdateView):
-    model = models.DataResponsibleRelation
-    template_name = 'data/data_responsible/edit.html'
-    form_class = forms.DataResponsibleRelationEditForm
+class DataDataProviderEdit(ProtectedUpdateView):
+    model = models.DataProviderRelation
+    template_name = 'data/data_provider/edit.html'
+    form_class = forms.DataProviderRelationEditForm
     context_object_name = 'rel'
-    permission_classes = (IsCopernicusServiceResponsible, )
+    permission_classes = (IsCopernicusServiceProvider, )
 
     def permission_denied(self, request):
-        if 'responsible_pk' in self.kwargs:
-            self.permission_denied_redirect = reverse('responsible:list')
+        if 'provider_pk' in self.kwargs:
+            self.permission_denied_redirect = reverse('provider:list')
         else:
             self.permission_denied_redirect = reverse('data:list')
         return super().permission_denied(request)
 
     def _get_reverse_url(self):
-        if 'responsible_pk' in self.kwargs:
-            url = reverse('responsible:detail',
-                       kwargs={'pk': self.kwargs['responsible_pk']})
+        if 'provider_pk' in self.kwargs:
+            url = reverse('provider:detail',
+                       kwargs={'pk': self.kwargs['provider_pk']})
         else:
             url = reverse('data:detail',
                        kwargs={'pk': self.kwargs['group_pk']})
@@ -97,23 +97,23 @@ class DataDataResponsibleEdit(ProtectedUpdateView):
         return self._get_reverse_url()
 
 
-class DataDataResponsibleDelete(ProtectedDeleteView):
-    model = models.DataResponsibleRelation
-    template_name = 'data/data_responsible/delete.html'
+class DataDataProviderDelete(ProtectedDeleteView):
+    model = models.DataProviderRelation
+    template_name = 'data/data_provider/delete.html'
     context_object_name = 'rel'
-    permission_classes = (IsCopernicusServiceResponsible, )
+    permission_classes = (IsCopernicusServiceProvider, )
 
     def permission_denied(self, request):
-        if 'responsible_pk' in self.kwargs:
-            self.permission_denied_redirect = reverse('responsible:list')
+        if 'provider_pk' in self.kwargs:
+            self.permission_denied_redirect = reverse('provider:list')
         else:
             self.permission_denied_redirect = reverse('data:list')
         return super().permission_denied(request)
 
     def _get_reverse_url(self):
-        if 'responsible_pk' in self.kwargs:
-            url = reverse('responsible:detail',
-                          kwargs={'pk': self.kwargs['responsible_pk']})
+        if 'provider_pk' in self.kwargs:
+            url = reverse('provider:detail',
+                          kwargs={'pk': self.kwargs['provider_pk']})
         else:
             url = reverse('data:detail',
                           kwargs={'pk': self.kwargs['group_pk']})

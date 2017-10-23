@@ -2,7 +2,7 @@
 {% load static %}
 
 {% block title %}
-  Data Responsible
+  Data Provider
 {% endblock %}
 
 {% block style %}
@@ -13,16 +13,16 @@
 {% block content %}
   <div class="row">
     <h1 class="col-sm-12">
-      <span>Data responsible </span>
+      <span>Data provider </span>
       {% if request.user.service_resp or request.user.is_superuser %}
         <span class="pull-right delete-btn">
-        <a class="btn btn-primary pull-right" href="{% url 'responsible:delete_non_network' responsible.pk %}">Delete
-          data responsible</a>
+        <a class="btn btn-primary pull-right" href="{% url 'provider:delete_non_network' provider.pk %}">Delete
+          data provider</a>
         </span>
         <span class="pull-right">
         <a class="btn btn-primary pull-right"
-           href="{% url 'responsible:edit_non_network' responsible.pk %}">
-          Edit data responsible
+           href="{% url 'provider:edit_non_network' provider.pk %}">
+          Edit data provider
         </a>
         </span>
       {% endif %}
@@ -34,18 +34,18 @@
       <tbody>
       <tr class="row">
         <th class="col-md-4 col-sm-6">Name</th>
-        <td class="col-md-8 col-sm-6">{{ responsible.name }}</td>
+        <td class="col-md-8 col-sm-6">{{ provider.name }}</td>
       </tr>
 
       <tr class="row">
         <th class="col-md-4 col-sm-6">Description</th>
-        <td class="col-md-8 col-sm-6">{{ responsible.description }}</td>
+        <td class="col-md-8 col-sm-6">{{ provider.description }}</td>
       </tr>
 
       <tr class="row">
         <th class="col-md-4 col-sm-6">Countries</th>
         <td class="col-md-8 col-sm-6">
-          {% for country in responsible.countries.all %}
+          {% for country in provider.countries.all %}
             <span class="col-sm-12 no-padding-left">{{ country }}</span>
           {% endfor %}
         </td>
@@ -54,10 +54,10 @@
       <tr class="row">
         <th class="col-md-4 col-sm-6">Networks</th>
         <td class="col-md-8 col-sm-6">
-          {% for network in responsible.networks.all %}
+          {% for network in provider.networks.all %}
             <span class="col-sm-12 no-padding-left">
                 <a
-                  href="{% url 'responsible:detail' network.pk %}">{{ network.name }}</a>
+                  href="{% url 'provider:detail' network.pk %}">{{ network.name }}</a>
               </span>
           {% empty %}
             <span class="col-sm-12 no-padding-left">-</span>
@@ -66,39 +66,39 @@
       </tr>
       <tr class="row">
         <th class="col-md-4 col-sm-6">Acronym</th>
-        <td class="col-md-8 col-sm-6">{{ responsible.details.first.acronym }}</td>
+        <td class="col-md-8 col-sm-6">{{ provider.details.first.acronym }}</td>
       </tr>
       <tr class="row">
         <th class="col-md-4 col-sm-6">Website</th>
-        <td class="col-md-8 col-sm-6">{{ responsible.details.first.website }}</td>
+        <td class="col-md-8 col-sm-6">{{ provider.details.first.website }}</td>
       </tr>
       <tr class="row">
         <th class="col-md-4 col-sm-6">Address</th>
-        <td class="col-md-8 col-sm-6">{{ responsible.details.first.address }}</td>
+        <td class="col-md-8 col-sm-6">{{ provider.details.first.address }}</td>
       </tr>
       <tr class="row">
         <th class="col-md-4 col-sm-6">Phone</th>
-        <td class="col-md-8 col-sm-6">{{ responsible.details.first.phone }}</td>
+        <td class="col-md-8 col-sm-6">{{ provider.details.first.phone }}</td>
       </tr>
       <tr class="row">
         <th class="col-md-4 col-sm-6">Email</th>
-        <td class="col-md-8 col-sm-6">{{ responsible.details.first.email }}</td>
+        <td class="col-md-8 col-sm-6">{{ provider.details.first.email }}</td>
       </tr>
       <tr class="row">
         <th class="col-md-4 col-sm-6">Contact person</th>
         <td class="col-md-8 col-sm-6">
-          {{ responsible.details.first.contact_person }}</td>
+          {{ provider.details.first.contact_person }}</td>
       </tr>
       <tr class="row">
-        <th class="col-md-4 col-sm-6">Responsible type</th>
+        <th class="col-md-4 col-sm-6">Provider type</th>
         <td class="col-md-8 col-sm-6">
-          {{ responsible.details.first.responsible_type }}</td>
+          {{ provider.details.first.provider_type }}</td>
       </tr>
       </tbody>
     </table>
   </div>
 
-  {% include 'data_responsible/_data_table.html' %}
+  {% include 'data_provider/_data_table.html' %}
 
 {% endblock %}
 

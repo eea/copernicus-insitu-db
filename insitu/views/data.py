@@ -8,7 +8,7 @@ from insitu.views.base import ESDatatableView
 from insitu.views.protected import (
     ProtectedTemplateView, ProtectedDetailView,
     ProtectedUpdateView, ProtectedCreateView, ProtectedDeleteView)
-from insitu.views.protected import IsAuthenticated, IsCopernicusServiceResponsible
+from insitu.views.protected import IsAuthenticated, IsCopernicusServiceProvider
 from picklists import models as pickmodels
 
 
@@ -60,7 +60,7 @@ class DataAdd(ProtectedCreateView):
     template_name = 'data/add.html'
     form_class = forms.DataForm
     model = models.Data
-    permission_classes = (IsCopernicusServiceResponsible, )
+    permission_classes = (IsCopernicusServiceProvider, )
     permission_denied_redirect = reverse_lazy('data:list')
 
     def get_success_url(self):
@@ -73,7 +73,7 @@ class DataEdit(ProtectedUpdateView):
     form_class = forms.DataForm
     model = models.Data
     context_object_name = 'data'
-    permission_classes = (IsCopernicusServiceResponsible, )
+    permission_classes = (IsCopernicusServiceProvider, )
     permission_denied_redirect = reverse_lazy('data:list')
 
     def get_success_url(self):
@@ -94,7 +94,7 @@ class DataDelete(ProtectedDeleteView):
     form_class = forms.DataForm
     model = models.Data
     context_object_name = 'data'
-    permission_classes = (IsCopernicusServiceResponsible, )
+    permission_classes = (IsCopernicusServiceProvider, )
     permission_denied_redirect = reverse_lazy('data:list')
 
     def get_success_url(self):

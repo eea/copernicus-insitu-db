@@ -110,21 +110,21 @@
   </div>
   <div class="row">
     <h3 class="col-sm-12">
-      <span>Data Responsibles</span>
+      <span>Data Providers</span>
       {% if request.user.service_resp or request.user.is_superuser %}
         <span class="pull-right">
           <a class="btn btn-primary pull-right"
-             href="{% url 'data:responsible:add' data.pk %}">Add data
-            responsible</a>
+             href="{% url 'data:provider:add' data.pk %}">Add data provider
+          </a>
         </span>
       {% endif %}
     </h3>
     <div class="col-sm-12">
-      <table id="responsibles"
+      <table id="providers"
              class="table table-condensed table-bordered table-hover">
         <thead>
           <tr>
-            <th>Data responsible</th>
+            <th>Data provider</th>
             <th>Role</th>
             <th class="no-sort">Is network</th>
             {% if request.user.service_resp or request.user.is_superuser %}
@@ -133,14 +133,14 @@
           </tr>
         </thead>
         <tbody>
-        {% for rel in data.dataresponsiblerelation_set.all %}
+        {% for rel in data.dataproviderrelation_set.all %}
           <tr>
             <td>
-              <a href="{% url 'responsible:detail' rel.responsible.pk %}">{{ rel.responsible.name }}</a>
+              <a href="{% url 'provider:detail' rel.provider.pk %}">{{ rel.provider.name }}</a>
             </td>
             <td>{{ rel.get_role_display }}</td>
             <td>
-              {% if rel.responsible.is_network %}
+              {% if rel.provider.is_network %}
                 <span class='glyphicon glyphicon-ok-circle text-success'></span>
               {% else %}
                 <span class='glyphicon glyphicon-remove-circle text-danger'></span>
@@ -148,11 +148,11 @@
             </td>
             {% if request.user.service_resp or request.user.is_superuser %}
               <td class="row">
-                <a href="{% url 'data:responsible:edit' group_pk=data.pk pk=rel.pk %}"
+                <a href="{% url 'data:provider:edit' group_pk=data.pk pk=rel.pk %}"
                    class="col-sm-6">
                   <span class="glyphicon glyphicon-edit"></span>
                 </a>
-                <a href="{% url 'data:responsible:delete' group_pk=data.pk pk=rel.pk %}"
+                <a href="{% url 'data:provider:delete' group_pk=data.pk pk=rel.pk %}"
                    class="col-sm-6">
                   <span class="glyphicon glyphicon-trash"></span>
                 </a>
@@ -239,7 +239,7 @@
   <script>
     $(function () {
 
-      var table = $('#responsibles').dataTable({
+      var table = $('#providers').dataTable({
         columnDefs: [
           { targets: 'no-sort',
             orderable: false }

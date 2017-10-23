@@ -18,17 +18,17 @@ class ComponentAdmin(admin.ModelAdmin):
     list_display = ('name', 'service', 'entrusted_entity')
 
 
-class CopernicusResponsibleAdmin(admin.ModelAdmin):
+class CopernicusProviderAdmin(admin.ModelAdmin):
     search_fields = ['user__username', 'service__name']
     list_display = ('user', 'service')
 
 
 class DataProviderUserAdmin(admin.ModelAdmin):
-    search_fields = ['user__username', 'responsible__name']
-    list_display = ('user', 'responsible')
+    search_fields = ['user__username', 'provider__name']
+    list_display = ('user', 'provider')
 
 
-class CountryResponsible(admin.ModelAdmin):
+class CountryProvider(admin.ModelAdmin):
     search_fields = ['user__username', 'country__name']
     list_display = ('user', 'country')
 
@@ -39,13 +39,13 @@ admin.site.register(models.Component, ComponentAdmin)
 admin.site.register(models.Requirement)
 admin.site.register(models.Product)
 admin.site.register(models.ProductRequirement)
-admin.site.register(models.DataResponsible)
-admin.site.register(models.DataResponsibleDetails)
+admin.site.register(models.DataProvider)
+admin.site.register(models.DataProviderDetails)
 admin.site.register(models.Data)
 admin.site.register(models.DataRequirement)
-admin.site.register(models.DataResponsibleRelation)
+admin.site.register(models.DataProviderRelation)
 admin.site.register(models.Metric)
 
-admin.site.register(models.CopernicusResponsible, CopernicusResponsibleAdmin)
+admin.site.register(models.CopernicusProvider, CopernicusProviderAdmin)
 admin.site.register(models.DataProviderUser, DataProviderUserAdmin)
-admin.site.register(models.CountryResponsible, CountryResponsible)
+admin.site.register(models.CountryProvider, CountryProvider)

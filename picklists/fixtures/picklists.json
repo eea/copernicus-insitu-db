@@ -4152,7 +4152,7 @@
   }
 },
 {
-  "model": "picklists.responsibletype",
+  "model": "picklists.providertype",
   "pk": 1,
   "fields": {
     "name": "Commercial",
@@ -4162,7 +4162,7 @@
   }
 },
 {
-  "model": "picklists.responsibletype",
+  "model": "picklists.providertype",
   "pk": 2,
   "fields": {
     "name": "Public",
@@ -4172,7 +4172,7 @@
   }
 },
 {
-  "model": "picklists.responsibletype",
+  "model": "picklists.providertype",
   "pk": 3,
   "fields": {
     "name": "Institutional",

@@ -4,12 +4,12 @@ from insitu import models
 from insitu import forms
 from insitu.views.protected import (
     ProtectedUpdateView, ProtectedCreateView, ProtectedDeleteView)
-from insitu.views.protected.permissions import IsCopernicusServiceResponsible
+from insitu.views.protected.permissions import IsCopernicusServiceProvider
 
 
 class DataRequirementAdd(ProtectedCreateView):
     template_name = 'data/requirement/add.html'
-    permission_classes = (IsCopernicusServiceResponsible, )
+    permission_classes = (IsCopernicusServiceProvider, )
 
     def permission_denied(self, request):
         if 'data_pk' in self.kwargs:
@@ -66,7 +66,7 @@ class DataRequirementEdit(ProtectedUpdateView):
     template_name = 'data/requirement/edit.html'
     form_class = forms.DataRequirementEditForm
     context_object_name = 'rel'
-    permission_classes = (IsCopernicusServiceResponsible, )
+    permission_classes = (IsCopernicusServiceProvider, )
 
     def permission_denied(self, request):
         if 'data_pk' in self.kwargs:
@@ -98,7 +98,7 @@ class DataRequirementDelete(ProtectedDeleteView):
     template_name = 'data/requirement/delete.html'
     form_class = forms.DataRequirementEditForm
     context_object_name = 'rel'
-    permission_classes = (IsCopernicusServiceResponsible, )
+    permission_classes = (IsCopernicusServiceProvider, )
 
     def permission_denied(self, request):
         if 'data_pk' in self.kwargs:
