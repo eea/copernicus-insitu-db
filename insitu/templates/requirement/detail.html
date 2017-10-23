@@ -90,7 +90,7 @@
       {% if request.user.service_resp or request.user.is_superuser %}
         <span class="pull-right">
           <a class="btn btn-primary pull-right"
-             href="{% url 'requirement:product:add' requirement.pk %}">Add product requirement</a>
+             href="{% url 'requirement:product:add' requirement.pk %}">Add requirement to product</a>
         </span>
       {% endif %}
     </h3>
@@ -150,7 +150,7 @@
       {% if request.user.service_resp or request.user.is_superuser %}
         <span class="pull-right">
           <a class="btn btn-primary pull-right"
-             href="{% url 'requirement:data:add' requirement.pk %}">Add data requirement</a>
+             href="{% url 'requirement:data:add' requirement.pk %}">Add requirement to data</a>
         </span>
       {% endif %}
     </h3>
