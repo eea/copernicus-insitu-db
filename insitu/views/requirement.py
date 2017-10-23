@@ -11,7 +11,7 @@ from insitu.views.protected import (
 from picklists import models as pickmodels
 from insitu.views.protected.permissions import (
     IsAuthenticated,
-    IsCopernicusServiceProvider,
+    IsCopernicusServiceResponsible,
 )
 
 
@@ -63,7 +63,7 @@ class RequirementAdd(ProtectedCreateView):
     template_name = 'requirement/add.html'
     form_class = forms.RequirementForm
     model = models.Requirement
-    permission_classes = (IsCopernicusServiceProvider, )
+    permission_classes = (IsCopernicusServiceResponsible,)
 
     def permission_denied(self, request):
         self.permission_denied_redirect = reverse('requirement:list')
@@ -79,7 +79,7 @@ class RequirementEdit(ProtectedUpdateView):
     form_class = forms.RequirementForm
     model = models.Requirement
     context_object_name = 'requirement'
-    permission_classes = (IsCopernicusServiceProvider, )
+    permission_classes = (IsCopernicusServiceResponsible,)
 
     def permission_denied(self, request):
         self.permission_denied_redirect = reverse('requirement:list')
@@ -110,7 +110,7 @@ class RequirementDelete(ProtectedDeleteView):
     form_class = forms.RequirementForm
     model = models.Requirement
     context_object_name = 'requirement'
-    permission_classes = (IsCopernicusServiceProvider, )
+    permission_classes = (IsCopernicusServiceResponsible,)
 
     def permission_denied(self, request):
         self.permission_denied_redirect = reverse('requirement:list')

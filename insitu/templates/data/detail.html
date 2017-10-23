@@ -114,7 +114,7 @@
       {% if request.user.service_resp or request.user.is_superuser %}
         <span class="pull-right">
           <a class="btn btn-primary pull-right"
-             href="{% url 'data:provider:add' data.pk %}">Add data provider
+             href="{% url 'data:provider:add' data.pk %}">Add data to data provider
           </a>
         </span>
       {% endif %}
@@ -167,12 +167,6 @@
   <div class="row">
     <h3 class="col-sm-12">
       <span>Requirements</span>
-      {% if request.user.service_resp or request.user.is_superuser %}
-        <span class="pull-right">
-          <a class="btn btn-primary pull-right"
-             href="{% url 'data:requirement:add' data.pk %}">Add data requirement</a>
-        </span>
-      {% endif %}
     </h3>
     <div class="col-sm-12">
       <table id="requirements"
@@ -184,9 +178,6 @@
           <th class="no-sort">Note</th>
           <th class="no-sort">Information costs</th>
           <th class="no-sort">Handling costs</th>
-          {% if request.user.service_resp or request.user.is_superuser %}
-            <th class="no-sort" width="10%"></th>
-          {% endif %}
         </tr>
         </thead>
         <tbody>
@@ -211,18 +202,6 @@
                 <span class='glyphicon glyphicon-remove-circle text-danger'></span>
               {% endif %}
             </td>
-            {% if request.user.service_resp or request.user.is_superuser %}
-              <td class="row">
-                <a href="{% url 'data:requirement:edit' data_pk=data.pk pk=rel.pk %}"
-                   class="col-sm-6">
-                  <span class="glyphicon glyphicon-edit"></span>
-                </a>
-                <a href="{% url 'data:requirement:delete' data_pk=data.pk pk=rel.pk %}"
-                  class="col-sm-6">
-                  <span class="glyphicon glyphicon-trash"></span>
-                </a>
-              </td>
-            {% endif %}
           </tr>
         {% endfor %}
         </tbody>

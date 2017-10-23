@@ -10,14 +10,15 @@ from insitu.views.protected import (
     ProtectedTemplateView, ProtectedDetailView,
     ProtectedUpdateView, ProtectedCreateView, ProtectedDeleteView)
 from insitu.views.protected import IsAuthenticated
-from insitu.views.protected.permissions import IsCopernicusServiceProvider
+from insitu.views.protected.permissions import IsCopernicusServiceResponsible
 from insitu.utils import get_choices
 
 from picklists import models as pickmodels
 
+
 class DataProviderList(ProtectedTemplateView):
     template_name = 'data_provider/list.html'
-    permission_classes = (IsAuthenticated, )
+    permission_classes = (IsAuthenticated,)
     permission_denied_redirect = reverse_lazy('auth:login')
 
     def get_context_data(self):
@@ -36,13 +37,13 @@ class DataProviderListJson(ESDatatableView):
     order_columns = columns
     filters = ['is_network', 'provider_type']
     document = documents.DataProviderDoc
-    permission_classes = (IsAuthenticated, )
+    permission_classes = (IsAuthenticated,)
 
 
 class DataProviderDetail(ProtectedDetailView):
     model = models.DataProvider
     context_object_name = 'provider'
-    permission_classes = (IsAuthenticated, )
+    permission_classes = (IsAuthenticated,)
     permission_denied_redirect = reverse_lazy('provider:list')
 
     def get_template_names(self):
@@ -55,7 +56,7 @@ class DataProviderDetail(ProtectedDetailView):
 class DataProviderAddNetwork(ProtectedCreateView):
     template_name = 'data_provider/network/add.html'
     form_class = forms.DataProviderNetworkForm
-    permission_classes = (IsCopernicusServiceProvider, )
+    permission_classes = (IsCopernicusServiceResponsible,)
     permission_denied_redirect = reverse_lazy('provider:list')
 
     def get_success_url(self):
@@ -67,7 +68,7 @@ class DataProviderEditNetwork(ProtectedUpdateView):
     form_class = forms.DataProviderNetworkForm
     context_object_name = 'provider'
     model = models.DataProvider
-    permission_classes = (IsCopernicusServiceProvider, )
+    permission_classes = (IsCopernicusServiceResponsible,)
     permission_denied_redirect = reverse_lazy('provider:list')
 
     def get_success_url(self):
@@ -79,7 +80,7 @@ class DataProviderEditNetworkMembers(ProtectedUpdateView):
     form_class = forms.DataProviderNetworkMembersForm
     context_object_name = 'provider'
     model = models.DataProvider
-    permission_classes = (IsCopernicusServiceProvider, )
+    permission_classes = (IsCopernicusServiceResponsible,)
     permission_denied_redirect = reverse_lazy('provider:list')
 
     def get_success_url(self):
@@ -91,7 +92,7 @@ class DataProviderDeleteNetwork(ProtectedDeleteView):
     form_class = forms.DataProviderNetworkForm
     context_object_name = 'provider'
     model = models.DataProvider
-    permission_classes = (IsCopernicusServiceProvider, )
+    permission_classes = (IsCopernicusServiceResponsible,)
     permission_denied_redirect = reverse_lazy('provider:list')
 
     def get_success_url(self):
@@ -101,7 +102,7 @@ class DataProviderDeleteNetwork(ProtectedDeleteView):
 class DataProviderAddNonNetwork(ProtectedCreateView):
     template_name = 'data_provider/non_network/add.html'
     form_class = forms.DataProviderNonNetworkForm
-    permission_classes = (IsCopernicusServiceProvider, )
+    permission_classes = (IsCopernicusServiceResponsible,)
     permission_denied_redirect = reverse_lazy('provider:list')
 
     def get_context_data(self, **kwargs):
@@ -140,7 +141,7 @@ class DataProviderEditNonNetwork(ProtectedUpdateView):
     form_class = forms.DataProviderNonNetworkForm
     context_object_name = 'provider'
     model = models.DataProvider
-    permission_classes = (IsCopernicusServiceProvider, )
+    permission_classes = (IsCopernicusServiceResponsible,)
     permission_denied_redirect = reverse_lazy('provider:list')
 
     def get_context_data(self, **kwargs):
@@ -156,7 +157,7 @@ class DataProviderEditNonNetwork(ProtectedUpdateView):
         data = form.data.copy()
         data['data_provider'] = self.object.pk
         details_form = forms.DataProviderDetailsForm(instance=details,
-                                                        data=data)
+                                                     data=data)
         details_form.save()
 
     def form_valid(self, form):
@@ -182,7 +183,7 @@ class DataProviderDeleteNonNetwork(ProtectedDeleteView):
     form_class = forms.DataProviderNonNetworkForm
     context_object_name = 'provider'
     model = models.DataProvider
-    permission_classes = (IsCopernicusServiceProvider, )
+    permission_classes = (IsCopernicusServiceResponsible,)
     permission_denied_redirect = reverse_lazy('provider:list')
 
     def get_success_url(self):

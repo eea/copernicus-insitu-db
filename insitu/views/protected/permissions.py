@@ -4,6 +4,7 @@ from insitu.models import (
     DataProviderUser
 )
 
+
 class BasePermission(object):
 
     def has_permission(self, request, view):
@@ -26,7 +27,7 @@ class IsSuperuser(IsAuthenticated):
                 and request.user.is_superuser)
 
 
-class IsCopernicusServiceProvider(IsAuthenticated):
+class IsCopernicusServiceResponsible(IsAuthenticated):
     def has_permission(self, request, view):
         has_permission = super().has_permission(request, view)
         if has_permission:
