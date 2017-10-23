@@ -45,10 +45,6 @@ product_patterns = [
     url(r'^(?P<pk>[0-9]+)/delete/$',
         views.ProductDelete.as_view(),
         name='delete'),
-
-    url(r'^(?P<product_pk>[0-9]+)/requirement/',
-        include(product_requirement_patterns,
-                namespace='requirement')),
 ]
 
 data_requirement_patterns = [
@@ -141,10 +137,6 @@ data_patterns = [
     url(r'^(?P<group_pk>[0-9]+)/responsible/',
         include(data_data_responsible_patterns,
                 namespace='responsible')),
-
-    url(r'^(?P<data_pk>[0-9]+)/requirement/',
-        include(data_requirement_patterns,
-                namespace='requirement')),
 ]
 
 responsible_patterns = [
@@ -187,10 +179,6 @@ responsible_patterns = [
     url(r'^(?P<pk>[0-9]+)/delete/$',
         views.DataResponsibleDeleteNonNetwork.as_view(),
         name='delete_non_network'),
-
-    url(r'^(?P<responsible_pk>[0-9]+)/group/',
-        include(data_data_responsible_patterns,
-                namespace='group')),
 ]
 
 auth_patterns = [

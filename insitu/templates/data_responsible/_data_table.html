@@ -1,12 +1,6 @@
 <div class="row">
   <h3 class="col-sm-12">
     <span>Data</span>
-    {% if request.user.service_resp or request.user.is_superuser %}
-      <span class="pull-right">
-          <a class="btn btn-primary pull-right"
-             href="{% url 'responsible:group:add' responsible.pk %}">Add data</a>
-      </span>
-    {% endif %}
   </h3>
   <div class="col-sm-12">
     <table id="groups"
@@ -15,9 +9,6 @@
       <tr>
         <th>Data</th>
         <th>Role</th>
-        {% if request.user.is_superuser or request.user.service_resp %}
-          <th class="no-sort" width="10%"></th>
-        {% endif %}
       </tr>
       </thead>
       <tbody>
@@ -27,18 +18,6 @@
             <a href="{% url 'data:detail' rel.data.pk %}">{{ rel.data.name }}</a>
           </td>
           <td>{{ rel.get_role_display }}</td>
-          {% if request.user.is_superuser or request.user.service_resp %}
-            <td class="row">
-              <a href="{% url 'responsible:group:edit' responsible_pk=responsible.pk pk=rel.pk %}"
-                 class="col-sm-6">
-                <span class="glyphicon glyphicon-edit"></span>
-              </a>
-              <a href="{% url 'responsible:group:delete' responsible_pk=responsible.pk pk=rel.pk %}"
-                 class="col-sm-6">
-                <span class="glyphicon glyphicon-trash"></span>
-              </a>
-            </td>
-          {% endif %}
         </tr>
       {% endfor %}
       </tbody>
