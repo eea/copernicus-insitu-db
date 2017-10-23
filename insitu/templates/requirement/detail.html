@@ -20,6 +20,11 @@
           requirement</a>
         </span>
         <span class="pull-right">
+        <a class="btn btn-primary pull-right" href="{% url 'requirement:add' %}?pk={{ requirement.pk }}">
+          Clone requirement
+        </a>
+        </span>
+        <span class="pull-right">
         <a class="btn btn-primary pull-right"
            href="{% url 'requirement:edit' requirement.pk %}">Edit requirement</a>
         </span>
