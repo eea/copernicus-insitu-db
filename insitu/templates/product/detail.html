@@ -108,12 +108,6 @@
   <div class="row">
     <h3 class="col-sm-12">
       <span>Requirements</span>
-      {% if request.user.is_superuser %}
-        <span class="pull-right">
-          <a class="btn btn-primary pull-right"
-             href="{% url 'product:requirement:add' product.pk %}">Add requirement</a>
-        </span>
-      {% endif %}
     </h3>
     <div class="col-sm-12">
       <table id="requirements"
@@ -147,20 +141,6 @@
               {% endfor %}
             </td>
             <td>{{ rel.note }}</td>
-            {% if request.user.service_resp or request.user.is_superuser %}
-              <td class="row">
-                <a
-                  href="{% url 'product:requirement:edit' product_pk=product.pk pk=rel.pk %}"
-                  class="col-sm-6">
-                  <span class="glyphicon glyphicon-edit"></span>
-                </a>
-                <a
-                  href="{% url 'product:requirement:delete' product_pk=product.pk pk=rel.pk %}"
-                  class="col-sm-6">
-                  <span class="glyphicon glyphicon-trash"></span>
-                </a>
-              </td>
-            {% endif %}
           </tr>
         {% endfor %}
         </tbody>
