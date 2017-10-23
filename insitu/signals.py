@@ -1,6 +1,6 @@
 import django.dispatch
 
-data_resposible_updated = django.dispatch.Signal()
+data_provider_updated = django.dispatch.Signal()
 requirement_updated = django.dispatch.Signal()
 
 
@@ -8,4 +8,4 @@ requirement_updated = django.dispatch.Signal()
 product_deleted = django.dispatch.Signal()
 requirement_deleted = django.dispatch.Signal()
 data_deleted = django.dispatch.Signal()
-data_responsible_deleted = django.dispatch.Signal()
+data_provider_deleted = django.dispatch.Signal()

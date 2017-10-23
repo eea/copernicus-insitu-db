@@ -27,7 +27,7 @@ class DataRequirementTests(base.FormCheckTestCase):
         }
         user = base.UserFactory()
         self.client.force_login(user)
-        base.CopernicususResponsibleFactory(user=user)
+        base.CopernicususProviderFactory(user=user)
 
     def test_data_requirement_add_required_fields(self):
         data = {}
@@ -111,8 +111,8 @@ class DataRequirementPermissionsTests(base.PermissionsCheckTestCase):
 
     def test_data_requirement_add_auth_from_data_requirement(self):
         data_requirement = base.RequirementFactory()
-        self.check_user_redirect_all_methods(
-            redirect_url=self.login_url,
+        self.check_authenticated_user_redirect_all_methods(
+            redirect_url=reverse('requirement:list'),
             url=reverse('requirement:data:add',
                         kwargs={'requirement_pk': data_requirement.pk}))
 
@@ -120,8 +120,8 @@ class DataRequirementPermissionsTests(base.PermissionsCheckTestCase):
         data_requirement = base.RequirementFactory()
         data_requirement = base.DataRequirementFactory(
             requirement=data_requirement)
-        self.check_user_redirect_all_methods(
-            redirect_url=self.login_url,
+        self.check_authenticated_user_redirect_all_methods(
+            redirect_url=reverse('requirement:list'),
             url=reverse('requirement:data:edit',
                         kwargs={'requirement_pk': data_requirement.pk,
                                 'pk': data_requirement.pk}))
@@ -130,8 +130,8 @@ class DataRequirementPermissionsTests(base.PermissionsCheckTestCase):
         data_requirement = base.RequirementFactory()
         data_requirement = base.DataRequirementFactory(
             requirement=data_requirement)
-        self.check_user_redirect_all_methods(
-            redirect_url=self.login_url,
+        self.check_authenticated_user_redirect_all_methods(
+            redirect_url=reverse('requirement:list'),
             url=reverse('requirement:data:delete',
                         kwargs={'requirement_pk': data_requirement.pk,
                                 'pk': data_requirement.pk}))

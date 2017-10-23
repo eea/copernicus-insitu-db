@@ -55,7 +55,6 @@ class DataRequirementEdit(ProtectedUpdateView):
 class DataRequirementDelete(ProtectedDeleteView):
     model = models.DataRequirement
     template_name = 'data/requirement/delete.html'
-    form_class = forms.DataRequirementEditForm
     context_object_name = 'rel'
     permission_classes = (IsCopernicusServiceResponsible,)
     permission_denied_redirect = reverse_lazy('requirement:list')

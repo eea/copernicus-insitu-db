@@ -3,8 +3,9 @@ from django.db import transaction
 
 from insitu import models
 from insitu import signals
-from picklists.models import Dissemination, Quality, RequirementGroup
-
+from picklists.models import (
+    Dissemination, QualityControlProcedure, RequirementGroup
+)
 
 class ProductForm(forms.ModelForm):
     class Meta:
@@ -69,7 +70,8 @@ class RequirementForm(forms.ModelForm):
 
     class Meta:
         model = models.Requirement
-        fields = ['name', 'note', 'dissemination', 'quality', 'group']
+        fields = ['name', 'note', 'dissemination',
+                  'quality_control_procedure', 'group']
 
     def _create_metric(self, threshold, breakthrough, goal):
         return models.Metric.objects.create(
@@ -117,7 +119,10 @@ class RequirementForm(forms.ModelForm):
             'name': self.data['name'],
             'note': self.data['note'],
             'dissemination': Dissemination.objects.get(id=self.data['dissemination']),
-            'quality': Quality.objects.get(id=self.data['quality']),
+            'quality_control_procedure':
+                QualityControlProcedure.objects.get(
+                    id=self.data['quality_control_procedure']
+                ),
             'group': RequirementGroup.objects.get(id=self.data['group']),
         }
 
@@ -150,8 +155,9 @@ class DataForm(forms.ModelForm):
         auto_created = True
         fields = ['name', 'note', 'update_frequency', 'coverage',
                   'start_time_coverage', 'end_time_coverage', 'timeliness',
-                  'policy', 'data_type', 'data_format', 'quality',
-                  'dissemination', 'inspire_themes', 'essential_variables']
+                  'policy', 'data_type', 'data_format',
+                  'quality_control_procedure', 'dissemination',
+                  'inspire_themes', 'essential_variables']
 
 
 class DataRequirementBaseForm(forms.ModelForm):
@@ -178,27 +184,27 @@ class DataRequirementEditForm(DataRequirementForm,
     pass
 
 
-class DataResponsibleNetworkForm(forms.ModelForm):
+class DataProviderNetworkForm(forms.ModelForm):
     is_network = forms.BooleanField(initial=True,
                                     widget=forms.HiddenInput)
 
     class Meta:
-        model = models.DataResponsible
+        model = models.DataProvider
         fields = ['name', 'description', 'countries', 'is_network']
 
 
-class DataResponsibleNetworkMembersForm(forms.ModelForm):
+class DataProviderNetworkMembersForm(forms.ModelForm):
     members = forms.ModelMultipleChoiceField(
         required=False,
-        queryset=models.DataResponsible.objects.all(),
+        queryset=models.DataProvider.objects.all(),
         label='Members')
 
     class Meta:
-        model = models.DataResponsible
+        model = models.DataProvider
         fields = ['members']
 
     def __init__(self, *args, **kwargs):
-        super(DataResponsibleNetworkMembersForm, self).__init__(*args, **kwargs)
+        super(DataProviderNetworkMembersForm, self).__init__(*args, **kwargs)
         self.initial['members'] = self.instance.members.all()
 
     def clean_members(self):
@@ -219,26 +225,26 @@ class DataResponsibleNetworkMembersForm(forms.ModelForm):
                     instance.members.add(member)
         return instance
 
-class DataResponsibleDetailsForm(forms.ModelForm):
-    data_responsible = forms.ModelChoiceField(
+class DataProviderDetailsForm(forms.ModelForm):
+    data_provider = forms.ModelChoiceField(
         widget=forms.HiddenInput,
-        queryset=models.DataResponsible.objects.filter(is_network=False),
+        queryset=models.DataProvider.objects.filter(is_network=False),
         required=False)
 
     class Meta:
-        model = models.DataResponsibleDetails
+        model = models.DataProviderDetails
         fields = ['acronym', 'website', 'address', 'phone', 'email', 'contact_person',
-                  'responsible_type', 'data_responsible']
+                  'provider_type', 'data_provider']
 
 
-class DataResponsibleNonNetworkForm(forms.ModelForm):
+class DataProviderNonNetworkForm(forms.ModelForm):
     networks = forms.ModelMultipleChoiceField(
         required=False,
-        queryset=models.DataResponsible.objects.filter(is_network=True),
+        queryset=models.DataProvider.objects.filter(is_network=True),
         label='Networks')
 
     class Meta:
-        model = models.DataResponsible
+        model = models.DataProvider
         fields = ['name', 'description', 'countries', 'networks']
 
     def save(self, commit=True):
@@ -249,24 +255,24 @@ class DataResponsibleNonNetworkForm(forms.ModelForm):
         return instance
 
 
-class DataResponsibleRelationBaseForm(forms.ModelForm):
+class DataProviderRelationBaseForm(forms.ModelForm):
     class Meta:
-        model = models.DataResponsibleRelation
-        fields = ['data', 'responsible', 'role']
+        model = models.DataProviderRelation
+        fields = ['data', 'provider', 'role']
 
 
-class DataResponsibleRelationResponsibleForm(DataResponsibleRelationBaseForm):
-    responsible = forms.ModelChoiceField(
+class DataProviderRelationProviderForm(DataProviderRelationBaseForm):
+    provider = forms.ModelChoiceField(
         disabled=True,
-        queryset=models.DataResponsible.objects.all())
+        queryset=models.DataProvider.objects.all())
 
 
-class DataResponsibleRelationGroupForm(DataResponsibleRelationBaseForm):
+class DataProviderRelationGroupForm(DataProviderRelationBaseForm):
     data = forms.ModelChoiceField(
         disabled=True,
         queryset=models.Data.objects.all())
 
 
-class DataResponsibleRelationEditForm(DataResponsibleRelationResponsibleForm,
-                                      DataResponsibleRelationGroupForm):
+class DataProviderRelationEditForm(DataProviderRelationProviderForm,
+                                      DataProviderRelationGroupForm):
     pass

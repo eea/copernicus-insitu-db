@@ -1,4 +1,8 @@
-from insitu.models import CopernicusResponsible, CountryResponsible, DataProvider
+from insitu.models import (
+    CopernicusProvider,
+    CountryProvider,
+    DataProviderUser
+)
 
 
 class BasePermission(object):
@@ -30,31 +34,31 @@ class IsCopernicusServiceResponsible(IsAuthenticated):
             try:
                 request.user.service_resp
                 return True
-            except CopernicusResponsible.DoesNotExist:
+            except CopernicusProvider.DoesNotExist:
                 return request.user.is_superuser
         return False
 
 
-class IsCountryResponsible(IsAuthenticated):
+class IsCountryProvider(IsAuthenticated):
     def has_permission(self, request, view):
         has_permission = super().has_permission(request, view)
         if has_permission:
             try:
                 request.user.country_resp
                 return True
-            except CountryResponsible.DoesNotExist:
+            except CountryProvider.DoesNotExist:
                 return request.user.is_superuser
         return False
 
 
-class IsDataProvider(IsAuthenticated):
+class IsDataProviderUser(IsAuthenticated):
     def has_permission(self, request, view):
         has_permission = super().has_permission(request, view)
         if has_permission:
             try:
                 request.user.data_resp
                 return True
-            except DataProvider.DoesNotExist:
+            except DataProviderUser.DoesNotExist:
                 return request.user.is_superuser
         return False
 

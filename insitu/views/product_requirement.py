@@ -58,7 +58,6 @@ class ProductRequirementEdit(ProtectedUpdateView):
 class ProductRequirementDelete(ProtectedDeleteView):
     model = models.ProductRequirement
     template_name = 'product/requirement/delete.html'
-    form_class = forms.ProductRequirementEditForm
     context_object_name = 'rel'
     permission_classes = (IsCopernicusServiceResponsible,)
     permission_denied_redirect = reverse_lazy('requirement:list')

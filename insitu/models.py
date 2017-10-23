@@ -86,10 +86,10 @@ class Metric(models.Model):
 
 
 class CopernicusService(models.Model):
-    acronym = models.CharField(max_length=10)
+    acronym = models.CharField(max_length=10, null=True)
     name = models.CharField(max_length=100)
-    description = models.TextField()
-    website = models.CharField(max_length=255)
+    description = models.TextField(null=True)
+    website = models.CharField(max_length=255, null=True)
     created_at = models.DateTimeField(auto_now_add=True,
                                       null=True)
     updated_at = models.DateTimeField(auto_now=True,
@@ -100,9 +100,9 @@ class CopernicusService(models.Model):
 
 
 class EntrustedEntity(models.Model):
-    acronym = models.CharField(max_length=10)
+    acronym = models.CharField(max_length=10, blank=True)
     name = models.CharField(max_length=100)
-    website = models.CharField(max_length=255)
+    website = models.CharField(max_length=255, blank=True)
     created_at = models.DateTimeField(auto_now_add=True,
                                       null=True)
     updated_at = models.DateTimeField(auto_now=True,
@@ -116,7 +116,7 @@ class EntrustedEntity(models.Model):
 
 
 class Component(models.Model):
-    acronym = models.CharField(max_length=10)
+    acronym = models.CharField(max_length=10, blank=True)
     name = models.CharField(max_length=100)
     service = models.ForeignKey(CopernicusService, on_delete=models.CASCADE)
     entrusted_entity = models.ForeignKey(EntrustedEntity,
@@ -142,17 +142,19 @@ class Requirement(SoftDeleteModel):
     dissemination = models.ForeignKey(pickmodels.Dissemination,
                                       on_delete=models.CASCADE,
                                       related_name='+')
-    quality = models.ForeignKey(pickmodels.Quality,
-                                on_delete=models.CASCADE,
-                                related_name='+')
+    quality_control_procedure = models.ForeignKey(
+        pickmodels.QualityControlProcedure,
+        on_delete=models.CASCADE,
+        related_name='+'
+    )
     group = models.ForeignKey(pickmodels.RequirementGroup,
                               on_delete=models.CASCADE)
     uncertainty = models.ForeignKey(Metric,
                                     on_delete=models.CASCADE,
                                     related_name='+')
     update_frequency = models.ForeignKey(Metric,
-                                  on_delete=models.CASCADE,
-                                  related_name='+')
+                                         on_delete=models.CASCADE,
+                                         related_name='+')
     timeliness = models.ForeignKey(Metric,
                                    on_delete=models.CASCADE,
                                    related_name='+')
@@ -177,7 +179,7 @@ class Product(SoftDeleteModel):
     ]
     elastic_delete_signal = signals.product_deleted
 
-    acronym = models.CharField(max_length=10)
+    acronym = models.CharField(max_length=10, blank=True)
     name = models.CharField(max_length=100)
     description = models.TextField(blank=True)
     note = models.TextField(blank=True)
@@ -225,12 +227,12 @@ class ProductRequirement(SoftDeleteModel):
         return '{} - {}'.format(self.product.name, self.requirement.name)
 
 
-class DataResponsible(SoftDeleteModel):
+class DataProvider(SoftDeleteModel):
     related_objects = [
-        ('DataResponsibleDetails', 'data_responsible'),
-        ('DataResponsibleRelation', 'responsible'),
+        ('DataProviderDetails', 'data_provider'),
+        ('DataProviderRelation', 'provider'),
     ]
-    elastic_delete_signal = signals.data_responsible_deleted
+    elastic_delete_signal = signals.data_provider_deleted
 
     name = models.CharField(max_length=100)
     description = models.TextField(blank=True)
@@ -252,54 +254,54 @@ class DataResponsible(SoftDeleteModel):
         details = self.details.first()
         for field in ['acronym', 'address', 'phone', 'email', 'contact_person']:
             data[field] = getattr(details, field) if details else '-'
-        data['responsible_type'] = (
-            getattr(details, 'responsible_type').name if details else '-'
+        data['provider_type'] = (
+            getattr(details, 'provider_type').name if details else '-'
         )
         return data
 
 
-class DataResponsibleDetails(SoftDeleteModel):
-    acronym = models.CharField(max_length=10)
-    website = models.CharField(max_length=255)
-    address = models.TextField()
-    phone = models.CharField(max_length=20)
-    email = models.CharField(max_length=100)
-    contact_person = models.CharField(max_length=100)
-    responsible_type = models.ForeignKey(pickmodels.ResponsibleType,
-                                         on_delete=models.CASCADE,
-                                         related_name='+')
-    data_responsible = models.ForeignKey(DataResponsible,
-                                         on_delete=models.CASCADE,
-                                         related_name='details')
+class DataProviderDetails(SoftDeleteModel):
+    acronym = models.CharField(max_length=10, blank=True)
+    website = models.CharField(max_length=255, blank=True)
+    address = models.TextField(blank=True)
+    phone = models.CharField(max_length=20, blank=True)
+    email = models.CharField(max_length=100, blank=True)
+    contact_person = models.CharField(max_length=100, blank=True)
+    provider_type = models.ForeignKey(pickmodels.ProviderType,
+                                      on_delete=models.CASCADE,
+                                      related_name='+')
+    data_provider = models.ForeignKey(DataProvider,
+                                      on_delete=models.CASCADE,
+                                      related_name='details')
     created_at = models.DateTimeField(auto_now_add=True,
                                       null=True)
     updated_at = models.DateTimeField(auto_now=True,
                                       null=True)
 
     class Meta:
-        verbose_name_plural = 'data responsible details'
+        verbose_name_plural = 'data provider details'
 
     def __str__(self):
-        return 'Details for {}'.format(self.data_responsible.name)
+        return 'Details for {}'.format(self.data_provider.name)
 
     def save(self, force_insert=False, force_update=False, using=None,
              update_fields=None):
         super().save(force_insert, force_update, using, update_fields)
-        signals.data_resposible_updated.send(sender=self)
+        signals.data_provider_updated.send(sender=self)
 
 
 class Data(SoftDeleteModel):
     related_objects = [
         ('DataRequirement', 'data'),
-        ('DataResponsibleRelation', 'data'),
+        ('DataProviderRelation', 'data'),
     ]
     elastic_delete_signal = signals.data_deleted
 
     name = models.CharField(max_length=100)
     note = models.TextField(blank=True)
     update_frequency = models.ForeignKey(pickmodels.UpdateFrequency,
-                                  on_delete=models.CASCADE,
-                                  related_name='+')
+                                         on_delete=models.CASCADE,
+                                         related_name='+')
     coverage = models.ForeignKey(pickmodels.Coverage,
                                  on_delete=models.CASCADE,
                                  related_name='+')
@@ -317,9 +319,11 @@ class Data(SoftDeleteModel):
     data_format = models.ForeignKey(pickmodels.DataFormat,
                                     on_delete=models.CASCADE,
                                     related_name='+')
-    quality = models.ForeignKey(pickmodels.Quality,
-                                on_delete=models.CASCADE,
-                                related_name='+')
+    quality_control_procedure = models.ForeignKey(
+        pickmodels.QualityControlProcedure,
+        on_delete=models.CASCADE,
+        related_name='+'
+    )
     dissemination = models.ForeignKey(pickmodels.Dissemination,
                                       on_delete=models.CASCADE,
                                       related_name='+')
@@ -329,8 +333,8 @@ class Data(SoftDeleteModel):
     )
     requirements = models.ManyToManyField(Requirement,
                                           through='DataRequirement')
-    responsibles = models.ManyToManyField(DataResponsible,
-                                          through='DataResponsibleRelation')
+    providers = models.ManyToManyField(DataProvider,
+                                       through='DataProviderRelation')
     created_at = models.DateTimeField(auto_now_add=True,
                                       null=True)
     updated_at = models.DateTimeField(auto_now=True,
@@ -359,7 +363,7 @@ class DataRequirement(SoftDeleteModel):
         return '{} - {}'.format(self.data.name, self.requirement.name)
 
 
-class DataResponsibleRelation(SoftDeleteModel):
+class DataProviderRelation(SoftDeleteModel):
     ORIGINATOR = 1
     DISTRIBUTOR = 2
     ROLE_CHOICES = (
@@ -367,7 +371,7 @@ class DataResponsibleRelation(SoftDeleteModel):
         (DISTRIBUTOR, 'Distributor'),
     )
     data = models.ForeignKey(Data, on_delete=models.CASCADE)
-    responsible = models.ForeignKey(DataResponsible, on_delete=models.CASCADE)
+    provider = models.ForeignKey(DataProvider, on_delete=models.CASCADE)
     role = models.IntegerField(choices=ROLE_CHOICES, db_index=True)
     created_at = models.DateTimeField(auto_now_add=True,
                                       null=True)
@@ -375,52 +379,52 @@ class DataResponsibleRelation(SoftDeleteModel):
                                       null=True)
 
     def __str__(self):
-        return '{} - {}'.format(self.data.name, self.responsible.name)
+        return '{} - {}'.format(self.data.name, self.provider.name)
 
 
-class CopernicusResponsibleManager(_WithRelatedUserManager):
+class CopernicusProviderManager(_WithRelatedUserManager):
     pass
 
 
-class CopernicusResponsible(models.Model):
+class CopernicusProvider(models.Model):
     user = models.OneToOneField(User,
                                 related_name='service_resp')
     service = models.ForeignKey(CopernicusService,
-                                related_name='responsible')
+                                related_name='provider')
 
-    objects = CopernicusResponsibleManager()
+    objects = CopernicusProviderManager()
     created_at = models.DateTimeField(auto_now_add=True,
                                       null=True)
     updated_at = models.DateTimeField(auto_now=True,
                                       null=True)
 
 
-class CountryResponsibleManager(_WithRelatedUserManager):
+class CountryProviderManager(_WithRelatedUserManager):
     pass
 
 
-class CountryResponsible(models.Model):
+class CountryProvider(models.Model):
     user = models.OneToOneField(User,
                                 related_name='country_resp')
     country = models.ForeignKey(pickmodels.Country,
-                                related_name='responsible')
+                                related_name='provider')
 
-    objects = CountryResponsibleManager()
+    objects = CountryProviderManager()
     created_at = models.DateTimeField(auto_now_add=True,
                                       null=True)
     updated_at = models.DateTimeField(auto_now=True,
                                       null=True)
 
 
-class DataProviderManager(_WithRelatedUserManager):
+class DataProviderUserManager(_WithRelatedUserManager):
     pass
 
 
-class DataProvider(models.Model):
+class DataProviderUser(models.Model):
     user = models.OneToOneField(User,
                                 related_name='data_resp')
-    responsible = models.ForeignKey(DataResponsible,
-                                    related_name='responsible')
+    provider = models.ForeignKey(DataProvider,
+                                related_name='provider')
     created_at = models.DateTimeField(auto_now_add=True,
                                       null=True)
     updated_at = models.DateTimeField(auto_now=True,

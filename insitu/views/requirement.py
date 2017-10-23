@@ -37,22 +37,24 @@ class RequirementList(ProtectedTemplateView):
     def get_context_data(self):
         context = super(RequirementList, self).get_context_data()
         disseminations = get_choices('name', model_cls=pickmodels.Dissemination)
-        qualities = get_choices('name', model_cls=pickmodels.Quality)
+        quality_control_procedures = get_choices(
+            'name', model_cls=pickmodels.QualityControlProcedure
+        )
         groups = get_choices('name', model_cls=pickmodels.RequirementGroup)
         context.update({
             'disseminations': disseminations,
-            'qualities': qualities,
+            'quality_control_procedures': quality_control_procedures,
             'groups': groups,
         })
         return context
 
 
 class RequirementListJson(ESDatatableView):
-    columns = ['name', 'dissemination', 'quality', 'group', 'uncertainty',
-               'update_frequency', 'timeliness', 'horizontal_resolution',
-               'vertical_resolution']
+    columns = ['name', 'dissemination', 'quality_control_procedure', 'group',
+               'uncertainty', 'update_frequency', 'timeliness',
+               'horizontal_resolution', 'vertical_resolution']
     order_columns = columns
-    filters = ['dissemination', 'quality', 'group']
+    filters = ['dissemination', 'quality_control_procedure', 'group']
     document = documents.RequirementDoc
     permission_classes = (IsAuthenticated, )
 
@@ -61,7 +63,7 @@ class RequirementAdd(ProtectedCreateView):
     template_name = 'requirement/add.html'
     form_class = forms.RequirementForm
     model = models.Requirement
-    permission_classes = (IsCopernicusServiceResponsible, )
+    permission_classes = (IsCopernicusServiceResponsible,)
 
     def permission_denied(self, request):
         self.permission_denied_redirect = reverse('requirement:list')
@@ -77,7 +79,7 @@ class RequirementEdit(ProtectedUpdateView):
     form_class = forms.RequirementForm
     model = models.Requirement
     context_object_name = 'requirement'
-    permission_classes = (IsCopernicusServiceResponsible, )
+    permission_classes = (IsCopernicusServiceResponsible,)
 
     def permission_denied(self, request):
         self.permission_denied_redirect = reverse('requirement:list')
@@ -86,7 +88,8 @@ class RequirementEdit(ProtectedUpdateView):
     def get_initial(self):
         requirement = self.get_object()
         initial_data = super().get_initial()
-        for field in ['name', 'note', 'dissemination', 'quality']:
+        for field in ['name', 'note', 'dissemination',
+                      'quality_control_procedure']:
             initial_data[field] = getattr(requirement, field)
         for field in ['uncertainty', 'update_frequency', 'timeliness',
                       'horizontal_resolution', 'vertical_resolution']:
@@ -107,7 +110,7 @@ class RequirementDelete(ProtectedDeleteView):
     form_class = forms.RequirementForm
     model = models.Requirement
     context_object_name = 'requirement'
-    permission_classes = (IsCopernicusServiceResponsible, )
+    permission_classes = (IsCopernicusServiceResponsible,)
 
     def permission_denied(self, request):
         self.permission_denied_redirect = reverse('requirement:list')

@@ -25,8 +25,8 @@ class HelpPage(ProtectedTemplateView):
             models.Country, models.DataFormat, models.DataType, models.DefinitionLevel,
             models.Dissemination, models.EssentialVariable, models.UpdateFrequency,
             models.InspireTheme, models.ProductGroup, models.RequirementGroup,
-            models.ProductStatus, models.Relevance, models.Quality, models.Timeliness,
-            models.Policy, models.ResponsibleType
+            models.ProductStatus, models.Relevance, models.QualityControlProcedure,
+            models.Timeliness, models.Policy, models.ProviderType
         ]
 
         for model in PICKLISTS:

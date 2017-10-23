@@ -12,7 +12,7 @@
       </tr>
       </thead>
       <tbody>
-      {% for rel in responsible.dataresponsiblerelation_set.all %}
+      {% for rel in provider.dataproviderrelation_set.all %}
         <tr>
           <td>
             <a href="{% url 'data:detail' rel.data.pk %}">{{ rel.data.name }}</a>

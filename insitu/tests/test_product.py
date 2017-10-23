@@ -9,7 +9,7 @@ from insitu.utils import ALL_OPTIONS_LABEL
 class ProductTests(base.FormCheckTestCase):
     fields = ['acronym', 'name', 'note', 'description']
     related_fields = ['group', 'component', 'status', 'coverage']
-    required_fields = ['acronym', 'name', 'group', 'component',
+    required_fields = ['name', 'group', 'component',
                        'status', 'coverage']
 
     def setUp(self):
@@ -18,9 +18,8 @@ class ProductTests(base.FormCheckTestCase):
         component = base.ComponentFactory()
         status = base.ProductStatusFactory()
         coverage = base.CoverageFactory()
-
-        responsible_user = base.UserFactory(is_superuser=True)
-        self.client.force_login(responsible_user)
+        provider_user = base.UserFactory(is_superuser=True)
+        self.client.force_login(provider_user)
         self._DATA = {
             'acronym': 'TST',
             'name': 'TEST product',

@@ -2,8 +2,8 @@ from .product_requirement import *
 from .product import *
 from .requirement import *
 from .data import *
-from .data_responsible import *
-from .data_responsible_relation import *
+from .data_provider import *
+from .data_provider_relation import *
 from .data_requirement import *
 from .user import *
 from .management import *

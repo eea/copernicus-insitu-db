@@ -37,7 +37,7 @@
           <th>Policy</th>
           <th>Data type</th>
           <th>Data format</th>
-          <th>Quality</th>
+          <th>Quality Control Procedure</th>
           <th>Dissemination</th>
         </tr>
         </thead>
@@ -104,9 +104,9 @@
           </div>
 
           <div class="form-group">
-            <label for="quality">Quality:</label>
-            <select id="quality" class="form-control">
-              {% for quality in qualities %}
+            <label for="quality_control_procedure">Quality Control Procedure:</label>
+            <select id="quality_control_procedure" class="form-control">
+              {% for quality in quality_control_procedures %}
                 <option value="{{ quality }}">{{ quality }}</option>
               {% endfor %}
             </select>
@@ -158,7 +158,7 @@
             d.policy = $('#policy').val();
             d.data_type = $('#data_type').val();
             d.data_format = $('#data_format').val();
-            d.quality = $('#quality').val();
+            d.quality_control_procedure = $('#quality_control_procedure').val();
             d.dissemination = $('#dissemination').val();
           }
         }
@@ -170,7 +170,7 @@
       });
 
       $('#reset-btn').on('click', function () {
-        $('#name,#update_frequency,#coverage,#timeliness,#policy,#data_type,#data_format,#quality,#dissemination').val('All');
+        $('#name,#update_frequency,#coverage,#timeliness,#policy,#data_type,#data_format,#quality_control_procedure,#dissemination').val('All');
         var table = $table.DataTable();
         table.ajax.reload();
       });

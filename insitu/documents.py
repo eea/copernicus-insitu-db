@@ -2,7 +2,7 @@ from django.core.urlresolvers import reverse
 from django_elasticsearch_dsl import DocType, Index, fields
 from elasticsearch_dsl.search import Search
 
-from insitu.models import Product, Requirement, DataResponsible, Data
+from insitu.models import Product, Requirement, DataProvider, Data
 from insitu import signals
 
 insitu = Index('insitu')
@@ -45,7 +45,9 @@ class ProductDoc(DocType):
 class RequirementDoc(DocType):
     name = fields.KeywordField()
     dissemination = fields.KeywordField(attr='dissemination.name')
-    quality = fields.KeywordField(attr='quality.name')
+    quality_control_procedure = fields.KeywordField(
+        attr='quality_control_procedure.name'
+    )
     group = fields.KeywordField(attr='group.name')
     uncertainty = fields.KeywordField(attr='uncertainty.to_elastic_search_format')
     update_frequency = fields.KeywordField(attr='update_frequency.to_elastic_search_format')
@@ -87,7 +89,9 @@ class DataDoc(DocType):
     policy = fields.KeywordField(attr='policy.name')
     data_type = fields.KeywordField(attr='data_type.name')
     data_format = fields.KeywordField(attr='data_format.name')
-    quality = fields.KeywordField(attr='quality.name')
+    quality_control_procedure = fields.KeywordField(
+        attr='quality_control_procedure.name'
+    )
     dissemination = fields.KeywordField(attr='dissemination.name')
 
 
@@ -109,7 +113,7 @@ class DataDoc(DocType):
 
 
 @insitu.doc_type
-class DataResponsibleDoc(DocType):
+class DataProviderDoc(DocType):
     name = fields.KeywordField()
     is_network = fields.BooleanField()
     acronym = fields.KeywordField(attr='get_elastic_search_data.acronym')
@@ -118,34 +122,34 @@ class DataResponsibleDoc(DocType):
     email = fields.KeywordField(attr='get_elastic_search_data.email')
     contact_person = fields.KeywordField(
         attr='get_elastic_search_data.contact_person')
-    responsible_type = fields.KeywordField(
-        attr='get_elastic_search_data.responsible_type')
+    provider_type = fields.KeywordField(
+        attr='get_elastic_search_data.provider_type')
 
     class Meta:
-        model = DataResponsible
+        model = DataProvider
         fields = [
             'id',
             'description'
         ]
 
     def get_name_display(self):
-        url = reverse('responsible:detail', kwargs={'pk': self.id})
+        url = reverse('provider:detail', kwargs={'pk': self.id})
         return '<a href="{url}">{name}</a>'.format(url=url, name=self.name)
 
     @staticmethod
     def delete_index(sender, **kwargs):
-        document = DataResponsibleDoc.get(id=sender.id)
+        document = DataProviderDoc.get(id=sender.id)
         document.delete()
 
     @staticmethod
     def update_index(sender, **kwargs):
-        data_responsible = sender.data_responsible
-        document = DataResponsibleDoc.get(id=data_responsible.id)
-        document.update(data_responsible)
+        data_provider = sender.data_provider
+        document = DataProviderDoc.get(id=data_provider.id)
+        document.update(data_provider)
 
-signals.data_resposible_updated.connect(DataResponsibleDoc.update_index)
+signals.data_provider_updated.connect(DataProviderDoc.update_index)
 signals.requirement_updated.connect(RequirementDoc.update_index)
 signals.product_deleted.connect(ProductDoc.delete_index)
 signals.requirement_deleted.connect(RequirementDoc.delete_index)
 signals.data_deleted.connect(DataDoc.delete_index)
-signals.data_responsible_deleted.connect(DataResponsibleDoc.delete_index)
+signals.data_provider_deleted.connect(DataProviderDoc.delete_index)

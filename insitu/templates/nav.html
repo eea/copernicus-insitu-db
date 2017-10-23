@@ -31,9 +31,9 @@
             <a href="{{ data_list }}">Data</a>
           </li>
 
-          {% url 'responsible:list' as responsible_list %}
-          <li class="{% active responsible_list %}">
-            <a href="{{ responsible_list }}">Data responsibles</a>
+          {% url 'provider:list' as provider_list %}
+          <li class="{% active provider_list %}">
+            <a href="{{ provider_list }}">Data providers</a>
           </li>
 
           {% if request.user.is_superuser %}

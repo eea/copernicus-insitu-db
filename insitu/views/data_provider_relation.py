@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
+from insitu.views.protected import IsCopernicusServiceResponsible
 from django.urls import reverse_lazy
 
-from insitu.views.protected import IsCopernicusServiceResponsible
 from insitu.views.protected import (
     ProtectedUpdateView, ProtectedCreateView, ProtectedDeleteView)
 
@@ -11,14 +11,14 @@ from insitu import models
 from insitu import forms
 
 
-class DataDataResponsibleAdd(ProtectedCreateView):
-    template_name = 'data/data_responsible/add.html'
+class DataDataProviderAdd(ProtectedCreateView):
+    template_name = 'data/data_provider/add.html'
     permission_classes = (IsCopernicusServiceResponsible,)
     permission_denied_redirect = reverse_lazy('data:list')
-    form_class = forms.DataResponsibleRelationGroupForm
+    form_class = forms.DataProviderRelationGroupForm
     form_field = 'data'
     model = models.Data
-    title = "Add a new responsible for {}"
+    title = "Add a new provider for {}"
 
     def get_form(self):
         form = super().get_form(self.form_class)
@@ -37,10 +37,10 @@ class DataDataResponsibleAdd(ProtectedCreateView):
                             kwargs={'pk': self.kwargs['group_pk']})
 
 
-class DataDataResponsibleEdit(ProtectedUpdateView):
-    model = models.DataResponsibleRelation
-    template_name = 'data/data_responsible/edit.html'
-    form_class = forms.DataResponsibleRelationEditForm
+class DataDataProviderEdit(ProtectedUpdateView):
+    model = models.DataProviderRelation
+    template_name = 'data/data_provider/edit.html'
+    form_class = forms.DataProviderRelationEditForm
     context_object_name = 'rel'
     permission_classes = (IsCopernicusServiceResponsible,)
     permission_denied_redirect = reverse_lazy('data:list')
@@ -55,9 +55,9 @@ class DataDataResponsibleEdit(ProtectedUpdateView):
                             kwargs={'pk': self.kwargs['group_pk']})
 
 
-class DataDataResponsibleDelete(ProtectedDeleteView):
-    model = models.DataResponsibleRelation
-    template_name = 'data/data_responsible/delete.html'
+class DataDataProviderDelete(ProtectedDeleteView):
+    model = models.DataProviderRelation
+    template_name = 'data/data_provider/delete.html'
     context_object_name = 'rel'
     permission_classes = (IsCopernicusServiceResponsible,)
     permission_denied_redirect = reverse_lazy('data:list')

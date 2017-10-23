@@ -11,11 +11,12 @@ class DataTests(base.FormCheckTestCase):
     fields = ['name', 'note', 'start_time_coverage', 'end_time_coverage']
     related_fields = ['update_frequency', 'coverage', 'timeliness',
                       'policy', 'data_type', 'data_format',
-                      'quality', 'dissemination']
+                      'quality_control_procedure', 'dissemination']
     many_to_many_fields = ['inspire_themes', 'essential_variables']
     required_fields = ['name', 'update_frequency', 'coverage', 'timeliness',
                       'policy', 'data_type', 'data_format',
-                      'quality', 'inspire_themes', 'dissemination']
+                      'quality_control_procedure', 'inspire_themes',
+                       'dissemination']
 
     def setUp(self):
         super().setUp()
@@ -25,7 +26,7 @@ class DataTests(base.FormCheckTestCase):
         policy = base.PolicyFactory()
         data_type = base.DataTypeFactory()
         data_format = base.DataFormatFactory()
-        quality = base.QualityFactory()
+        quality_control_procedure = base.QualityControlProcedureFactory()
         inspire_themes = [base.InspireThemeFactory(),base.InspireThemeFactory()]
         essential_variables = [base.EssentialVariableFactory(),
                                base.EssentialVariableFactory(),
@@ -41,7 +42,7 @@ class DataTests(base.FormCheckTestCase):
             'policy': policy.pk,
             'data_type': data_type.pk,
             'data_format': data_format.pk,
-            'quality': quality.pk,
+            'quality_control_procedure': quality_control_procedure.pk,
             'inspire_themes': [inspire_theme.pk for inspire_theme
                                in inspire_themes],
             'start_time_coverage': datetime.date(day=1, month=1, year=2000),
@@ -52,7 +53,7 @@ class DataTests(base.FormCheckTestCase):
             'dissemination': dissemination.pk
         }
         user = base.UserFactory()
-        base.CopernicususResponsibleFactory(user=user)
+        base.CopernicususProviderFactory(user=user)
         self.client.force_login(user)
 
     def test_list_data_json(self):
@@ -108,12 +109,12 @@ class DataTests(base.FormCheckTestCase):
     def test_delete_data_related_objects(self):
         data = base.DataFactory()
         base.DataRequirementFactory(data=data)
-        base.DataResponsibleRelationFactory(data=data)
+        base.DataProviderRelationFactory(data=data)
         self.client.post(
             reverse('data:delete', kwargs={'pk': data.pk})
         )
         self.check_objects_are_soft_deleted(models.DataRequirement)
-        self.check_objects_are_soft_deleted(models.DataResponsibleRelation)
+        self.check_objects_are_soft_deleted(models.DataProviderRelation)
 
 
 class DataPermissionsTests(base.PermissionsCheckTestCase):

@@ -10,22 +10,22 @@
 {% endblock %}
 
 {% block title %}
-  Edit data responsible network
+  Edit data provider network
 {% endblock %}
 
 {% block content %}
 
   <div class="row">
     <h1>
-      <p class="col-sm-12">Edit data responsible network</p>
-      <p class="col-sm-12"><small>{{ responsible.name }}</small></p>
+      <p class="col-sm-12">Edit data provider network</p>
+      <p class="col-sm-12"><small>{{ provider.name }}</small></p>
     </h1>
   </div>
   <form action="" method="POST">
     {% csrf_token %}
     {% bootstrap_form form %}
     <input class="btn btn-primary" type="submit" value="Save" />
-    <a href="{% url 'responsible:detail' responsible.pk %}"
+    <a href="{% url 'provider:detail' provider.pk %}"
        class="btn btn-default">Cancel</a>
   </form>
 {% endblock %}
