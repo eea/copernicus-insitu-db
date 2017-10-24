@@ -1,3 +1,4 @@
+from django.core.exceptions import ObjectDoesNotExist
 from django.core.urlresolvers import reverse
 
 from insitu import documents
@@ -13,6 +14,36 @@ from insitu.views.protected.permissions import (
     IsAuthenticated,
     IsCopernicusServiceResponsible,
 )
+
+class GetInitialMixin:
+
+    def get_requirement(self):
+        try:
+            return self.get_object()
+        except AttributeError:
+            pk = self.request.GET.get('pk', None)
+            try:
+                return models.Requirement.objects.get(pk=pk)
+            except ObjectDoesNotExist:
+                return
+
+    def get_initial(self):
+        requirement = self.get_requirement()
+        if not requirement:
+            return super().get_initial()
+
+        initial_data = super().get_initial()
+        for field in ['name', 'note', 'dissemination',
+                      'quality_control_procedure', 'group']:
+            initial_data[field] = getattr(requirement, field)
+        for field in ['uncertainty', 'update_frequency', 'timeliness',
+                      'horizontal_resolution', 'vertical_resolution']:
+            for attr in ['threshold', 'breakthrough', 'goal']:
+                initial_data["_".join([field, attr])] = getattr(
+                    getattr(requirement, field), attr
+                )
+        return initial_data.copy()
+
 
 
 class RequirementDetail(ProtectedDetailView):
@@ -59,11 +90,17 @@ class RequirementListJson(ESDatatableView):
     permission_classes = (IsAuthenticated, )
 
 
-class RequirementAdd(ProtectedCreateView):
+class RequirementAdd(GetInitialMixin, ProtectedCreateView):
     template_name = 'requirement/add.html'
-    form_class = forms.RequirementForm
     model = models.Requirement
     permission_classes = (IsCopernicusServiceResponsible,)
+
+    def get_form_class(self):
+        requirement = self.get_requirement()
+        if requirement:
+            return forms.RequirementCloneForm
+
+        return forms.RequirementForm
 
     def permission_denied(self, request):
         self.permission_denied_redirect = reverse('requirement:list')
@@ -74,7 +111,7 @@ class RequirementAdd(ProtectedCreateView):
         return reverse('requirement:detail', kwargs={'pk': instance.pk})
 
 
-class RequirementEdit(ProtectedUpdateView):
+class RequirementEdit(GetInitialMixin, ProtectedUpdateView):
     template_name = 'requirement/edit.html'
     form_class = forms.RequirementForm
     model = models.Requirement
@@ -84,19 +121,6 @@ class RequirementEdit(ProtectedUpdateView):
     def permission_denied(self, request):
         self.permission_denied_redirect = reverse('requirement:list')
         return super().permission_denied(request)
-
-    def get_initial(self):
-        requirement = self.get_object()
-        initial_data = super().get_initial()
-        for field in ['name', 'note', 'dissemination',
-                      'quality_control_procedure']:
-            initial_data[field] = getattr(requirement, field)
-        for field in ['uncertainty', 'update_frequency', 'timeliness',
-                      'horizontal_resolution', 'vertical_resolution']:
-            for attr in ['threshold', 'breakthrough', 'goal']:
-                initial_data["_".join([field, attr])] = getattr(getattr(requirement,
-                                                                        field), attr)
-        return initial_data.copy()
 
     def get_success_url(self):
         instance = self.get_object()

@@ -13,9 +13,9 @@
 {% block content %}
   <div class="row">
     <h1 class="col-sm-12">
-      <span>Data provider </span>
       {% if request.user.service_resp or request.user.is_superuser %}
-        <span class="pull-right delete-btn">
+      <span>Data provider </span>
+        <span class="pull-right margin-left-btn">
         <a class="btn btn-primary pull-right" href="{% url 'provider:delete_non_network' provider.pk %}">Delete
           data provider</a>
         </span>

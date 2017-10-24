@@ -15,9 +15,14 @@
     <h1 class="col-sm-12">
       <span>Requirement details</span>
       {% if request.user.service_resp or request.user.is_superuser %}
-        <span class="pull-right delete-btn">
+        <span class="pull-right margin-left-btn">
         <a class="btn btn-primary pull-right" href="{% url 'requirement:delete' requirement.pk %}">Delete
           requirement</a>
+        </span>
+        <span class="pull-right margin-left-btn">
+        <a class="btn btn-primary pull-right" href="{% url 'requirement:add' %}?pk={{ requirement.pk }}">
+          Clone requirement
+        </a>
         </span>
         <span class="pull-right">
         <a class="btn btn-primary pull-right"
@@ -78,7 +83,7 @@
 
       <tr class="row">
         <th class="col-md-4 col-sm-6">Vertical resolution</th>
-        {% include 'bits/metric.html' with metric=requirement.horizontal_resolution %}
+        {% include 'bits/metric.html' with metric=requirement.vertical_resolution %}
       </tr>
       </tbody>
     </table>

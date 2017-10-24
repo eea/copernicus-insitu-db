@@ -35,7 +35,27 @@ class RequirementTests(base.FormCheckTestCase):
             for field in self.related_entities_fields:
                 self._DATA["_".join([entity, field])] = ''
         self._DATA['uncertainty_goal'] = '1'
+
+        self.cloned_errors = {}
+        self.cloned_errors['__all__'] = [
+            'You must modify at least one field of the cloned requirement.']
         self.errors['__all__'] = ['At least one metric is required.']
+
+
+    def _create_clone_data(self, requirement):
+        REQUIREMENT_FOR_CLONE = {
+            'name': requirement.name,
+            'dissemination': requirement.dissemination.pk,
+            'note': requirement.note,
+            'quality_control_procedure': requirement.quality_control_procedure.pk,
+            'group': requirement.group.pk,
+        }
+        for entity in self.related_entities_updated:
+            for field in self.related_entities_fields:
+                REQUIREMENT_FOR_CLONE["_".join([entity, field])] = (
+                    getattr(getattr(requirement, entity), field)
+                )
+        return REQUIREMENT_FOR_CLONE
 
     def test_list_requirement_json(self):
         base.RequirementFactory()
@@ -79,6 +99,41 @@ class RequirementTests(base.FormCheckTestCase):
         resp = self.client.post(reverse('requirement:add'), data)
         self.assertEqual(resp.status_code, 302)
         self.check_single_object(models.Requirement, data)
+
+    def test_get_add_with_clone(self):
+        requirement = base.RequirementFactory()
+        resp =  self.client.get(reverse('requirement:add'),
+                                {'pk': requirement.pk})
+        self.assertEqual(resp.status_code, 200)
+        form_data = [ value for field, value in resp.context['form'].initial.items()]
+        for value in form_data:
+            self.assertTrue(value)
+
+    def test_post_add_with_clone_duplicate_error(self):
+        requirement = base.RequirementFactory()
+        cloned_data = self._create_clone_data(requirement)
+        resp = self.client.post(
+            reverse('requirement:add') + '?pk=' + str(requirement.pk),
+            cloned_data
+        )
+        self.assertEqual(
+            resp.context['form'].errors,
+            self.cloned_errors
+        )
+
+    def test_post_add_with_clone(self):
+
+        requirement = base.RequirementFactory()
+        cloned_data = self._create_clone_data(requirement)
+        cloned_data['name'] = 'Updated requirement'
+
+        resp = self.client.post(
+            reverse('requirement:add') + '?pk=' + str(requirement.pk),
+            cloned_data
+        )
+        requirement.delete()
+        self.assertEqual(resp.status_code, 302)
+        self.check_single_object(models.Requirement, cloned_data)
 
     def test_edit_requirement(self):
         requirement = base.RequirementFactory()
