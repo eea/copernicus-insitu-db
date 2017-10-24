@@ -20,7 +20,8 @@ class GetInitialMixing(object):
         if self.get_object():
             requirement = self.get_object()
             initial_data = super().get_initial()
-            for field in ['name', 'note', 'dissemination', 'quality', 'group']:
+            for field in ['name', 'note', 'dissemination',
+                          'quality_control_procedure', 'group']:
                 initial_data[field] = getattr(requirement, field)
             for field in ['uncertainty', 'update_frequency', 'timeliness',
                           'horizontal_resolution', 'vertical_resolution']:
