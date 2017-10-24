@@ -21,7 +21,17 @@
   </div>
   <form action="" method="POST">
     {% csrf_token %}
-    {% bootstrap_form form %}
+    {% bootstrap_field form.data %}
+
+    {% bootstrap_field form.requirement %}
+
+    {% bootstrap_field form.information_costs %}
+
+    {% bootstrap_field form.handling_costs %}
+
+    {% bootstrap_field form.note %}
+
+    {% bootstrap_field form.level_of_compliance addon_after='<a href="help#compliancelevel"><span class="glyphicon glyphicon-question-sign"></span></a>' %}
     <input class="btn btn-primary" type="submit" value="Save"/>
     <a href="{{ url }}"
        class="btn btn-default">Cancel</a>
