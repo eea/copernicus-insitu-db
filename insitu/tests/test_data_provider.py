@@ -245,6 +245,22 @@ class DataProviderTests(base.FormCheckTestCase):
         self.assertEqual(getattr(details, 'provider_type').pk,
                          data['provider_type'])
 
+    def test_get_edit_network_provider(self):
+        provider = base.DataProviderFactory(is_network=True)
+        resp = self.client.get(
+            reverse('provider:edit_network',
+                    kwargs={'pk': provider.pk})
+        )
+        self.assertEqual(resp.status_code, 200)
+
+    def test_get_edit_network(self):
+        provider = base.DataProviderFactory(is_network=False)
+        resp = self.client.get(
+            reverse('provider:edit_non_network',
+                    kwargs={'pk': provider.pk})
+        )
+        self.assertEqual(resp.status_code, 200)
+
     def test_delete_data_provider_network(self):
         provider = base.DataProviderFactory(is_network=False)
         resp = self.client.post(
