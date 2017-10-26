@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
+from insitu.views.base import CreatedByMixin
 from insitu.views.protected import IsCopernicusServiceResponsible
 from django.urls import reverse_lazy
 
@@ -11,7 +12,7 @@ from insitu import models
 from insitu import forms
 
 
-class DataDataProviderAdd(ProtectedCreateView):
+class DataDataProviderAdd(CreatedByMixin, ProtectedCreateView):
     template_name = 'data/data_provider/add.html'
     permission_classes = (IsCopernicusServiceResponsible,)
     permission_denied_redirect = reverse_lazy('data:list')

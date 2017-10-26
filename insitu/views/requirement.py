@@ -5,7 +5,7 @@ from insitu import documents
 from insitu import forms
 from insitu import models
 from insitu.utils import get_choices
-from insitu.views.base import ESDatatableView
+from insitu.views.base import ESDatatableView, CreatedByMixin
 from insitu.views.protected import (
     ProtectedTemplateView, ProtectedDetailView,
     ProtectedUpdateView, ProtectedCreateView, ProtectedDeleteView)
@@ -14,6 +14,7 @@ from insitu.views.protected.permissions import (
     IsAuthenticated,
     IsCopernicusServiceResponsible,
 )
+
 
 class GetInitialMixin:
 
@@ -43,7 +44,6 @@ class GetInitialMixin:
                     getattr(requirement, field), attr
                 )
         return initial_data.copy()
-
 
 
 class RequirementDetail(ProtectedDetailView):
@@ -90,7 +90,7 @@ class RequirementListJson(ESDatatableView):
     permission_classes = (IsAuthenticated, )
 
 
-class RequirementAdd(GetInitialMixin, ProtectedCreateView):
+class RequirementAdd(GetInitialMixin, CreatedByMixin, ProtectedCreateView):
     template_name = 'requirement/add.html'
     model = models.Requirement
     permission_classes = (IsCopernicusServiceResponsible,)

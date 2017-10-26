@@ -1,3 +1,4 @@
+from django.views.generic.edit import ModelFormMixin
 from django_datatables_view.base_datatable_view import BaseDatatableView
 
 from insitu.utils import ALL_OPTIONS_LABEL
@@ -19,3 +20,9 @@ class ESDatatableView(BaseDatatableView, ProtectedView):
         if not search_text:
             return qs
         return qs.query('query_string', query=search_text)
+
+
+class CreatedByMixin:
+    def form_valid(self, form):
+        self.object = form.save(created_by=self.request.user)
+        return super(ModelFormMixin, self).form_valid(form)

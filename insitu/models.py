@@ -72,6 +72,7 @@ class Metric(models.Model):
     threshold = models.CharField(max_length=100)
     breakthrough = models.CharField(max_length=100)
     goal = models.CharField(max_length=100)
+    created_by = models.ForeignKey(User)
     created_at = models.DateTimeField(auto_now_add=True,
                                       null=True)
     updated_at = models.DateTimeField(auto_now=True,
@@ -164,6 +165,7 @@ class Requirement(SoftDeleteModel):
     vertical_resolution = models.ForeignKey(Metric,
                                             on_delete=models.CASCADE,
                                             related_name='+')
+    created_by = models.ForeignKey(User)
     created_at = models.DateTimeField(auto_now_add=True,
                                       null=True)
     updated_at = models.DateTimeField(auto_now=True,
@@ -218,6 +220,7 @@ class ProductRequirement(SoftDeleteModel):
                                     on_delete=models.CASCADE,
                                     related_name='+')
     barriers = models.ManyToManyField(pickmodels.Barrier)
+    created_by = models.ForeignKey(User)
     created_at = models.DateTimeField(auto_now_add=True,
                                       null=True)
     updated_at = models.DateTimeField(auto_now=True,
@@ -241,6 +244,7 @@ class DataProvider(SoftDeleteModel):
                                       related_name='members',
                                       symmetrical=False)
     countries = models.ManyToManyField(pickmodels.Country)
+    created_by = models.ForeignKey(User)
     created_at = models.DateTimeField(auto_now_add=True,
                                       null=True)
     updated_at = models.DateTimeField(auto_now=True,
@@ -273,6 +277,7 @@ class DataProviderDetails(SoftDeleteModel):
     data_provider = models.ForeignKey(DataProvider,
                                       on_delete=models.CASCADE,
                                       related_name='details')
+    created_by = models.ForeignKey(User)
     created_at = models.DateTimeField(auto_now_add=True,
                                       null=True)
     updated_at = models.DateTimeField(auto_now=True,
@@ -335,6 +340,7 @@ class Data(SoftDeleteModel):
                                           through='DataRequirement')
     providers = models.ManyToManyField(DataProvider,
                                        through='DataProviderRelation')
+    created_by = models.ForeignKey(User)
     created_at = models.DateTimeField(auto_now_add=True,
                                       null=True)
     updated_at = models.DateTimeField(auto_now=True,
@@ -354,6 +360,7 @@ class DataRequirement(SoftDeleteModel):
     level_of_compliance = models.ForeignKey(pickmodels.ComplianceLevel,
                                             on_delete=models.CASCADE,
                                             related_name='+')
+    created_by = models.ForeignKey(User)
     created_at = models.DateTimeField(auto_now_add=True,
                                       null=True)
     updated_at = models.DateTimeField(auto_now=True,
@@ -373,6 +380,7 @@ class DataProviderRelation(SoftDeleteModel):
     data = models.ForeignKey(Data, on_delete=models.CASCADE)
     provider = models.ForeignKey(DataProvider, on_delete=models.CASCADE)
     role = models.IntegerField(choices=ROLE_CHOICES, db_index=True)
+    created_by = models.ForeignKey(User)
     created_at = models.DateTimeField(auto_now_add=True,
                                       null=True)
     updated_at = models.DateTimeField(auto_now=True,
