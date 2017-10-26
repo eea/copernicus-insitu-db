@@ -1,0 +1,47 @@
+{% extends '_layout.html' %}
+{% load bootstrap3 %}
+{% load static %}
+
+{% block style %}
+  <link rel="stylesheet" type="text/css"
+        href="{% static 'css/select2.min.css' %}"/>
+  <link rel="stylesheet" type="text/css"
+        href="{% static 'css/select2-bootstrap.min.css' %}"/>
+{% endblock %}
+
+{% block title %}
+  {{ title }}
+{% endblock %}
+
+{% block content %}
+
+  <div class="row">
+    <h1 class="col-sm-12">
+      <span>{{ title }}</span>
+    </h1>
+  </div>
+
+  <form action="" method="POST">
+    {% csrf_token %}
+    {% bootstrap_field form.requirement %}
+    {% bootstrap_field form.product_group %}
+    {% bootstrap_field form.note %}
+    {% bootstrap_field form.level_of_definition addon_after='<a href="help#definitionlevel"><span class="glyphicon glyphicon-question-sign"></span></a>' %}
+    {% bootstrap_field form.relevance addon_after='<a href="help#relevance"><span class="glyphicon glyphicon-question-sign"></span></a>' %}
+    {% bootstrap_field form.criticality addon_after='<a href="help#criticality"><span class="glyphicon glyphicon-question-sign"></span></a>' %}
+    {% bootstrap_field form.barriers addon_after='<a href="help#barrier"><span class="glyphicon glyphicon-question-sign"></span></a>' %}
+    <input class="btn btn-primary" type="submit" value="Save" />
+    <a href="{{ url }}"
+       class="btn btn-default">Cancel</a>
+  </form>
+{% endblock %}
+
+{% block scripts %}
+  <script src="{% static 'js/jquery-3.2.1.min.js' %}"></script>
+  <script src="{% static 'js/select2.min.js' %}"></script>
+  <script>
+    $(document).ready(function () {
+      $('select').select2();
+    });
+  </script>
+{% endblock %}

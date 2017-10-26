@@ -97,6 +97,10 @@
           <a class="btn btn-primary pull-right"
              href="{% url 'requirement:product:add' requirement.pk %}">Add requirement to product</a>
         </span>
+        <span class="pull-right">
+          <a class="btn btn-primary pull-right"
+             href="{% url 'requirement:product:add_group' requirement.pk %}">Add requirement to product group</a>
+        </span>
       {% endif %}
     </h3>
     <div class="col-sm-12">
