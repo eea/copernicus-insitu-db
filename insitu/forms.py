@@ -55,7 +55,7 @@ class ProductGroupRequirementForm(RequirementProductRequirementForm):
 
     def save(self, commit=True):
         products = models.Product.objects.filter(
-            group=self.cleaned_data['product_group'])
+            group__name=self.cleaned_data['product_group'].name)
         self.cleaned_data.pop('product_group')
         barriers = self.cleaned_data.pop('barriers')
         for product in products:

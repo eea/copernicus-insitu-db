@@ -1,3 +1,5 @@
+import copy
+
 from django.core.urlresolvers import reverse
 
 from insitu import models
@@ -98,6 +100,32 @@ class ProductRequirementTests(base.FormCheckTestCase):
         self.assertEqual(resp.status_code, 302)
         self.check_single_object_deleted(models.ProductRequirement)
 
+    def test_product_group_requirement_add_required_fields(self):
+        data = {}
+        requirement = base.RequirementFactory()
+        errors_requirement = self.errors.copy()
+        errors_requirement.pop('requirement')
+        errors_requirement.pop('product')
+        errors_requirement['product_group'] = ['This field is required.']
+
+        resp = self.client.post(reverse('requirement:product:add_group',
+                                        kwargs={
+                                            'requirement_pk': requirement.pk}),
+                                data)
+        self.check_required_errors(resp, errors_requirement)
+
+    def test_product_group_requirement_add(self):
+        data = copy.deepcopy(self._DATA)
+        data.pop('product')
+        product_group = base.ProductGroupFactory()
+        data['product_group'] = product_group.pk
+        resp = self.client.post(
+            reverse('requirement:product:add_group',
+                    kwargs={'requirement_pk': self._DATA['requirement']}),
+            data)
+        self.assertEqual(resp.status_code, 302)
+        self.check_single_object(models.ProductRequirement, self._DATA)
+
 
 class ProductRequirementPermissionsTests(base.PermissionsCheckTestCase):
 
@@ -178,3 +206,17 @@ class ProductRequirementPermissionsTests(base.PermissionsCheckTestCase):
             url=reverse('requirement:product:delete',
                         kwargs={'requirement_pk': requirement.pk,
                                 'pk': product_requirement.pk}))
+
+    def test_product_group_requirement_add_not_auth(self):
+        requirement = base.RequirementFactory()
+        self.check_user_redirect_all_methods(
+            redirect_url=self.login_url,
+            url=reverse('requirement:product:add_group',
+                        kwargs={'requirement_pk': requirement.pk}))
+
+    def test_product_group_requirement_add_auth(self):
+        requirement = base.RequirementFactory()
+        self.check_authenticated_user_redirect_all_methods(
+            redirect_url=reverse('requirement:list'),
+            url=reverse('requirement:product:add_group',
+                        kwargs={'requirement_pk': requirement.pk}))
