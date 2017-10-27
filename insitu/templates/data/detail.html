@@ -14,13 +14,15 @@
   <div class="row">
     <h1 class="col-sm-12">
       <span>Data details</span>
-      {% if request.user == data.created_by or request.user.is_superuser %}
-        <span class="pull-right margin-left-btn">
+      {% if data.state.name == 'draft' %}
+        {% if request.user == data.created_by or request.user.is_superuser %}
+          <span class="pull-right margin-left-btn">
         <a class="btn btn-primary pull-right" href="{% url 'data:delete' data.pk %}">Delete data</a>
         </span>
-        <span class="pull-right">
+          <span class="pull-right">
         <a class="btn btn-primary pull-right" href="{% url 'data:edit' data.pk %}">Edit data</a>
         </span>
+        {% endif %}
       {% endif %}
     </h1>
   </div>
@@ -106,7 +108,13 @@
       {% endif %}
       <tr class="row">
         <th class="col-md-4 col-sm-6">State</th>
-        <td class="col-md-8 col-sm-6">{{ provider.state.title }}</td>
+        <td class="col-md-8 col-sm-6">{{ data.state.title }}</td>
+      </tr>
+      <tr class="row">
+        <th class="col-md-4 col-sm-6">Created by</th>
+        <td class="col-md-8 col-sm-6">{{ data.created_by.get_full_name }},
+          <i>{{ data.created_by.email }}</i>
+        </td>
       </tr>
       </tbody>
     </table>
@@ -126,20 +134,23 @@
       <table id="providers"
              class="table table-condensed table-bordered table-hover">
         <thead>
-          <tr>
-            <th>Data provider</th>
-            <th>Role</th>
-            <th class="no-sort">Is network</th>
-            {% if request.user.service_resp or request.user.is_superuser %}
+        <tr>
+          <th>Data provider</th>
+          <th>Role</th>
+          <th class="no-sort">Is network</th>
+          {% if data.state.name == 'draft' %}
+            {% if request.user == data.created_by or request.user.is_superuser %}
               <th class="no-sort" width="10%"></th>
             {% endif %}
-          </tr>
+          {% endif %}
+        </tr>
         </thead>
         <tbody>
         {% for rel in data.dataproviderrelation_set.all %}
           <tr>
             <td>
-              <a href="{% url 'provider:detail' rel.provider.pk %}">{{ rel.provider.name }}</a>
+              <a
+                href="{% url 'provider:detail' rel.provider.pk %}">{{ rel.provider.name }}</a>
             </td>
             <td>{{ rel.get_role_display }}</td>
             <td>
@@ -149,17 +160,19 @@
                 <span class='glyphicon glyphicon-remove-circle text-danger'></span>
               {% endif %}
             </td>
-            {% if request.user == rel.created_by or request.user.is_superuser %}
-              <td class="row">
-                <a href="{% url 'data:provider:edit' group_pk=data.pk pk=rel.pk %}"
-                   class="col-sm-6">
-                  <span class="glyphicon glyphicon-edit"></span>
-                </a>
-                <a href="{% url 'data:provider:delete' group_pk=data.pk pk=rel.pk %}"
-                   class="col-sm-6">
-                  <span class="glyphicon glyphicon-trash"></span>
-                </a>
-              </td>
+            {% if rel.state.name == 'draft' %}
+              {% if request.user == rel.created_by or request.user.is_superuser %}
+                <td class="row">
+                  <a href="{% url 'data:provider:edit' group_pk=data.pk pk=rel.pk %}"
+                     class="col-sm-6">
+                    <span class="glyphicon glyphicon-edit"></span>
+                  </a>
+                  <a href="{% url 'data:provider:delete' group_pk=data.pk pk=rel.pk %}"
+                     class="col-sm-6">
+                    <span class="glyphicon glyphicon-trash"></span>
+                  </a>
+                </td>
+              {% endif %}
             {% endif %}
           </tr>
         {% endfor %}
@@ -173,7 +186,7 @@
     </h3>
     <div class="col-sm-12">
       <table id="requirements"
-           class="table table-condensed table-bordered table-hover">
+             class="table table-condensed table-bordered table-hover">
         <thead>
         <tr>
           <th>Requirement</th>
@@ -186,20 +199,21 @@
         <tbody>
         {% for rel in data.datarequirement_set.all %}
           <tr>
-            <td> 
-              <a href="{% url 'requirement:detail' rel.requirement.pk %}">{{ rel.requirement }}</a>
+            <td>
+              <a
+                href="{% url 'requirement:detail' rel.requirement.pk %}">{{ rel.requirement }}</a>
             </td>
             <td> {{ rel.level_of_compliance }} </td>
             <td> {{ rel.note }} </td>
-            <td> 
-              {% if rel.information_costs %} 
+            <td>
+              {% if rel.information_costs %}
                 <span class='glyphicon glyphicon-ok-circle text-success'></span>
               {% else %}
                 <span class='glyphicon glyphicon-remove-circle text-danger'></span>
               {% endif %}
             </td>
-            <td> 
-              {% if rel.handling_costs %} 
+            <td>
+              {% if rel.handling_costs %}
                 <span class='glyphicon glyphicon-ok-circle text-success'></span>
               {% else %}
                 <span class='glyphicon glyphicon-remove-circle text-danger'></span>
@@ -223,20 +237,24 @@
 
       var table = $('#providers').dataTable({
         columnDefs: [
-          { targets: 'no-sort',
-            orderable: false }
+          {
+            targets: 'no-sort',
+            orderable: false
+          }
         ]
       });
     });
   </script>
-  
+
   <script>
     $(function () {
 
       var table = $('#requirements').dataTable({
         columnDefs: [
-          { targets: 'no-sort',
-            orderable: false }
+          {
+            targets: 'no-sort',
+            orderable: false
+          }
         ]
       });
     });

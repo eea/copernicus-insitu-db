@@ -64,7 +64,7 @@ class ValidationWorkflow(Workflow):
             for source in trans.source:
                 if (source.name == source_state and
                         trans.target.name == target_state):
-                    return trans
+                    return trans.name
         return None
 
 
@@ -233,6 +233,8 @@ class Requirement(ValidationWorkflowModel, SoftDeleteModel):
         objects += [obj for obj in self.productrequirement_set.all()]
         objects += [obj for obj in self.datarequirement_set.all()]
         objects += [obj for obj in self.data_set.distinct().all()]
+        objects += [obj for obj in DataProviderRelation.objects.filter(
+            data__requirements=self).distinct()]
         objects += [obj for obj in DataProvider.objects.filter(
             data__requirements=self).distinct()]
         objects += [obj for obj in DataProviderDetails.objects.filter(
