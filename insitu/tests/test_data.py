@@ -14,8 +14,8 @@ class DataTests(base.FormCheckTestCase):
                       'quality_control_procedure', 'dissemination']
     many_to_many_fields = ['inspire_themes', 'essential_variables']
     required_fields = ['name', 'update_frequency', 'coverage', 'timeliness',
-                      'policy', 'data_type', 'data_format',
-                      'quality_control_procedure', 'inspire_themes',
+                       'policy', 'data_type', 'data_format',
+                       'quality_control_procedure', 'inspire_themes',
                        'dissemination']
 
     def setUp(self):
@@ -53,7 +53,6 @@ class DataTests(base.FormCheckTestCase):
             'dissemination': dissemination.pk
         }
         user = base.UserFactory()
-        base.CopernicususProviderFactory(user=user)
         self.client.force_login(user)
 
     def test_list_data_json(self):
@@ -95,6 +94,7 @@ class DataTests(base.FormCheckTestCase):
         self.assertEqual(resp.status_code, 200)
 
     def test_edit_data(self):
+        self.login_creator()
         data_factory = base.DataFactory(created_by=self.creator)
         data = self._DATA
         resp = self.client.post(
@@ -110,6 +110,7 @@ class DataTests(base.FormCheckTestCase):
         self.assertEqual(resp.status_code, 200)
 
     def test_delete_data(self):
+        self.login_creator()
         data = base.DataFactory(created_by=self.creator)
         resp = self.client.post(
             reverse('data:delete', kwargs={'pk': data.pk}))
@@ -118,6 +119,7 @@ class DataTests(base.FormCheckTestCase):
         self.check_objects_are_soft_deleted(models.Data, DataDoc)
 
     def test_delete_data_related_objects(self):
+        self.login_creator()
         data = base.DataFactory(created_by=self.creator)
         metrics = base.RequirementFactory.create_metrics(self.creator)
         requirement = base.RequirementFactory(created_by=self.creator,
@@ -177,22 +179,3 @@ class DataPermissionsTests(base.PermissionsCheckTestCase):
             url=reverse('data:delete',
                         kwargs={'pk': data.pk}),
             redirect_url=self.redirect_login_url)
-
-    def test_add_data_auth(self):
-        self.check_authenticated_user_redirect_all_methods(
-            url=reverse('data:add'),
-            redirect_url=self.redirect_group_url)
-
-    def test_edit_network_data_auth(self):
-        data = base.DataFactory(created_by=self.creator)
-        self.check_authenticated_user_redirect_all_methods(
-            url=reverse('data:edit',
-                        kwargs={'pk': data.pk}),
-            redirect_url=self.redirect_group_url)
-
-    def test_delete_network_data_auth(self):
-        data = base.DataFactory(created_by=self.creator)
-        self.check_authenticated_user_redirect_all_methods(
-            url=reverse('data:delete',
-                        kwargs={'pk': data.pk}),
-            redirect_url=self.redirect_group_url)

@@ -38,7 +38,6 @@ class ProductRequirementTests(base.FormCheckTestCase):
         }
         user = base.UserFactory()
         self.client.force_login(user)
-        base.CopernicususProviderFactory(user=user)
 
     def test_product_requirement_add_required_fields(self):
         data = {}
@@ -82,6 +81,7 @@ class ProductRequirementTests(base.FormCheckTestCase):
         self.assertEqual(resp.status_code, 200)
 
     def test_product_requirement_edit(self):
+        self.login_creator()
         metrics = base.RequirementFactory.create_metrics(self.creator)
         requirement = base.RequirementFactory(created_by=self.creator,
                                               **metrics)
@@ -117,6 +117,7 @@ class ProductRequirementTests(base.FormCheckTestCase):
         self.assertEqual(resp.status_code, 200)
 
     def test_product_requirement_delete(self):
+        self.login_creator()
         data = {}
         metrics = base.RequirementFactory.create_metrics(self.creator)
         requirement = base.RequirementFactory(created_by=self.creator,
@@ -205,57 +206,11 @@ class ProductRequirementPermissionsTests(base.PermissionsCheckTestCase):
                         kwargs={'requirement_pk': requirement.pk,
                                 'pk': product_requirement.pk}))
 
-    def test_product_requirement_add_auth(self):
-        metrics = base.RequirementFactory.create_metrics(self.creator)
-        requirement = base.RequirementFactory(created_by=self.creator,
-                                              **metrics)
-        self.check_authenticated_user_redirect_all_methods(
-            redirect_url=reverse('requirement:list'),
-            url=reverse('requirement:product:add',
-                        kwargs={'requirement_pk': requirement.pk}))
-
-    def test_product_requirement_edit_auth(self):
-        metrics = base.RequirementFactory.create_metrics(self.creator)
-        requirement = base.RequirementFactory(created_by=self.creator,
-                                              **metrics)
-        product_requirement = base.ProductRequirementFactory(
-            requirement=requirement,
-            created_by=self.creator
-        )
-        self.check_authenticated_user_redirect_all_methods(
-            redirect_url=reverse('requirement:list'),
-            url=reverse('requirement:product:edit',
-                        kwargs={'requirement_pk': requirement.pk,
-                                'pk': product_requirement.pk}))
-
-    def test_product_requirement_delete_auth(self):
-        metrics = base.RequirementFactory.create_metrics(self.creator)
-        requirement = base.RequirementFactory(created_by=self.creator,
-                                              **metrics)
-        product_requirement = base.ProductRequirementFactory(
-            requirement=requirement,
-            created_by=self.creator
-        )
-        self.check_authenticated_user_redirect_all_methods(
-            redirect_url=reverse('requirement:list'),
-            url=reverse('requirement:product:delete',
-                        kwargs={'requirement_pk': requirement.pk,
-                                'pk': product_requirement.pk}))
-
     def test_product_group_requirement_add_not_auth(self):
         metrics = base.RequirementFactory.create_metrics(self.creator)
         requirement = base.RequirementFactory(created_by=self.creator,
                                               **metrics)
         self.check_user_redirect_all_methods(
             redirect_url=self.login_url,
-            url=reverse('requirement:product:add_group',
-                        kwargs={'requirement_pk': requirement.pk}))
-
-    def test_product_group_requirement_add_auth(self):
-        metrics = base.RequirementFactory.create_metrics(self.creator)
-        requirement = base.RequirementFactory(created_by=self.creator,
-                                              **metrics)
-        self.check_authenticated_user_redirect_all_methods(
-            redirect_url=reverse('requirement:list'),
             url=reverse('requirement:product:add_group',
                         kwargs={'requirement_pk': requirement.pk}))

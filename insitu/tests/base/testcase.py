@@ -17,6 +17,9 @@ class FormCheckTestCase(TestCase):
         self.creator = UserFactory(is_superuser=True,
                                    username='Creator')
 
+    def login_creator(self):
+        self.client.force_login(self.creator)
+
     def check_required_errors(self, resp, errors):
         self.assertEqual(resp.status_code, 200)
         self.assertIsNot(resp.context['form'].errors, {})

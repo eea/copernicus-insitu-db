@@ -16,7 +16,7 @@ class ValidationWorkflow(Workflow):
     name = 'validation'
 
     states = (
-        # name, description
+        # name, title
         ('draft', 'Draft'),
         ('ready', 'Ready for validation'),
         ('valid', 'Valid'),
@@ -34,15 +34,38 @@ class ValidationWorkflow(Workflow):
         ('make_changes', 'changes', 'draft')
     )
 
+    @classmethod
+    def __check_state_exists(cls, state):
+        return state in cls.states
 
-class _WithRelatedUserManager(models.Manager):
-    """
-    A manager whose default queryset pre-selects the related user object
-    for performance reasons.
-    """
+    @classmethod
+    def __check_transition_between_states_exist(cls, source_state, target_state):
+        for trans in cls.transitions:
+            for source in trans.source:
+                if (source.name == source_state and
+                        trans.target.name == target_state):
+                    return True
+        return False
 
-    def get_queryset(self):
-        return super().get_queryset().select_related('user')
+    @classmethod
+    def check_transition(cls, source_state, target_state):
+        return (
+            cls.__check_state_exists(source_state) and
+            cls.__check_state_exists(target_state) and
+            cls.__check_transition_between_states_exist(
+                source_state, target_state)
+        )
+
+    @classmethod
+    def get_transition(cls, source_state, target_state):
+        if not cls.check_transition(source_state, target_state):
+            return None
+        for trans in cls.transitions:
+            for source in trans.source:
+                if (source.name == source_state and
+                        trans.target.name == target_state):
+                    return trans
+        return None
 
 
 class SoftDeleteQuerySet(QuerySet):
@@ -201,6 +224,50 @@ class Requirement(ValidationWorkflowModel, SoftDeleteModel):
 
     def __str__(self):
         return self.name
+
+    def get_related_objects(self):
+        metrics = ['uncertainty', 'update_frequency', 'timeliness',
+                   'horizontal_resolution', 'vertical_resolution']
+        objects = [getattr(self, metric) for metric in metrics]
+
+        objects += [obj for obj in self.productrequirement_set.all()]
+        objects += [obj for obj in self.datarequirement_set.all()]
+        objects += [obj for obj in self.data_set.distinct().all()]
+        objects += [obj for obj in DataProvider.objects.filter(
+            data__requirements=self).distinct()]
+        objects += [obj for obj in DataProviderDetails.objects.filter(
+            data_provider__data__requirements=self).distinct()]
+        return objects
+
+    @transition()
+    def mark_as_ready(self):
+        for obj in self.get_related_objects():
+            trans = getattr(obj, 'mark_as_ready')
+            trans()
+
+    @transition()
+    def validate(self):
+        for obj in self.get_related_objects():
+            trans = getattr(obj, 'validate')
+            trans()
+
+    @transition()
+    def cancel(self):
+        for obj in self.get_related_objects():
+            trans = getattr(obj, 'cancel')
+            trans()
+
+    @transition()
+    def request_changes(self):
+        for obj in self.get_related_objects():
+            trans = getattr(obj, 'request_changes')
+            trans()
+
+    @transition()
+    def make_changes(self):
+        for obj in self.get_related_objects():
+            trans = getattr(obj, 'make_changes')
+            trans()
 
 
 class Product(SoftDeleteModel):
@@ -415,52 +482,3 @@ class DataProviderRelation(ValidationWorkflowModel, SoftDeleteModel):
 
     def __str__(self):
         return '{} - {}'.format(self.data.name, self.provider.name)
-
-
-class CopernicusProviderManager(_WithRelatedUserManager):
-    pass
-
-
-class CopernicusProvider(models.Model):
-    user = models.OneToOneField(User,
-                                related_name='service_resp')
-    service = models.ForeignKey(CopernicusService,
-                                related_name='provider')
-
-    objects = CopernicusProviderManager()
-    created_at = models.DateTimeField(auto_now_add=True,
-                                      null=True)
-    updated_at = models.DateTimeField(auto_now=True,
-                                      null=True)
-
-
-class CountryProviderManager(_WithRelatedUserManager):
-    pass
-
-
-class CountryProvider(models.Model):
-    user = models.OneToOneField(User,
-                                related_name='country_resp')
-    country = models.ForeignKey(pickmodels.Country,
-                                related_name='provider')
-
-    objects = CountryProviderManager()
-    created_at = models.DateTimeField(auto_now_add=True,
-                                      null=True)
-    updated_at = models.DateTimeField(auto_now=True,
-                                      null=True)
-
-
-class DataProviderUserManager(_WithRelatedUserManager):
-    pass
-
-
-class DataProviderUser(models.Model):
-    user = models.OneToOneField(User,
-                                related_name='data_resp')
-    provider = models.ForeignKey(DataProvider,
-                                 related_name='provider')
-    created_at = models.DateTimeField(auto_now_add=True,
-                                      null=True)
-    updated_at = models.DateTimeField(auto_now=True,
-                                      null=True)

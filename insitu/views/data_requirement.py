@@ -6,14 +6,15 @@ from insitu.views.base import CreatedByMixin
 from insitu.views.protected import (
     ProtectedUpdateView, ProtectedCreateView, ProtectedDeleteView)
 from insitu.views.protected.permissions import (
-    IsCopernicusServiceResponsible,
-    IsDraftObject
+    IsOwnerUser,
+    IsDraftObject,
+    IsAuthenticated
 )
 
 
 class DataRequirementAdd(CreatedByMixin, ProtectedCreateView):
     template_name = 'data/requirement/add.html'
-    permission_classes = (IsCopernicusServiceResponsible, IsDraftObject)
+    permission_classes = (IsAuthenticated, )
     permission_denied_redirect = reverse_lazy('requirement:list')
     form_class = forms.RequirementDataRequirementForm
     form_field = 'requirement'
@@ -43,7 +44,7 @@ class DataRequirementEdit(ProtectedUpdateView):
     template_name = 'data/requirement/edit.html'
     form_class = forms.DataRequirementEditForm
     context_object_name = 'rel'
-    permission_classes = (IsCopernicusServiceResponsible, IsDraftObject)
+    permission_classes = (IsOwnerUser, IsDraftObject)
     permission_denied_redirect = reverse_lazy('requirement:list')
 
     def get_context_data(self, **kwargs):
@@ -60,7 +61,7 @@ class DataRequirementDelete(ProtectedDeleteView):
     model = models.DataRequirement
     template_name = 'data/requirement/delete.html'
     context_object_name = 'rel'
-    permission_classes = (IsCopernicusServiceResponsible, IsDraftObject)
+    permission_classes = (IsOwnerUser, IsDraftObject)
     permission_denied_redirect = reverse_lazy('requirement:list')
 
     def get_context_data(self, **kwargs):

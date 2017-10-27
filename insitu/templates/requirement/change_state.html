@@ -1,0 +1,25 @@
+{% extends '_layout.html' %}
+{% load static %}
+
+{% block title %}
+  Requirement change state
+{% endblock %}
+
+{% block content %}
+  <div class="row">
+    <h1 class="col-sm-12">Mark requirement as {{ target }}</h1>
+    <h3 class="text-muted">{{ source }} -> {{ target }}</h3>
+  </div>
+  <div class="row">
+    <div class="row">
+      If you change this requirement, the following objects will also be marked as
+      {{ target }}.
+    </div>
+    <ul class="row">
+      {% for item in requirement.get_related_objects %}
+        <li>{{ item }}</li>
+      {% endfor %}
+    </ul>
+    {{ transition }}
+  </div>
+{% endblock %}

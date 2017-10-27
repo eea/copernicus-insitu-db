@@ -8,7 +8,7 @@ from insitu.views.base import ESDatatableView, CreatedByMixin
 from insitu.views.protected import (
     ProtectedTemplateView, ProtectedDetailView,
     ProtectedUpdateView, ProtectedCreateView, ProtectedDeleteView)
-from insitu.views.protected import IsAuthenticated, IsCopernicusServiceResponsible
+from insitu.views.protected import IsAuthenticated, IsOwnerUser
 from insitu.views.protected.permissions import IsDraftObject
 from picklists import models as pickmodels
 
@@ -61,7 +61,7 @@ class DataAdd(CreatedByMixin, ProtectedCreateView):
     template_name = 'data/add.html'
     form_class = forms.DataForm
     model = models.Data
-    permission_classes = (IsCopernicusServiceResponsible, IsDraftObject)
+    permission_classes = (IsAuthenticated, )
     permission_denied_redirect = reverse_lazy('data:list')
 
     def get_success_url(self):
@@ -74,7 +74,7 @@ class DataEdit(ProtectedUpdateView):
     form_class = forms.DataForm
     model = models.Data
     context_object_name = 'data'
-    permission_classes = (IsCopernicusServiceResponsible, IsDraftObject)
+    permission_classes = (IsOwnerUser, IsDraftObject)
     permission_denied_redirect = reverse_lazy('data:list')
 
     def get_success_url(self):
@@ -94,7 +94,7 @@ class DataDelete(ProtectedDeleteView):
     form_class = forms.DataForm
     model = models.Data
     context_object_name = 'data'
-    permission_classes = (IsCopernicusServiceResponsible, IsDraftObject)
+    permission_classes = (IsOwnerUser, IsDraftObject)
     permission_denied_redirect = reverse_lazy('data:list')
 
     def get_success_url(self):

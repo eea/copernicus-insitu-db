@@ -86,9 +86,14 @@ requirement_patterns = [
         views.RequirementDelete.as_view(),
         name='delete'),
 
+    url(r'^(?P<pk>[0-9]+)/transition/(?P<source>[a-z]+)-to-(?P<target>[a-z]+)/$',
+        views.RequirementTransition.as_view(),
+        name='transition'),
+
     url(r'^(?P<requirement_pk>[0-9]+)/product/',
         include(product_requirement_patterns,
                 namespace='product')),
+
     url(r'^add/$',
         views.RequirementAdd.as_view(),
         name='add'),

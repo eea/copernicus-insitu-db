@@ -20,7 +20,6 @@ class RequirementTests(base.FormCheckTestCase):
         quality_control_procedure = base.QualityControlProcedureFactory()
         group = base.RequirementGroupFactory()
         provider_user = base.UserFactory()
-        base.CopernicususProviderFactory(user=provider_user)
         self.client.force_login(provider_user)
 
         self._DATA = {
@@ -147,7 +146,6 @@ class RequirementTests(base.FormCheckTestCase):
         )
 
     def test_post_add_with_clone(self):
-
         metrics = base.RequirementFactory.create_metrics(self.creator)
         requirement = base.RequirementFactory(name="Test requirement",
                                               created_by=self.creator,
@@ -175,6 +173,7 @@ class RequirementTests(base.FormCheckTestCase):
         self.assertEqual(resp.status_code, 200)
 
     def test_edit_requirement(self):
+        self.login_creator()
         metrics = base.RequirementFactory.create_metrics(self.creator)
         requirement = base.RequirementFactory(name="Test requirement",
                                               created_by=self.creator,
@@ -195,6 +194,7 @@ class RequirementTests(base.FormCheckTestCase):
         self.assertEqual(resp.status_code, 200)
 
     def test_delete_requirement(self):
+        self.login_creator()
         metrics = base.RequirementFactory.create_metrics(self.creator)
         requirement = base.RequirementFactory(name="Test requirement",
                                               created_by=self.creator,
@@ -206,6 +206,7 @@ class RequirementTests(base.FormCheckTestCase):
         self.check_objects_are_soft_deleted(models.Requirement, RequirementDoc)
 
     def test_delete_requirement_related_objects(self):
+        self.login_creator()
         metrics = base.RequirementFactory.create_metrics(self.creator)
         requirement = base.RequirementFactory(name="Test requirement",
                                               created_by=self.creator,
@@ -270,27 +271,4 @@ class RequirementPermissionTests(base.PermissionsCheckTestCase):
                                               **metrics)
         self.check_user_redirect_all_methods(
             redirect_url=self.redirect_requirement_url_non_auth,
-            url=reverse('requirement:delete', kwargs={'pk': requirement.pk}))
-
-    def test_requirement_relation_add_auth(self):
-        self.check_authenticated_user_redirect_all_methods(
-            redirect_url=self.redirect_requirement_url_auth,
-            url=reverse('requirement:add'))
-
-    def test_requirement_relation_edit_auth(self):
-        metrics = base.RequirementFactory.create_metrics(self.creator)
-        requirement = base.RequirementFactory(name="Test requirement",
-                                              created_by=self.creator,
-                                              **metrics)
-        self.check_authenticated_user_redirect_all_methods(
-            redirect_url=self.redirect_requirement_url_auth,
-            url=reverse('requirement:edit', kwargs={'pk': requirement.pk}))
-
-    def test_requirement_relation_delete_auth(self):
-        metrics = base.RequirementFactory.create_metrics(self.creator)
-        requirement = base.RequirementFactory(name="Test requirement",
-                                              created_by=self.creator,
-                                              **metrics)
-        self.check_authenticated_user_redirect_all_methods(
-            redirect_url=self.redirect_requirement_url_auth,
             url=reverse('requirement:delete', kwargs={'pk': requirement.pk}))

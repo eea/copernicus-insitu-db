@@ -19,14 +19,16 @@
         <a class="btn btn-primary pull-right" href="{% url 'requirement:delete' requirement.pk %}">Delete
           requirement</a>
         </span>
-        <span class="pull-right margin-left-btn">
-        <a class="btn btn-primary pull-right" href="{% url 'requirement:add' %}?pk={{ requirement.pk }}">
-          Clone requirement
-        </a>
-        </span>
         <span class="pull-right">
         <a class="btn btn-primary pull-right"
            href="{% url 'requirement:edit' requirement.pk %}">Edit requirement</a>
+        </span>
+        <br>
+        <span class="pull-right margin-left-btn">
+        <a class="btn btn-primary pull-right"
+           href="{% url 'requirement:add' %}?pk={{ requirement.pk }}">
+          Clone requirement
+        </a>
         </span>
       {% endif %}
     </h1>
@@ -84,6 +86,10 @@
       <tr class="row">
         <th class="col-md-4 col-sm-6">Vertical resolution</th>
         {% include 'bits/metric.html' with metric=requirement.vertical_resolution %}
+      </tr>
+      <tr class="row">
+        <th class="col-md-4 col-sm-6">State</th>
+        <td class="col-md-8 col-sm-6">{{ requirement.state.title }}</td>
       </tr>
       </tbody>
     </table>

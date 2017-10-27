@@ -1,5 +1,6 @@
 from django.core.exceptions import ObjectDoesNotExist
 from django.core.urlresolvers import reverse
+from django.http import Http404
 
 from insitu import documents
 from insitu import forms
@@ -12,7 +13,7 @@ from insitu.views.protected import (
 from picklists import models as pickmodels
 from insitu.views.protected.permissions import (
     IsAuthenticated,
-    IsCopernicusServiceResponsible,
+    IsOwnerUser,
     IsDraftObject
 )
 
@@ -94,7 +95,7 @@ class RequirementListJson(ESDatatableView):
 class RequirementAdd(GetInitialMixin, CreatedByMixin, ProtectedCreateView):
     template_name = 'requirement/add.html'
     model = models.Requirement
-    permission_classes = (IsCopernicusServiceResponsible, IsDraftObject)
+    permission_classes = (IsAuthenticated, )
 
     def get_form_class(self):
         requirement = self.get_requirement()
@@ -117,7 +118,7 @@ class RequirementEdit(GetInitialMixin, ProtectedUpdateView):
     form_class = forms.RequirementForm
     model = models.Requirement
     context_object_name = 'requirement'
-    permission_classes = (IsCopernicusServiceResponsible, IsDraftObject)
+    permission_classes = (IsOwnerUser, IsDraftObject)
 
     def permission_denied(self, request):
         self.permission_denied_redirect = reverse('requirement:list')
@@ -130,12 +131,11 @@ class RequirementEdit(GetInitialMixin, ProtectedUpdateView):
 
 
 class RequirementDelete(ProtectedDeleteView):
-
     template_name = 'requirement/delete.html'
     form_class = forms.RequirementForm
     model = models.Requirement
     context_object_name = 'requirement'
-    permission_classes = (IsCopernicusServiceResponsible, IsDraftObject)
+    permission_classes = (IsOwnerUser, IsDraftObject)
 
     def permission_denied(self, request):
         self.permission_denied_redirect = reverse('requirement:list')
@@ -143,3 +143,24 @@ class RequirementDelete(ProtectedDeleteView):
 
     def get_success_url(self):
         return reverse('requirement:list')
+
+
+class RequirementTransition(ProtectedDetailView):
+    model = models.Requirement
+    template_name = 'requirement/change_state.html'
+    permission_classes = (IsOwnerUser, )
+    context_object_name = 'requirement'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        source = self.kwargs.get('source')
+        target = self.kwargs.get('target')
+        transition = models.ValidationWorkflow.get_transition(source, target)
+        if not transition:
+            raise Http404()
+        context.update({
+            'target': target,
+            'source': source,
+            'transition': transition,
+        })
+        return context
