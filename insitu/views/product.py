@@ -84,8 +84,6 @@ class ProductAdd(ProtectedCreateView):
         return reverse('product:list')
 
 
-
-
 class ProductEdit(ProtectedUpdateView):
     template_name = 'product/edit.html'
     form_class = forms.ProductForm

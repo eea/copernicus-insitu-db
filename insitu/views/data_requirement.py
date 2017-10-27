@@ -2,12 +2,13 @@ from django.urls import reverse_lazy
 
 from insitu import models
 from insitu import forms
+from insitu.views.base import CreatedByMixin
 from insitu.views.protected import (
     ProtectedUpdateView, ProtectedCreateView, ProtectedDeleteView)
 from insitu.views.protected.permissions import IsCopernicusServiceResponsible
 
 
-class DataRequirementAdd(ProtectedCreateView):
+class DataRequirementAdd(CreatedByMixin, ProtectedCreateView):
     template_name = 'data/requirement/add.html'
     permission_classes = (IsCopernicusServiceResponsible,)
     permission_denied_redirect = reverse_lazy('requirement:list')

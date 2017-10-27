@@ -13,10 +13,11 @@ class DataProviderRelationTests(base.FormCheckTestCase):
 
     def setUp(self):
         super().setUp()
-        data = base.DataFactory()
+        data = base.DataFactory(created_by=self.creator)
         countries = [base.CountryFactory(code='T1'),
                      base.CountryFactory(code='T2')]
-        provider = base.DataProviderFactory(countries=countries)
+        provider = base.DataProviderFactory(countries=countries,
+                                            created_by=self.creator)
 
         self._DATA = {
             'role': 1,
@@ -29,7 +30,7 @@ class DataProviderRelationTests(base.FormCheckTestCase):
 
     def test_provider_relation_add_required_fields(self):
         data = {}
-        data_factory = base.DataFactory()
+        data_factory = base.DataFactory(created_by=self.creator)
         errors_data = self.errors.copy()
         errors_data.pop('data')
         resp = self.client.post(reverse('data:provider:add',
@@ -46,7 +47,13 @@ class DataProviderRelationTests(base.FormCheckTestCase):
         self.check_single_object(models.DataProviderRelation, data)
 
     def test_provider_relation_edit(self):
-        provider_relation = base.DataProviderRelationFactory()
+        data_object = base.DataFactory(created_by=self.creator)
+        provider = base.DataProviderFactory(created_by=self.creator)
+        provider_relation = base.DataProviderRelationFactory(
+            provider=provider,
+            data=data_object,
+            created_by=self.creator,
+        )
         data = self._DATA
         data.pop('data')
         data.pop('provider')
@@ -62,7 +69,13 @@ class DataProviderRelationTests(base.FormCheckTestCase):
 
     def test_provider_relation_delete(self):
         data = {}
-        provider_relation = base.DataProviderRelationFactory()
+        data_object = base.DataFactory(created_by=self.creator)
+        provider = base.DataProviderFactory(created_by=self.creator)
+        provider_relation = base.DataProviderRelationFactory(
+            provider=provider,
+            data=data_object,
+            created_by=self.creator,
+        )
         resp = self.client.post(
             reverse('data:provider:delete',
                     kwargs={'group_pk': provider_relation.data.pk,
@@ -74,19 +87,24 @@ class DataProviderRelationTests(base.FormCheckTestCase):
 
 class DataProviderRelationPermissionsTests(base.PermissionsCheckTestCase):
     def setUp(self):
+        super().setUp()
         self.login_url = reverse('auth:login')
 
     def test_provider_relation_add_not_auth(self):
-        data = base.DataFactory()
+        data = base.DataFactory(created_by=self.creator)
         self.check_user_redirect_all_methods(
             redirect_url=self.login_url,
             url=reverse('data:provider:add',
                         kwargs={'group_pk': data.pk}))
 
     def test_provider_relation_delete_not_auth(self):
-        data = base.DataFactory()
+        data = base.DataFactory(created_by=self.creator)
+        provider = base.DataProviderFactory(created_by=self.creator)
         provider_relation = base.DataProviderRelationFactory(
-            data=data)
+            provider=provider,
+            data=data,
+            created_by=self.creator,
+        )
         self.check_user_redirect_all_methods(
             redirect_url=self.login_url,
             url=reverse('data:provider:delete',
@@ -94,8 +112,13 @@ class DataProviderRelationPermissionsTests(base.PermissionsCheckTestCase):
                                 'pk': provider_relation.pk}))
 
     def test_provider_relation_edit_not_auth(self):
-        data = base.DataFactory()
-        provider_relation = base.DataProviderRelationFactory(data=data)
+        data = base.DataFactory(created_by=self.creator)
+        provider = base.DataProviderFactory(created_by=self.creator)
+        provider_relation = base.DataProviderRelationFactory(
+            provider=provider,
+            data=data,
+            created_by=self.creator,
+        )
         self.check_user_redirect_all_methods(
             redirect_url=self.login_url,
             url=reverse('data:provider:edit',
@@ -103,16 +126,20 @@ class DataProviderRelationPermissionsTests(base.PermissionsCheckTestCase):
                                 'pk': provider_relation.pk}))
 
     def test_provider_relation_add_auth(self):
-        data = base.DataFactory()
+        data = base.DataFactory(created_by=self.creator)
         self.check_authenticated_user_redirect_all_methods(
             redirect_url=reverse('data:list'),
             url=reverse('data:provider:add',
                         kwargs={'group_pk': data.pk}))
 
     def test_provider_relation_delete_auth(self):
-        data = base.DataFactory()
+        data = base.DataFactory(created_by=self.creator)
+        provider = base.DataProviderFactory(created_by=self.creator)
         provider_relation = base.DataProviderRelationFactory(
-            data=data)
+            provider=provider,
+            data=data,
+            created_by=self.creator,
+        )
         self.check_authenticated_user_redirect_all_methods(
             redirect_url=reverse('data:list'),
             url=reverse('data:provider:delete',
@@ -120,9 +147,13 @@ class DataProviderRelationPermissionsTests(base.PermissionsCheckTestCase):
                                 'pk': provider_relation.pk}))
 
     def test_provider_relation_edit_auth(self):
-        data = base.DataFactory()
+        data = base.DataFactory(created_by=self.creator)
+        provider = base.DataProviderFactory(created_by=self.creator)
         provider_relation = base.DataProviderRelationFactory(
-            data=data)
+            provider=provider,
+            data=data,
+            created_by=self.creator,
+        )
         self.check_authenticated_user_redirect_all_methods(
             redirect_url=reverse('data:list'),
             url=reverse('data:provider:edit',

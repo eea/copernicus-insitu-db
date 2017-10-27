@@ -7,6 +7,15 @@ from picklists.models import (
     Dissemination, QualityControlProcedure, RequirementGroup
 )
 
+
+class CreatedByFormMixin:
+
+    def save(self, created_by='', commit=True):
+        if created_by:
+            self.instance.created_by = created_by
+        return super().save(commit)
+
+
 class ProductForm(forms.ModelForm):
     class Meta:
         model = models.Product
@@ -26,7 +35,8 @@ class ProductRequirementForm(ProductRequirementBaseForm):
                                      queryset=models.Product.objects.all())
 
 
-class RequirementProductRequirementForm(ProductRequirementBaseForm):
+class RequirementProductRequirementForm(CreatedByFormMixin,
+                                        ProductRequirementBaseForm):
     requirement = forms.ModelChoiceField(disabled=True,
                                          queryset=models.Requirement.objects.all())
 
@@ -77,7 +87,8 @@ class RequirementForm(forms.ModelForm):
         return models.Metric.objects.create(
             threshold=threshold,
             breakthrough=breakthrough,
-            goal=goal
+            goal=goal,
+            created_by=self.instance.created_by
         )
 
     def _update_metric(self, metric, threshold, breakthrough, goal):
@@ -107,7 +118,10 @@ class RequirementForm(forms.ModelForm):
         self._clean_metric(metric_fields)
         return self.cleaned_data
 
-    def save(self, commit=True):
+    def save(self, created_by='', commit=True):
+        if created_by:
+            self.instance.created_by = created_by
+
         uncertainty_data = self._get_metric_data('uncertainty', self.data)
         update_frequency_data = self._get_metric_data('update_frequency', self.data)
         timeliness_data = self._get_metric_data('timeliness', self.data)
@@ -133,6 +147,7 @@ class RequirementForm(forms.ModelForm):
             data['horizontal_resolution'] = self._create_metric(
                 **horizontal_resolution_data)
             data['vertical_resolution'] = self._create_metric(**vertical_resolution_data)
+            data['created_by'] = self.instance.created_by
             return models.Requirement.objects.create(**data)
         else:
             self._update_metric(self.instance.uncertainty, **uncertainty_data)
@@ -158,13 +173,12 @@ class RequirementCloneForm(RequirementForm):
             self.add_error(None, "You must modify at least one field of the cloned requirement.")
         return self.cleaned_data
 
-    def save(self, commit=True):
+    def save(self, created_by='', commit=True):
         self.initial = None
-        return super().save()
+        return super().save(created_by, commit)
 
 
-
-class DataForm(forms.ModelForm):
+class DataForm(CreatedByFormMixin, forms.ModelForm):
     class Meta:
         model = models.Data
         auto_created = True
@@ -188,18 +202,19 @@ class DataRequirementForm(DataRequirementBaseForm):
         queryset=models.Data.objects.all())
 
 
-class RequirementDataRequirementForm(DataRequirementBaseForm):
+class RequirementDataRequirementForm(CreatedByFormMixin,
+                                     DataRequirementBaseForm):
     requirement = forms.ModelChoiceField(
         disabled=True,
         queryset=models.Requirement.objects.all())
 
 
 class DataRequirementEditForm(DataRequirementForm,
-                                 RequirementDataRequirementForm):
+                              RequirementDataRequirementForm):
     pass
 
 
-class DataProviderNetworkForm(forms.ModelForm):
+class DataProviderNetworkForm(CreatedByFormMixin, forms.ModelForm):
     is_network = forms.BooleanField(initial=True,
                                     widget=forms.HiddenInput)
 
@@ -240,7 +255,8 @@ class DataProviderNetworkMembersForm(forms.ModelForm):
                     instance.members.add(member)
         return instance
 
-class DataProviderDetailsForm(forms.ModelForm):
+
+class DataProviderDetailsForm(CreatedByFormMixin, forms.ModelForm):
     data_provider = forms.ModelChoiceField(
         widget=forms.HiddenInput,
         queryset=models.DataProvider.objects.filter(is_network=False),
@@ -248,11 +264,11 @@ class DataProviderDetailsForm(forms.ModelForm):
 
     class Meta:
         model = models.DataProviderDetails
-        fields = ['acronym', 'website', 'address', 'phone', 'email', 'contact_person',
-                  'provider_type', 'data_provider']
+        fields = ['acronym', 'website', 'address', 'phone', 'email',
+                  'contact_person', 'provider_type', 'data_provider']
 
 
-class DataProviderNonNetworkForm(forms.ModelForm):
+class DataProviderNonNetworkForm(CreatedByFormMixin, forms.ModelForm):
     networks = forms.ModelMultipleChoiceField(
         required=False,
         queryset=models.DataProvider.objects.filter(is_network=True),
@@ -262,8 +278,8 @@ class DataProviderNonNetworkForm(forms.ModelForm):
         model = models.DataProvider
         fields = ['name', 'description', 'countries', 'networks']
 
-    def save(self, commit=True):
-        instance = super().save(commit)
+    def save(self, created_by='', commit=True):
+        instance = super().save(created_by, commit)
         if 'networks' in self.cleaned_data:
             for network in self.cleaned_data['networks']:
                 instance.networks.add(network)
@@ -282,7 +298,8 @@ class DataProviderRelationProviderForm(DataProviderRelationBaseForm):
         queryset=models.DataProvider.objects.all())
 
 
-class DataProviderRelationGroupForm(DataProviderRelationBaseForm):
+class DataProviderRelationGroupForm(CreatedByFormMixin,
+                                    DataProviderRelationBaseForm):
     data = forms.ModelChoiceField(
         disabled=True,
         queryset=models.Data.objects.all())

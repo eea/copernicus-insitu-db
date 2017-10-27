@@ -41,7 +41,6 @@ class RequirementTests(base.FormCheckTestCase):
             'You must modify at least one field of the cloned requirement.']
         self.errors['__all__'] = ['At least one metric is required.']
 
-
     def _create_clone_data(self, requirement):
         REQUIREMENT_FOR_CLONE = {
             'name': requirement.name,
@@ -58,7 +57,9 @@ class RequirementTests(base.FormCheckTestCase):
         return REQUIREMENT_FOR_CLONE
 
     def test_list_requirement_json(self):
-        base.RequirementFactory()
+        metrics = base.RequirementFactory.create_metrics(self.creator)
+        requirement = base.RequirementFactory(created_by=self.creator,
+                                              **metrics)
         resp = self.client.get(reverse('requirement:json'))
         self.assertEqual(resp.status_code, 200)
 
@@ -67,8 +68,16 @@ class RequirementTests(base.FormCheckTestCase):
         self.assertEqual(data['recordsTotal'], data['recordsFiltered'])
 
     def test_list_requirement_json_filter(self):
-        base.RequirementFactory(name="Test requirement")
-        base.RequirementFactory(name="Other requirement")
+
+        metrics = base.RequirementFactory.create_metrics(self.creator)
+        base.RequirementFactory(name="Test requirement",
+                                created_by=self.creator,
+                                **metrics)
+
+        metrics = base.RequirementFactory.create_metrics(self.creator)
+        base.RequirementFactory(name="Other requirement",
+                                created_by=self.creator,
+                                **metrics)
         resp = self.client.get(reverse('requirement:json'),
                                {'search[value]': 'Other'})
         self.assertEqual(resp.status_code, 200)
@@ -79,12 +88,18 @@ class RequirementTests(base.FormCheckTestCase):
         self.assertIs(data['recordsFiltered'], 1)
 
     def test_list_requirements(self):
-        base.RequirementFactory()
+        metrics = base.RequirementFactory.create_metrics(self.creator)
+        base.RequirementFactory(name="Test requirement",
+                                created_by=self.creator,
+                                **metrics)
         resp = self.client.get(reverse('requirement:list'))
         self.assertTemplateUsed(resp, 'requirement/list.html')
 
     def test_detail_requirement(self):
-        requirement = base.RequirementFactory()
+        metrics = base.RequirementFactory.create_metrics(self.creator)
+        requirement = base.RequirementFactory(name="Test requirement",
+                                              created_by=self.creator,
+                                              **metrics)
         resp = self.client.get(reverse('requirement:detail',
                                        kwargs={'pk': requirement.pk}))
         self.assertEqual(resp.context['requirement'], requirement)
@@ -101,8 +116,11 @@ class RequirementTests(base.FormCheckTestCase):
         self.check_single_object(models.Requirement, data)
 
     def test_get_add_with_clone(self):
-        requirement = base.RequirementFactory()
-        resp =  self.client.get(reverse('requirement:add'),
+        metrics = base.RequirementFactory.create_metrics(self.creator)
+        requirement = base.RequirementFactory(name="Test requirement",
+                                              created_by=self.creator,
+                                              **metrics)
+        resp = self.client.get(reverse('requirement:add'),
                                 {'pk': requirement.pk})
         self.assertEqual(resp.status_code, 200)
         form_data = [ value for field, value in resp.context['form'].initial.items()]
@@ -110,7 +128,10 @@ class RequirementTests(base.FormCheckTestCase):
             self.assertTrue(value)
 
     def test_post_add_with_clone_duplicate_error(self):
-        requirement = base.RequirementFactory()
+        metrics = base.RequirementFactory.create_metrics(self.creator)
+        requirement = base.RequirementFactory(name="Test requirement",
+                                              created_by=self.creator,
+                                              **metrics)
         cloned_data = self._create_clone_data(requirement)
         resp = self.client.post(
             reverse('requirement:add') + '?pk=' + str(requirement.pk),
@@ -123,7 +144,10 @@ class RequirementTests(base.FormCheckTestCase):
 
     def test_post_add_with_clone(self):
 
-        requirement = base.RequirementFactory()
+        metrics = base.RequirementFactory.create_metrics(self.creator)
+        requirement = base.RequirementFactory(name="Test requirement",
+                                              created_by=self.creator,
+                                              **metrics)
         cloned_data = self._create_clone_data(requirement)
         cloned_data['name'] = 'Updated requirement'
 
@@ -136,7 +160,10 @@ class RequirementTests(base.FormCheckTestCase):
         self.check_single_object(models.Requirement, cloned_data)
 
     def test_edit_requirement(self):
-        requirement = base.RequirementFactory()
+        metrics = base.RequirementFactory.create_metrics(self.creator)
+        requirement = base.RequirementFactory(name="Test requirement",
+                                              created_by=self.creator,
+                                              **metrics)
         data = self._DATA
         resp = self.client.post(reverse('requirement:edit',
                                         kwargs={'pk': requirement.pk}), data)
@@ -144,18 +171,27 @@ class RequirementTests(base.FormCheckTestCase):
         self.check_single_object(models.Requirement, data)
 
     def test_delete_requirement(self):
-        requirement = base.RequirementFactory()
+        metrics = base.RequirementFactory.create_metrics(self.creator)
+        requirement = base.RequirementFactory(name="Test requirement",
+                                              created_by=self.creator,
+                                              **metrics)
         resp = self.client.post(
             reverse('requirement:delete', kwargs={'pk': requirement.pk}))
         self.assertEqual(resp.status_code, 302)
         self.check_single_object_deleted(models.Requirement)
         self.check_objects_are_soft_deleted(models.Requirement, RequirementDoc)
 
-
     def test_delete_requirement_related_objects(self):
-        requirement = base.RequirementFactory()
-        base.ProductRequirementFactory(requirement=requirement)
-        base.DataRequirementFactory(requirement=requirement)
+        metrics = base.RequirementFactory.create_metrics(self.creator)
+        requirement = base.RequirementFactory(name="Test requirement",
+                                              created_by=self.creator,
+                                              **metrics)
+        base.ProductRequirementFactory(requirement=requirement,
+                                       created_by=self.creator)
+        data = base.DataFactory(created_by=self.creator)
+        base.DataRequirementFactory(requirement=requirement,
+                                    data=data,
+                                    created_by=self.creator)
         self.client.post(
             reverse('requirement:delete', kwargs={'pk': requirement.pk})
         )
@@ -166,6 +202,7 @@ class RequirementTests(base.FormCheckTestCase):
 class RequirementPermissionTests(base.PermissionsCheckTestCase):
 
     def setUp(self):
+        super().setUp()
         self.redirect_requirement_url_non_auth = reverse('auth:login')
         self.redirect_requirement_url_auth = reverse('requirement:list')
         self.methods = ['GET', 'POST']
@@ -180,7 +217,10 @@ class RequirementPermissionTests(base.PermissionsCheckTestCase):
             url=reverse('requirement:list'))
 
     def test_requirement_detail_not_auth(self):
-        requirement = base.RequirementFactory()
+        metrics = base.RequirementFactory.create_metrics(self.creator)
+        requirement = base.RequirementFactory(name="Test requirement",
+                                              created_by=self.creator,
+                                              **metrics)
         self.check_user_redirect_all_methods(
             redirect_url=self.redirect_requirement_url_non_auth,
             url=reverse('requirement:detail', kwargs={'pk': requirement.pk}))
@@ -191,13 +231,19 @@ class RequirementPermissionTests(base.PermissionsCheckTestCase):
             url=reverse('requirement:add'))
 
     def test_requirement_edit_not_auth(self):
-        requirement = base.RequirementFactory()
+        metrics = base.RequirementFactory.create_metrics(self.creator)
+        requirement = base.RequirementFactory(name="Test requirement",
+                                              created_by=self.creator,
+                                              **metrics)
         self.check_user_redirect_all_methods(
             redirect_url=self.redirect_requirement_url_non_auth,
             url=reverse('requirement:edit', kwargs={'pk': requirement.pk}))
 
     def test_requirement_delete_not_auth(self):
-        requirement = base.RequirementFactory()
+        metrics = base.RequirementFactory.create_metrics(self.creator)
+        requirement = base.RequirementFactory(name="Test requirement",
+                                              created_by=self.creator,
+                                              **metrics)
         self.check_user_redirect_all_methods(
             redirect_url=self.redirect_requirement_url_non_auth,
             url=reverse('requirement:delete', kwargs={'pk': requirement.pk}))
@@ -208,13 +254,19 @@ class RequirementPermissionTests(base.PermissionsCheckTestCase):
             url=reverse('requirement:add'))
 
     def test_requirement_relation_edit_auth(self):
-        requirement = base.RequirementFactory()
+        metrics = base.RequirementFactory.create_metrics(self.creator)
+        requirement = base.RequirementFactory(name="Test requirement",
+                                              created_by=self.creator,
+                                              **metrics)
         self.check_authenticated_user_redirect_all_methods(
             redirect_url=self.redirect_requirement_url_auth,
             url=reverse('requirement:edit', kwargs={'pk': requirement.pk}))
 
     def test_requirement_relation_delete_auth(self):
-        requirement = base.RequirementFactory()
+        metrics = base.RequirementFactory.create_metrics(self.creator)
+        requirement = base.RequirementFactory(name="Test requirement",
+                                              created_by=self.creator,
+                                              **metrics)
         self.check_authenticated_user_redirect_all_methods(
             redirect_url=self.redirect_requirement_url_auth,
             url=reverse('requirement:delete', kwargs={'pk': requirement.pk}))

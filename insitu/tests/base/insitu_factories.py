@@ -59,6 +59,17 @@ class RequirementFactory(DjangoModelFactory):
     horizontal_resolution = SubFactory(MetricFactory)
     vertical_resolution = SubFactory(MetricFactory)
 
+    @staticmethod
+    def create_metrics(creator):
+        data = {
+            'uncertainty': MetricFactory(created_by=creator),
+            'update_frequency': MetricFactory(created_by=creator),
+            'timeliness': MetricFactory(created_by=creator),
+            'horizontal_resolution': MetricFactory(created_by=creator),
+            'vertical_resolution': MetricFactory(created_by=creator)
+        }
+        return data
+
     class Meta:
         model = models.Requirement
 

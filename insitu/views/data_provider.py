@@ -5,7 +5,7 @@ from django.urls import reverse, reverse_lazy
 from insitu import documents
 from insitu import models
 from insitu import forms
-from insitu.views.base import ESDatatableView
+from insitu.views.base import ESDatatableView, CreatedByMixin
 from insitu.views.protected import (
     ProtectedTemplateView, ProtectedDetailView,
     ProtectedUpdateView, ProtectedCreateView, ProtectedDeleteView)
@@ -53,7 +53,7 @@ class DataProviderDetail(ProtectedDetailView):
         return ['data_provider/non_network/detail.html']
 
 
-class DataProviderAddNetwork(ProtectedCreateView):
+class DataProviderAddNetwork(CreatedByMixin, ProtectedCreateView):
     template_name = 'data_provider/network/add.html'
     form_class = forms.DataProviderNetworkForm
     permission_classes = (IsCopernicusServiceResponsible,)
@@ -99,7 +99,7 @@ class DataProviderDeleteNetwork(ProtectedDeleteView):
         return reverse('provider:list')
 
 
-class DataProviderAddNonNetwork(ProtectedCreateView):
+class DataProviderAddNonNetwork(CreatedByMixin, ProtectedCreateView):
     template_name = 'data_provider/non_network/add.html'
     form_class = forms.DataProviderNonNetworkForm
     permission_classes = (IsCopernicusServiceResponsible,)
@@ -111,18 +111,15 @@ class DataProviderAddNonNetwork(ProtectedCreateView):
             context['details'] = forms.DataProviderDetailsForm()
         return context
 
-    def _create_objects(self, form):
-        self.object = form.save()
-        data = form.data.copy()
-        data['data_provider'] = self.object.pk
-        details_form = forms.DataProviderDetailsForm(data=data)
-        details_form.save()
-
     def form_valid(self, form):
         details_form = forms.DataProviderDetailsForm(data=form.data)
         if not details_form.is_valid():
             return self.form_invalid(form)
-        self._create_objects(form)
+        super().form_valid(form)
+        data = form.data.copy()
+        data['data_provider'] = self.object.pk
+        details_form = forms.DataProviderDetailsForm(data=data)
+        details_form.save(created_by=self.object.created_by)
         return HttpResponseRedirect(self.get_success_url())
 
     def form_invalid(self, form):

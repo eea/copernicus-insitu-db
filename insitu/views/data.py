@@ -4,7 +4,7 @@ from insitu import documents
 from insitu import forms
 from insitu import models
 from insitu.utils import get_choices
-from insitu.views.base import ESDatatableView
+from insitu.views.base import ESDatatableView, CreatedByMixin
 from insitu.views.protected import (
     ProtectedTemplateView, ProtectedDetailView,
     ProtectedUpdateView, ProtectedCreateView, ProtectedDeleteView)
@@ -56,7 +56,7 @@ class DataListJson(ESDatatableView):
     permission_classes = (IsAuthenticated, )
 
 
-class DataAdd(ProtectedCreateView):
+class DataAdd(CreatedByMixin, ProtectedCreateView):
     template_name = 'data/add.html'
     form_class = forms.DataForm
     model = models.Data

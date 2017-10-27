@@ -147,7 +147,6 @@ class ProductTests(base.FormCheckTestCase):
         self.assertEqual(len(data['components']), 1)
         self.assertTrue(ALL_OPTIONS_LABEL in data['components'])
 
-
     def test_delete_product(self):
         product = base.ProductFactory()
         resp = self.client.post(
@@ -156,10 +155,14 @@ class ProductTests(base.FormCheckTestCase):
         self.check_single_object_deleted(models.Product)
         self.check_objects_are_soft_deleted(models.Product, ProductDoc)
 
-
     def test_delete_product_related_objects(self):
         product = base.ProductFactory()
-        base.ProductRequirementFactory(product=product)
+        metrics = base.RequirementFactory.create_metrics(self.creator)
+        requirement = base.RequirementFactory(created_by=self.creator,
+                                              **metrics)
+        base.ProductRequirementFactory(product=product,
+                                       requirement=requirement,
+                                       created_by=self.creator)
         self.client.post(
             reverse('product:delete', kwargs={'pk': product.pk})
         )
@@ -172,7 +175,6 @@ class ProductPermissionTests(base.PermissionsCheckTestCase):
         self.redirect_product_url_non_auth = reverse('auth:login')
         self.redirect_product_url_auth = reverse('product:list')
         self.methods = ['GET', 'POST']
-
 
     def test_list_product_json_non_auth(self):
         self.check_permission_denied(method='GET',
