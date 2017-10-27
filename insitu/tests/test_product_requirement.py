@@ -102,7 +102,9 @@ class ProductRequirementTests(base.FormCheckTestCase):
 
     def test_product_group_requirement_add_required_fields(self):
         data = {}
-        requirement = base.RequirementFactory()
+        metrics = base.RequirementFactory.create_metrics(self.creator)
+        requirement = base.RequirementFactory(created_by=self.creator,
+                                              **metrics)
         errors_requirement = self.errors.copy()
         errors_requirement.pop('requirement')
         errors_requirement.pop('product')
@@ -208,14 +210,18 @@ class ProductRequirementPermissionsTests(base.PermissionsCheckTestCase):
                                 'pk': product_requirement.pk}))
 
     def test_product_group_requirement_add_not_auth(self):
-        requirement = base.RequirementFactory()
+        metrics = base.RequirementFactory.create_metrics(self.creator)
+        requirement = base.RequirementFactory(created_by=self.creator,
+                                              **metrics)
         self.check_user_redirect_all_methods(
             redirect_url=self.login_url,
             url=reverse('requirement:product:add_group',
                         kwargs={'requirement_pk': requirement.pk}))
 
     def test_product_group_requirement_add_auth(self):
-        requirement = base.RequirementFactory()
+        metrics = base.RequirementFactory.create_metrics(self.creator)
+        requirement = base.RequirementFactory(created_by=self.creator,
+                                              **metrics)
         self.check_authenticated_user_redirect_all_methods(
             redirect_url=reverse('requirement:list'),
             url=reverse('requirement:product:add_group',

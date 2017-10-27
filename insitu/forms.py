@@ -51,13 +51,14 @@ class ProductGroupRequirementForm(RequirementProductRequirementForm):
 
     class Meta:
         model = models.ProductRequirement
-        exclude = ['product']
+        exclude = ['product', 'created_by']
 
-    def save(self, commit=True):
+    def save(self, created_by='', commit=True):
         products = models.Product.objects.filter(
             group__name=self.cleaned_data['product_group'].name)
         self.cleaned_data.pop('product_group')
         barriers = self.cleaned_data.pop('barriers')
+        self.cleaned_data['created_by'] = created_by
         for product in products:
             self.cleaned_data['product'] = product
             product_requirement = models.ProductRequirement(**self.cleaned_data)
