@@ -11,14 +11,11 @@ from insitu.views.protected import (
 from insitu.views.protected.permissions import IsCopernicusServiceResponsible
 
 
-class ProductRequirementAdd(CreatedByMixin, ProtectedCreateView):
-    template_name = 'product/requirement/add.html'
-    permission_classes = (IsCopernicusServiceResponsible,)
-    permission_denied_redirect = reverse_lazy('requirement:list')
-    form_class = forms.RequirementProductRequirementForm
+class BaseProductRequirementAdd(CreatedByMixin, ProtectedCreateView):
     form_field = 'requirement'
     model = models.Requirement
-    title = "Add a new product for {}"
+    permission_classes = (IsCopernicusServiceResponsible,)
+    permission_denied_redirect = reverse_lazy('requirement:list')
 
     def get_form(self):
         form = super().get_form(self.form_class)
@@ -36,6 +33,18 @@ class ProductRequirementAdd(CreatedByMixin, ProtectedCreateView):
     def get_success_url(self):
         return reverse_lazy('requirement:detail',
                             kwargs={'pk': self.kwargs['requirement_pk']})
+
+
+class ProductRequirementAdd(BaseProductRequirementAdd):
+    template_name = 'product/requirement/add.html'
+    form_class = forms.RequirementProductRequirementForm
+    title = "Add a new product for {}"
+
+
+class ProductGroupRequirementAdd(BaseProductRequirementAdd):
+    template_name = 'product_group/requirement/add.html'
+    form_class = forms.ProductGroupRequirementForm
+    title = "Add a new product group for {}"
 
 
 class ProductRequirementEdit(ProtectedUpdateView):

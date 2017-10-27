@@ -8,6 +8,10 @@ product_requirement_patterns = [
         views.ProductRequirementAdd.as_view(),
         name='add'),
 
+    url(r'^add-group/$',
+        views.ProductGroupRequirementAdd.as_view(),
+        name='add_group'),
+
     url(r'^(?P<pk>[0-9]+)/$',
         views.ProductRequirementEdit.as_view(),
         name='edit'),

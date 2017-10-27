@@ -4,7 +4,7 @@ from django.db import transaction
 from insitu import models
 from insitu import signals
 from picklists.models import (
-    Dissemination, QualityControlProcedure, RequirementGroup
+    Dissemination, QualityControlProcedure, RequirementGroup, ProductGroup
 )
 
 
@@ -44,6 +44,26 @@ class RequirementProductRequirementForm(CreatedByFormMixin,
 class ProductRequirementEditForm(ProductRequirementForm,
                                  RequirementProductRequirementForm):
     pass
+
+
+class ProductGroupRequirementForm(RequirementProductRequirementForm):
+    product_group = forms.ModelChoiceField(queryset=ProductGroup.objects.all())
+
+    class Meta:
+        model = models.ProductRequirement
+        exclude = ['product', 'created_by']
+
+    def save(self, created_by='', commit=True):
+        products = models.Product.objects.filter(
+            group__name=self.cleaned_data['product_group'].name)
+        self.cleaned_data.pop('product_group')
+        barriers = self.cleaned_data.pop('barriers')
+        self.cleaned_data['created_by'] = created_by
+        for product in products:
+            self.cleaned_data['product'] = product
+            product_requirement = models.ProductRequirement(**self.cleaned_data)
+            product_requirement.save()
+            product_requirement.barriers.add(*barriers)
 
 
 class RequirementForm(forms.ModelForm):
