@@ -13,6 +13,7 @@ from picklists import models as pickmodels
 from insitu.views.protected.permissions import (
     IsAuthenticated,
     IsCopernicusServiceResponsible,
+    IsDraftObject
 )
 
 
@@ -83,7 +84,7 @@ class RequirementList(ProtectedTemplateView):
 class RequirementListJson(ESDatatableView):
     columns = ['name', 'dissemination', 'quality_control_procedure', 'group',
                'uncertainty', 'update_frequency', 'timeliness',
-               'horizontal_resolution', 'vertical_resolution']
+               'horizontal_resolution', 'vertical_resolution', 'state']
     order_columns = columns
     filters = ['dissemination', 'quality_control_procedure', 'group']
     document = documents.RequirementDoc
@@ -93,7 +94,7 @@ class RequirementListJson(ESDatatableView):
 class RequirementAdd(GetInitialMixin, CreatedByMixin, ProtectedCreateView):
     template_name = 'requirement/add.html'
     model = models.Requirement
-    permission_classes = (IsCopernicusServiceResponsible,)
+    permission_classes = (IsCopernicusServiceResponsible, IsDraftObject)
 
     def get_form_class(self):
         requirement = self.get_requirement()
@@ -116,7 +117,7 @@ class RequirementEdit(GetInitialMixin, ProtectedUpdateView):
     form_class = forms.RequirementForm
     model = models.Requirement
     context_object_name = 'requirement'
-    permission_classes = (IsCopernicusServiceResponsible,)
+    permission_classes = (IsCopernicusServiceResponsible, IsDraftObject)
 
     def permission_denied(self, request):
         self.permission_denied_redirect = reverse('requirement:list')
@@ -134,7 +135,7 @@ class RequirementDelete(ProtectedDeleteView):
     form_class = forms.RequirementForm
     model = models.Requirement
     context_object_name = 'requirement'
-    permission_classes = (IsCopernicusServiceResponsible,)
+    permission_classes = (IsCopernicusServiceResponsible, IsDraftObject)
 
     def permission_denied(self, request):
         self.permission_denied_redirect = reverse('requirement:list')

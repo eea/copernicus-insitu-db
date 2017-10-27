@@ -4,12 +4,35 @@ from __future__ import unicode_literals
 from django.contrib.auth import get_user_model
 from django.db import models
 from django.db.models.query import QuerySet
+from django_xworkflows.models import Workflow, WorkflowEnabled, StateField, transition
 
 from insitu import signals
 from picklists import models as pickmodels
 
-
 User = get_user_model()
+
+
+class ValidationWorkflow(Workflow):
+    name = 'validation'
+
+    states = (
+        # name, description
+        ('draft', 'Draft'),
+        ('ready', 'Ready for validation'),
+        ('valid', 'Valid'),
+        ('changes', 'Changes requested')
+    )
+
+    initial_state = 'draft'
+
+    transitions = (
+        # name, source state, target state
+        ('mark_as_ready', 'draft', 'ready'),
+        ('validate', 'ready', 'valid'),
+        ('cancel', 'ready', 'draft'),
+        ('request_changes', 'ready', 'changes'),
+        ('make_changes', 'changes', 'draft')
+    )
 
 
 class _WithRelatedUserManager(models.Manager):
@@ -29,7 +52,6 @@ class SoftDeleteQuerySet(QuerySet):
 
 
 class SoftDeleteManager(models.Manager):
-
     def get_queryset(self):
         return SoftDeleteQuerySet(self.model).filter(_deleted=False)
 
@@ -53,7 +75,7 @@ class SoftDeleteModel(models.Model):
     def delete_related(self):
         for class_name, field in self.related_objects:
             objects = globals()[class_name].objects.filter(
-                        **{field: self})
+                **{field: self})
             objects.delete()
 
     def delete(self, using=None):
@@ -63,12 +85,18 @@ class SoftDeleteModel(models.Model):
         if hasattr(self, 'elastic_delete_signal'):
             self.elastic_delete_signal.send(sender=self)
 
+    class Meta:
+        abstract = True
+
+
+class ValidationWorkflowModel(WorkflowEnabled, models.Model):
+    state = StateField(ValidationWorkflow)
 
     class Meta:
         abstract = True
 
 
-class Metric(models.Model):
+class Metric(ValidationWorkflowModel):
     threshold = models.CharField(max_length=100)
     breakthrough = models.CharField(max_length=100)
     goal = models.CharField(max_length=100)
@@ -131,7 +159,7 @@ class Component(models.Model):
         return self.name
 
 
-class Requirement(SoftDeleteModel):
+class Requirement(ValidationWorkflowModel, SoftDeleteModel):
     related_objects = [
         ('ProductRequirement', 'requirement'),
         ('DataRequirement', 'requirement')
@@ -206,7 +234,7 @@ class Product(SoftDeleteModel):
         return self.name
 
 
-class ProductRequirement(SoftDeleteModel):
+class ProductRequirement(ValidationWorkflowModel, SoftDeleteModel):
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     requirement = models.ForeignKey(Requirement, on_delete=models.CASCADE)
     note = models.TextField(blank=True)
@@ -230,7 +258,7 @@ class ProductRequirement(SoftDeleteModel):
         return '{} - {}'.format(self.product.name, self.requirement.name)
 
 
-class DataProvider(SoftDeleteModel):
+class DataProvider(ValidationWorkflowModel, SoftDeleteModel):
     related_objects = [
         ('DataProviderDetails', 'data_provider'),
         ('DataProviderRelation', 'provider'),
@@ -264,7 +292,7 @@ class DataProvider(SoftDeleteModel):
         return data
 
 
-class DataProviderDetails(SoftDeleteModel):
+class DataProviderDetails(ValidationWorkflowModel, SoftDeleteModel):
     acronym = models.CharField(max_length=10, blank=True)
     website = models.CharField(max_length=255, blank=True)
     address = models.TextField(blank=True)
@@ -295,7 +323,7 @@ class DataProviderDetails(SoftDeleteModel):
         signals.data_provider_updated.send(sender=self)
 
 
-class Data(SoftDeleteModel):
+class Data(ValidationWorkflowModel, SoftDeleteModel):
     related_objects = [
         ('DataRequirement', 'data'),
         ('DataProviderRelation', 'data'),
@@ -346,12 +374,11 @@ class Data(SoftDeleteModel):
     updated_at = models.DateTimeField(auto_now=True,
                                       null=True)
 
-
     def __str__(self):
         return self.name
 
 
-class DataRequirement(SoftDeleteModel):
+class DataRequirement(ValidationWorkflowModel, SoftDeleteModel):
     data = models.ForeignKey(Data, on_delete=models.CASCADE)
     requirement = models.ForeignKey(Requirement, on_delete=models.CASCADE)
     information_costs = models.BooleanField(default=False)
@@ -370,7 +397,7 @@ class DataRequirement(SoftDeleteModel):
         return '{} - {}'.format(self.data.name, self.requirement.name)
 
 
-class DataProviderRelation(SoftDeleteModel):
+class DataProviderRelation(ValidationWorkflowModel, SoftDeleteModel):
     ORIGINATOR = 1
     DISTRIBUTOR = 2
     ROLE_CHOICES = (
@@ -432,7 +459,7 @@ class DataProviderUser(models.Model):
     user = models.OneToOneField(User,
                                 related_name='data_resp')
     provider = models.ForeignKey(DataProvider,
-                                related_name='provider')
+                                 related_name='provider')
     created_at = models.DateTimeField(auto_now_add=True,
                                       null=True)
     updated_at = models.DateTimeField(auto_now=True,

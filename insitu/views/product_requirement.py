@@ -8,7 +8,10 @@ from insitu import forms
 from insitu.views.base import CreatedByMixin
 from insitu.views.protected import (
     ProtectedUpdateView, ProtectedCreateView, ProtectedDeleteView)
-from insitu.views.protected.permissions import IsCopernicusServiceResponsible
+from insitu.views.protected.permissions import (
+    IsCopernicusServiceResponsible,
+    IsDraftObject
+)
 
 
 class BaseProductRequirementAdd(CreatedByMixin, ProtectedCreateView):
@@ -52,7 +55,7 @@ class ProductRequirementEdit(ProtectedUpdateView):
     template_name = 'product/requirement/edit.html'
     form_class = forms.ProductRequirementEditForm
     context_object_name = 'rel'
-    permission_classes = (IsCopernicusServiceResponsible,)
+    permission_classes = (IsCopernicusServiceResponsible, IsDraftObject)
     permission_denied_redirect = reverse_lazy('requirement:list')
 
     def get_context_data(self, **kwargs):
@@ -69,7 +72,7 @@ class ProductRequirementDelete(ProtectedDeleteView):
     model = models.ProductRequirement
     template_name = 'product/requirement/delete.html'
     context_object_name = 'rel'
-    permission_classes = (IsCopernicusServiceResponsible,)
+    permission_classes = (IsCopernicusServiceResponsible, IsDraftObject)
     permission_denied_redirect = reverse_lazy('requirement:list')
 
     def get_context_data(self, **kwargs):

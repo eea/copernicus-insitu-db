@@ -2,7 +2,7 @@
 from __future__ import unicode_literals
 
 from insitu.views.base import CreatedByMixin
-from insitu.views.protected import IsCopernicusServiceResponsible
+from insitu.views.protected import IsCopernicusServiceResponsible, IsDraftObject
 from django.urls import reverse_lazy
 
 from insitu.views.protected import (
@@ -14,7 +14,7 @@ from insitu import forms
 
 class DataDataProviderAdd(CreatedByMixin, ProtectedCreateView):
     template_name = 'data/data_provider/add.html'
-    permission_classes = (IsCopernicusServiceResponsible,)
+    permission_classes = (IsCopernicusServiceResponsible, IsDraftObject)
     permission_denied_redirect = reverse_lazy('data:list')
     form_class = forms.DataProviderRelationGroupForm
     form_field = 'data'
@@ -43,7 +43,7 @@ class DataDataProviderEdit(ProtectedUpdateView):
     template_name = 'data/data_provider/edit.html'
     form_class = forms.DataProviderRelationEditForm
     context_object_name = 'rel'
-    permission_classes = (IsCopernicusServiceResponsible,)
+    permission_classes = (IsCopernicusServiceResponsible, IsDraftObject)
     permission_denied_redirect = reverse_lazy('data:list')
 
     def get_context_data(self, **kwargs):
@@ -60,7 +60,7 @@ class DataDataProviderDelete(ProtectedDeleteView):
     model = models.DataProviderRelation
     template_name = 'data/data_provider/delete.html'
     context_object_name = 'rel'
-    permission_classes = (IsCopernicusServiceResponsible,)
+    permission_classes = (IsCopernicusServiceResponsible, IsDraftObject)
     permission_denied_redirect = reverse_lazy('data:list')
 
     def get_context_data(self, **kwargs):

@@ -8,9 +8,13 @@ from insitu import forms
 from insitu.views.base import ESDatatableView, CreatedByMixin
 from insitu.views.protected import (
     ProtectedTemplateView, ProtectedDetailView,
-    ProtectedUpdateView, ProtectedCreateView, ProtectedDeleteView)
+    ProtectedUpdateView, ProtectedCreateView, ProtectedDeleteView
+)
 from insitu.views.protected import IsAuthenticated
-from insitu.views.protected.permissions import IsCopernicusServiceResponsible
+from insitu.views.protected.permissions import (
+    IsCopernicusServiceResponsible,
+    IsDraftObject
+)
 from insitu.utils import get_choices
 
 from picklists import models as pickmodels
@@ -33,7 +37,7 @@ class DataProviderList(ProtectedTemplateView):
 
 class DataProviderListJson(ESDatatableView):
     columns = ['name', 'acronym', 'address', 'phone', 'email', 'contact_person',
-               'provider_type', 'is_network']
+               'provider_type', 'is_network', 'state']
     order_columns = columns
     filters = ['is_network', 'provider_type']
     document = documents.DataProviderDoc
@@ -56,7 +60,7 @@ class DataProviderDetail(ProtectedDetailView):
 class DataProviderAddNetwork(CreatedByMixin, ProtectedCreateView):
     template_name = 'data_provider/network/add.html'
     form_class = forms.DataProviderNetworkForm
-    permission_classes = (IsCopernicusServiceResponsible,)
+    permission_classes = (IsCopernicusServiceResponsible, IsDraftObject)
     permission_denied_redirect = reverse_lazy('provider:list')
 
     def get_success_url(self):
@@ -68,7 +72,7 @@ class DataProviderEditNetwork(ProtectedUpdateView):
     form_class = forms.DataProviderNetworkForm
     context_object_name = 'provider'
     model = models.DataProvider
-    permission_classes = (IsCopernicusServiceResponsible,)
+    permission_classes = (IsCopernicusServiceResponsible, IsDraftObject)
     permission_denied_redirect = reverse_lazy('provider:list')
 
     def get_success_url(self):
@@ -80,7 +84,7 @@ class DataProviderEditNetworkMembers(ProtectedUpdateView):
     form_class = forms.DataProviderNetworkMembersForm
     context_object_name = 'provider'
     model = models.DataProvider
-    permission_classes = (IsCopernicusServiceResponsible,)
+    permission_classes = (IsCopernicusServiceResponsible, IsDraftObject)
     permission_denied_redirect = reverse_lazy('provider:list')
 
     def get_success_url(self):
@@ -92,7 +96,7 @@ class DataProviderDeleteNetwork(ProtectedDeleteView):
     form_class = forms.DataProviderNetworkForm
     context_object_name = 'provider'
     model = models.DataProvider
-    permission_classes = (IsCopernicusServiceResponsible,)
+    permission_classes = (IsCopernicusServiceResponsible, IsDraftObject)
     permission_denied_redirect = reverse_lazy('provider:list')
 
     def get_success_url(self):
@@ -102,7 +106,7 @@ class DataProviderDeleteNetwork(ProtectedDeleteView):
 class DataProviderAddNonNetwork(CreatedByMixin, ProtectedCreateView):
     template_name = 'data_provider/non_network/add.html'
     form_class = forms.DataProviderNonNetworkForm
-    permission_classes = (IsCopernicusServiceResponsible,)
+    permission_classes = (IsCopernicusServiceResponsible, IsDraftObject)
     permission_denied_redirect = reverse_lazy('provider:list')
 
     def get_context_data(self, **kwargs):
@@ -138,7 +142,7 @@ class DataProviderEditNonNetwork(ProtectedUpdateView):
     form_class = forms.DataProviderNonNetworkForm
     context_object_name = 'provider'
     model = models.DataProvider
-    permission_classes = (IsCopernicusServiceResponsible,)
+    permission_classes = (IsCopernicusServiceResponsible, IsDraftObject)
     permission_denied_redirect = reverse_lazy('provider:list')
 
     def get_context_data(self, **kwargs):
@@ -180,7 +184,7 @@ class DataProviderDeleteNonNetwork(ProtectedDeleteView):
     form_class = forms.DataProviderNonNetworkForm
     context_object_name = 'provider'
     model = models.DataProvider
-    permission_classes = (IsCopernicusServiceResponsible,)
+    permission_classes = (IsCopernicusServiceResponsible, IsDraftObject)
     permission_denied_redirect = reverse_lazy('provider:list')
 
     def get_success_url(self):
