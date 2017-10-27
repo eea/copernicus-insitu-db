@@ -14,7 +14,7 @@
   <div class="row">
     <h1 class="col-sm-12">
       <span>Requirement details</span>
-      {% if request.user.service_resp or request.user.is_superuser %}
+      {% if request.user == requirement.created_by or request.user.is_superuser %}
         <span class="pull-right margin-left-btn">
         <a class="btn btn-primary pull-right" href="{% url 'requirement:delete' requirement.pk %}">Delete
           requirement</a>
@@ -98,7 +98,7 @@
   <div class="row">
     <h3 class="col-sm-12">
       <span>Products</span>
-      {% if request.user.service_resp or request.user.is_superuser %}
+      {% if request.user == requirement.created_by or request.user.is_superuser %}
         <span class="pull-right">
           <a class="btn btn-primary pull-right"
              href="{% url 'requirement:product:add' requirement.pk %}">Add requirement to product</a>
@@ -120,7 +120,7 @@
           <th>Criticality</th>
           <th class="no-sort">Barriers</th>
           <th class="no-sort">Note</th>
-          {% if request.user.service_resp or request.user.is_superuser %}
+          {% if request.user == requirement.created_by or request.user.is_superuser %}
             <th class="no-sort"></th>
           {% endif %}
         </tr>
@@ -140,7 +140,7 @@
               {% endfor %}
             </td>
             <td>{{ rel.note }}</td>
-            {% if request.user.service_resp or request.user.is_superuser %}
+            {% if request.user == rel.created_by or request.user.is_superuser %}
               <td class="row">
                 <a href="{% url 'requirement:product:edit' requirement_pk=requirement.pk pk=rel.pk %}"
                    class="col-sm-6">
@@ -162,7 +162,7 @@
   <div class="row">
     <h3 class="col-sm-12">
       <span>Data</span>
-      {% if request.user.service_resp or request.user.is_superuser %}
+      {% if request.user == requirement.created_by or request.user.is_superuser %}
         <span class="pull-right">
           <a class="btn btn-primary pull-right"
              href="{% url 'requirement:data:add' requirement.pk %}">Add requirement to data</a>
@@ -206,7 +206,7 @@
                   <span class='glyphicon glyphicon-remove-circle text-danger'></span>
                 {% endif %}
               </td>
-              {% if request.user.service_resp or request.user.is_superuser %}
+              {% if request.user == rel.created_by or request.user.is_superuser %}
                 <td class="row">
                   <a href="{% url 'requirement:data:edit' requirement_pk=requirement.pk pk=rel.pk %}"
                      class="col-sm-6">
