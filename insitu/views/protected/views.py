@@ -5,9 +5,16 @@ from django.http import HttpResponseForbidden
 from django.shortcuts import redirect
 from django.views.generic.base import View, TemplateView
 from django.views.generic.detail import DetailView
-from django.views.generic.edit import (FormView, FormMixin, UpdateView, DeleteView,
-                                       CreateView)
+from django.views.generic.edit import (FormView, FormMixin, UpdateView,
+                                       DeleteView, CreateView)
 from django.views.generic.list import ListView
+from insitu.views.action_logging.base_logging import (
+    ListLoggingView,
+    UpdateLoggingView,
+    CreateLoggingView,
+    DeleteLoggingView,
+    DetailLoggingView,
+)
 
 
 class ProtectedViewBase(type):
@@ -89,7 +96,8 @@ class ProtectedObjectMixin(object):
         )
 
 
-class ProtectedDetailView(ProtectedObjectMixin,
+class ProtectedDetailView(DetailLoggingView,
+                          ProtectedObjectMixin,
                           ProtectedView,
                           DetailView):
     """
@@ -108,8 +116,10 @@ class ProtectedListView(ProtectedView,
     pass
 
 
-class ProtectedTemplateView(ProtectedView,
+class ProtectedTemplateView(ListLoggingView,
+                            ProtectedView,
                             TemplateView):
+
     """
     Convenience view adding permissions support to
     `django.views.generic.TemplateView`.
@@ -131,7 +141,8 @@ class ProtectedFormView(ProtectedView,
     pass
 
 
-class ProtectedCreateView(ProtectedView,
+class ProtectedCreateView(CreateLoggingView,
+                          ProtectedView,
                           CreateView,
                           metaclass=ProtectedFormViewBase):
     """
@@ -141,7 +152,8 @@ class ProtectedCreateView(ProtectedView,
     pass
 
 
-class ProtectedUpdateView(ProtectedObjectMixin,
+class ProtectedUpdateView(UpdateLoggingView,
+                          ProtectedObjectMixin,
                           ProtectedView,
                           UpdateView,
                           metaclass=ProtectedFormViewBase):
@@ -152,7 +164,8 @@ class ProtectedUpdateView(ProtectedObjectMixin,
     pass
 
 
-class ProtectedDeleteView(ProtectedObjectMixin,
+class ProtectedDeleteView(DeleteLoggingView,
+                          ProtectedObjectMixin,
                           ProtectedView,
                           DeleteView,
                           metaclass=ProtectedFormViewBase):

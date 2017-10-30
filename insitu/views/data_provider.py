@@ -24,6 +24,7 @@ class DataProviderList(ProtectedTemplateView):
     template_name = 'data_provider/list.html'
     permission_classes = (IsAuthenticated,)
     permission_denied_redirect = reverse_lazy('auth:login')
+    target_type = 'data providers'
 
     def get_context_data(self):
         context = super().get_context_data()
@@ -49,6 +50,7 @@ class DataProviderDetail(ProtectedDetailView):
     context_object_name = 'provider'
     permission_classes = (IsAuthenticated,)
     permission_denied_redirect = reverse_lazy('provider:list')
+    target_type = 'data provider'
 
     def get_template_names(self):
         provider = self.object
@@ -62,6 +64,7 @@ class DataProviderAddNetwork(CreatedByMixin, ProtectedCreateView):
     form_class = forms.DataProviderNetworkForm
     permission_classes = (IsAuthenticated, )
     permission_denied_redirect = reverse_lazy('provider:list')
+    target_type = 'data provider network'
 
     def get_success_url(self):
         return reverse('provider:detail', kwargs={'pk': self.object.pk})
@@ -74,6 +77,7 @@ class DataProviderEditNetwork(ProtectedUpdateView):
     model = models.DataProvider
     permission_classes = (IsOwnerUser, IsDraftObject)
     permission_denied_redirect = reverse_lazy('provider:list')
+    target_type = 'data provider network'
 
     def get_success_url(self):
         return reverse('provider:detail', kwargs={'pk': self.object.pk})
@@ -86,6 +90,7 @@ class DataProviderEditNetworkMembers(ProtectedUpdateView):
     model = models.DataProvider
     permission_classes = (IsOwnerUser, IsDraftObject)
     permission_denied_redirect = reverse_lazy('provider:list')
+    target_type = 'data provider members'
 
     def get_success_url(self):
         return reverse('provider:detail', kwargs={'pk': self.object.pk})
@@ -98,6 +103,7 @@ class DataProviderDeleteNetwork(ProtectedDeleteView):
     model = models.DataProvider
     permission_classes = (IsOwnerUser, IsDraftObject)
     permission_denied_redirect = reverse_lazy('provider:list')
+    target_type = 'data provider network'
 
     def get_success_url(self):
         return reverse('provider:list')
@@ -108,6 +114,7 @@ class DataProviderAddNonNetwork(CreatedByMixin, ProtectedCreateView):
     form_class = forms.DataProviderNonNetworkForm
     permission_classes = (IsAuthenticated, )
     permission_denied_redirect = reverse_lazy('provider:list')
+    target_type = 'data provider'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -144,6 +151,7 @@ class DataProviderEditNonNetwork(ProtectedUpdateView):
     model = models.DataProvider
     permission_classes = (IsOwnerUser, IsDraftObject)
     permission_denied_redirect = reverse_lazy('provider:list')
+    target_type = 'data provider'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -186,6 +194,7 @@ class DataProviderDeleteNonNetwork(ProtectedDeleteView):
     model = models.DataProvider
     permission_classes = (IsOwnerUser, IsDraftObject)
     permission_denied_redirect = reverse_lazy('provider:list')
+    target_type = 'data provider'
 
     def get_success_url(self):
         return reverse('provider:list')

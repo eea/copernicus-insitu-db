@@ -55,6 +55,7 @@ class RequirementDetail(ProtectedDetailView):
     model = models.Requirement
     context_object_name = 'requirement'
     permission_classes = (IsAuthenticated,)
+    target_type = 'requirement'
 
     def permission_denied(self, request):
         self.permission_denied_redirect = reverse('auth:login')
@@ -64,6 +65,7 @@ class RequirementDetail(ProtectedDetailView):
 class RequirementList(ProtectedTemplateView):
     template_name = 'requirement/list.html'
     permission_classes = (IsAuthenticated, )
+    target_type = 'requirements'
 
     def permission_denied(self, request):
         self.permission_denied_redirect = reverse('auth:login')
@@ -98,6 +100,7 @@ class RequirementAdd(GetInitialMixin, CreatedByMixin, ProtectedCreateView):
     template_name = 'requirement/add.html'
     model = models.Requirement
     permission_classes = (IsAuthenticated, )
+    target_type = 'requirement'
 
     def get_form_class(self):
         requirement = self.get_requirement()
@@ -121,6 +124,7 @@ class RequirementEdit(GetInitialMixin, ProtectedUpdateView):
     model = models.Requirement
     context_object_name = 'requirement'
     permission_classes = (IsOwnerUser, IsDraftObject)
+    target_type = 'requirement'
 
     def permission_denied(self, request):
         self.permission_denied_redirect = reverse('requirement:list')
@@ -138,6 +142,7 @@ class RequirementDelete(ProtectedDeleteView):
     model = models.Requirement
     context_object_name = 'requirement'
     permission_classes = (IsOwnerUser, IsDraftObject)
+    target_type = 'requirement'
 
     def permission_denied(self, request):
         self.permission_denied_redirect = reverse('requirement:list')

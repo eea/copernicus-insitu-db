@@ -17,6 +17,7 @@ class DataList(ProtectedTemplateView):
     template_name = 'data/list.html'
     permission_classes = (IsAuthenticated, )
     permission_denied_redirect = reverse_lazy('auth:login')
+    target_type = 'data'
 
     def get_context_data(self):
         context = super(DataList, self).get_context_data()
@@ -63,6 +64,7 @@ class DataAdd(CreatedByMixin, ProtectedCreateView):
     model = models.Data
     permission_classes = (IsAuthenticated, )
     permission_denied_redirect = reverse_lazy('data:list')
+    target_type = 'data'
 
     def get_success_url(self):
         instance = self.object
@@ -76,6 +78,7 @@ class DataEdit(ProtectedUpdateView):
     context_object_name = 'data'
     permission_classes = (IsOwnerUser, IsDraftObject)
     permission_denied_redirect = reverse_lazy('data:list')
+    target_type = 'data'
 
     def get_success_url(self):
         return reverse('data:detail', kwargs={'pk': self.object.pk})
@@ -87,6 +90,7 @@ class DataDetail(ProtectedDetailView):
     context_object_name = 'data'
     permission_classes = (IsAuthenticated, )
     permission_denied_redirect = reverse_lazy('auth:login')
+    target_type = 'data'
 
 
 class DataDelete(ProtectedDeleteView):
@@ -96,6 +100,7 @@ class DataDelete(ProtectedDeleteView):
     context_object_name = 'data'
     permission_classes = (IsOwnerUser, IsDraftObject)
     permission_denied_redirect = reverse_lazy('data:list')
+    target_type = 'data'
 
     def get_success_url(self):
         return reverse('data:list')

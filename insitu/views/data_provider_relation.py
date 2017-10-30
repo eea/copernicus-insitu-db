@@ -20,6 +20,7 @@ class DataDataProviderAdd(CreatedByMixin, ProtectedCreateView):
     form_field = 'data'
     model = models.Data
     title = "Add a new provider for {}"
+    target_type = 'relation between data and data provider'
 
     def get_form(self):
         form = super().get_form(self.form_class)
@@ -45,6 +46,7 @@ class DataDataProviderEdit(ProtectedUpdateView):
     context_object_name = 'rel'
     permission_classes = (IsOwnerUser, IsDraftObject)
     permission_denied_redirect = reverse_lazy('data:list')
+    target_type = 'relation between data and data provider'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -62,6 +64,7 @@ class DataDataProviderDelete(ProtectedDeleteView):
     context_object_name = 'rel'
     permission_classes = (IsOwnerUser, IsDraftObject)
     permission_denied_redirect = reverse_lazy('data:list')
+    target_type = 'relation between data and data provider'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)

@@ -20,6 +20,7 @@ class BaseProductRequirementAdd(CreatedByMixin, ProtectedCreateView):
     model = models.Requirement
     permission_classes = (IsAuthenticated, )
     permission_denied_redirect = reverse_lazy('requirement:list')
+    target_type = 'relation between product and requirement provider'
 
     def get_form(self):
         form = super().get_form(self.form_class)
@@ -58,6 +59,7 @@ class ProductRequirementEdit(ProtectedUpdateView):
     context_object_name = 'rel'
     permission_classes = (IsOwnerUser, IsDraftObject)
     permission_denied_redirect = reverse_lazy('requirement:list')
+    target_type = 'relation between product and requirement provider'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -75,6 +77,7 @@ class ProductRequirementDelete(ProtectedDeleteView):
     context_object_name = 'rel'
     permission_classes = (IsOwnerUser, IsDraftObject)
     permission_denied_redirect = reverse_lazy('requirement:list')
+    target_type = 'relation between product and requirement provider'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)

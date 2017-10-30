@@ -143,3 +143,5 @@ ELASTICSEARCH_DSL = {
 SUIT_CONFIG = {
     'ADMIN_NAME': 'Copernicus Insitu DB'
 }
+
+LOGGING_CSV_FILENAME = env('LOGGING_CSV_FILENAME', 'user-actions-logging.csv')

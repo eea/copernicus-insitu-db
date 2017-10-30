@@ -20,6 +20,7 @@ class DataRequirementAdd(CreatedByMixin, ProtectedCreateView):
     form_field = 'requirement'
     model = models.Requirement
     title = "Add a new data for {}"
+    target_type = 'relation between data and data provider'
 
     def get_form(self):
         form = super().get_form(self.form_class)
@@ -46,6 +47,7 @@ class DataRequirementEdit(ProtectedUpdateView):
     context_object_name = 'rel'
     permission_classes = (IsOwnerUser, IsDraftObject)
     permission_denied_redirect = reverse_lazy('requirement:list')
+    target_type = 'relation between data and data provider'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -63,6 +65,7 @@ class DataRequirementDelete(ProtectedDeleteView):
     context_object_name = 'rel'
     permission_classes = (IsOwnerUser, IsDraftObject)
     permission_denied_redirect = reverse_lazy('requirement:list')
+    target_type = 'relation between data and data provider'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
