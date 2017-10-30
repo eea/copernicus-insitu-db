@@ -188,7 +188,7 @@ class RequirementForm(forms.ModelForm):
 class RequirementCloneForm(RequirementForm):
 
     def clean(self):
-        super(RequirementForm, self).clean()
+        super().clean()
         if self.cleaned_data == self.initial:
             self.add_error(None, "You must modify at least one field of the cloned requirement.")
         return self.cleaned_data
