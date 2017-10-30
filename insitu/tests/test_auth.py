@@ -5,6 +5,7 @@ from django.test import TestCase
 
 from insitu.tests import base
 
+
 class UserAuthenticationTests(TestCase):
 
     required_fields = ['username', 'password']
@@ -19,7 +20,8 @@ class UserAuthenticationTests(TestCase):
             'password': self.user.password,
         }
 
-        self.errors = {field: self.REQUIRED_ERROR for field in self.required_fields}
+        self.errors = {field: self.REQUIRED_ERROR for field in
+                       self.required_fields}
 
     def test_login_no_data(self):
         resp = self.client.post(reverse('auth:login'), {})

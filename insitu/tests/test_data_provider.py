@@ -9,6 +9,7 @@ class DataProviderTests(base.FormCheckTestCase):
     fields = ['name', 'is_network', 'description']
     many_to_many_fields = ['networks', 'countries']
     required_fields = ['name', 'is_network', 'countries']
+    target_type = 'data provider'
 
     def setUp(self):
         super().setUp()
@@ -40,8 +41,8 @@ class DataProviderTests(base.FormCheckTestCase):
             'contact_person': 'test person',
             'provider_type': provider_type.pk
         }
-        user = base.UserFactory()
-        self.client.force_login(user)
+        self.creator = base.UserFactory(username='New user 1')
+        self.client.force_login(self.creator)
 
     def test_list_provider_json(self):
         base.DataProviderFactory(created_by=self.creator)
@@ -69,15 +70,19 @@ class DataProviderTests(base.FormCheckTestCase):
         self.assertIs(data['recordsFiltered'], 1)
 
     def test_list_providers(self):
+        self.erase_logging_file()
         base.DataProviderFactory(created_by=self.creator)
         resp = self.client.get(reverse('provider:list'))
         self.assertTemplateUsed(resp, 'data_provider/list.html')
+        self.logging()
 
     def test_detail_provider(self):
+        self.erase_logging_file()
         provider = base.DataProviderFactory(created_by=self.creator)
         resp = self.client.get(reverse('provider:detail',
                                        kwargs={'pk': provider.pk}))
         self.assertEqual(resp.context['provider'], provider)
+        self.logging()
 
     def test_add_network_provider_required_fields(self):
         data = {}
@@ -89,21 +94,26 @@ class DataProviderTests(base.FormCheckTestCase):
         self.assertEqual(resp.status_code, 200)
 
     def test_add_network_provider(self):
+        self.erase_logging_file()
         data = self._DATA
         resp = self.client.post(reverse('provider:add_network'), data)
         self.assertEqual(resp.status_code, 302)
         data['networks'] = []
         self.check_single_object(models.DataProvider, data)
+        self.logging()
 
     def test_get_edit_network_provider(self):
         self.login_creator()
+        self.erase_logging_file()
         network = base.DataProviderFactory(created_by=self.creator)
         resp = self.client.get(reverse('provider:edit_network',
                                        kwargs={'pk': network.pk}))
         self.assertEqual(resp.status_code, 200)
+        self.logging()
 
     def test_edit_network_provider(self):
         self.login_creator()
+        self.erase_logging_file()
         data = self._DATA
         network = base.DataProviderFactory(is_network=True,
                                            created_by=self.creator)
@@ -113,6 +123,7 @@ class DataProviderTests(base.FormCheckTestCase):
         self.assertEqual(resp.status_code, 302)
         data['networks'] = []
         self.check_single_object(models.DataProvider, data)
+        self.logging()
 
     def test_get_edit_network_members_provider(self):
         self.login_creator()
@@ -221,6 +232,7 @@ class DataProviderTests(base.FormCheckTestCase):
         self.assertDictEqual(resp.context['details'].errors, detail_errors)
 
     def test_add_non_network_provider(self):
+        self.erase_logging_file()
         data = self._DATA
         details_data = self._DETAILS_DATA
         data.update(**details_data)
@@ -262,6 +274,7 @@ class DataProviderTests(base.FormCheckTestCase):
             self.assertEqual(getattr(details, attr), data[attr])
         self.assertEqual(getattr(details, 'provider_type').pk,
                          data['provider_type'])
+        self.logging()
 
     def test_get_edit_non_network_provider(self):
         self.login_creator()
@@ -273,6 +286,7 @@ class DataProviderTests(base.FormCheckTestCase):
 
     def test_edit_non_network_provider(self):
         self.login_creator()
+        self.erase_logging_file()
         data = self._DATA
         data['is_network'] = False
         details_data = self._DETAILS_DATA
@@ -295,14 +309,18 @@ class DataProviderTests(base.FormCheckTestCase):
             self.assertEqual(getattr(details, attr), data[attr])
         self.assertEqual(getattr(details, 'provider_type').pk,
                          data['provider_type'])
+        self.logging()
+
 
     def test_get_edit_network(self):
         self.login_creator()
+        self.erase_logging_file()
         provider = base.DataProviderFactory(is_network=False,
                                             created_by=self.creator)
         resp = self.client.get(
             reverse('provider:edit_non_network',
                     kwargs={'pk': provider.pk}))
+        self.logging()
 
     def test_get_delete_data_provider_network(self):
         self.login_creator()
@@ -311,9 +329,11 @@ class DataProviderTests(base.FormCheckTestCase):
         resp = self.client.get(reverse('provider:delete_network',
                                        kwargs={'pk': provider.pk}))
         self.assertEqual(resp.status_code, 200)
+        self.logging()
 
     def test_delete_data_provider_network(self):
         self.login_creator()
+        self.erase_logging_file()
         provider = base.DataProviderFactory(is_network=False,
                                             created_by=self.creator)
         resp = self.client.post(
@@ -324,6 +344,7 @@ class DataProviderTests(base.FormCheckTestCase):
         self.check_single_object_deleted(models.DataProvider)
         self.check_objects_are_soft_deleted(models.DataProvider,
                                             DataProviderDoc)
+        self.logging()
 
     def test_delete_data_provider_network_related_objects(self):
         self.login_creator()
@@ -352,6 +373,7 @@ class DataProviderTests(base.FormCheckTestCase):
 
     def test_delete_data_provider_non_network(self):
         self.login_creator()
+        self.erase_logging_file()
         provider = base.DataProviderFactory(is_network=False,
                                             created_by=self.creator)
         resp = self.client.post(
@@ -362,6 +384,7 @@ class DataProviderTests(base.FormCheckTestCase):
         self.check_single_object_deleted(models.DataProvider)
         self.check_objects_are_soft_deleted(models.DataProvider,
                                             DataProviderDoc)
+        self.logging()
 
     def test_delete_data_provider_non_network_related_objects(self):
         self.login_creator()

@@ -17,6 +17,7 @@ class DataTests(base.FormCheckTestCase):
                        'policy', 'data_type', 'data_format',
                        'quality_control_procedure', 'inspire_themes',
                        'dissemination']
+    target_type = 'data'
 
     def setUp(self):
         super().setUp()
@@ -27,7 +28,8 @@ class DataTests(base.FormCheckTestCase):
         data_type = base.DataTypeFactory()
         data_format = base.DataFormatFactory()
         quality_control_procedure = base.QualityControlProcedureFactory()
-        inspire_themes = [base.InspireThemeFactory(),base.InspireThemeFactory()]
+        inspire_themes = [base.InspireThemeFactory(),
+                          base.InspireThemeFactory()]
         essential_variables = [base.EssentialVariableFactory(),
                                base.EssentialVariableFactory(),
                                base.EssentialVariableFactory()]
@@ -52,8 +54,9 @@ class DataTests(base.FormCheckTestCase):
                                     essential_variables],
             'dissemination': dissemination.pk
         }
-        user = base.UserFactory()
-        self.client.force_login(user)
+
+        self.creator = base.UserFactory(username='New user 1')
+        self.client.force_login(self.creator)
 
     def test_list_data_json(self):
         base.DataFactory(created_by=self.creator)
@@ -77,15 +80,19 @@ class DataTests(base.FormCheckTestCase):
         self.assertIs(data['recordsFiltered'], 1)
 
     def test_list_data(self):
+        self.erase_logging_file()
         base.DataFactory(created_by=self.creator)
         resp = self.client.get(reverse('data:list'))
         self.assertTemplateUsed(resp, 'data/list.html')
+        self.logging()
 
     def test_detail_data(self):
+        self.erase_logging_file()
         data = base.DataFactory(created_by=self.creator)
         resp = self.client.get(reverse('data:detail',
                                        kwargs={'pk': data.pk}))
         self.assertEqual(resp.context['data'], data)
+        self.logging()
 
     def test_get_edit_data(self):
         self.login_creator()
@@ -96,6 +103,7 @@ class DataTests(base.FormCheckTestCase):
 
     def test_edit_data(self):
         self.login_creator()
+        self.erase_logging_file()
         data_factory = base.DataFactory(created_by=self.creator)
         data = self._DATA
         resp = self.client.post(
@@ -103,6 +111,7 @@ class DataTests(base.FormCheckTestCase):
         )
         self.assertEqual(resp.status_code, 302)
         self.check_single_object(models.Data, data)
+        self.logging()
 
     def test_get_delete_data(self):
         self.login_creator()
@@ -113,12 +122,14 @@ class DataTests(base.FormCheckTestCase):
 
     def test_delete_data(self):
         self.login_creator()
+        self.erase_logging_file()
         data = base.DataFactory(created_by=self.creator)
         resp = self.client.post(
             reverse('data:delete', kwargs={'pk': data.pk}))
         self.assertEqual(resp.status_code, 302)
         self.check_single_object_deleted(models.Data)
         self.check_objects_are_soft_deleted(models.Data, DataDoc)
+        self.logging()
 
     def test_delete_data_related_objects(self):
         self.login_creator()
@@ -128,8 +139,7 @@ class DataTests(base.FormCheckTestCase):
                                               **metrics)
         base.DataRequirementFactory(data=data,
                                     requirement=requirement,
-                                    created_by=self.creator
-        )
+                                    created_by=self.creator)
         data_provider = base.DataProviderFactory(created_by=self.creator)
         base.DataProviderRelationFactory(data=data,
                                          provider=data_provider,

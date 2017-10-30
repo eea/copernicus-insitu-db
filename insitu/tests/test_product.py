@@ -11,6 +11,7 @@ class ProductTests(base.FormCheckTestCase):
     related_fields = ['group', 'component', 'status', 'coverage']
     required_fields = ['name', 'group', 'component',
                        'status', 'coverage']
+    target_type = 'product'
 
     def setUp(self):
         super().setUp()
@@ -18,7 +19,8 @@ class ProductTests(base.FormCheckTestCase):
         component = base.ComponentFactory()
         status = base.ProductStatusFactory()
         coverage = base.CoverageFactory()
-        provider_user = base.UserFactory(is_superuser=True)
+        self.user = provider_user = base.UserFactory(is_superuser=True,
+                                                     username='New user 1')
         self.client.force_login(provider_user)
         self._DATA = {
             'acronym': 'TST',
@@ -69,15 +71,19 @@ class ProductTests(base.FormCheckTestCase):
         self.assertIs(data['recordsFiltered'], 1)
 
     def test_list_products(self):
+        self.erase_logging_file()
         base.ProductFactory()
         resp = self.client.get(reverse('product:list'))
         self.assertTemplateUsed(resp, 'product/list.html')
+        self.logging()
 
     def test_detail_product(self):
+        self.erase_logging_file()
         product = base.ProductFactory()
         resp = self.client.get(reverse('product:detail',
                                        kwargs={'pk': product.pk}))
         self.assertEqual(resp.context['product'], product)
+        self.logging()
 
     def test_get_edit_product(self):
         product = base.ProductFactory()
@@ -86,6 +92,7 @@ class ProductTests(base.FormCheckTestCase):
         self.assertEqual(resp.status_code, 200)
 
     def test_edit_product(self):
+        self.erase_logging_file()
         product = base.ProductFactory()
         data = self._DATA
         resp = self.client.post(
@@ -93,6 +100,7 @@ class ProductTests(base.FormCheckTestCase):
             data)
         self.assertEqual(resp.status_code, 302)
         self.check_single_object(models.Product, data)
+        self.logging()
 
     def test_product_component_filter_service(self):
         service_1 = base.CopernicusServiceFactory(name="Special service")
@@ -164,12 +172,14 @@ class ProductTests(base.FormCheckTestCase):
         self.assertEqual(resp.status_code, 200)
 
     def test_delete_product(self):
+        self.erase_logging_file()
         product = base.ProductFactory()
         resp = self.client.post(
             reverse('product:delete', kwargs={'pk': product.pk}))
         self.assertEqual(resp.status_code, 302)
         self.check_single_object_deleted(models.Product)
         self.check_objects_are_soft_deleted(models.Product, ProductDoc)
+        self.logging()
 
     def test_delete_product_related_objects(self):
         product = base.ProductFactory()

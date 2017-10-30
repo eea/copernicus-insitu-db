@@ -1,5 +1,8 @@
-from django.test import TestCase
+import csv
+import os
 
+from django.test import TestCase
+from copernicus.testsettings import LOGGING_CSV_FILENAME
 from insitu.tests.base import UserFactory
 
 
@@ -19,6 +22,18 @@ class FormCheckTestCase(TestCase):
 
     def login_creator(self):
         self.client.force_login(self.creator)
+
+    def erase_logging_file(self):
+        file_name = LOGGING_CSV_FILENAME
+        open(file_name, 'w').close()
+
+    def logging(self):
+        file_name = LOGGING_CSV_FILENAME
+        with open(file_name, 'r') as csv_file:
+            spamreader = csv.reader(csv_file, delimiter=',')
+            for row in spamreader:
+                self.assertEqual(row[1], self.creator.username)
+                self.assertTrue(self.target_type in row[3])
 
     def check_required_errors(self, resp, errors):
         self.assertEqual(resp.status_code, 200)
@@ -61,6 +76,13 @@ class FormCheckTestCase(TestCase):
             if document:
                 resp = document.get(id=obj.id, ignore=404)
                 self.assertIsNone(resp)
+
+    def tearDown(self):
+        super().tearDown()
+        try:
+            os.remove(LOGGING_CSV_FILENAME)
+        except OSError:
+            pass
 
 
 class PermissionsCheckTestCase(TestCase):
@@ -107,3 +129,10 @@ class PermissionsCheckTestCase(TestCase):
         for method in ['GET', 'POST']:
             self.check_user_redirect(method, url, redirect_url)
         self.client.logout()
+
+    def tearDown(self):
+        super().tearDown()
+        try:
+            os.remove(LOGGING_CSV_FILENAME)
+        except OSError:
+            pass

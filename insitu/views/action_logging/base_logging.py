@@ -1,5 +1,6 @@
 import csv
 import json
+import sys
 
 from copernicus.settings import LOGGING_CSV_FILENAME
 from datetime import datetime
@@ -14,6 +15,8 @@ class BaseLoggingView:
         return ''
 
     def log_action(self, request, action, id=''):
+        if 'test' in sys.argv:
+            from copernicus.testsettings import LOGGING_CSV_FILENAME
         with open(LOGGING_CSV_FILENAME, 'a') as csvfile:
             spamwriter = csv.writer(csvfile, delimiter=',')
             row = ",".join([
