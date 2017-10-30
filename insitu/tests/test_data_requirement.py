@@ -45,6 +45,12 @@ class DataRequirementTests(base.FormCheckTestCase):
             data)
         self.check_required_errors(resp, errors_requirement)
 
+    def test_get_data_requirement_add(self):
+        resp = self.client.get(
+            reverse('requirement:data:add',
+                    kwargs={'requirement_pk': self._DATA['requirement']}))
+        self.assertEqual(resp.status_code, 200)
+
     def test_data_requirement_add(self):
         data = self._DATA
         resp = self.client.post(
@@ -53,6 +59,22 @@ class DataRequirementTests(base.FormCheckTestCase):
             data)
         self.assertEqual(resp.status_code, 302)
         self.check_single_object(models.DataRequirement, data)
+
+    def test_get_data_requirement_edit(self):
+        data_object = base.DataFactory(created_by=self.creator)
+        metrics = base.RequirementFactory.create_metrics(self.creator)
+        requirement = base.RequirementFactory(created_by=self.creator,
+                                              **metrics)
+        data_requirement = base.DataRequirementFactory(
+            data=data_object,
+            requirement=requirement,
+            created_by=self.creator,
+        )
+        resp = self.client.get(
+            reverse('requirement:data:edit',
+                    kwargs={'requirement_pk': data_requirement.requirement.pk,
+                            'pk': data_requirement.pk}))
+        self.assertEqual(resp.status_code, 200)
 
     def test_data_requirement_edit(self):
         data_object = base.DataFactory(created_by=self.creator)
@@ -76,6 +98,22 @@ class DataRequirementTests(base.FormCheckTestCase):
         data['data'] = data_requirement.data.pk
         data['requirement'] = data_requirement.requirement.pk
         self.check_single_object(models.DataRequirement, data)
+
+    def test_get_data_requirement_delete(self):
+        data_object = base.DataFactory(created_by=self.creator)
+        metrics = base.RequirementFactory.create_metrics(self.creator)
+        requirement = base.RequirementFactory(created_by=self.creator,
+                                              **metrics)
+        data_requirement = base.DataRequirementFactory(
+            data=data_object,
+            requirement=requirement,
+            created_by=self.creator,
+        )
+        resp = self.client.get(
+            reverse('requirement:data:delete',
+                    kwargs={'requirement_pk': data_requirement.requirement.pk,
+                            'pk': data_requirement.pk}))
+        self.assertEqual(resp.status_code, 200)
 
     def test_data_requirement_delete(self):
         data = {}

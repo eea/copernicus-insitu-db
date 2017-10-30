@@ -109,6 +109,10 @@ class RequirementTests(base.FormCheckTestCase):
         resp = self.client.post(reverse('requirement:add'), data)
         self.check_required_errors(resp, self.errors)
 
+    def test_get_create_requirement(self):
+        resp = self.client.get(reverse('requirement:add'))
+        self.assertEqual(resp.status_code, 200)
+
     def test_create_requirement(self):
         data = self._DATA
         resp = self.client.post(reverse('requirement:add'), data)
@@ -159,6 +163,17 @@ class RequirementTests(base.FormCheckTestCase):
         self.assertEqual(resp.status_code, 302)
         self.check_single_object(models.Requirement, cloned_data)
 
+    def test_get_edit_requirement(self):
+        metrics = base.RequirementFactory.create_metrics(self.creator)
+        requirement = base.RequirementFactory(name="Test requirement",
+                                              created_by=self.creator,
+                                              **metrics)
+        resp = self.client.get(
+            reverse('requirement:edit',
+                    kwargs={'pk': requirement.pk})
+        )
+        self.assertEqual(resp.status_code, 200)
+
     def test_edit_requirement(self):
         metrics = base.RequirementFactory.create_metrics(self.creator)
         requirement = base.RequirementFactory(name="Test requirement",
@@ -169,6 +184,15 @@ class RequirementTests(base.FormCheckTestCase):
                                         kwargs={'pk': requirement.pk}), data)
         self.assertEqual(resp.status_code, 302)
         self.check_single_object(models.Requirement, data)
+
+    def test_get_delete_requirement(self):
+        metrics = base.RequirementFactory.create_metrics(self.creator)
+        requirement = base.RequirementFactory(name="Test requirement",
+                                              created_by=self.creator,
+                                              **metrics)
+        resp = self.client.get(reverse('requirement:delete',
+                                       kwargs={'pk': requirement.pk}))
+        self.assertEqual(resp.status_code, 200)
 
     def test_delete_requirement(self):
         metrics = base.RequirementFactory.create_metrics(self.creator)

@@ -85,12 +85,22 @@ class DataProviderTests(base.FormCheckTestCase):
         resp = self.client.post(reverse('provider:add_network'), data)
         self.check_required_errors(resp, self.errors)
 
+    def test_get_add_network_provider(self):
+        resp = self.client.get(reverse('provider:add_network'))
+        self.assertEqual(resp.status_code, 200)
+
     def test_add_network_provider(self):
         data = self._DATA
         resp = self.client.post(reverse('provider:add_network'), data)
         self.assertEqual(resp.status_code, 302)
         data['networks'] = []
         self.check_single_object(models.DataProvider, data)
+
+    def test_get_edit_network_provider(self):
+        network = base.DataProviderFactory()
+        resp = self.client.get(reverse('provider:edit_network',
+                                       kwargs={'pk': network.pk}))
+        self.assertEqual(resp.status_code, 200)
 
     def test_edit_network_provider(self):
         data = self._DATA
@@ -102,6 +112,13 @@ class DataProviderTests(base.FormCheckTestCase):
         self.assertEqual(resp.status_code, 302)
         data['networks'] = []
         self.check_single_object(models.DataProvider, data)
+
+    def test_get_edit_network_members_provider(self):
+        network = base.DataProviderFactory(is_network=True,
+                                           created_by=self.creator)
+        resp = self.client.get(reverse('provider:edit_network_members',
+                                       kwargs={'pk': network.pk}))
+        self.assertEqual(resp.status_code, 200)
 
     def test_edit_network_members_provider(self):
         member_1 = base.DataProviderFactory(id=1,
@@ -182,6 +199,10 @@ class DataProviderTests(base.FormCheckTestCase):
         self.assertEqual(network.members.count(), 1)
         self.assertEqual(network.members.get(id=member_1.pk).name, member_1.name)
 
+    def test_get_add_non_network_provider_required_fields(self):
+        resp = self.client.get(reverse('provider:add_non_network'))
+        self.assertEqual(resp.status_code, 200)
+
     def test_add_non_network_provider_required_fields(self):
         data = {}
         resp = self.client.post(reverse('provider:add_non_network'), data)
@@ -237,6 +258,13 @@ class DataProviderTests(base.FormCheckTestCase):
         self.assertEqual(getattr(details, 'provider_type').pk,
                          data['provider_type'])
 
+    def test_get_edit_non_network_provider(self):
+        provider = base.DataProviderFactory(is_network=False,
+                                            created_by=self.creator)
+        resp = self.client.get(reverse('provider:edit_non_network',
+                                       kwargs={'pk': provider.pk}))
+        self.assertEqual(resp.status_code, 200)
+
     def test_edit_non_network_provider(self):
         data = self._DATA
         data['is_network'] = False
@@ -275,8 +303,13 @@ class DataProviderTests(base.FormCheckTestCase):
                                             created_by=self.creator)
         resp = self.client.get(
             reverse('provider:edit_non_network',
-                    kwargs={'pk': provider.pk})
-        )
+                    kwargs={'pk': provider.pk}))
+
+    def test_get_delete_data_provider_network(self):
+        provider = base.DataProviderFactory(is_network=False,
+                                            created_by=self.creator)
+        resp = self.client.get(reverse('provider:delete_network',
+                                       kwargs={'pk': provider.pk}))
         self.assertEqual(resp.status_code, 200)
 
     def test_delete_data_provider_network(self):
@@ -306,6 +339,13 @@ class DataProviderTests(base.FormCheckTestCase):
         )
         self.check_objects_are_soft_deleted(models.DataProviderDetails)
         self.check_objects_are_soft_deleted(models.DataProviderRelation)
+
+    def test_get_delete_data_provider_non_network(self):
+        provider = base.DataProviderFactory(is_network=False,
+                                            created_by=self.creator)
+        resp = self.client.get(reverse('provider:delete_non_network',
+                                       kwargs={'pk': provider.pk}))
+        self.assertEqual(resp.status_code, 200)
 
     def test_delete_data_provider_non_network(self):
         provider = base.DataProviderFactory(is_network=False,

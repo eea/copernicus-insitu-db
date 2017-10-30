@@ -36,6 +36,10 @@ class ProductTests(base.FormCheckTestCase):
         resp = self.client.post(reverse('product:add'), data)
         self.check_required_errors(resp, self.errors)
 
+    def test_get_create_product(self):
+        resp = self.client.get(reverse('product:add'))
+        self.assertEqual(resp.status_code, 200)
+
     def test_create_product(self):
         data = self._DATA
         resp = self.client.post(reverse('product:add'), data)
@@ -74,6 +78,12 @@ class ProductTests(base.FormCheckTestCase):
         resp = self.client.get(reverse('product:detail',
                                        kwargs={'pk': product.pk}))
         self.assertEqual(resp.context['product'], product)
+
+    def test_get_edit_product(self):
+        product = base.ProductFactory()
+        resp = self.client.get(reverse('product:edit',
+                                       kwargs={'pk': product.pk}))
+        self.assertEqual(resp.status_code, 200)
 
     def test_edit_product(self):
         product = base.ProductFactory()
@@ -146,6 +156,12 @@ class ProductTests(base.FormCheckTestCase):
         data = resp.json()
         self.assertEqual(len(data['components']), 1)
         self.assertTrue(ALL_OPTIONS_LABEL in data['components'])
+
+    def test_get_delete_product(self):
+        product = base.ProductFactory()
+        resp = self.client.get(reverse('product:delete',
+                                       kwargs={'pk': product.pk}))
+        self.assertEqual(resp.status_code, 200)
 
     def test_delete_product(self):
         product = base.ProductFactory()
