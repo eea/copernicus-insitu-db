@@ -38,6 +38,11 @@ class DataProviderRelationTests(base.FormCheckTestCase):
                                 data)
         self.check_required_errors(resp, errors_data)
 
+    def test_get_provider_relation_add(self):
+        resp = self.client.get(reverse('data:provider:add',
+                                       kwargs={'group_pk': self._DATA['data']}))
+        self.assertEqual(resp.status_code, 200)
+
     def test_provider_relation_add(self):
         data = self._DATA
         resp = self.client.post(reverse('data:provider:add',
@@ -45,6 +50,20 @@ class DataProviderRelationTests(base.FormCheckTestCase):
                                 data)
         self.assertEqual(resp.status_code, 302)
         self.check_single_object(models.DataProviderRelation, data)
+
+    def test_get_provider_relation_edit(self):
+        data_object = base.DataFactory(created_by=self.creator)
+        provider = base.DataProviderFactory(created_by=self.creator)
+        provider_relation = base.DataProviderRelationFactory(
+            provider=provider,
+            data=data_object,
+            created_by=self.creator,
+        )
+        resp = self.client.get(
+            reverse('data:provider:edit',
+                    kwargs={'group_pk': provider_relation.data.pk,
+                            'pk': provider_relation.pk}))
+        self.assertEqual(resp.status_code, 200)
 
     def test_provider_relation_edit(self):
         data_object = base.DataFactory(created_by=self.creator)
@@ -66,6 +85,20 @@ class DataProviderRelationTests(base.FormCheckTestCase):
         data['data'] = provider_relation.data.pk
         data['provider'] = provider_relation.provider.pk
         self.check_single_object(models.DataProviderRelation, data)
+
+    def test_get_provider_relation_delete(self):
+        data_object = base.DataFactory(created_by=self.creator)
+        provider = base.DataProviderFactory(created_by=self.creator)
+        provider_relation = base.DataProviderRelationFactory(
+            provider=provider,
+            data=data_object,
+            created_by=self.creator,
+        )
+        resp = self.client.get(
+            reverse('data:provider:delete',
+                    kwargs={'group_pk': provider_relation.data.pk,
+                            'pk': provider_relation.pk}))
+        self.assertEqual(resp.status_code, 200)
 
     def test_provider_relation_delete(self):
         data = {}

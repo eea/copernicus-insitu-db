@@ -53,6 +53,12 @@ class ProductRequirementTests(base.FormCheckTestCase):
                                 data)
         self.check_required_errors(resp, errors_requirement)
 
+    def test_get_product_requirement_add(self):
+        resp = self.client.get(
+            reverse('requirement:product:add',
+                    kwargs={'requirement_pk': self._DATA['requirement']}))
+        self.assertEqual(resp.status_code, 200)
+
     def test_product_requirement_add(self):
         data = self._DATA
         resp = self.client.post(
@@ -61,6 +67,19 @@ class ProductRequirementTests(base.FormCheckTestCase):
             data)
         self.assertEqual(resp.status_code, 302)
         self.check_single_object(models.ProductRequirement, data)
+
+    def test_get_product_requirement_edit(self):
+        metrics = base.RequirementFactory.create_metrics(self.creator)
+        requirement = base.RequirementFactory(created_by=self.creator,
+                                              **metrics)
+        product_requirement = base.ProductRequirementFactory(
+            requirement=requirement,
+            created_by=self.creator)
+        resp = self.client.get(
+            reverse('requirement:product:edit',
+                    kwargs={'requirement_pk': product_requirement.requirement.pk,
+                            'pk': product_requirement.pk}))
+        self.assertEqual(resp.status_code, 200)
 
     def test_product_requirement_edit(self):
         metrics = base.RequirementFactory.create_metrics(self.creator)
@@ -82,6 +101,20 @@ class ProductRequirementTests(base.FormCheckTestCase):
         data['product'] = product_requirement.product.pk
         data['requirement'] = product_requirement.requirement.pk
         self.check_single_object(models.ProductRequirement, data)
+
+    def test_get_product_requirement_delete(self):
+        metrics = base.RequirementFactory.create_metrics(self.creator)
+        requirement = base.RequirementFactory(created_by=self.creator,
+                                              **metrics)
+        product_requirement = base.ProductRequirementFactory(
+            requirement=requirement,
+            created_by=self.creator
+        )
+        resp = self.client.get(
+            reverse('requirement:product:delete',
+                    kwargs={'requirement_pk': product_requirement.requirement.pk,
+                            'pk': product_requirement.pk}))
+        self.assertEqual(resp.status_code, 200)
 
     def test_product_requirement_delete(self):
         data = {}
