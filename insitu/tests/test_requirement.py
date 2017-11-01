@@ -223,6 +223,114 @@ class RequirementTests(base.FormCheckTestCase):
         self.check_objects_are_soft_deleted(models.ProductRequirement)
         self.check_objects_are_soft_deleted(models.DataRequirement)
 
+    def test_transition(self):
+        self.login_creator()
+        metrics = base.RequirementFactory.create_metrics(self.creator)
+        requirement = base.RequirementFactory(name="Test requirement",
+                                              created_by=self.creator,
+                                              **metrics)
+        data = base.DataFactory(name="Test data",
+                                created_by=self.creator)
+        data_requirement = base.DataRequirementFactory(data=data,
+                                                       created_by=self.creator,
+                                                       requirement=requirement)
+        provider = base.DataProviderFactory(name="Test provider",
+                                            created_by=self.creator)
+        data_provider = base.DataProviderRelationFactory(data=data,
+                                                         created_by=self.creator,
+                                                         provider=provider)
+
+        items = ([requirement, data, data_requirement, provider, data_provider]
+                 + list(metrics.values()))
+        for item in items:
+            self.assertEqual((getattr(item, 'state')).name, 'draft')
+
+        transitions = [
+            {'source': 'draft', 'target': 'ready'},
+            {'source': 'ready', 'target': 'draft'},
+            {'source': 'draft', 'target': 'ready'},
+            {'source': 'ready', 'target': 'changes'},
+            {'source': 'changes', 'target': 'draft'},
+            {'source': 'draft', 'target': 'ready'},
+            {'source': 'ready', 'target': 'valid'},
+        ]
+
+        for transition in transitions:
+            for item in items:
+                self.assertEqual((getattr(item, 'state')).name, transition['source'])
+            response = self.client.post(
+                reverse('requirement:transition',
+                        kwargs={'source': transition['source'],
+                                'target': transition['target'],
+                                'pk': requirement.pk}))
+            self.assertRedirects(response, reverse('requirement:detail',
+                                                   kwargs={'pk': requirement.pk}))
+            for item in items:
+                getattr(item, 'refresh_from_db')()
+                self.assertEqual((getattr(item, 'state')).name, transition['target'])
+
+    def test_transition_inexistent_state(self):
+        self.login_creator()
+        metrics = base.RequirementFactory.create_metrics(self.creator)
+        requirement = base.RequirementFactory(name="Test requirement",
+                                              created_by=self.creator,
+                                              **metrics)
+        data = base.DataFactory(name="Test data",
+                                created_by=self.creator)
+        data_requirement = base.DataRequirementFactory(data=data,
+                                                       created_by=self.creator,
+                                                       requirement=requirement)
+        provider = base.DataProviderFactory(name="Test provider",
+                                            created_by=self.creator)
+        data_provider = base.DataProviderRelationFactory(data=data,
+                                                         created_by=self.creator,
+                                                         provider=provider)
+
+        items = ([requirement, data, data_requirement, provider, data_provider]
+                 + list(metrics.values()))
+
+        response = self.client.post(
+            reverse('requirement:transition',
+                    kwargs={'source': 'draft',
+                            'target': 'nosuchstate',
+                            'pk': requirement.pk}))
+        self.assertEqual(response.status_code, 404)
+
+        for item in items:
+            getattr(item, 'refresh_from_db')()
+            self.assertEqual((getattr(item, 'state')).name, 'draft')
+
+    def test_transition_existent_state_no_transition(self):
+        self.login_creator()
+        metrics = base.RequirementFactory.create_metrics(self.creator)
+        requirement = base.RequirementFactory(name="Test requirement",
+                                              created_by=self.creator,
+                                              **metrics)
+        data = base.DataFactory(name="Test data",
+                                created_by=self.creator)
+        data_requirement = base.DataRequirementFactory(data=data,
+                                                       created_by=self.creator,
+                                                       requirement=requirement)
+        provider = base.DataProviderFactory(name="Test provider",
+                                            created_by=self.creator)
+        data_provider = base.DataProviderRelationFactory(data=data,
+                                                         created_by=self.creator,
+                                                         provider=provider)
+
+        items = ([requirement, data, data_requirement, provider, data_provider]
+                 + list(metrics.values()))
+
+        response = self.client.post(
+            reverse('requirement:transition',
+                    kwargs={'source': 'draft',
+                            'target': 'valid',
+                            'pk': requirement.pk}))
+        self.assertEqual(response.status_code, 404)
+
+        for item in items:
+            getattr(item, 'refresh_from_db')()
+            self.assertEqual((getattr(item, 'state')).name, 'draft')
+
 
 class RequirementPermissionTests(base.PermissionsCheckTestCase):
 
