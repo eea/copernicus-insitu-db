@@ -133,6 +133,34 @@ class DataProviderRelationPermissionsTests(base.PermissionsCheckTestCase):
             url=reverse('data:provider:add',
                         kwargs={'group_pk': data.pk}))
 
+    def test_provider_relation_edit_not_auth(self):
+        data = base.DataFactory(created_by=self.creator)
+        provider = base.DataProviderFactory(created_by=self.creator)
+        provider_relation = base.DataProviderRelationFactory(
+            provider=provider,
+            data=data,
+            created_by=self.creator,
+        )
+        self.check_user_redirect_all_methods(
+            redirect_url=self.login_url,
+            url=reverse('data:provider:edit',
+                        kwargs={'group_pk': data.pk,
+                                'pk': provider_relation.pk}))
+
+    def test_provider_relation_edit_auth(self):
+        data = base.DataFactory(created_by=self.creator)
+        provider = base.DataProviderFactory(created_by=self.creator)
+        provider_relation = base.DataProviderRelationFactory(
+            provider=provider,
+            data=data,
+            created_by=self.creator,
+        )
+        self.check_authenticated_user_redirect_all_methods(
+            redirect_url=reverse('data:list'),
+            url=reverse('data:provider:edit',
+                        kwargs={'group_pk': data.pk,
+                                'pk': provider_relation.pk}))
+
     def test_provider_relation_delete_not_auth(self):
         data = base.DataFactory(created_by=self.creator)
         provider = base.DataProviderFactory(created_by=self.creator)
@@ -147,7 +175,7 @@ class DataProviderRelationPermissionsTests(base.PermissionsCheckTestCase):
                         kwargs={'group_pk': data.pk,
                                 'pk': provider_relation.pk}))
 
-    def test_provider_relation_edit_not_auth(self):
+    def test_provider_relation_delete_auth(self):
         data = base.DataFactory(created_by=self.creator)
         provider = base.DataProviderFactory(created_by=self.creator)
         provider_relation = base.DataProviderRelationFactory(
@@ -155,8 +183,8 @@ class DataProviderRelationPermissionsTests(base.PermissionsCheckTestCase):
             data=data,
             created_by=self.creator,
         )
-        self.check_user_redirect_all_methods(
-            redirect_url=self.login_url,
-            url=reverse('data:provider:edit',
+        self.check_authenticated_user_redirect_all_methods(
+            redirect_url=reverse('data:list'),
+            url=reverse('data:provider:delete',
                         kwargs={'group_pk': data.pk,
                                 'pk': provider_relation.pk}))

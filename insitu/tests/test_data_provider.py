@@ -415,6 +415,13 @@ class DataProviderPermissionsTests(base.PermissionsCheckTestCase):
                         kwargs={'pk': provider.pk}),
             redirect_url=self.redirect_login_url)
 
+    def test_edit_network_provider_auth(self):
+        provider = base.DataProviderFactory(created_by=self.creator)
+        self.check_authenticated_user_redirect_all_methods(
+            url=reverse('provider:edit_network',
+                        kwargs={'pk': provider.pk}),
+            redirect_url=reverse('provider:list'))
+
     def test_delete_network_provider_non_auth(self):
         provider = base.DataProviderFactory(created_by=self.creator)
         self.check_user_redirect_all_methods(
@@ -422,17 +429,31 @@ class DataProviderPermissionsTests(base.PermissionsCheckTestCase):
                         kwargs={'pk': provider.pk}),
             redirect_url=self.redirect_login_url)
 
-    def test_add_non_network_provider_non_auth(self):
+    def test_delete_network_provider_auth(self):
         provider = base.DataProviderFactory(created_by=self.creator)
-        self.check_user_redirect_all_methods(
-            url=reverse('provider:edit_network',
+        self.check_authenticated_user_redirect_all_methods(
+            url=reverse('provider:delete_network',
                         kwargs={'pk': provider.pk}),
-            redirect_url=self.redirect_login_url)
+            redirect_url=reverse('provider:list'))
 
-    def test_edit_non_network_provider_non_auth(self):
+    def test_add_non_network_provider_non_auth(self):
         self.check_user_redirect_all_methods(
             url=reverse('provider:add_non_network'),
             redirect_url=self.redirect_login_url)
+
+    def test_edit_non_network_provider_non_auth(self):
+        provider = base.DataProviderFactory(created_by=self.creator)
+        self.check_user_redirect_all_methods(
+            url=reverse('provider:edit_non_network',
+                        kwargs={'pk': provider.pk}),
+            redirect_url=self.redirect_login_url)
+
+    def test_edit_non_network_provider_auth(self):
+        provider = base.DataProviderFactory(created_by=self.creator)
+        self.check_authenticated_user_redirect_all_methods(
+            url=reverse('provider:edit_non_network',
+                        kwargs={'pk': provider.pk}),
+            redirect_url=reverse('provider:list'))
 
     def test_delete_non_network_provider_non_auth(self):
         provider = base.DataProviderFactory(created_by=self.creator)
@@ -440,3 +461,10 @@ class DataProviderPermissionsTests(base.PermissionsCheckTestCase):
             url=reverse('provider:delete_non_network',
                         kwargs={'pk': provider.pk}),
             redirect_url=self.redirect_login_url)
+
+    def test_delete_non_network_provider_auth(self):
+        provider = base.DataProviderFactory(created_by=self.creator)
+        self.check_authenticated_user_redirect_all_methods(
+            url=reverse('provider:delete_non_network',
+                        kwargs={'pk': provider.pk}),
+            redirect_url=reverse('provider:list'))

@@ -374,6 +374,15 @@ class RequirementPermissionTests(base.PermissionsCheckTestCase):
             redirect_url=self.redirect_requirement_url_non_auth,
             url=reverse('requirement:edit', kwargs={'pk': requirement.pk}))
 
+    def test_requirement_edit_auth(self):
+        metrics = base.RequirementFactory.create_metrics(self.creator)
+        requirement = base.RequirementFactory(name="Test requirement",
+                                              created_by=self.creator,
+                                              **metrics)
+        self.check_authenticated_user_redirect_all_methods(
+            redirect_url=reverse('requirement:list'),
+            url=reverse('requirement:edit', kwargs={'pk': requirement.pk}))
+
     def test_requirement_delete_not_auth(self):
         metrics = base.RequirementFactory.create_metrics(self.creator)
         requirement = base.RequirementFactory(name="Test requirement",
@@ -381,4 +390,13 @@ class RequirementPermissionTests(base.PermissionsCheckTestCase):
                                               **metrics)
         self.check_user_redirect_all_methods(
             redirect_url=self.redirect_requirement_url_non_auth,
+            url=reverse('requirement:delete', kwargs={'pk': requirement.pk}))
+
+    def test_requirement_delete_auth(self):
+        metrics = base.RequirementFactory.create_metrics(self.creator)
+        requirement = base.RequirementFactory(name="Test requirement",
+                                              created_by=self.creator,
+                                              **metrics)
+        self.check_authenticated_user_redirect_all_methods(
+            redirect_url=reverse('requirement:list'),
             url=reverse('requirement:delete', kwargs={'pk': requirement.pk}))

@@ -169,6 +169,22 @@ class DataRequirementPermissionsTests(base.PermissionsCheckTestCase):
                         kwargs={'requirement_pk': data_requirement.pk,
                                 'pk': data_requirement.pk}))
 
+    def test_data_requirement_edit_auth_from_data_requirement(self):
+        data_object = base.DataFactory(created_by=self.creator)
+        metrics = base.RequirementFactory.create_metrics(self.creator)
+        requirement = base.RequirementFactory(created_by=self.creator,
+                                              **metrics)
+        data_requirement = base.DataRequirementFactory(
+            data=data_object,
+            requirement=requirement,
+            created_by=self.creator,
+        )
+        self.check_authenticated_user_redirect_all_methods(
+            redirect_url=reverse('requirement:list'),
+            url=reverse('requirement:data:edit',
+                        kwargs={'requirement_pk': data_requirement.pk,
+                                'pk': data_requirement.pk}))
+
     def test_data_requirement_delete_not_auth_from_data_requirement(self):
         data_object = base.DataFactory(created_by=self.creator)
         metrics = base.RequirementFactory.create_metrics(self.creator)
@@ -181,6 +197,22 @@ class DataRequirementPermissionsTests(base.PermissionsCheckTestCase):
         )
         self.check_user_redirect_all_methods(
             redirect_url=self.login_url,
+            url=reverse('requirement:data:delete',
+                        kwargs={'requirement_pk': data_requirement.pk,
+                                'pk': data_requirement.pk}))
+
+    def test_data_requirement_delete_auth_from_data_requirement(self):
+        data_object = base.DataFactory(created_by=self.creator)
+        metrics = base.RequirementFactory.create_metrics(self.creator)
+        requirement = base.RequirementFactory(created_by=self.creator,
+                                              **metrics)
+        data_requirement = base.DataRequirementFactory(
+            data=data_object,
+            requirement=requirement,
+            created_by=self.creator,
+        )
+        self.check_authenticated_user_redirect_all_methods(
+            redirect_url=reverse('requirement:list'),
             url=reverse('requirement:data:delete',
                         kwargs={'requirement_pk': data_requirement.pk,
                                 'pk': data_requirement.pk}))
