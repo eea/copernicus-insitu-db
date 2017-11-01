@@ -88,6 +88,7 @@ class DataTests(base.FormCheckTestCase):
         self.assertEqual(resp.context['data'], data)
 
     def test_get_edit_data(self):
+        self.login_creator()
         data = base.DataFactory(created_by=self.creator)
         resp = self.client.get(reverse('data:edit',
                                        kwargs={'pk': data.pk}))
@@ -104,6 +105,7 @@ class DataTests(base.FormCheckTestCase):
         self.check_single_object(models.Data, data)
 
     def test_get_delete_data(self):
+        self.login_creator()
         data = base.DataFactory(created_by=self.creator)
         resp = self.client.get(reverse('data:delete',
                                        kwargs={'pk': data.pk}))

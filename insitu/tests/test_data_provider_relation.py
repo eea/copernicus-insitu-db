@@ -51,6 +51,7 @@ class DataProviderRelationTests(base.FormCheckTestCase):
         self.check_single_object(models.DataProviderRelation, data)
 
     def test_get_provider_relation_edit(self):
+        self.login_creator()
         data_object = base.DataFactory(created_by=self.creator)
         provider = base.DataProviderFactory(created_by=self.creator)
         provider_relation = base.DataProviderRelationFactory(
@@ -87,6 +88,7 @@ class DataProviderRelationTests(base.FormCheckTestCase):
         self.check_single_object(models.DataProviderRelation, data)
 
     def test_get_provider_relation_delete(self):
+        self.login_creator()
         data_object = base.DataFactory(created_by=self.creator)
         provider = base.DataProviderFactory(created_by=self.creator)
         provider_relation = base.DataProviderRelationFactory(

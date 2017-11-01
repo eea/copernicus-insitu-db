@@ -60,6 +60,7 @@ class DataRequirementTests(base.FormCheckTestCase):
         self.check_single_object(models.DataRequirement, data)
 
     def test_get_data_requirement_edit(self):
+        self.login_creator()
         data_object = base.DataFactory(created_by=self.creator)
         metrics = base.RequirementFactory.create_metrics(self.creator)
         requirement = base.RequirementFactory(created_by=self.creator,
@@ -100,6 +101,7 @@ class DataRequirementTests(base.FormCheckTestCase):
         self.check_single_object(models.DataRequirement, data)
 
     def test_get_data_requirement_delete(self):
+        self.login_creator()
         data_object = base.DataFactory(created_by=self.creator)
         metrics = base.RequirementFactory.create_metrics(self.creator)
         requirement = base.RequirementFactory(created_by=self.creator,

@@ -162,6 +162,7 @@ class RequirementTests(base.FormCheckTestCase):
         self.check_single_object(models.Requirement, cloned_data)
 
     def test_get_edit_requirement(self):
+        self.login_creator()
         metrics = base.RequirementFactory.create_metrics(self.creator)
         requirement = base.RequirementFactory(name="Test requirement",
                                               created_by=self.creator,
@@ -185,6 +186,7 @@ class RequirementTests(base.FormCheckTestCase):
         self.check_single_object(models.Requirement, data)
 
     def test_get_delete_requirement(self):
+        self.login_creator()
         metrics = base.RequirementFactory.create_metrics(self.creator)
         requirement = base.RequirementFactory(name="Test requirement",
                                               created_by=self.creator,

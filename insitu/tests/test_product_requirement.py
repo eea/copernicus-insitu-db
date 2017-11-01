@@ -68,6 +68,7 @@ class ProductRequirementTests(base.FormCheckTestCase):
         self.check_single_object(models.ProductRequirement, data)
 
     def test_get_product_requirement_edit(self):
+        self.login_creator()
         metrics = base.RequirementFactory.create_metrics(self.creator)
         requirement = base.RequirementFactory(created_by=self.creator,
                                               **metrics)
@@ -103,6 +104,7 @@ class ProductRequirementTests(base.FormCheckTestCase):
         self.check_single_object(models.ProductRequirement, data)
 
     def test_get_product_requirement_delete(self):
+        self.login_creator()
         metrics = base.RequirementFactory.create_metrics(self.creator)
         requirement = base.RequirementFactory(created_by=self.creator,
                                               **metrics)
