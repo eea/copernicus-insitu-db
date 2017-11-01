@@ -6,10 +6,11 @@ from insitu import documents
 from insitu import models
 from insitu import forms
 from insitu.views.base import ESDatatableView, CreatedByMixin
+from insitu.views.protected import ProtectedUpdateView
 from insitu.views.protected import (
-    ProtectedTemplateView, ProtectedDetailView,
-    ProtectedUpdateView, ProtectedCreateView, ProtectedDeleteView
-)
+    LoggingProtectedTemplateView, LoggingProtectedDetailView,
+    LoggingProtectedUpdateView, LoggingProtectedCreateView,
+    LoggingProtectedDeleteView)
 from insitu.views.protected import IsAuthenticated
 from insitu.views.protected.permissions import (
     IsOwnerUser,
@@ -20,7 +21,7 @@ from insitu.utils import get_choices
 from picklists import models as pickmodels
 
 
-class DataProviderList(ProtectedTemplateView):
+class DataProviderList(LoggingProtectedTemplateView):
     template_name = 'data_provider/list.html'
     permission_classes = (IsAuthenticated,)
     permission_denied_redirect = reverse_lazy('auth:login')
@@ -45,7 +46,7 @@ class DataProviderListJson(ESDatatableView):
     permission_classes = (IsAuthenticated,)
 
 
-class DataProviderDetail(ProtectedDetailView):
+class DataProviderDetail(LoggingProtectedDetailView):
     model = models.DataProvider
     context_object_name = 'provider'
     permission_classes = (IsAuthenticated,)
@@ -59,7 +60,7 @@ class DataProviderDetail(ProtectedDetailView):
         return ['data_provider/non_network/detail.html']
 
 
-class DataProviderAddNetwork(CreatedByMixin, ProtectedCreateView):
+class DataProviderAddNetwork(CreatedByMixin, LoggingProtectedCreateView):
     template_name = 'data_provider/network/add.html'
     form_class = forms.DataProviderNetworkForm
     permission_classes = (IsAuthenticated, )
@@ -70,7 +71,7 @@ class DataProviderAddNetwork(CreatedByMixin, ProtectedCreateView):
         return reverse('provider:detail', kwargs={'pk': self.object.pk})
 
 
-class DataProviderEditNetwork(ProtectedUpdateView):
+class DataProviderEditNetwork(LoggingProtectedUpdateView):
     template_name = 'data_provider/network/edit.html'
     form_class = forms.DataProviderNetworkForm
     context_object_name = 'provider'
@@ -90,13 +91,12 @@ class DataProviderEditNetworkMembers(ProtectedUpdateView):
     model = models.DataProvider
     permission_classes = (IsOwnerUser, IsDraftObject)
     permission_denied_redirect = reverse_lazy('provider:list')
-    target_type = 'data provider members'
 
     def get_success_url(self):
         return reverse('provider:detail', kwargs={'pk': self.object.pk})
 
 
-class DataProviderDeleteNetwork(ProtectedDeleteView):
+class DataProviderDeleteNetwork(LoggingProtectedDeleteView):
     template_name = 'data_provider/network/delete.html'
     form_class = forms.DataProviderNetworkForm
     context_object_name = 'provider'
@@ -109,7 +109,7 @@ class DataProviderDeleteNetwork(ProtectedDeleteView):
         return reverse('provider:list')
 
 
-class DataProviderAddNonNetwork(CreatedByMixin, ProtectedCreateView):
+class DataProviderAddNonNetwork(CreatedByMixin, LoggingProtectedCreateView):
     template_name = 'data_provider/non_network/add.html'
     form_class = forms.DataProviderNonNetworkForm
     permission_classes = (IsAuthenticated, )
@@ -144,7 +144,7 @@ class DataProviderAddNonNetwork(CreatedByMixin, ProtectedCreateView):
         return reverse('provider:detail', kwargs={'pk': self.object.pk})
 
 
-class DataProviderEditNonNetwork(ProtectedUpdateView):
+class DataProviderEditNonNetwork(LoggingProtectedUpdateView):
     template_name = 'data_provider/non_network/edit.html'
     form_class = forms.DataProviderNonNetworkForm
     context_object_name = 'provider'
@@ -187,7 +187,7 @@ class DataProviderEditNonNetwork(ProtectedUpdateView):
         return reverse('provider:detail', kwargs={'pk': self.object.pk})
 
 
-class DataProviderDeleteNonNetwork(ProtectedDeleteView):
+class DataProviderDeleteNonNetwork(LoggingProtectedDeleteView):
     template_name = 'data_provider/non_network/delete.html'
     form_class = forms.DataProviderNonNetworkForm
     context_object_name = 'provider'

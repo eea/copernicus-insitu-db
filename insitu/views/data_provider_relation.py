@@ -6,13 +6,16 @@ from insitu.views.protected import IsOwnerUser, IsDraftObject, IsAuthenticated
 from django.urls import reverse_lazy
 
 from insitu.views.protected import (
-    ProtectedUpdateView, ProtectedCreateView, ProtectedDeleteView)
+    LoggingProtectedUpdateView,
+    LoggingProtectedCreateView,
+    LoggingProtectedDeleteView
+)
 
 from insitu import models
 from insitu import forms
 
 
-class DataDataProviderAdd(CreatedByMixin, ProtectedCreateView):
+class DataDataProviderAdd(CreatedByMixin, LoggingProtectedCreateView):
     template_name = 'data/data_provider/add.html'
     permission_classes = (IsAuthenticated, )
     permission_denied_redirect = reverse_lazy('data:list')
@@ -39,7 +42,7 @@ class DataDataProviderAdd(CreatedByMixin, ProtectedCreateView):
                             kwargs={'pk': self.kwargs['group_pk']})
 
 
-class DataDataProviderEdit(ProtectedUpdateView):
+class DataDataProviderEdit(LoggingProtectedUpdateView):
     model = models.DataProviderRelation
     template_name = 'data/data_provider/edit.html'
     form_class = forms.DataProviderRelationEditForm
@@ -58,7 +61,7 @@ class DataDataProviderEdit(ProtectedUpdateView):
                             kwargs={'pk': self.kwargs['group_pk']})
 
 
-class DataDataProviderDelete(ProtectedDeleteView):
+class DataDataProviderDelete(LoggingProtectedDeleteView):
     model = models.DataProviderRelation
     template_name = 'data/data_provider/delete.html'
     context_object_name = 'rel'

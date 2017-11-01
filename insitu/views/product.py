@@ -10,7 +10,8 @@ from insitu.views.base import ESDatatableView
 from insitu.views.protected import (
     ProtectedView,
     ProtectedTemplateView, ProtectedDetailView,
-    ProtectedUpdateView, ProtectedCreateView, ProtectedDeleteView)
+    ProtectedUpdateView, ProtectedCreateView,
+    ProtectedDeleteView)
 from insitu.views.protected.permissions import (
     IsAuthenticated,
     IsSuperuser,

@@ -10,8 +10,9 @@ from insitu import models
 from insitu.utils import get_choices
 from insitu.views.base import ESDatatableView, CreatedByMixin
 from insitu.views.protected import (
-    ProtectedTemplateView, ProtectedDetailView,
-    ProtectedUpdateView, ProtectedCreateView, ProtectedDeleteView)
+    LoggingProtectedTemplateView, LoggingProtectedDetailView,
+    LoggingProtectedUpdateView, LoggingProtectedCreateView,
+    LoggingProtectedDeleteView, ProtectedDetailView)
 from picklists import models as pickmodels
 from insitu.views.protected.permissions import (
     IsAuthenticated,
@@ -50,7 +51,7 @@ class GetInitialMixin:
         return initial_data.copy()
 
 
-class RequirementDetail(ProtectedDetailView):
+class RequirementDetail(LoggingProtectedDetailView):
     template_name = 'requirement/detail.html'
     model = models.Requirement
     context_object_name = 'requirement'
@@ -62,7 +63,7 @@ class RequirementDetail(ProtectedDetailView):
         return super().permission_denied(request)
 
 
-class RequirementList(ProtectedTemplateView):
+class RequirementList(LoggingProtectedTemplateView):
     template_name = 'requirement/list.html'
     permission_classes = (IsAuthenticated, )
     target_type = 'requirements'
@@ -96,7 +97,8 @@ class RequirementListJson(ESDatatableView):
     permission_classes = (IsAuthenticated, )
 
 
-class RequirementAdd(GetInitialMixin, CreatedByMixin, ProtectedCreateView):
+class RequirementAdd(GetInitialMixin, CreatedByMixin,
+                     LoggingProtectedCreateView):
     template_name = 'requirement/add.html'
     model = models.Requirement
     permission_classes = (IsAuthenticated, )
@@ -105,8 +107,12 @@ class RequirementAdd(GetInitialMixin, CreatedByMixin, ProtectedCreateView):
     def get_form_class(self):
         requirement = self.get_requirement()
         if requirement:
+            self.post_action = 'cloned requirement {pk} to'.format(
+                pk=requirement.pk)
+            self.post_action_failed = 'tried to clone object {pk} of'.format(
+                pk=requirement.pk
+            )
             return forms.RequirementCloneForm
-
         return forms.RequirementForm
 
     def permission_denied(self, request):
@@ -118,7 +124,7 @@ class RequirementAdd(GetInitialMixin, CreatedByMixin, ProtectedCreateView):
         return reverse('requirement:detail', kwargs={'pk': instance.pk})
 
 
-class RequirementEdit(GetInitialMixin, ProtectedUpdateView):
+class RequirementEdit(GetInitialMixin, LoggingProtectedUpdateView):
     template_name = 'requirement/edit.html'
     form_class = forms.RequirementForm
     model = models.Requirement
@@ -136,7 +142,8 @@ class RequirementEdit(GetInitialMixin, ProtectedUpdateView):
                        kwargs={'pk': instance.pk})
 
 
-class RequirementDelete(ProtectedDeleteView):
+class RequirementDelete(LoggingProtectedDeleteView):
+
     template_name = 'requirement/delete.html'
     form_class = forms.RequirementForm
     model = models.Requirement

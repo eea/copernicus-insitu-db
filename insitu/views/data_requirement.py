@@ -4,7 +4,10 @@ from insitu import models
 from insitu import forms
 from insitu.views.base import CreatedByMixin
 from insitu.views.protected import (
-    ProtectedUpdateView, ProtectedCreateView, ProtectedDeleteView)
+    LoggingProtectedUpdateView,
+    LoggingProtectedCreateView,
+    LoggingProtectedDeleteView
+)
 from insitu.views.protected.permissions import (
     IsOwnerUser,
     IsDraftObject,
@@ -12,7 +15,7 @@ from insitu.views.protected.permissions import (
 )
 
 
-class DataRequirementAdd(CreatedByMixin, ProtectedCreateView):
+class DataRequirementAdd(CreatedByMixin, LoggingProtectedCreateView):
     template_name = 'data/requirement/add.html'
     permission_classes = (IsAuthenticated, )
     permission_denied_redirect = reverse_lazy('requirement:list')
@@ -40,7 +43,7 @@ class DataRequirementAdd(CreatedByMixin, ProtectedCreateView):
                             kwargs={'pk': self.kwargs['requirement_pk']})
 
 
-class DataRequirementEdit(ProtectedUpdateView):
+class DataRequirementEdit(LoggingProtectedUpdateView):
     model = models.DataRequirement
     template_name = 'data/requirement/edit.html'
     form_class = forms.DataRequirementEditForm
@@ -59,7 +62,7 @@ class DataRequirementEdit(ProtectedUpdateView):
                             kwargs={'pk': self.kwargs['requirement_pk']})
 
 
-class DataRequirementDelete(ProtectedDeleteView):
+class DataRequirementDelete(LoggingProtectedDeleteView):
     model = models.DataRequirement
     template_name = 'data/requirement/delete.html'
     context_object_name = 'rel'

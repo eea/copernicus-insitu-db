@@ -6,14 +6,15 @@ from insitu import models
 from insitu.utils import get_choices
 from insitu.views.base import ESDatatableView, CreatedByMixin
 from insitu.views.protected import (
-    ProtectedTemplateView, ProtectedDetailView,
-    ProtectedUpdateView, ProtectedCreateView, ProtectedDeleteView)
+    LoggingProtectedTemplateView, LoggingProtectedDetailView,
+    LoggingProtectedUpdateView, LoggingProtectedCreateView,
+    LoggingProtectedDeleteView)
 from insitu.views.protected import IsAuthenticated, IsOwnerUser
 from insitu.views.protected.permissions import IsDraftObject
 from picklists import models as pickmodels
 
 
-class DataList(ProtectedTemplateView):
+class DataList(LoggingProtectedTemplateView):
     template_name = 'data/list.html'
     permission_classes = (IsAuthenticated, )
     permission_denied_redirect = reverse_lazy('auth:login')
@@ -58,7 +59,7 @@ class DataListJson(ESDatatableView):
     permission_classes = (IsAuthenticated, )
 
 
-class DataAdd(CreatedByMixin, ProtectedCreateView):
+class DataAdd(CreatedByMixin, LoggingProtectedCreateView):
     template_name = 'data/add.html'
     form_class = forms.DataForm
     model = models.Data
@@ -71,7 +72,7 @@ class DataAdd(CreatedByMixin, ProtectedCreateView):
         return reverse('data:detail', kwargs={'pk': instance.pk})
 
 
-class DataEdit(ProtectedUpdateView):
+class DataEdit(LoggingProtectedUpdateView):
     template_name = 'data/edit.html'
     form_class = forms.DataForm
     model = models.Data
@@ -84,7 +85,7 @@ class DataEdit(ProtectedUpdateView):
         return reverse('data:detail', kwargs={'pk': self.object.pk})
 
 
-class DataDetail(ProtectedDetailView):
+class DataDetail(LoggingProtectedDetailView):
     template_name = 'data/detail.html'
     model = models.Data
     context_object_name = 'data'
@@ -93,7 +94,7 @@ class DataDetail(ProtectedDetailView):
     target_type = 'data'
 
 
-class DataDelete(ProtectedDeleteView):
+class DataDelete(LoggingProtectedDeleteView):
     template_name = 'data/delete.html'
     form_class = forms.DataForm
     model = models.Data

@@ -9,14 +9,12 @@ class PicklistsManager(ProtectedTemplateView):
     template_name = 'picklists.html'
     permission_classes = (protected.IsSuperuser,)
     permission_denied_redirect = reverse_lazy('auth:login')
-    target_type = 'picklists manage'
 
 
 class HelpPage(ProtectedTemplateView):
     template_name = 'help.html'
     permission_classes = (protected.IsAuthenticated,)
     permission_denied_redirect = reverse_lazy('auth:login')
-    target_type = 'help for picklists'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)

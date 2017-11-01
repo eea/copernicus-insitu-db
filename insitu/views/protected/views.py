@@ -96,13 +96,23 @@ class ProtectedObjectMixin(object):
         )
 
 
-class ProtectedDetailView(DetailLoggingView,
-                          ProtectedObjectMixin,
+class ProtectedDetailView(ProtectedObjectMixin,
                           ProtectedView,
                           DetailView):
     """
     Convenience view adding permissions support to
     `django.views.generic.DetailView`.
+    """
+    pass
+
+
+class LoggingProtectedDetailView(DetailLoggingView,
+                                 ProtectedObjectMixin,
+                                 ProtectedView,
+                                 DetailView):
+    """
+    Convenience view adding permissions and logging
+    support to `django.views.generic.DetailView`.
     """
     pass
 
@@ -116,13 +126,22 @@ class ProtectedListView(ProtectedView,
     pass
 
 
-class ProtectedTemplateView(ListLoggingView,
-                            ProtectedView,
+class ProtectedTemplateView(ProtectedView,
                             TemplateView):
 
     """
     Convenience view adding permissions support to
     `django.views.generic.TemplateView`.
+    """
+    pass
+
+
+class LoggingProtectedTemplateView(ListLoggingView,
+                                   ProtectedView,
+                                   TemplateView):
+    """
+    Convenience view adding permissions and logging
+     support to `django.views.generic.TemplateView`.
     """
     pass
 
@@ -141,8 +160,7 @@ class ProtectedFormView(ProtectedView,
     pass
 
 
-class ProtectedCreateView(CreateLoggingView,
-                          ProtectedView,
+class ProtectedCreateView(ProtectedView,
                           CreateView,
                           metaclass=ProtectedFormViewBase):
     """
@@ -152,8 +170,18 @@ class ProtectedCreateView(CreateLoggingView,
     pass
 
 
-class ProtectedUpdateView(UpdateLoggingView,
-                          ProtectedObjectMixin,
+class LoggingProtectedCreateView(CreateLoggingView,
+                                 ProtectedView,
+                                 CreateView,
+                                 metaclass=ProtectedFormViewBase):
+    """
+    Convenience view adding permissions and logging
+    support to `django.views.generic.CreateView`.
+    """
+    pass
+
+
+class ProtectedUpdateView(ProtectedObjectMixin,
                           ProtectedView,
                           UpdateView,
                           metaclass=ProtectedFormViewBase):
@@ -164,8 +192,19 @@ class ProtectedUpdateView(UpdateLoggingView,
     pass
 
 
-class ProtectedDeleteView(DeleteLoggingView,
-                          ProtectedObjectMixin,
+class LoggingProtectedUpdateView(UpdateLoggingView,
+                                 ProtectedObjectMixin,
+                                 ProtectedView,
+                                 UpdateView,
+                                 metaclass=ProtectedFormViewBase):
+    """
+    Convenience view adding permissions and logging
+    support to `django.views.generic.UpdateView`.
+    """
+    pass
+
+
+class ProtectedDeleteView(ProtectedObjectMixin,
                           ProtectedView,
                           DeleteView,
                           metaclass=ProtectedFormViewBase):
@@ -173,5 +212,18 @@ class ProtectedDeleteView(DeleteLoggingView,
     """
     Convenience view adding permissions support to
     `django.views.generic.DeleteView`.
+    """
+    pass
+
+
+class LoggingProtectedDeleteView(DeleteLoggingView,
+                                 ProtectedObjectMixin,
+                                 ProtectedView,
+                                 DeleteView,
+                                 metaclass=ProtectedFormViewBase):
+
+    """
+    Convenience view adding permissions and logging
+    support to `django.views.generic.DeleteView`.
     """
     pass
