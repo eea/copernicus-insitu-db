@@ -24,7 +24,15 @@
           {% for entry in data.manager.all %}
              <tr>
               {% for field in data.fields %}
-                <td>{{ entry|get_field_nice_value:field }}</td>
+                <td>
+                  {% with entry|get_field_nice_value:field as value %}
+                    {% if field == 'link' and value %}
+                      <a href="{{ value }}">Link</a>
+                    {% else %}
+                      {{ value }}
+                    {% endif %}
+                  {% endwith %}
+                </td>
               {% endfor %}
              </tr>
           {% endfor %}

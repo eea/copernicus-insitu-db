@@ -35,26 +35,8 @@ class InspireTheme(models.Model):
 
 
 class EssentialVariable(models.Model):
-    DOMAIN_CHOICES = (
-        (0, 'ATMOSPHERIC'),
-        (1, 'OCEANIC'),
-        (2, 'TERRESTRIAL'),
-    )
-    COMPONENT_CHOICES = (
-        (0, 'SURFACE'),
-        (1, 'UPPER-AIR'),
-        (2, 'COMPOSITION'),
-        (3, 'PHYSICS'),
-        (4, 'BIOGEOCHEMISTRY'),
-        (5, 'BIOLOGY/ECOSYSTEMS'),
-        (6, 'HYDROLOGICAL'),
-        (7, 'CRYOSPHERE'),
-        (8, 'CRYOSPHERE/BIOSPHERE'),
-        (9, 'BIOSPHERE'),
-        (10, 'HUMAN DIMENSION'),
-    )
-    domain = models.IntegerField(choices=DOMAIN_CHOICES)
-    component = models.IntegerField(choices=COMPONENT_CHOICES)
+    domain = models.CharField(max_length=100)
+    component = models.CharField(max_length=100)
     parameter = models.CharField(max_length=100)
     description = models.TextField(blank=True)
     sort_order = models.IntegerField()
@@ -66,8 +48,8 @@ class EssentialVariable(models.Model):
     def __str__(self):
         return (
             '{} - {} - {}'.format(
-                self.get_domain_display(),
-                self.get_component_display(),
+                self.domain,
+                self.component,
                 self.parameter)
         )
 
@@ -76,7 +58,7 @@ class ProductStatus(models.Model):
     name = models.CharField(max_length=100)
     description = models.TextField(blank=True)
     sort_order = models.IntegerField()
-    link = models.CharField(max_length=100, blank=True)
+    link = models.CharField(max_length=300, blank=True)
 
     class Meta:
         ordering = ['sort_order']

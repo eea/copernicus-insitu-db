@@ -86,21 +86,23 @@ class ImportPicklistsView(protected.ProtectedView):
                 with transaction.atomic():
                     ws = wb.get_sheet_by_name(sheet_name)
                     model = models.get(sheet_name)
-                    fields = [col[0].value for col in ws.iter_cols(min_row=1, max_row=1)]
-
+                    fields = [
+                        col[0].value
+                        for col in ws.iter_cols(min_row=1, max_row=1)
+                        if col[0].value is not None
+                    ]
                     for row in ws.iter_rows(min_row=2):
                         data = {}
                         pk = row[0].value
-                        for i in range(1, len(row)):
+                        for i in range(1, len(fields)):
                             field = fields[i]
                             value = row[i].value if row[i].value is not None else ''
                             if field in RELATED_FIELDS.keys():
                                 value = RELATED_FIELDS[field].objects.get(pk=value)
                             data[field] = value
-                        if pk is not None:
-                            model.objects.filter(pk=pk).update(**data)
-                        else:
-                            model.objects.create(**data)
+                        if not [val for val in data.values() if val]:
+                            continue
+                        model.objects.update_or_create(pk=pk, defaults=data)
         except:
             return HttpResponse(status=400)
         return HttpResponse(status=200)
