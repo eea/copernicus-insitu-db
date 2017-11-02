@@ -20,8 +20,8 @@ class InspireThemeFactory(DjangoModelFactory):
 
 
 class EssentialVariableFactory(DjangoModelFactory):
-    domain = models.EssentialVariable.DOMAIN_CHOICES[0][0]
-    component = models.EssentialVariable.COMPONENT_CHOICES[0][0]
+    domain = 'Test domain'
+    component = 'Test component'
     parameter = 'Test parameter'
     sort_order = 0
     link = ''
