@@ -1,5 +1,8 @@
 from django.core.exceptions import ObjectDoesNotExist
 from django.core.urlresolvers import reverse
+from django.http import Http404
+from django.http.response import HttpResponseRedirect
+from xworkflows import ForbiddenTransition
 
 from insitu import documents
 from insitu import forms
@@ -12,7 +15,8 @@ from insitu.views.protected import (
 from picklists import models as pickmodels
 from insitu.views.protected.permissions import (
     IsAuthenticated,
-    IsCopernicusServiceResponsible,
+    IsOwnerUser,
+    IsDraftObject
 )
 
 
@@ -83,7 +87,7 @@ class RequirementList(ProtectedTemplateView):
 class RequirementListJson(ESDatatableView):
     columns = ['name', 'dissemination', 'quality_control_procedure', 'group',
                'uncertainty', 'update_frequency', 'timeliness',
-               'horizontal_resolution', 'vertical_resolution']
+               'horizontal_resolution', 'vertical_resolution', 'state']
     order_columns = columns
     filters = ['dissemination', 'quality_control_procedure', 'group']
     document = documents.RequirementDoc
@@ -93,7 +97,7 @@ class RequirementListJson(ESDatatableView):
 class RequirementAdd(GetInitialMixin, CreatedByMixin, ProtectedCreateView):
     template_name = 'requirement/add.html'
     model = models.Requirement
-    permission_classes = (IsCopernicusServiceResponsible,)
+    permission_classes = (IsAuthenticated, )
 
     def get_form_class(self):
         requirement = self.get_requirement()
@@ -116,7 +120,7 @@ class RequirementEdit(GetInitialMixin, ProtectedUpdateView):
     form_class = forms.RequirementForm
     model = models.Requirement
     context_object_name = 'requirement'
-    permission_classes = (IsCopernicusServiceResponsible,)
+    permission_classes = (IsOwnerUser, IsDraftObject)
 
     def permission_denied(self, request):
         self.permission_denied_redirect = reverse('requirement:list')
@@ -129,12 +133,11 @@ class RequirementEdit(GetInitialMixin, ProtectedUpdateView):
 
 
 class RequirementDelete(ProtectedDeleteView):
-
     template_name = 'requirement/delete.html'
     form_class = forms.RequirementForm
     model = models.Requirement
     context_object_name = 'requirement'
-    permission_classes = (IsCopernicusServiceResponsible,)
+    permission_classes = (IsOwnerUser, IsDraftObject)
 
     def permission_denied(self, request):
         self.permission_denied_redirect = reverse('requirement:list')
@@ -142,3 +145,46 @@ class RequirementDelete(ProtectedDeleteView):
 
     def get_success_url(self):
         return reverse('requirement:list')
+
+
+class RequirementTransition(ProtectedDetailView):
+    model = models.Requirement
+    template_name = 'requirement/transition.html'
+    permission_classes = (IsAuthenticated, )
+    context_object_name = 'requirement'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        source = self.kwargs.get('source')
+        target = self.kwargs.get('target')
+        transition = models.ValidationWorkflow.get_transition(source, target)
+        if not transition:
+            raise Http404()
+        context.update({
+            'target': target,
+            'source': source,
+            'objects': [
+                {
+                    'obj': item,
+                    'type': item.__class__.__name__
+                }
+                for item in self.object.get_related_objects()
+            ]
+        })
+        return context
+
+    def post(self, request, *args, **kwargs):
+        requirement = self.get_object(self.get_queryset())
+        source = self.kwargs.get('source')
+        target = self.kwargs.get('target')
+        try:
+            transition_name = models.ValidationWorkflow.get_transition(source, target)
+            transition = getattr(requirement, transition_name)
+            requirement.requesting_user = self.request.user
+            if transition.is_available():
+                transition()
+                return HttpResponseRedirect(reverse('requirement:detail',
+                                                    kwargs={'pk': requirement.pk}))
+        except ForbiddenTransition:
+            pass
+        raise Http404()

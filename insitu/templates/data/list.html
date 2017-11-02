@@ -15,12 +15,10 @@
   <div class="row">
     <h1 class="col-sm-12">
       <span>Data</span>
-      {% if request.user.service_resp or request.user.is_superuser %}
-        <span class="pull-right">
+      <span class="pull-right">
           <a class="btn btn-primary pull-right"
              href="{% url 'data:add' %}">New data</a>
         </span>
-      {% endif %}
     </h1>
   </div>
 
@@ -39,12 +37,13 @@
           <th>Data format</th>
           <th>Quality Control Procedure</th>
           <th>Dissemination</th>
+          <th>State</th>
         </tr>
         </thead>
       </table>
     </div>
 
-   <div class="col-lg-2">
+    <div class="col-lg-2">
       <div class="panel panel-default">
         <div class="panel-heading">Filters</div>
         <div class="panel-body">

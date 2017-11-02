@@ -15,15 +15,13 @@
   <div class="row">
     <h1 class="col-sm-12">
       <span class="">Data providers </span>
-      {% if request.user.service_resp or request.user.is_superuser %}
-        <span class="pull-right">
+      <span class="pull-right">
           <a class="btn btn-primary pull-right"
              href="{% url 'provider:add_network' %}">New data provider network</a>
           <br>
           <a class="btn btn-primary pull-right"
              href="{% url 'provider:add_non_network' %}">New data provider</a>
         </span>
-      {% endif %}
     </h1>
   </div>
 
@@ -41,6 +39,7 @@
           <th>Contact person</th>
           <th>Provider type</th>
           <th>Is network?</th>
+          <th>State</th>
         </tr>
         </thead>
       </table>

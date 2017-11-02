@@ -56,6 +56,7 @@ class RequirementDoc(DocType):
         attr='horizontal_resolution.to_elastic_search_format')
     vertical_resolution = fields.KeywordField(
         attr='vertical_resolution.to_elastic_search_format')
+    state = fields.KeywordField(attr='state.name')
 
     def get_name_display(self):
         url = reverse('requirement:detail', kwargs={'pk': self.id})
@@ -93,7 +94,7 @@ class DataDoc(DocType):
         attr='quality_control_procedure.name'
     )
     dissemination = fields.KeywordField(attr='dissemination.name')
-
+    state = fields.KeywordField(attr='state.name')
 
     def get_name_display(self):
         url = reverse('data:detail', kwargs={'pk': self.id})
@@ -124,6 +125,7 @@ class DataProviderDoc(DocType):
         attr='get_elastic_search_data.contact_person')
     provider_type = fields.KeywordField(
         attr='get_elastic_search_data.provider_type')
+    state = fields.KeywordField(attr='state.name')
 
     class Meta:
         model = DataProvider
@@ -146,6 +148,7 @@ class DataProviderDoc(DocType):
         data_provider = sender.data_provider
         document = DataProviderDoc.get(id=data_provider.id)
         document.update(data_provider)
+
 
 signals.data_provider_updated.connect(DataProviderDoc.update_index)
 signals.requirement_updated.connect(RequirementDoc.update_index)

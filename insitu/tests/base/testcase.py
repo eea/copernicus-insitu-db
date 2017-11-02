@@ -14,8 +14,11 @@ class FormCheckTestCase(TestCase):
 
     def setUp(self):
         self.errors = {field: self.REQUIRED_ERROR for field in self.required_fields}
-        self.creator = UserFactory(is_superuser=True,
-                                   username='Creator')
+        self.creator = UserFactory(username='Creator')
+        self.other_user = UserFactory(username='Other')
+
+    def login_creator(self):
+        self.client.force_login(self.creator)
 
     def check_required_errors(self, resp, errors):
         self.assertEqual(resp.status_code, 200)

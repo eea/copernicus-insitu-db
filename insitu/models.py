@@ -4,22 +4,69 @@ from __future__ import unicode_literals
 from django.contrib.auth import get_user_model
 from django.db import models
 from django.db.models.query import QuerySet
+from django_xworkflows.models import Workflow, WorkflowEnabled, StateField
+from xworkflows import (
+    transition_check, transition,
+    ForbiddenTransition,
+)
 
 from insitu import signals
 from picklists import models as pickmodels
 
-
 User = get_user_model()
 
 
-class _WithRelatedUserManager(models.Manager):
-    """
-    A manager whose default queryset pre-selects the related user object
-    for performance reasons.
-    """
+class ValidationWorkflow(Workflow):
+    name = 'validation'
 
-    def get_queryset(self):
-        return super().get_queryset().select_related('user')
+    states = (
+        # name, title
+        ('draft', 'Draft'),
+        ('ready', 'Ready for validation'),
+        ('valid', 'Valid'),
+        ('changes', 'Changes requested')
+    )
+
+    initial_state = 'draft'
+
+    transitions = (
+        # name, source state, target state
+        ('mark_as_ready', 'draft', 'ready'),
+        ('validate', 'ready', 'valid'),
+        ('cancel', 'ready', 'draft'),
+        ('request_changes', 'ready', 'changes'),
+        ('make_changes', 'changes', 'draft')
+    )
+
+    @classmethod
+    def __check_state_exists(cls, state):
+        if state not in cls.states:
+            raise ForbiddenTransition()
+
+    @classmethod
+    def __check_transition_between_states_exist(cls, source_state, target_state):
+        for trans in cls.transitions:
+            for source in trans.source:
+                if (source.name == source_state and
+                        trans.target.name == target_state):
+                    return
+        raise ForbiddenTransition()
+
+    @classmethod
+    def check_transition(cls, source_state, target_state):
+        cls.__check_state_exists(source_state)
+        cls.__check_state_exists(target_state)
+        cls.__check_transition_between_states_exist(source_state, target_state)
+
+    @classmethod
+    def get_transition(cls, source_state, target_state):
+        cls.check_transition(source_state, target_state)
+        for trans in cls.transitions:
+            for source in trans.source:
+                if (source.name == source_state and
+                        trans.target.name == target_state):
+                    return trans.name
+        raise ForbiddenTransition()
 
 
 class SoftDeleteQuerySet(QuerySet):
@@ -29,7 +76,6 @@ class SoftDeleteQuerySet(QuerySet):
 
 
 class SoftDeleteManager(models.Manager):
-
     def get_queryset(self):
         return SoftDeleteQuerySet(self.model).filter(_deleted=False)
 
@@ -53,7 +99,7 @@ class SoftDeleteModel(models.Model):
     def delete_related(self):
         for class_name, field in self.related_objects:
             objects = globals()[class_name].objects.filter(
-                        **{field: self})
+                **{field: self})
             objects.delete()
 
     def delete(self, using=None):
@@ -63,12 +109,46 @@ class SoftDeleteModel(models.Model):
         if hasattr(self, 'elastic_delete_signal'):
             self.elastic_delete_signal.send(sender=self)
 
-
     class Meta:
         abstract = True
 
 
-class Metric(models.Model):
+class ValidationWorkflowModel(WorkflowEnabled, models.Model):
+    state = StateField(ValidationWorkflow)
+
+    class Meta:
+        abstract = True
+
+    @transition()
+    def mark_as_ready(self):
+        pass
+
+    @transition()
+    def validate(self):
+        pass
+
+    @transition()
+    def cancel(self):
+        pass
+
+    @transition()
+    def request_changes(self):
+        pass
+
+    @transition()
+    def make_changes(self):
+        pass
+
+    @transition_check('mark_as_ready', 'cancel', 'make_changes')
+    def check_owner_user(self, *args, **kwargs):
+        return self.requesting_user == self.created_by
+
+    @transition_check('validate', 'request_changes')
+    def check_other_user(self, *args, **kwargs):
+        return self.requesting_user != self.created_by
+
+
+class Metric(ValidationWorkflowModel):
     threshold = models.CharField(max_length=100)
     breakthrough = models.CharField(max_length=100)
     goal = models.CharField(max_length=100)
@@ -131,7 +211,7 @@ class Component(models.Model):
         return self.name
 
 
-class Requirement(SoftDeleteModel):
+class Requirement(ValidationWorkflowModel, SoftDeleteModel):
     related_objects = [
         ('ProductRequirement', 'requirement'),
         ('DataRequirement', 'requirement')
@@ -174,6 +254,52 @@ class Requirement(SoftDeleteModel):
     def __str__(self):
         return self.name
 
+    def get_related_objects(self):
+        metrics = ['uncertainty', 'update_frequency', 'timeliness',
+                   'horizontal_resolution', 'vertical_resolution']
+        objects = [getattr(self, metric) for metric in metrics]
+
+        objects += [obj for obj in self.productrequirement_set.all()]
+        objects += [obj for obj in self.datarequirement_set.all()]
+        objects += [obj for obj in self.data_set.distinct().all()]
+        objects += [obj for obj in DataProviderRelation.objects.filter(
+            data__requirements=self).distinct()]
+        objects += [obj for obj in DataProvider.objects.filter(
+            data__requirements=self).distinct()]
+        objects += [obj for obj in DataProviderDetails.objects.filter(
+            data_provider__data__requirements=self).distinct()]
+        return objects
+
+    @transition()
+    def mark_as_ready(self):
+        for obj in self.get_related_objects():
+            obj.requesting_user = self.requesting_user
+            obj.mark_as_ready()
+
+    @transition()
+    def validate(self):
+        for obj in self.get_related_objects():
+            obj.requesting_user = self.requesting_user
+            obj.validate()
+
+    @transition()
+    def cancel(self):
+        for obj in self.get_related_objects():
+            obj.requesting_user = self.requesting_user
+            obj.cancel()
+
+    @transition()
+    def request_changes(self):
+        for obj in self.get_related_objects():
+            obj.requesting_user = self.requesting_user
+            obj.request_changes()
+
+    @transition()
+    def make_changes(self):
+        for obj in self.get_related_objects():
+            obj.requesting_user = self.requesting_user
+            obj.make_changes()
+
 
 class Product(SoftDeleteModel):
     related_objects = [
@@ -206,7 +332,7 @@ class Product(SoftDeleteModel):
         return self.name
 
 
-class ProductRequirement(SoftDeleteModel):
+class ProductRequirement(ValidationWorkflowModel, SoftDeleteModel):
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     requirement = models.ForeignKey(Requirement, on_delete=models.CASCADE)
     note = models.TextField(blank=True)
@@ -230,7 +356,7 @@ class ProductRequirement(SoftDeleteModel):
         return '{} - {}'.format(self.product.name, self.requirement.name)
 
 
-class DataProvider(SoftDeleteModel):
+class DataProvider(ValidationWorkflowModel, SoftDeleteModel):
     related_objects = [
         ('DataProviderDetails', 'data_provider'),
         ('DataProviderRelation', 'provider'),
@@ -264,7 +390,7 @@ class DataProvider(SoftDeleteModel):
         return data
 
 
-class DataProviderDetails(SoftDeleteModel):
+class DataProviderDetails(ValidationWorkflowModel, SoftDeleteModel):
     acronym = models.CharField(max_length=10, blank=True)
     website = models.CharField(max_length=255, blank=True)
     address = models.TextField(blank=True)
@@ -295,7 +421,7 @@ class DataProviderDetails(SoftDeleteModel):
         signals.data_provider_updated.send(sender=self)
 
 
-class Data(SoftDeleteModel):
+class Data(ValidationWorkflowModel, SoftDeleteModel):
     related_objects = [
         ('DataRequirement', 'data'),
         ('DataProviderRelation', 'data'),
@@ -346,12 +472,11 @@ class Data(SoftDeleteModel):
     updated_at = models.DateTimeField(auto_now=True,
                                       null=True)
 
-
     def __str__(self):
         return self.name
 
 
-class DataRequirement(SoftDeleteModel):
+class DataRequirement(ValidationWorkflowModel, SoftDeleteModel):
     data = models.ForeignKey(Data, on_delete=models.CASCADE)
     requirement = models.ForeignKey(Requirement, on_delete=models.CASCADE)
     information_costs = models.BooleanField(default=False)
@@ -370,7 +495,7 @@ class DataRequirement(SoftDeleteModel):
         return '{} - {}'.format(self.data.name, self.requirement.name)
 
 
-class DataProviderRelation(SoftDeleteModel):
+class DataProviderRelation(ValidationWorkflowModel, SoftDeleteModel):
     ORIGINATOR = 1
     DISTRIBUTOR = 2
     ROLE_CHOICES = (
@@ -388,52 +513,3 @@ class DataProviderRelation(SoftDeleteModel):
 
     def __str__(self):
         return '{} - {}'.format(self.data.name, self.provider.name)
-
-
-class CopernicusProviderManager(_WithRelatedUserManager):
-    pass
-
-
-class CopernicusProvider(models.Model):
-    user = models.OneToOneField(User,
-                                related_name='service_resp')
-    service = models.ForeignKey(CopernicusService,
-                                related_name='provider')
-
-    objects = CopernicusProviderManager()
-    created_at = models.DateTimeField(auto_now_add=True,
-                                      null=True)
-    updated_at = models.DateTimeField(auto_now=True,
-                                      null=True)
-
-
-class CountryProviderManager(_WithRelatedUserManager):
-    pass
-
-
-class CountryProvider(models.Model):
-    user = models.OneToOneField(User,
-                                related_name='country_resp')
-    country = models.ForeignKey(pickmodels.Country,
-                                related_name='provider')
-
-    objects = CountryProviderManager()
-    created_at = models.DateTimeField(auto_now_add=True,
-                                      null=True)
-    updated_at = models.DateTimeField(auto_now=True,
-                                      null=True)
-
-
-class DataProviderUserManager(_WithRelatedUserManager):
-    pass
-
-
-class DataProviderUser(models.Model):
-    user = models.OneToOneField(User,
-                                related_name='data_resp')
-    provider = models.ForeignKey(DataProvider,
-                                related_name='provider')
-    created_at = models.DateTimeField(auto_now_add=True,
-                                      null=True)
-    updated_at = models.DateTimeField(auto_now=True,
-                                      null=True)

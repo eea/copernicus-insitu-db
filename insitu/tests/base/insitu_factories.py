@@ -156,27 +156,3 @@ class DataProviderRelationFactory(DjangoModelFactory):
 
     class Meta:
         model = models.DataProviderRelation
-
-
-class CopernicususProviderFactory(DjangoModelFactory):
-    user = SubFactory(UserFactory)
-    service = SubFactory(CopernicusServiceFactory)
-
-    class Meta:
-        model = models.CopernicusProvider
-
-
-class CountryProvider(DjangoModelFactory):
-    user = SubFactory(UserFactory)
-    country = SubFactory(factories.CountryFactory)
-
-    class Meta:
-        model = models.CountryProvider
-
-
-class DataProviderUserManager(DjangoModelFactory):
-    user = SubFactory(UserFactory)
-    provider = SubFactory(DataProviderFactory)
-
-    class Meta:
-        model = models.DataProviderUser

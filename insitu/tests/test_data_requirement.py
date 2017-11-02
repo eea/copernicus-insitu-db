@@ -29,7 +29,6 @@ class DataRequirementTests(base.FormCheckTestCase):
         }
         user = base.UserFactory()
         self.client.force_login(user)
-        base.CopernicususProviderFactory(user=user)
 
     def test_data_requirement_add_required_fields(self):
         data = {}
@@ -61,6 +60,7 @@ class DataRequirementTests(base.FormCheckTestCase):
         self.check_single_object(models.DataRequirement, data)
 
     def test_get_data_requirement_edit(self):
+        self.login_creator()
         data_object = base.DataFactory(created_by=self.creator)
         metrics = base.RequirementFactory.create_metrics(self.creator)
         requirement = base.RequirementFactory(created_by=self.creator,
@@ -77,6 +77,7 @@ class DataRequirementTests(base.FormCheckTestCase):
         self.assertEqual(resp.status_code, 200)
 
     def test_data_requirement_edit(self):
+        self.login_creator()
         data_object = base.DataFactory(created_by=self.creator)
         metrics = base.RequirementFactory.create_metrics(self.creator)
         requirement = base.RequirementFactory(created_by=self.creator,
@@ -100,6 +101,7 @@ class DataRequirementTests(base.FormCheckTestCase):
         self.check_single_object(models.DataRequirement, data)
 
     def test_get_data_requirement_delete(self):
+        self.login_creator()
         data_object = base.DataFactory(created_by=self.creator)
         metrics = base.RequirementFactory.create_metrics(self.creator)
         requirement = base.RequirementFactory(created_by=self.creator,
@@ -116,6 +118,7 @@ class DataRequirementTests(base.FormCheckTestCase):
         self.assertEqual(resp.status_code, 200)
 
     def test_data_requirement_delete(self):
+        self.login_creator()
         data = {}
         data_object = base.DataFactory(created_by=self.creator)
         metrics = base.RequirementFactory.create_metrics(self.creator)
@@ -166,31 +169,6 @@ class DataRequirementPermissionsTests(base.PermissionsCheckTestCase):
                         kwargs={'requirement_pk': data_requirement.pk,
                                 'pk': data_requirement.pk}))
 
-    def test_data_requirement_delete_not_auth_from_data_requirement(self):
-        data_object = base.DataFactory(created_by=self.creator)
-        metrics = base.RequirementFactory.create_metrics(self.creator)
-        requirement = base.RequirementFactory(created_by=self.creator,
-                                              **metrics)
-        data_requirement = base.DataRequirementFactory(
-            data=data_object,
-            requirement=requirement,
-            created_by=self.creator,
-        )
-        self.check_user_redirect_all_methods(
-            redirect_url=self.login_url,
-            url=reverse('requirement:data:delete',
-                        kwargs={'requirement_pk': data_requirement.pk,
-                                'pk': data_requirement.pk}))
-
-    def test_data_requirement_add_auth_from_data_requirement(self):
-        metrics = base.RequirementFactory.create_metrics(self.creator)
-        requirement = base.RequirementFactory(created_by=self.creator,
-                                              **metrics)
-        self.check_authenticated_user_redirect_all_methods(
-            redirect_url=reverse('requirement:list'),
-            url=reverse('requirement:data:add',
-                        kwargs={'requirement_pk': requirement.pk}))
-
     def test_data_requirement_edit_auth_from_data_requirement(self):
         data_object = base.DataFactory(created_by=self.creator)
         metrics = base.RequirementFactory.create_metrics(self.creator)
@@ -204,6 +182,22 @@ class DataRequirementPermissionsTests(base.PermissionsCheckTestCase):
         self.check_authenticated_user_redirect_all_methods(
             redirect_url=reverse('requirement:list'),
             url=reverse('requirement:data:edit',
+                        kwargs={'requirement_pk': data_requirement.pk,
+                                'pk': data_requirement.pk}))
+
+    def test_data_requirement_delete_not_auth_from_data_requirement(self):
+        data_object = base.DataFactory(created_by=self.creator)
+        metrics = base.RequirementFactory.create_metrics(self.creator)
+        requirement = base.RequirementFactory(created_by=self.creator,
+                                              **metrics)
+        data_requirement = base.DataRequirementFactory(
+            data=data_object,
+            requirement=requirement,
+            created_by=self.creator,
+        )
+        self.check_user_redirect_all_methods(
+            redirect_url=self.login_url,
+            url=reverse('requirement:data:delete',
                         kwargs={'requirement_pk': data_requirement.pk,
                                 'pk': data_requirement.pk}))
 

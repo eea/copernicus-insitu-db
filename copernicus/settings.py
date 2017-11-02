@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django_elasticsearch_dsl',
     'bootstrap3',
+    'django_xworkflows',
     'picklists',
     'insitu',
     'suit',

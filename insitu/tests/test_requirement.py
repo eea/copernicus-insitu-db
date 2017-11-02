@@ -20,7 +20,6 @@ class RequirementTests(base.FormCheckTestCase):
         quality_control_procedure = base.QualityControlProcedureFactory()
         group = base.RequirementGroupFactory()
         provider_user = base.UserFactory()
-        base.CopernicususProviderFactory(user=provider_user)
         self.client.force_login(provider_user)
 
         self._DATA = {
@@ -147,7 +146,6 @@ class RequirementTests(base.FormCheckTestCase):
         )
 
     def test_post_add_with_clone(self):
-
         metrics = base.RequirementFactory.create_metrics(self.creator)
         requirement = base.RequirementFactory(name="Test requirement",
                                               created_by=self.creator,
@@ -164,6 +162,7 @@ class RequirementTests(base.FormCheckTestCase):
         self.check_single_object(models.Requirement, cloned_data)
 
     def test_get_edit_requirement(self):
+        self.login_creator()
         metrics = base.RequirementFactory.create_metrics(self.creator)
         requirement = base.RequirementFactory(name="Test requirement",
                                               created_by=self.creator,
@@ -175,6 +174,7 @@ class RequirementTests(base.FormCheckTestCase):
         self.assertEqual(resp.status_code, 200)
 
     def test_edit_requirement(self):
+        self.login_creator()
         metrics = base.RequirementFactory.create_metrics(self.creator)
         requirement = base.RequirementFactory(name="Test requirement",
                                               created_by=self.creator,
@@ -186,6 +186,7 @@ class RequirementTests(base.FormCheckTestCase):
         self.check_single_object(models.Requirement, data)
 
     def test_get_delete_requirement(self):
+        self.login_creator()
         metrics = base.RequirementFactory.create_metrics(self.creator)
         requirement = base.RequirementFactory(name="Test requirement",
                                               created_by=self.creator,
@@ -195,6 +196,7 @@ class RequirementTests(base.FormCheckTestCase):
         self.assertEqual(resp.status_code, 200)
 
     def test_delete_requirement(self):
+        self.login_creator()
         metrics = base.RequirementFactory.create_metrics(self.creator)
         requirement = base.RequirementFactory(name="Test requirement",
                                               created_by=self.creator,
@@ -206,6 +208,7 @@ class RequirementTests(base.FormCheckTestCase):
         self.check_objects_are_soft_deleted(models.Requirement, RequirementDoc)
 
     def test_delete_requirement_related_objects(self):
+        self.login_creator()
         metrics = base.RequirementFactory.create_metrics(self.creator)
         requirement = base.RequirementFactory(name="Test requirement",
                                               created_by=self.creator,
@@ -221,6 +224,115 @@ class RequirementTests(base.FormCheckTestCase):
         )
         self.check_objects_are_soft_deleted(models.ProductRequirement)
         self.check_objects_are_soft_deleted(models.DataRequirement)
+
+    def test_transition(self):
+        self.login_creator()
+        metrics = base.RequirementFactory.create_metrics(self.creator)
+        requirement = base.RequirementFactory(name="Test requirement",
+                                              created_by=self.creator,
+                                              **metrics)
+        data = base.DataFactory(name="Test data",
+                                created_by=self.creator)
+        data_requirement = base.DataRequirementFactory(data=data,
+                                                       created_by=self.creator,
+                                                       requirement=requirement)
+        provider = base.DataProviderFactory(name="Test provider",
+                                            created_by=self.creator)
+        data_provider = base.DataProviderRelationFactory(data=data,
+                                                         created_by=self.creator,
+                                                         provider=provider)
+
+        items = ([requirement, data, data_requirement, provider, data_provider]
+                 + list(metrics.values()))
+        for item in items:
+            self.assertEqual((getattr(item, 'state')).name, 'draft')
+
+        transitions = [
+            {'source': 'draft', 'target': 'ready', 'user': self.creator},
+            {'source': 'ready', 'target': 'draft', 'user': self.creator},
+            {'source': 'draft', 'target': 'ready', 'user': self.creator},
+            {'source': 'ready', 'target': 'changes', 'user': self.other_user},
+            {'source': 'changes', 'target': 'draft', 'user': self.creator},
+            {'source': 'draft', 'target': 'ready', 'user': self.creator},
+            {'source': 'ready', 'target': 'valid', 'user': self.other_user},
+        ]
+
+        for transition in transitions:
+            for item in items:
+                self.assertEqual((getattr(item, 'state')).name, transition['source'])
+            self.client.force_login(transition['user'])
+            response = self.client.post(
+                reverse('requirement:transition',
+                        kwargs={'source': transition['source'],
+                                'target': transition['target'],
+                                'pk': requirement.pk}))
+            self.assertRedirects(response, reverse('requirement:detail',
+                                                   kwargs={'pk': requirement.pk}))
+            for item in items:
+                getattr(item, 'refresh_from_db')()
+                self.assertEqual((getattr(item, 'state')).name, transition['target'])
+
+    def test_transition_inexistent_state(self):
+        self.login_creator()
+        metrics = base.RequirementFactory.create_metrics(self.creator)
+        requirement = base.RequirementFactory(name="Test requirement",
+                                              created_by=self.creator,
+                                              **metrics)
+        data = base.DataFactory(name="Test data",
+                                created_by=self.creator)
+        data_requirement = base.DataRequirementFactory(data=data,
+                                                       created_by=self.creator,
+                                                       requirement=requirement)
+        provider = base.DataProviderFactory(name="Test provider",
+                                            created_by=self.creator)
+        data_provider = base.DataProviderRelationFactory(data=data,
+                                                         created_by=self.creator,
+                                                         provider=provider)
+
+        items = ([requirement, data, data_requirement, provider, data_provider]
+                 + list(metrics.values()))
+
+        response = self.client.post(
+            reverse('requirement:transition',
+                    kwargs={'source': 'draft',
+                            'target': 'nosuchstate',
+                            'pk': requirement.pk}))
+        self.assertEqual(response.status_code, 404)
+
+        for item in items:
+            getattr(item, 'refresh_from_db')()
+            self.assertEqual((getattr(item, 'state')).name, 'draft')
+
+    def test_transition_existent_state_no_transition(self):
+        self.login_creator()
+        metrics = base.RequirementFactory.create_metrics(self.creator)
+        requirement = base.RequirementFactory(name="Test requirement",
+                                              created_by=self.creator,
+                                              **metrics)
+        data = base.DataFactory(name="Test data",
+                                created_by=self.creator)
+        data_requirement = base.DataRequirementFactory(data=data,
+                                                       created_by=self.creator,
+                                                       requirement=requirement)
+        provider = base.DataProviderFactory(name="Test provider",
+                                            created_by=self.creator)
+        data_provider = base.DataProviderRelationFactory(data=data,
+                                                         created_by=self.creator,
+                                                         provider=provider)
+
+        items = ([requirement, data, data_requirement, provider, data_provider]
+                 + list(metrics.values()))
+
+        response = self.client.post(
+            reverse('requirement:transition',
+                    kwargs={'source': 'draft',
+                            'target': 'valid',
+                            'pk': requirement.pk}))
+        self.assertEqual(response.status_code, 404)
+
+        for item in items:
+            getattr(item, 'refresh_from_db')()
+            self.assertEqual((getattr(item, 'state')).name, 'draft')
 
 
 class RequirementPermissionTests(base.PermissionsCheckTestCase):
@@ -263,6 +375,15 @@ class RequirementPermissionTests(base.PermissionsCheckTestCase):
             redirect_url=self.redirect_requirement_url_non_auth,
             url=reverse('requirement:edit', kwargs={'pk': requirement.pk}))
 
+    def test_requirement_edit_auth(self):
+        metrics = base.RequirementFactory.create_metrics(self.creator)
+        requirement = base.RequirementFactory(name="Test requirement",
+                                              created_by=self.creator,
+                                              **metrics)
+        self.check_authenticated_user_redirect_all_methods(
+            redirect_url=reverse('requirement:list'),
+            url=reverse('requirement:edit', kwargs={'pk': requirement.pk}))
+
     def test_requirement_delete_not_auth(self):
         metrics = base.RequirementFactory.create_metrics(self.creator)
         requirement = base.RequirementFactory(name="Test requirement",
@@ -272,25 +393,11 @@ class RequirementPermissionTests(base.PermissionsCheckTestCase):
             redirect_url=self.redirect_requirement_url_non_auth,
             url=reverse('requirement:delete', kwargs={'pk': requirement.pk}))
 
-    def test_requirement_relation_add_auth(self):
-        self.check_authenticated_user_redirect_all_methods(
-            redirect_url=self.redirect_requirement_url_auth,
-            url=reverse('requirement:add'))
-
-    def test_requirement_relation_edit_auth(self):
+    def test_requirement_delete_auth(self):
         metrics = base.RequirementFactory.create_metrics(self.creator)
         requirement = base.RequirementFactory(name="Test requirement",
                                               created_by=self.creator,
                                               **metrics)
         self.check_authenticated_user_redirect_all_methods(
-            redirect_url=self.redirect_requirement_url_auth,
-            url=reverse('requirement:edit', kwargs={'pk': requirement.pk}))
-
-    def test_requirement_relation_delete_auth(self):
-        metrics = base.RequirementFactory.create_metrics(self.creator)
-        requirement = base.RequirementFactory(name="Test requirement",
-                                              created_by=self.creator,
-                                              **metrics)
-        self.check_authenticated_user_redirect_all_methods(
-            redirect_url=self.redirect_requirement_url_auth,
+            redirect_url=reverse('requirement:list'),
             url=reverse('requirement:delete', kwargs={'pk': requirement.pk}))
