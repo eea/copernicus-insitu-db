@@ -4,7 +4,11 @@ from __future__ import unicode_literals
 from django.contrib.auth import get_user_model
 from django.db import models
 from django.db.models.query import QuerySet
-from django_xworkflows.models import Workflow, WorkflowEnabled, StateField, transition
+from django_xworkflows.models import Workflow, WorkflowEnabled, StateField
+from xworkflows import (
+    transition_check, transition,
+    ForbiddenTransition,
+)
 
 from insitu import signals
 from picklists import models as pickmodels
@@ -36,7 +40,8 @@ class ValidationWorkflow(Workflow):
 
     @classmethod
     def __check_state_exists(cls, state):
-        return state in cls.states
+        if state not in cls.states:
+            raise ForbiddenTransition()
 
     @classmethod
     def __check_transition_between_states_exist(cls, source_state, target_state):
@@ -44,28 +49,24 @@ class ValidationWorkflow(Workflow):
             for source in trans.source:
                 if (source.name == source_state and
                         trans.target.name == target_state):
-                    return True
-        return False
+                    return
+        raise ForbiddenTransition()
 
     @classmethod
     def check_transition(cls, source_state, target_state):
-        return (
-            cls.__check_state_exists(source_state) and
-            cls.__check_state_exists(target_state) and
-            cls.__check_transition_between_states_exist(
-                source_state, target_state)
-        )
+        cls.__check_state_exists(source_state)
+        cls.__check_state_exists(target_state)
+        cls.__check_transition_between_states_exist(source_state, target_state)
 
     @classmethod
     def get_transition(cls, source_state, target_state):
-        if not cls.check_transition(source_state, target_state):
-            return None
+        cls.check_transition(source_state, target_state)
         for trans in cls.transitions:
             for source in trans.source:
                 if (source.name == source_state and
                         trans.target.name == target_state):
                     return trans.name
-        return None
+        raise ForbiddenTransition()
 
 
 class SoftDeleteQuerySet(QuerySet):
@@ -117,6 +118,34 @@ class ValidationWorkflowModel(WorkflowEnabled, models.Model):
 
     class Meta:
         abstract = True
+
+    @transition()
+    def mark_as_ready(self):
+        pass
+
+    @transition()
+    def validate(self):
+        pass
+
+    @transition()
+    def cancel(self):
+        pass
+
+    @transition()
+    def request_changes(self):
+        pass
+
+    @transition()
+    def make_changes(self):
+        pass
+
+    @transition_check('mark_as_ready', 'cancel', 'make_changes')
+    def check_owner_user(self, *args, **kwargs):
+        return self.requesting_user == self.created_by
+
+    @transition_check('validate', 'request_changes')
+    def check_other_user(self, *args, **kwargs):
+        return self.requesting_user != self.created_by
 
 
 class Metric(ValidationWorkflowModel):
@@ -244,32 +273,32 @@ class Requirement(ValidationWorkflowModel, SoftDeleteModel):
     @transition()
     def mark_as_ready(self):
         for obj in self.get_related_objects():
-            trans = getattr(obj, 'mark_as_ready')
-            trans()
+            obj.requesting_user = self.requesting_user
+            obj.mark_as_ready()
 
     @transition()
     def validate(self):
         for obj in self.get_related_objects():
-            trans = getattr(obj, 'validate')
-            trans()
+            obj.requesting_user = self.requesting_user
+            obj.validate()
 
     @transition()
     def cancel(self):
         for obj in self.get_related_objects():
-            trans = getattr(obj, 'cancel')
-            trans()
+            obj.requesting_user = self.requesting_user
+            obj.cancel()
 
     @transition()
     def request_changes(self):
         for obj in self.get_related_objects():
-            trans = getattr(obj, 'request_changes')
-            trans()
+            obj.requesting_user = self.requesting_user
+            obj.request_changes()
 
     @transition()
     def make_changes(self):
         for obj in self.get_related_objects():
-            trans = getattr(obj, 'make_changes')
-            trans()
+            obj.requesting_user = self.requesting_user
+            obj.make_changes()
 
 
 class Product(SoftDeleteModel):

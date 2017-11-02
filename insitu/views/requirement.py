@@ -2,6 +2,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.core.urlresolvers import reverse
 from django.http import Http404
 from django.http.response import HttpResponseRedirect
+from xworkflows import ForbiddenTransition
 
 from insitu import documents
 from insitu import forms
@@ -149,7 +150,7 @@ class RequirementDelete(ProtectedDeleteView):
 class RequirementTransition(ProtectedDetailView):
     model = models.Requirement
     template_name = 'requirement/transition.html'
-    permission_classes = (IsOwnerUser, )
+    permission_classes = (IsAuthenticated, )
     context_object_name = 'requirement'
 
     def get_context_data(self, **kwargs):
@@ -176,10 +177,14 @@ class RequirementTransition(ProtectedDetailView):
         requirement = self.get_object(self.get_queryset())
         source = self.kwargs.get('source')
         target = self.kwargs.get('target')
-        transition = models.ValidationWorkflow.get_transition(source, target)
-        if not transition:
-            raise Http404()
-        method = getattr(requirement, transition)
-        method()
-        return HttpResponseRedirect(reverse('requirement:detail',
-                                            kwargs={'pk': requirement.pk}))
+        try:
+            transition_name = models.ValidationWorkflow.get_transition(source, target)
+            transition = getattr(requirement, transition_name)
+            requirement.requesting_user = self.request.user
+            if transition.is_available():
+                transition()
+                return HttpResponseRedirect(reverse('requirement:detail',
+                                                    kwargs={'pk': requirement.pk}))
+        except ForbiddenTransition:
+            pass
+        raise Http404()

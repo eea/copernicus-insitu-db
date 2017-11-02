@@ -248,18 +248,19 @@ class RequirementTests(base.FormCheckTestCase):
             self.assertEqual((getattr(item, 'state')).name, 'draft')
 
         transitions = [
-            {'source': 'draft', 'target': 'ready'},
-            {'source': 'ready', 'target': 'draft'},
-            {'source': 'draft', 'target': 'ready'},
-            {'source': 'ready', 'target': 'changes'},
-            {'source': 'changes', 'target': 'draft'},
-            {'source': 'draft', 'target': 'ready'},
-            {'source': 'ready', 'target': 'valid'},
+            {'source': 'draft', 'target': 'ready', 'user': self.creator},
+            {'source': 'ready', 'target': 'draft', 'user': self.creator},
+            {'source': 'draft', 'target': 'ready', 'user': self.creator},
+            {'source': 'ready', 'target': 'changes', 'user': self.other_user},
+            {'source': 'changes', 'target': 'draft', 'user': self.creator},
+            {'source': 'draft', 'target': 'ready', 'user': self.creator},
+            {'source': 'ready', 'target': 'valid', 'user': self.other_user},
         ]
 
         for transition in transitions:
             for item in items:
                 self.assertEqual((getattr(item, 'state')).name, transition['source'])
+            self.client.force_login(transition['user'])
             response = self.client.post(
                 reverse('requirement:transition',
                         kwargs={'source': transition['source'],
