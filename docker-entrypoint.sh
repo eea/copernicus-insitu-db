@@ -13,7 +13,6 @@ done
 
 if [ -z "$1" ]; then
   python manage.py migrate &&
-  python manage.py loaddata picklists &&
   python manage.py collectstatic --noinput &&
   exec gunicorn copernicus.wsgi:application \
          --name insitu \

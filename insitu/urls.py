@@ -49,6 +49,14 @@ product_patterns = [
     url(r'^(?P<pk>[0-9]+)/delete/$',
         views.ProductDelete.as_view(),
         name='delete'),
+
+    url(r'^export$',
+        views.ExportProductView.as_view(),
+        name='export'),
+
+    url(r'import$',
+        views.ImportProductsView.as_view(),
+        name='import')
 ]
 
 data_requirement_patterns = [
@@ -223,9 +231,9 @@ urlpatterns = [
         include(auth_patterns,
                 namespace='auth')),
 
-    url(r'picklists$',
-        views.PicklistsManager.as_view(),
-        name='picklists'),
+    url(r'manage$',
+        views.Manager.as_view(),
+        name='manage'),
 
     url(r'help$',
         views.HelpPage.as_view(),

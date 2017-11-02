@@ -5,8 +5,8 @@ from insitu.views.protected.views import ProtectedTemplateView
 from picklists import models
 
 
-class PicklistsManager(ProtectedTemplateView):
-    template_name = 'picklists.html'
+class Manager(ProtectedTemplateView):
+    template_name = 'manage.html'
     permission_classes = (protected.IsSuperuser,)
     permission_denied_redirect = reverse_lazy('auth:login')
 

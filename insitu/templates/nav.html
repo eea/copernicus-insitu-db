@@ -37,9 +37,9 @@
           </li>
 
           {% if request.user.is_superuser %}
-            {% url 'picklists' as picklists %}
-            <li class="{% active picklists %}">
-              <a href="{{ picklists }}">Manage picklists</a>
+            {% url 'manage' as manage %}
+            <li class="{% active manage %}">
+              <a href="{{ manage }}">Manage picklists and products</a>
             </li>
           {% endif %}
         </ul>
