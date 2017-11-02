@@ -10,8 +10,9 @@ from insitu import models
 from insitu.utils import get_choices
 from insitu.views.base import ESDatatableView, CreatedByMixin
 from insitu.views.protected import (
-    ProtectedTemplateView, ProtectedDetailView,
-    ProtectedUpdateView, ProtectedCreateView, ProtectedDeleteView)
+    LoggingProtectedTemplateView, LoggingProtectedDetailView,
+    LoggingProtectedUpdateView, LoggingProtectedCreateView,
+    LoggingProtectedDeleteView, LoggingTransitionProtectedDetailView)
 from picklists import models as pickmodels
 from insitu.views.protected.permissions import (
     IsAuthenticated,
@@ -50,20 +51,22 @@ class GetInitialMixin:
         return initial_data.copy()
 
 
-class RequirementDetail(ProtectedDetailView):
+class RequirementDetail(LoggingProtectedDetailView):
     template_name = 'requirement/detail.html'
     model = models.Requirement
     context_object_name = 'requirement'
     permission_classes = (IsAuthenticated,)
+    target_type = 'requirement'
 
     def permission_denied(self, request):
         self.permission_denied_redirect = reverse('auth:login')
         return super().permission_denied(request)
 
 
-class RequirementList(ProtectedTemplateView):
+class RequirementList(LoggingProtectedTemplateView):
     template_name = 'requirement/list.html'
     permission_classes = (IsAuthenticated, )
+    target_type = 'requirements'
 
     def permission_denied(self, request):
         self.permission_denied_redirect = reverse('auth:login')
@@ -94,16 +97,22 @@ class RequirementListJson(ESDatatableView):
     permission_classes = (IsAuthenticated, )
 
 
-class RequirementAdd(GetInitialMixin, CreatedByMixin, ProtectedCreateView):
+class RequirementAdd(GetInitialMixin, CreatedByMixin,
+                     LoggingProtectedCreateView):
     template_name = 'requirement/add.html'
     model = models.Requirement
     permission_classes = (IsAuthenticated, )
+    target_type = 'requirement'
 
     def get_form_class(self):
         requirement = self.get_requirement()
         if requirement:
+            self.post_action = 'cloned requirement {pk} to'.format(
+                pk=requirement.pk)
+            self.post_action_failed = 'tried to clone object {pk} of'.format(
+                pk=requirement.pk
+            )
             return forms.RequirementCloneForm
-
         return forms.RequirementForm
 
     def permission_denied(self, request):
@@ -115,12 +124,13 @@ class RequirementAdd(GetInitialMixin, CreatedByMixin, ProtectedCreateView):
         return reverse('requirement:detail', kwargs={'pk': instance.pk})
 
 
-class RequirementEdit(GetInitialMixin, ProtectedUpdateView):
+class RequirementEdit(GetInitialMixin, LoggingProtectedUpdateView):
     template_name = 'requirement/edit.html'
     form_class = forms.RequirementForm
     model = models.Requirement
     context_object_name = 'requirement'
     permission_classes = (IsOwnerUser, IsDraftObject)
+    target_type = 'requirement'
 
     def permission_denied(self, request):
         self.permission_denied_redirect = reverse('requirement:list')
@@ -132,12 +142,14 @@ class RequirementEdit(GetInitialMixin, ProtectedUpdateView):
                        kwargs={'pk': instance.pk})
 
 
-class RequirementDelete(ProtectedDeleteView):
+class RequirementDelete(LoggingProtectedDeleteView):
+
     template_name = 'requirement/delete.html'
     form_class = forms.RequirementForm
     model = models.Requirement
     context_object_name = 'requirement'
     permission_classes = (IsOwnerUser, IsDraftObject)
+    target_type = 'requirement'
 
     def permission_denied(self, request):
         self.permission_denied_redirect = reverse('requirement:list')
@@ -147,11 +159,12 @@ class RequirementDelete(ProtectedDeleteView):
         return reverse('requirement:list')
 
 
-class RequirementTransition(ProtectedDetailView):
+class RequirementTransition(LoggingTransitionProtectedDetailView):
     model = models.Requirement
     template_name = 'requirement/transition.html'
     permission_classes = (IsAuthenticated, )
     context_object_name = 'requirement'
+    target_type = 'requirement'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -177,6 +190,12 @@ class RequirementTransition(ProtectedDetailView):
         requirement = self.get_object(self.get_queryset())
         source = self.kwargs.get('source')
         target = self.kwargs.get('target')
+        self.post_action = 'changed state from {source} to {target} for'.format(
+            source=source,
+            target=target
+        )
+        id = self.get_object_id()
+        self.log_action(request, self.post_action, id)
         try:
             transition_name = models.ValidationWorkflow.get_transition(source, target)
             transition = getattr(requirement, transition_name)

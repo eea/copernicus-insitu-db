@@ -14,7 +14,8 @@ from insitu.views.base import ESDatatableView
 from insitu.views.protected import (
     ProtectedView,
     ProtectedTemplateView, ProtectedDetailView,
-    ProtectedUpdateView, ProtectedCreateView, ProtectedDeleteView)
+    ProtectedUpdateView, ProtectedCreateView,
+    ProtectedDeleteView)
 from insitu.views.protected.permissions import (
     IsAuthenticated,
     IsSuperuser,
@@ -26,6 +27,7 @@ class ProductList(ProtectedTemplateView):
     template_name = 'product/list.html'
     permission_classes = (IsAuthenticated, )
     permission_denied_redirect = None
+    target_type = 'products'
 
     def permission_denied(self, request):
         self.permission_denied_redirect = reverse('auth:login')
@@ -79,6 +81,7 @@ class ProductAdd(ProtectedCreateView):
     template_name = 'product/add.html'
     form_class = forms.ProductForm
     permission_classes = (IsSuperuser, )
+    target_type = 'product'
 
     def permission_denied(self, request):
         self.permission_denied_redirect = reverse('product:list')
@@ -94,6 +97,7 @@ class ProductEdit(ProtectedUpdateView):
     model = models.Product
     context_object_name = 'product'
     permission_classes = (IsSuperuser, )
+    target_type = 'product'
 
     def permission_denied(self, request):
         self.permission_denied_redirect = reverse('product:list')
@@ -109,6 +113,7 @@ class ProductDetail(ProtectedDetailView):
     model = models.Product
     context_object_name = 'product'
     permission_classes = (IsAuthenticated, )
+    target_type = 'product'
 
     def permission_denied(self, request):
         self.permission_denied_redirect = reverse('auth:login')
@@ -122,6 +127,7 @@ class ProductDelete(ProtectedDeleteView):
     model = models.Product
     context_object_name = 'product'
     permission_classes = (IsSuperuser, )
+    target_type = 'product'
 
     def permission_denied(self, request):
         self.permission_denied_redirect = reverse('product:list')

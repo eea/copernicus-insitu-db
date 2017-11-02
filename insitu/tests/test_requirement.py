@@ -13,15 +13,15 @@ class RequirementTests(base.FormCheckTestCase):
     related_entities_updated = ['uncertainty', 'update_frequency', 'timeliness',
                                 'horizontal_resolution', 'vertical_resolution']
     related_entities_fields = ['threshold', 'breakthrough', 'goal']
+    target_type = 'requirement'
 
     def setUp(self):
         super().setUp()
         dissemination = base.DisseminationFactory()
         quality_control_procedure = base.QualityControlProcedureFactory()
         group = base.RequirementGroupFactory()
-        provider_user = base.UserFactory()
-        self.client.force_login(provider_user)
-
+        self.creator = base.UserFactory(username='New User 1')
+        self.client.force_login(self.creator)
         self._DATA = {
             'name': 'TEST requirement',
             'note': 'TEST note',
@@ -87,14 +87,17 @@ class RequirementTests(base.FormCheckTestCase):
         self.assertIs(data['recordsFiltered'], 1)
 
     def test_list_requirements(self):
+        self.erase_logging_file()
         metrics = base.RequirementFactory.create_metrics(self.creator)
         base.RequirementFactory(name="Test requirement",
                                 created_by=self.creator,
                                 **metrics)
         resp = self.client.get(reverse('requirement:list'))
         self.assertTemplateUsed(resp, 'requirement/list.html')
+        self.logging()
 
     def test_detail_requirement(self):
+        self.erase_logging_file()
         metrics = base.RequirementFactory.create_metrics(self.creator)
         requirement = base.RequirementFactory(name="Test requirement",
                                               created_by=self.creator,
@@ -102,6 +105,7 @@ class RequirementTests(base.FormCheckTestCase):
         resp = self.client.get(reverse('requirement:detail',
                                        kwargs={'pk': requirement.pk}))
         self.assertEqual(resp.context['requirement'], requirement)
+        self.logging()
 
     def test_create_requirement_fields_required(self):
         data = {}
@@ -113,12 +117,15 @@ class RequirementTests(base.FormCheckTestCase):
         self.assertEqual(resp.status_code, 200)
 
     def test_create_requirement(self):
+        self.erase_logging_file()
         data = self._DATA
         resp = self.client.post(reverse('requirement:add'), data)
         self.assertEqual(resp.status_code, 302)
         self.check_single_object(models.Requirement, data)
+        self.logging()
 
     def test_get_add_with_clone(self):
+        self.erase_logging_file()
         metrics = base.RequirementFactory.create_metrics(self.creator)
         requirement = base.RequirementFactory(name="Test requirement",
                                               created_by=self.creator,
@@ -129,6 +136,7 @@ class RequirementTests(base.FormCheckTestCase):
         form_data = [ value for field, value in resp.context['form'].initial.items()]
         for value in form_data:
             self.assertTrue(value)
+        self.logging()
 
     def test_post_add_with_clone_duplicate_error(self):
         metrics = base.RequirementFactory.create_metrics(self.creator)
@@ -146,6 +154,7 @@ class RequirementTests(base.FormCheckTestCase):
         )
 
     def test_post_add_with_clone(self):
+        self.erase_logging_file()
         metrics = base.RequirementFactory.create_metrics(self.creator)
         requirement = base.RequirementFactory(name="Test requirement",
                                               created_by=self.creator,
@@ -160,6 +169,7 @@ class RequirementTests(base.FormCheckTestCase):
         requirement.delete()
         self.assertEqual(resp.status_code, 302)
         self.check_single_object(models.Requirement, cloned_data)
+        self.logging()
 
     def test_get_edit_requirement(self):
         self.login_creator()
@@ -175,6 +185,7 @@ class RequirementTests(base.FormCheckTestCase):
 
     def test_edit_requirement(self):
         self.login_creator()
+        self.erase_logging_file()
         metrics = base.RequirementFactory.create_metrics(self.creator)
         requirement = base.RequirementFactory(name="Test requirement",
                                               created_by=self.creator,
@@ -184,6 +195,7 @@ class RequirementTests(base.FormCheckTestCase):
                                         kwargs={'pk': requirement.pk}), data)
         self.assertEqual(resp.status_code, 302)
         self.check_single_object(models.Requirement, data)
+        self.logging()
 
     def test_get_delete_requirement(self):
         self.login_creator()
@@ -226,6 +238,7 @@ class RequirementTests(base.FormCheckTestCase):
         self.check_objects_are_soft_deleted(models.DataRequirement)
 
     def test_transition(self):
+        self.erase_logging_file()
         self.login_creator()
         metrics = base.RequirementFactory.create_metrics(self.creator)
         requirement = base.RequirementFactory(name="Test requirement",
@@ -271,6 +284,7 @@ class RequirementTests(base.FormCheckTestCase):
             for item in items:
                 getattr(item, 'refresh_from_db')()
                 self.assertEqual((getattr(item, 'state')).name, transition['target'])
+        self.logging(check_username=False)
 
     def test_transition_inexistent_state(self):
         self.login_creator()

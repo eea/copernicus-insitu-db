@@ -4,7 +4,10 @@ from insitu import models
 from insitu import forms
 from insitu.views.base import CreatedByMixin
 from insitu.views.protected import (
-    ProtectedUpdateView, ProtectedCreateView, ProtectedDeleteView)
+    LoggingProtectedUpdateView,
+    LoggingProtectedCreateView,
+    LoggingProtectedDeleteView
+)
 from insitu.views.protected.permissions import (
     IsOwnerUser,
     IsDraftObject,
@@ -12,7 +15,7 @@ from insitu.views.protected.permissions import (
 )
 
 
-class DataRequirementAdd(CreatedByMixin, ProtectedCreateView):
+class DataRequirementAdd(CreatedByMixin, LoggingProtectedCreateView):
     template_name = 'data/requirement/add.html'
     permission_classes = (IsAuthenticated, )
     permission_denied_redirect = reverse_lazy('requirement:list')
@@ -20,6 +23,7 @@ class DataRequirementAdd(CreatedByMixin, ProtectedCreateView):
     form_field = 'requirement'
     model = models.Requirement
     title = "Add a new data for {}"
+    target_type = 'relation between data and data provider'
 
     def get_form(self):
         form = super().get_form(self.form_class)
@@ -39,13 +43,14 @@ class DataRequirementAdd(CreatedByMixin, ProtectedCreateView):
                             kwargs={'pk': self.kwargs['requirement_pk']})
 
 
-class DataRequirementEdit(ProtectedUpdateView):
+class DataRequirementEdit(LoggingProtectedUpdateView):
     model = models.DataRequirement
     template_name = 'data/requirement/edit.html'
     form_class = forms.DataRequirementEditForm
     context_object_name = 'rel'
     permission_classes = (IsOwnerUser, IsDraftObject)
     permission_denied_redirect = reverse_lazy('requirement:list')
+    target_type = 'relation between data and data provider'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -57,12 +62,13 @@ class DataRequirementEdit(ProtectedUpdateView):
                             kwargs={'pk': self.kwargs['requirement_pk']})
 
 
-class DataRequirementDelete(ProtectedDeleteView):
+class DataRequirementDelete(LoggingProtectedDeleteView):
     model = models.DataRequirement
     template_name = 'data/requirement/delete.html'
     context_object_name = 'rel'
     permission_classes = (IsOwnerUser, IsDraftObject)
     permission_denied_redirect = reverse_lazy('requirement:list')
+    target_type = 'relation between data and data provider'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)

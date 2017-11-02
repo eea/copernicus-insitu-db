@@ -11,6 +11,7 @@ class ProductTests(base.FormCheckTestCase):
     related_fields = ['group', 'component', 'status', 'coverage']
     required_fields = ['name', 'group', 'component',
                        'status', 'coverage']
+    target_type = 'product'
 
     def setUp(self):
         super().setUp()
@@ -18,7 +19,8 @@ class ProductTests(base.FormCheckTestCase):
         component = base.ComponentFactory()
         status = base.ProductStatusFactory()
         coverage = base.CoverageFactory()
-        provider_user = base.UserFactory(is_superuser=True)
+        self.user = provider_user = base.UserFactory(is_superuser=True,
+                                                     username='New user 1')
         self.client.force_login(provider_user)
         self._DATA = {
             'acronym': 'TST',

@@ -5,9 +5,17 @@ from django.http import HttpResponseForbidden
 from django.shortcuts import redirect
 from django.views.generic.base import View, TemplateView
 from django.views.generic.detail import DetailView
-from django.views.generic.edit import (FormView, FormMixin, UpdateView, DeleteView,
-                                       CreateView)
+from django.views.generic.edit import (FormView, FormMixin, UpdateView,
+                                       DeleteView, CreateView)
 from django.views.generic.list import ListView
+from insitu.views.action_logging.base_logging import (
+    ListLoggingView,
+    UpdateLoggingView,
+    CreateLoggingView,
+    DeleteLoggingView,
+    DetailLoggingView,
+    TrasitionLoggingView,
+)
 
 
 class ProtectedViewBase(type):
@@ -99,6 +107,26 @@ class ProtectedDetailView(ProtectedObjectMixin,
     pass
 
 
+class LoggingProtectedDetailView(DetailLoggingView,
+                                 ProtectedObjectMixin,
+                                 ProtectedView,
+                                 DetailView):
+    """
+    Convenience view adding permissions and logging
+    support to `django.views.generic.DetailView`.
+    """
+    pass
+
+
+class LoggingTransitionProtectedDetailView(TrasitionLoggingView,
+                                           ProtectedDetailView):
+    """
+    Convenience view adding permissions and logging
+    support for transition view.
+    """
+    pass
+
+
 class ProtectedListView(ProtectedView,
                         ListView):
     """
@@ -110,9 +138,20 @@ class ProtectedListView(ProtectedView,
 
 class ProtectedTemplateView(ProtectedView,
                             TemplateView):
+
     """
     Convenience view adding permissions support to
     `django.views.generic.TemplateView`.
+    """
+    pass
+
+
+class LoggingProtectedTemplateView(ListLoggingView,
+                                   ProtectedView,
+                                   TemplateView):
+    """
+    Convenience view adding permissions and logging
+     support to `django.views.generic.TemplateView`.
     """
     pass
 
@@ -141,6 +180,17 @@ class ProtectedCreateView(ProtectedView,
     pass
 
 
+class LoggingProtectedCreateView(CreateLoggingView,
+                                 ProtectedView,
+                                 CreateView,
+                                 metaclass=ProtectedFormViewBase):
+    """
+    Convenience view adding permissions and logging
+    support to `django.views.generic.CreateView`.
+    """
+    pass
+
+
 class ProtectedUpdateView(ProtectedObjectMixin,
                           ProtectedView,
                           UpdateView,
@@ -148,6 +198,18 @@ class ProtectedUpdateView(ProtectedObjectMixin,
     """
     Convenience view adding permissions support to
     `django.views.generic.UpdateView`.
+    """
+    pass
+
+
+class LoggingProtectedUpdateView(UpdateLoggingView,
+                                 ProtectedObjectMixin,
+                                 ProtectedView,
+                                 UpdateView,
+                                 metaclass=ProtectedFormViewBase):
+    """
+    Convenience view adding permissions and logging
+    support to `django.views.generic.UpdateView`.
     """
     pass
 
@@ -160,5 +222,18 @@ class ProtectedDeleteView(ProtectedObjectMixin,
     """
     Convenience view adding permissions support to
     `django.views.generic.DeleteView`.
+    """
+    pass
+
+
+class LoggingProtectedDeleteView(DeleteLoggingView,
+                                 ProtectedObjectMixin,
+                                 ProtectedView,
+                                 DeleteView,
+                                 metaclass=ProtectedFormViewBase):
+
+    """
+    Convenience view adding permissions and logging
+    support to `django.views.generic.DeleteView`.
     """
     pass

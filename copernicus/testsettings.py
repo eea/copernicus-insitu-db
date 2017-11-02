@@ -18,3 +18,6 @@ ELASTICSEARCH_DSL = {
 }
 
 SECRET_KEY = 'app_tests_secret_key'
+
+
+LOGGING_CSV_FILENAME = 'test-user-actions.csv'
