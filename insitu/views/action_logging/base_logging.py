@@ -44,8 +44,8 @@ class PostMethodLoggingView(BaseLoggingView):
 
     def post(self, request, *args, **kwargs):
         response = super().post(request, *args, **kwargs)
-        errors = self.get_form().errors
         action = self.post_action
+        errors = self.get_form().errors
         if errors:
             self.extra = json.dumps(errors)
             action = self.post_action_failed
@@ -114,6 +114,13 @@ class ListLoggingView(GetMethodLoggingView):
 
 class DetailLoggingView(GetMethodLoggingView):
     get_action = 'visited detail page of'
+
+    def get_object_id(self):
+        return self.get_object().id
+
+
+class TrasitionLoggingView(GetMethodLoggingView):
+    get_action = 'visited transition page of '
 
     def get_object_id(self):
         return self.get_object().id

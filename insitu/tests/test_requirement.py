@@ -238,6 +238,7 @@ class RequirementTests(base.FormCheckTestCase):
         self.check_objects_are_soft_deleted(models.DataRequirement)
 
     def test_transition(self):
+        self.erase_logging_file()
         self.login_creator()
         metrics = base.RequirementFactory.create_metrics(self.creator)
         requirement = base.RequirementFactory(name="Test requirement",
@@ -283,6 +284,7 @@ class RequirementTests(base.FormCheckTestCase):
             for item in items:
                 getattr(item, 'refresh_from_db')()
                 self.assertEqual((getattr(item, 'state')).name, transition['target'])
+        self.logging(check_username=False)
 
     def test_transition_inexistent_state(self):
         self.login_creator()

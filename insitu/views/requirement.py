@@ -12,7 +12,7 @@ from insitu.views.base import ESDatatableView, CreatedByMixin
 from insitu.views.protected import (
     LoggingProtectedTemplateView, LoggingProtectedDetailView,
     LoggingProtectedUpdateView, LoggingProtectedCreateView,
-    LoggingProtectedDeleteView, ProtectedDetailView)
+    LoggingProtectedDeleteView, LoggingTransitionProtectedDetailView)
 from picklists import models as pickmodels
 from insitu.views.protected.permissions import (
     IsAuthenticated,
@@ -159,11 +159,12 @@ class RequirementDelete(LoggingProtectedDeleteView):
         return reverse('requirement:list')
 
 
-class RequirementTransition(ProtectedDetailView):
+class RequirementTransition(LoggingTransitionProtectedDetailView):
     model = models.Requirement
     template_name = 'requirement/transition.html'
     permission_classes = (IsAuthenticated, )
     context_object_name = 'requirement'
+    target_type = 'requirement'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -189,6 +190,12 @@ class RequirementTransition(ProtectedDetailView):
         requirement = self.get_object(self.get_queryset())
         source = self.kwargs.get('source')
         target = self.kwargs.get('target')
+        self.post_action = 'changed state from {source} to {target} for'.format(
+            source=source,
+            target=target
+        )
+        id = self.get_object_id()
+        self.log_action(request, self.post_action, id)
         try:
             transition_name = models.ValidationWorkflow.get_transition(source, target)
             transition = getattr(requirement, transition_name)

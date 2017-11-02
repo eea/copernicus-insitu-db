@@ -14,6 +14,7 @@ from insitu.views.action_logging.base_logging import (
     CreateLoggingView,
     DeleteLoggingView,
     DetailLoggingView,
+    TrasitionLoggingView,
 )
 
 
@@ -113,6 +114,15 @@ class LoggingProtectedDetailView(DetailLoggingView,
     """
     Convenience view adding permissions and logging
     support to `django.views.generic.DetailView`.
+    """
+    pass
+
+
+class LoggingTransitionProtectedDetailView(TrasitionLoggingView,
+                                           ProtectedDetailView):
+    """
+    Convenience view adding permissions and logging
+    support for transition view.
     """
     pass
 

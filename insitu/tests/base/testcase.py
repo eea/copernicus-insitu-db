@@ -27,12 +27,13 @@ class FormCheckTestCase(TestCase):
         file_name = LOGGING_CSV_FILENAME
         open(file_name, 'w').close()
 
-    def logging(self):
+    def logging(self, check_username=True):
         file_name = LOGGING_CSV_FILENAME
         with open(file_name, 'r') as csv_file:
             spamreader = csv.reader(csv_file, delimiter=',')
             for row in spamreader:
-                self.assertEqual(row[1], self.creator.username)
+                if check_username:
+                    self.assertEqual(row[1], self.creator.username)
                 self.assertTrue(self.target_type in row[3])
 
     def check_required_errors(self, resp, errors):
