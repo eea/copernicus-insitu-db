@@ -47,6 +47,15 @@ INSTALLED_APPS = [
     'django.contrib.admin',
 ]
 
+if not DEBUG:
+    import os
+
+    INSTALLED_APPS += ['raven.contrib.django.raven_compat', ]
+
+    RAVEN_CONFIG = {
+        'dsn': env('SENTRY_DSN'),
+    }
+
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -70,6 +79,10 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'insitu.context_processors.google_analytics',
+                'insitu.context_processors.crazy_egg',
+                'insitu.context_processors.sentry',
+
             ],
         },
     },
@@ -145,3 +158,9 @@ SUIT_CONFIG = {
 }
 
 LOGGING_CSV_FILENAME = env('LOGGING_CSV_FILENAME', 'user-actions-logging.csv')
+
+
+GOOGLE_ANALYTICS_PROPERTY_ID = env('GOOGLE_ANALYTICS_PROPERTY_ID', '')
+GOOGLE_ANALYTICS_DOMAIN = env('GOOGLE_ANALYTICS_DOMAIN', '')
+
+CRAZY_EGG = env('CRAZY_EGG', '')

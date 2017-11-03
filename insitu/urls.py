@@ -237,5 +237,8 @@ urlpatterns = [
 
     url(r'help$',
         views.HelpPage.as_view(),
-        name='help')
+        name='help'),
+    url(r'crashme$',
+        views.Crashme.as_view(),
+        name='crashme')
 ]

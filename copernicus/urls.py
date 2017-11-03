@@ -16,6 +16,8 @@ Including another URLconf
 from django.conf.urls import url, include
 from django.contrib import admin
 
+handler500 = 'insitu.views.errors.handler500'
+
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^', include('insitu.urls')),

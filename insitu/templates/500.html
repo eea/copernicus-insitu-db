@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    {% if sentry_id %}
+      <script src="https://cdn.ravenjs.com/2.3.0/raven.min.js"></script>
+      <script>
+      Raven.showReportDialog({
+        eventId: '{{ sentry_id }}',
+        // use the public DSN (dont include your secret!)
+        dsn: '{{ sentry_public_id }}'
+      });
+      </script>
+    {% endif %}
+  </head>
+  <body>
+    <h1>Internal Server Error</h1>
+  </body>
+</html>
+

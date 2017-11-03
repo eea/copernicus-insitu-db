@@ -15,6 +15,33 @@
     {% block title %}
     {% endblock %}
     </title>
+    {% if sentry_public_id %}
+    <script src="https://cdn.ravenjs.com/3.17.0/raven.min.js" crossorigin="anonymous"></script>
+    <script>
+      Raven.config('{{ sentry_public_id }}').install()
+      Raven.setUserContext({
+        email: '{{ request.user.email }}',
+        username: '{{ request.user.username }}',
+        id: '{{ request.user.id }}',
+      })
+    </script>
+    {% endif %}
+    {% if GOOGLE_ANALYTICS_PROPERTY_ID %}
+      <script>
+        (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+        })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+        ga('create', '{{ GOOGLE_ANALYTICS_PROPERTY_ID }}', '{{ GOOGLE_ANALYTICS_DOMAIN }}');
+        ga('send', 'pageview');
+
+      </script>
+    {% endif %}
+
+    {% if CRAZY_EGG %}
+        <script type="text/javascript" src="{{ CRAZY_EGG }}" async="async"></script>
+    {% endif %}
   </head>
   <body>
     {% include 'nav.html' %}

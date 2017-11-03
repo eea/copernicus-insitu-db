@@ -7,6 +7,7 @@ from .data_provider_relation import *
 from .data_requirement import *
 from .user import *
 from .management import *
+from .crash_me import *
 
 from django.views.generic import TemplateView
 
