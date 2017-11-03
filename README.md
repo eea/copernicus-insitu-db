@@ -104,7 +104,7 @@ is not executed:
 * If your host runs ubuntu your elasticsearch container may fail to run with the error "bootstrap checks failed". This happens because max map count is set under the value __26214__
 * You can fix this temporarily(till you restart your machine) by running:
 
-        sudo sysctl -w vm.max_map_count=262144(till you restart your machine)
+        sudo sysctl -w vm.max_map_count=262144
 * You can fix this permanently by modifying your max_map_count file:
 
         sudo vim /proc/sys/vm/max_map_count
