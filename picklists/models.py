@@ -14,8 +14,6 @@ class Country(models.Model):
     code = models.CharField(max_length=2, primary_key=True)
     name = models.CharField(max_length=100)
 
-    objects = SortedManager()
-
     class Meta:
         ordering = ['name']
         verbose_name_plural = 'countries'

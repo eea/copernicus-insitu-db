@@ -14,6 +14,9 @@ local_settings.py
 # macOS specific files
 *.DS_Store
 
+# Logging
+*.csv
+
 # Docker conf
 env/*.env
 docker-compose.yml
