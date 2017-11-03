@@ -98,3 +98,14 @@ is not executed:
         # ./manage.py runserver 0.0.0.0:8000
 
 * See it in action: [http://localhost:8000](http://localhost:8000)
+
+
+## Ubuntu elasticsearch container error:
+* If your host runs ubuntu your elasticsearch container may fail to run with the error "bootstrap checks failed". This happens because max map count is set under the value __26214__
+* You can fix this temporarily(till you restart your machine) by running:
+
+        sudo sysctl -w vm.max_map_count=262144(till you restart your machine)
+* You can fix this permanently by modifying your max_map_count file:
+
+        sudo vim /proc/sys/vm/max_map_count
+  Change the value from the file with 262144 and save
