@@ -32,8 +32,9 @@ class HelpPage(ProtectedTemplateView):
         for model in PICKLISTS:
             data = {
                 'nice_name': model._meta.verbose_name,
-                'manager': model.objects,
-                'fields': [field.name for field in model._meta.fields]
+                'objects': model.objects.order_by('pk'),
+                'fields': [field.name for field in model._meta.fields
+                           if field.name not in ('id', 'sort_order')]
             }
             context['models'][model._meta.model_name] = data
         return context

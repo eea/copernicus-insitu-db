@@ -53,10 +53,10 @@ class ProductList(ProtectedTemplateView):
 
 
 class ProductListJson(ESDatatableView):
-    columns = ['acronym', 'name', 'group', 'service', 'component', 'entity',
+    columns = ['name', 'service', 'entity', 'component', 'group',
                'status', 'coverage']
     order_columns = columns
-    filters = ['service', 'group', 'status', 'coverage', 'component', 'entity']
+    filters = ['service', 'entity', 'component', 'group', 'status', 'coverage']
     document = documents.ProductDoc
     permission_classes = (IsAuthenticated, )
 

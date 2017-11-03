@@ -4,9 +4,17 @@ from __future__ import unicode_literals
 from django.db import models
 
 
+class SortedManager(models.Manager):
+
+    def get_queryset(self):
+        return super().get_queryset().order_by('sort_order')
+
+
 class Country(models.Model):
     code = models.CharField(max_length=2, primary_key=True)
     name = models.CharField(max_length=100)
+
+    objects = SortedManager()
 
     class Meta:
         ordering = ['name']
@@ -22,6 +30,8 @@ class InspireTheme(models.Model):
     description = models.TextField(blank=True)
     sort_order = models.IntegerField()
     link = models.CharField(max_length=100, blank=True)
+
+    objects = SortedManager()
 
     class Meta:
         ordering = ['sort_order']
@@ -42,6 +52,8 @@ class EssentialVariable(models.Model):
     sort_order = models.IntegerField()
     link = models.CharField(max_length=100, blank=True)
 
+    objects = SortedManager()
+
     class Meta:
         ordering = ['sort_order']
 
@@ -60,6 +72,8 @@ class ProductStatus(models.Model):
     sort_order = models.IntegerField()
     link = models.CharField(max_length=300, blank=True)
 
+    objects = SortedManager()
+
     class Meta:
         ordering = ['sort_order']
         verbose_name_plural = 'product status'
@@ -73,6 +87,8 @@ class ProductGroup(models.Model):
     description = models.TextField(blank=True)
     sort_order = models.IntegerField()
 
+    objects = SortedManager()
+
     class Meta:
         ordering = ['sort_order']
 
@@ -84,6 +100,8 @@ class RequirementGroup(models.Model):
     name = models.CharField(max_length=100)
     description = models.TextField(blank=True)
     sort_order = models.IntegerField()
+
+    objects = SortedManager()
 
     class Meta:
         ordering = ['sort_order']
@@ -98,6 +116,8 @@ class DefinitionLevel(models.Model):
     sort_order = models.IntegerField()
     link = models.CharField(max_length=100, blank=True)
 
+    objects = SortedManager()
+
     class Meta:
         ordering = ['sort_order']
 
@@ -110,6 +130,8 @@ class Relevance(models.Model):
     description = models.TextField(blank=True)
     sort_order = models.IntegerField()
     link = models.CharField(max_length=100, blank=True)
+
+    objects = SortedManager()
 
     class Meta:
         ordering = ['sort_order']
@@ -125,6 +147,8 @@ class Criticality(models.Model):
     sort_order = models.IntegerField()
     link = models.CharField(max_length=100, blank=True)
 
+    objects = SortedManager()
+
     class Meta:
         ordering = ['sort_order']
         verbose_name_plural = 'criticality'
@@ -138,6 +162,8 @@ class Barrier(models.Model):
     description = models.TextField(blank=True)
     sort_order = models.IntegerField()
 
+    objects = SortedManager()
+
     class Meta:
         ordering = ['sort_order']
 
@@ -150,6 +176,8 @@ class Dissemination(models.Model):
     description = models.TextField(blank=True)
     sort_order = models.IntegerField()
     link = models.CharField(max_length=100, blank=True)
+
+    objects = SortedManager()
 
     class Meta:
         ordering = ['sort_order']
@@ -165,6 +193,8 @@ class Coverage(models.Model):
     sort_order = models.IntegerField()
     link = models.CharField(max_length=100, blank=True)
 
+    objects = SortedManager()
+
     class Meta:
         ordering = ['sort_order']
         verbose_name_plural = 'coverage'
@@ -178,6 +208,8 @@ class QualityControlProcedure(models.Model):
     description = models.TextField(blank=True)
     sort_order = models.IntegerField()
     link = models.CharField(max_length=100, blank=True)
+
+    objects = SortedManager()
 
     class Meta:
         ordering = ['sort_order']
@@ -193,6 +225,8 @@ class ComplianceLevel(models.Model):
     sort_order = models.IntegerField()
     link = models.CharField(max_length=100, blank=True)
 
+    objects = SortedManager()
+
     class Meta:
         ordering = ['sort_order']
 
@@ -205,6 +239,8 @@ class UpdateFrequency(models.Model):
     description = models.TextField(blank=True)
     sort_order = models.IntegerField()
     link = models.CharField(max_length=100, blank=True)
+
+    objects = SortedManager()
 
     class Meta:
         ordering = ['sort_order']
@@ -220,6 +256,8 @@ class Timeliness(models.Model):
     sort_order = models.IntegerField()
     link = models.CharField(max_length=100, blank=True)
 
+    objects = SortedManager()
+
     class Meta:
         ordering = ['sort_order']
         verbose_name_plural = 'timeliness'
@@ -233,6 +271,8 @@ class Policy(models.Model):
     description = models.TextField(blank=True)
     sort_order = models.IntegerField()
     link = models.CharField(max_length=100, blank=True)
+
+    objects = SortedManager()
 
     class Meta:
         ordering = ['sort_order']
@@ -248,6 +288,8 @@ class DataType(models.Model):
     sort_order = models.IntegerField()
     link = models.CharField(max_length=100, blank=True)
 
+    objects = SortedManager()
+
     class Meta:
         ordering = ['sort_order']
 
@@ -261,6 +303,8 @@ class DataFormat(models.Model):
     sort_order = models.IntegerField()
     link = models.CharField(max_length=100, blank=True)
 
+    objects = SortedManager()
+
     class Meta:
         ordering = ['sort_order']
 
@@ -273,6 +317,8 @@ class ProviderType(models.Model):
     description = models.TextField(blank=True)
     sort_order = models.IntegerField()
     link = models.CharField(max_length=100, blank=True)
+
+    objects = SortedManager()
 
     def __str__(self):
         return self.name
