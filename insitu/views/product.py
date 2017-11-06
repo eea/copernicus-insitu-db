@@ -201,7 +201,6 @@ class ImportProductsView(ProtectedView):
                     for col in ws.iter_cols(min_row=1, max_row=1)
                     if col[0].value is not None
                 ]
-                print(fields)
                 for row in ws.iter_rows(min_row=2):
                     data = {}
                     pk = row[0].value
@@ -213,7 +212,6 @@ class ImportProductsView(ProtectedView):
                         data[field] = value
                     if not [val for val in data.values() if val]:
                         continue
-                    print(pk, data)
                     models.Product.objects.update_or_create(pk=pk, defaults=data)
         except:
             return HttpResponse(status=400)
