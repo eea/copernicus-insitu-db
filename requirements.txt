@@ -11,3 +11,6 @@ raven==6.1.0
 openpyxl==2.4.8
 xworkflows==1.0.4
 django-xworkflows==0.12.1
+django-compat==1.0.14
+django-hijack==2.1.4
+django-hijack-admin==2.1.4

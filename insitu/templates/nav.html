@@ -9,7 +9,7 @@
               aria-expanded="false">
         <span class="sr-only">Toggle navigation</span>
       </button>
-      <a class="navbar-brand" href="{% url 'home' %}">Copernicus In Situ Database</a>
+      <a class="navbar-brand" href="{% url 'home' %}">CIS<sup>2</sup></a>
     </div>
 
     <!-- Collect the nav links, forms, and other content for toggling -->
@@ -39,17 +39,25 @@
           {% if request.user.is_superuser %}
             {% url 'manage' as manage %}
             <li class="{% active manage %}">
-              <a href="{{ manage }}">Manage picklists and products</a>
+              <a href="{{ manage }}">Management</a>
             </li>
           {% endif %}
         </ul>
       {% endif %}
       <ul class="pull-right nav navbar-nav">
         {% if user.is_authenticated %}
-          {% url 'help' as help %}
+           <li>
+            <a>Hello, {{ user.username }}</a>
+          </li>         {% url 'help' as help %}
           <li class="{% active help %}">
             <a href="{{ help }}">
               <span class="glyphicon glyphicon-question-sign"></span> Help
+            </a>
+          </li>
+          {% url 'auth:change_password' as change_password %}
+          <li class="{% active change_password %}">
+            <a href="{{ change_password }}">
+              Change password
             </a>
           </li>
           {% if user.is_superuser %}
@@ -59,9 +67,6 @@
             </li>
           {% endif %}
           {% url 'auth:logout' as logout %}
-          <li>
-            <a>Hello, {{ user.username }}</a>
-          </li>
           <li class="{% active logout %}">
             <a href="{{ logout }}">Logout</a>
           </li>

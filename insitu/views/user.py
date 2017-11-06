@@ -1,6 +1,7 @@
 from django.core.urlresolvers import reverse
-from django.contrib.auth.forms import AuthenticationForm
+from django.contrib.auth.forms import AuthenticationForm, PasswordChangeForm
 from django.contrib.auth import login as auth_login, logout as auth_logout
+from django.http import HttpResponse
 from django.shortcuts import redirect
 from django.views.generic import FormView, RedirectView
 
@@ -30,3 +31,18 @@ class LogoutView(RedirectView):
     def get(self, request, *args, **kwargs):
         auth_logout(request)
         return super(LogoutView, self).get(request, *args, **kwargs)
+
+
+class ChangePasswordView(FormView):
+    success_url = '/'
+    template_name = 'auth/change_password.html'
+    form_class = PasswordChangeForm
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs['user'] = self.request.user
+        return kwargs
+
+    def form_valid(self, form):
+        form.save()
+        return super().form_valid(form)

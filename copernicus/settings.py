@@ -41,6 +41,9 @@ INSTALLED_APPS = [
     'django_elasticsearch_dsl',
     'bootstrap3',
     'django_xworkflows',
+    'hijack',
+    'compat',
+    'hijack_admin',
     'picklists',
     'insitu',
     'suit',
@@ -164,3 +167,10 @@ GOOGLE_ANALYTICS_PROPERTY_ID = env('GOOGLE_ANALYTICS_PROPERTY_ID', '')
 GOOGLE_ANALYTICS_DOMAIN = env('GOOGLE_ANALYTICS_DOMAIN', '')
 
 CRAZY_EGG = env('CRAZY_EGG', '')
+
+
+# Hijack customization
+
+HIJACK_LOGIN_REDIRECT_URL = '/'
+HIJACK_LOGOUT_REDIRECT_URL = '/'
+HIJACK_ALLOW_GET_REQUESTS = True
