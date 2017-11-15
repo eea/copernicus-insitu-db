@@ -1,9 +1,10 @@
-from django.core.urlresolvers import reverse
+from django.core.urlresolvers import reverse, reverse_lazy
 from django.contrib.auth.forms import AuthenticationForm, PasswordChangeForm
 from django.contrib.auth import login as auth_login, logout as auth_logout
-from django.http import HttpResponse
 from django.shortcuts import redirect
 from django.views.generic import FormView, RedirectView
+
+from insitu.views.protected import ProtectedFormView, IsAuthenticated
 
 
 class LoginView(FormView):
@@ -33,10 +34,12 @@ class LogoutView(RedirectView):
         return super(LogoutView, self).get(request, *args, **kwargs)
 
 
-class ChangePasswordView(FormView):
+class ChangePasswordView(ProtectedFormView):
     success_url = '/'
     template_name = 'auth/change_password.html'
     form_class = PasswordChangeForm
+    permission_classes = (IsAuthenticated,)
+    permission_denied_redirect = reverse_lazy('auth:login')
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
