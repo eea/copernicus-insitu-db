@@ -226,7 +226,7 @@
           <th class="no-sort">Note</th>
           <th class="no-sort">Information costs</th>
           <th class="no-sort">Handling costs</th>
-          {% if request.user.service_resp or request.user.is_superuser %}
+          {% if request.user == rel.created_by or request.user.is_superuser %}
             <th class="no-sort"></th>
           {% endif %}
         </tr>
