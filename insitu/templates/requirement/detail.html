@@ -226,8 +226,10 @@
           <th class="no-sort">Note</th>
           <th class="no-sort">Information costs</th>
           <th class="no-sort">Handling costs</th>
-          {% if request.user == rel.created_by or request.user.is_superuser %}
-            <th class="no-sort"></th>
+          {% if requirement.state.name == 'draft' %}
+            {% if request.user == requirement.created_by or request.user.is_superuser %}
+              <th class="no-sort"></th>
+            {% endif %}
           {% endif %}
         </tr>
         </thead>
