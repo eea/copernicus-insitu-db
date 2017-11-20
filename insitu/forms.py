@@ -59,16 +59,31 @@ class ProductRequirementEditForm(ProductRequirementBaseForm):
                                      queryset=models.Product.objects.all())
 
 
-class ProductGroupRequirementForm(RequirementProductRequirementForm):
+class ProductGroupRequirementForm(ProductRequirementBaseForm):
     product_group = forms.ModelChoiceField(queryset=ProductGroup.objects.all())
 
     class Meta:
         model = models.ProductRequirement
         exclude = ['product', 'created_by', 'state']
 
-    def save(self, created_by='', commit=True):
+    def clean(self):
+        cleaned_data = super().clean()
         products = models.Product.objects.filter(
-            group__name=self.cleaned_data['product_group'].name)
+            group__name=cleaned_data['product_group'].name)
+        cleaned_products = [
+            product for product in products if not
+            models.ProductRequirement.objects.filter(
+                product=product,
+                requirement=cleaned_data['requirement']).first()
+        ]
+        if not cleaned_products:
+            raise forms.ValidationError(
+                "A relation already exists for all products of this group."
+            )
+        self.products = cleaned_products
+
+    def save(self, created_by='', commit=True):
+        products = self.products
         self.cleaned_data.pop('product_group')
         barriers = self.cleaned_data.pop('barriers')
         self.cleaned_data['created_by'] = created_by
