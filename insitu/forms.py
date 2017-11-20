@@ -4,7 +4,7 @@ from django.db import transaction
 from insitu import models
 from insitu import signals
 from picklists.models import (
-    Dissemination, QualityControlProcedure, RequirementGroup, ProductGroup
+    Dissemination, QualityControlProcedure, RequirementGroup, ProductGroup,
 )
 
 
@@ -24,26 +24,39 @@ class ProductForm(forms.ModelForm):
 
 
 class ProductRequirementBaseForm(forms.ModelForm):
+    requirement = forms.ModelChoiceField(
+        disabled=True,
+        queryset=models.Requirement.objects.all()
+    )
+
     class Meta:
         model = models.ProductRequirement
         fields = ['requirement', 'product', 'note', 'level_of_definition',
                   'relevance', 'criticality', 'barriers']
 
 
-class ProductRequirementForm(ProductRequirementBaseForm):
-    product = forms.ModelChoiceField(disabled=True,
-                                     queryset=models.Product.objects.all())
-
-
 class RequirementProductRequirementForm(CreatedByFormMixin,
                                         ProductRequirementBaseForm):
-    requirement = forms.ModelChoiceField(disabled=True,
-                                         queryset=models.Requirement.objects.all())
+
+    def clean(self):
+        cleaned_data = super().clean()
+        product = cleaned_data.get('product')
+        requirement = cleaned_data.get('requirement')
+        try:
+            models.ProductRequirement.objects.filter(
+                product=product,
+                requirement=requirement,
+            )[0]
+        except IndexError:
+            pass
+        else:
+            raise forms.ValidationError("This relation already exists.")
 
 
-class ProductRequirementEditForm(ProductRequirementForm,
-                                 RequirementProductRequirementForm):
-    pass
+class ProductRequirementEditForm(ProductRequirementBaseForm):
+
+    product = forms.ModelChoiceField(disabled=True,
+                                     queryset=models.Product.objects.all())
 
 
 class ProductGroupRequirementForm(RequirementProductRequirementForm):
@@ -143,16 +156,23 @@ class RequirementForm(forms.ModelForm):
             self.instance.created_by = created_by
 
         uncertainty_data = self._get_metric_data('uncertainty', self.data)
-        update_frequency_data = self._get_metric_data('update_frequency', self.data)
+        update_frequency_data = self._get_metric_data(
+            'update_frequency',
+            self.data
+        )
         timeliness_data = self._get_metric_data('timeliness', self.data)
-        horizontal_resolution_data = self._get_metric_data('horizontal_resolution',
-                                                           self.data)
+        horizontal_resolution_data = self._get_metric_data(
+            'horizontal_resolution',
+            self.data
+        )
         vertical_resolution_data = self._get_metric_data('vertical_resolution',
                                                          self.data)
         data = {
             'name': self.data['name'],
             'note': self.data['note'],
-            'dissemination': Dissemination.objects.get(id=self.data['dissemination']),
+            'dissemination': Dissemination.objects.get(
+                id=self.data['dissemination']
+            ),
             'quality_control_procedure':
                 QualityControlProcedure.objects.get(
                     id=self.data['quality_control_procedure']
@@ -162,16 +182,19 @@ class RequirementForm(forms.ModelForm):
 
         if not self.initial:
             data['uncertainty'] = self._create_metric(**uncertainty_data)
-            data['update_frequency'] = self._create_metric(**update_frequency_data)
+            data['update_frequency'] = self._create_metric(
+                **update_frequency_data)
             data['timeliness'] = self._create_metric(**timeliness_data)
             data['horizontal_resolution'] = self._create_metric(
                 **horizontal_resolution_data)
-            data['vertical_resolution'] = self._create_metric(**vertical_resolution_data)
+            data['vertical_resolution'] = self._create_metric(
+                **vertical_resolution_data)
             data['created_by'] = self.instance.created_by
             return models.Requirement.objects.create(**data)
         else:
             self._update_metric(self.instance.uncertainty, **uncertainty_data)
-            self._update_metric(self.instance.update_frequency, **update_frequency_data)
+            self._update_metric(self.instance.update_frequency,
+                                **update_frequency_data)
             self._update_metric(self.instance.timeliness, **timeliness_data)
             self._update_metric(self.instance.horizontal_resolution,
                                 **horizontal_resolution_data)
@@ -222,28 +245,39 @@ class DataForm(CreatedByFormMixin, forms.ModelForm):
 
 
 class DataRequirementBaseForm(forms.ModelForm):
+
+    requirement = forms.ModelChoiceField(
+        disabled=True,
+        queryset=models.Requirement.objects.all())
+
     class Meta:
         model = models.DataRequirement
         fields = ['data', 'requirement', 'information_costs', 'handling_costs',
                   'note', 'level_of_compliance']
 
 
-class DataRequirementForm(DataRequirementBaseForm):
+class RequirementDataRequirementForm(CreatedByFormMixin,
+                                     DataRequirementBaseForm):
+
+    def clean(self):
+        cleaned_data = super().clean()
+        data = cleaned_data.get('data')
+        requirement = cleaned_data.get('requirement')
+        try:
+            models.DataRequirement.objects.filter(
+                data=data,
+                requirement=requirement,
+            )[0]
+        except IndexError:
+            pass
+        else:
+            raise forms.ValidationError("This relation already exists.")
+
+
+class DataRequirementEditForm(DataRequirementBaseForm):
     data = forms.ModelChoiceField(
         disabled=True,
         queryset=models.Data.objects.all())
-
-
-class RequirementDataRequirementForm(CreatedByFormMixin,
-                                     DataRequirementBaseForm):
-    requirement = forms.ModelChoiceField(
-        disabled=True,
-        queryset=models.Requirement.objects.all())
-
-
-class DataRequirementEditForm(DataRequirementForm,
-                              RequirementDataRequirementForm):
-    pass
 
 
 class DataProviderNetworkForm(CreatedByFormMixin, forms.ModelForm):
@@ -274,7 +308,8 @@ class DataProviderNetworkMembersForm(forms.ModelForm):
         clean_members = self.cleaned_data['members']
         for member in clean_members:
             if instance.pk == member.pk:
-                self.add_error(None, 'Members should be different than the network.')
+                self.add_error(None,
+                               'Members should be different than the network.')
         return clean_members
 
     def save(self, commit=True):
@@ -319,24 +354,35 @@ class DataProviderNonNetworkForm(CreatedByFormMixin, forms.ModelForm):
 
 
 class DataProviderRelationBaseForm(forms.ModelForm):
+
+    data = forms.ModelChoiceField(
+        disabled=True,
+        queryset=models.Data.objects.all())
+
     class Meta:
         model = models.DataProviderRelation
         fields = ['data', 'provider', 'role']
 
 
-class DataProviderRelationProviderForm(DataProviderRelationBaseForm):
+class DataProviderRelationGroupForm(CreatedByFormMixin,
+                                    DataProviderRelationBaseForm):
+
+    def clean(self):
+        cleaned_data = super().clean()
+        data = cleaned_data.get('data')
+        provider = cleaned_data.get('provider')
+        try:
+            models.DataProviderRelation.objects.filter(
+                data=data,
+                provider=provider,
+            )[0]
+        except IndexError:
+            pass
+        else:
+            raise forms.ValidationError("This relation already exists.")
+
+
+class DataProviderRelationEditForm(DataProviderRelationBaseForm):
     provider = forms.ModelChoiceField(
         disabled=True,
         queryset=models.DataProvider.objects.all())
-
-
-class DataProviderRelationGroupForm(CreatedByFormMixin,
-                                    DataProviderRelationBaseForm):
-    data = forms.ModelChoiceField(
-        disabled=True,
-        queryset=models.Data.objects.all())
-
-
-class DataProviderRelationEditForm(DataProviderRelationProviderForm,
-                                      DataProviderRelationGroupForm):
-    pass
