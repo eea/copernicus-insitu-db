@@ -1,8 +1,7 @@
 from django.contrib.auth.models import User
 
-from factory import SubFactory, RelatedFactory, post_generation
+from factory import SubFactory, Sequence, RelatedFactory
 from factory.django import DjangoModelFactory
-
 from insitu import models
 from insitu.tests.base import picklist_factories as factories
 
@@ -46,7 +45,7 @@ class ComponentFactory(DjangoModelFactory):
 
 
 class RequirementFactory(DjangoModelFactory):
-    name = 'Test requirement'
+    name = Sequence(lambda n: 'Test requirement %s' % n)
     note = 'Test note'
     dissemination = SubFactory(factories.DisseminationFactory)
     quality_control_procedure = SubFactory(

@@ -37,8 +37,9 @@ class RequirementTests(base.FormCheckTestCase):
 
         self.cloned_errors = {}
         self.cloned_errors['__all__'] = [
-            'You must modify at least one field of the cloned requirement.']
+            'This requirement is too similar.']
         self.errors['__all__'] = ['At least one metric is required.']
+        self.name_errors = ['Requirement with this Name already exists.']
 
     def _create_clone_data(self, requirement):
         REQUIREMENT_FOR_CLONE = {
@@ -140,13 +141,16 @@ class RequirementTests(base.FormCheckTestCase):
 
     def test_post_add_with_clone_duplicate_error(self):
         metrics = base.RequirementFactory.create_metrics(self.creator)
-        requirement = base.RequirementFactory(name="Test requirement",
-                                              created_by=self.creator,
+        requirement = base.RequirementFactory(created_by=self.creator,
                                               **metrics)
         cloned_data = self._create_clone_data(requirement)
         resp = self.client.post(
             reverse('requirement:add') + '?pk=' + str(requirement.pk),
             cloned_data
+        )
+        self.assertEqual(
+            resp.context['form'].errors.pop('name'),
+            self.name_errors
         )
         self.assertEqual(
             resp.context['form'].errors,
@@ -156,11 +160,11 @@ class RequirementTests(base.FormCheckTestCase):
     def test_post_add_with_clone(self):
         self.erase_logging_file()
         metrics = base.RequirementFactory.create_metrics(self.creator)
-        requirement = base.RequirementFactory(name="Test requirement",
-                                              created_by=self.creator,
+        requirement = base.RequirementFactory(created_by=self.creator,
                                               **metrics)
         cloned_data = self._create_clone_data(requirement)
-        cloned_data['name'] = 'Updated requirement'
+        cloned_data['note'] = 'Note 2'
+        cloned_data['name'] = 'Updated name'
 
         resp = self.client.post(
             reverse('requirement:add') + '?pk=' + str(requirement.pk),
