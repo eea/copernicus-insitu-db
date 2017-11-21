@@ -436,8 +436,8 @@ class Data(ValidationWorkflowModel, SoftDeleteModel):
     coverage = models.ForeignKey(pickmodels.Coverage,
                                  on_delete=models.CASCADE,
                                  related_name='+')
-    start_time_coverage = models.DateField(null=True)
-    end_time_coverage = models.DateField(null=True)
+    start_time_coverage = models.DateField(null=True, blank=True)
+    end_time_coverage = models.DateField(null=True, blank=True)
     timeliness = models.ForeignKey(pickmodels.Timeliness,
                                    on_delete=models.CASCADE,
                                    related_name='+')
@@ -458,9 +458,11 @@ class Data(ValidationWorkflowModel, SoftDeleteModel):
     dissemination = models.ForeignKey(pickmodels.Dissemination,
                                       on_delete=models.CASCADE,
                                       related_name='+')
-    inspire_themes = models.ManyToManyField(pickmodels.InspireTheme)
+    inspire_themes = models.ManyToManyField(pickmodels.InspireTheme,
+                                            blank=True)
     essential_variables = models.ManyToManyField(
-        pickmodels.EssentialVariable
+        pickmodels.EssentialVariable,
+        blank=True
     )
     requirements = models.ManyToManyField(Requirement,
                                           through='DataRequirement')

@@ -15,9 +15,13 @@ class DataTests(base.FormCheckTestCase):
     many_to_many_fields = ['inspire_themes', 'essential_variables']
     required_fields = ['name', 'update_frequency', 'coverage', 'timeliness',
                        'policy', 'data_type', 'data_format',
-                       'quality_control_procedure', 'inspire_themes',
-                       'dissemination']
+                       'quality_control_procedure', 'dissemination']
     target_type = 'data'
+    custom_errors = {
+        'inspire_themes': [''],
+        'essential_variables':
+            ['At least one Inspire Theme or Essential Variable is required.']
+    }
 
     def setUp(self):
         super().setUp()
@@ -68,8 +72,8 @@ class DataTests(base.FormCheckTestCase):
         self.assertEqual(data['recordsTotal'], data['recordsFiltered'])
 
     def test_list_data_json_filter(self):
-        base.DataFactory(name="Test data", created_by=self.creator)
-        base.DataFactory(name="Other data", created_by=self.creator)
+        base.DataFactory(name='Test data', created_by=self.creator)
+        base.DataFactory(name='Other data', created_by=self.creator)
         resp = self.client.get(reverse('data:json'),
                                {'search[value]': 'Other'})
         self.assertEqual(resp.status_code, 200)
@@ -84,6 +88,50 @@ class DataTests(base.FormCheckTestCase):
         base.DataFactory(created_by=self.creator)
         resp = self.client.get(reverse('data:list'))
         self.assertTemplateUsed(resp, 'data/list.html')
+        self.logging()
+
+    def test_add_data_required_fields(self):
+        data = {}
+        resp = self.client.post(reverse('data:add'), data)
+        self.check_required_errors(resp, self.errors)
+
+    def test_get_add_data(self):
+        resp = self.client.get(reverse('data:add'))
+        self.assertEqual(resp.status_code, 200)
+
+    def test_add_data(self):
+        self.erase_logging_file()
+        data = self._DATA
+        resp = self.client.post(reverse('data:add'), data)
+        self.assertEqual(resp.status_code, 302)
+        self.check_single_object(models.Data, data)
+        self.logging()
+
+    def test_add_data_either_essential_variable_or_inspire_theme_required(self):
+        self.erase_logging_file()
+        data = self._DATA
+        essential_variables = data.pop('essential_variables')
+        inspire_themes = data.pop('inspire_themes')
+        resp = self.client.post(reverse('data:add'), data)
+
+        self.assertEqual(resp.status_code, 200)
+        self.assertIsNot(resp.context['form'].errors, {})
+        self.assertDictEqual(
+            resp.context['form'].errors,
+            self.custom_errors
+        )
+
+        data['essential_variables'] = essential_variables
+        data['inspire_themes'] = []
+        resp = self.client.post(reverse('data:add'), data)
+        self.assertEqual(resp.status_code, 302)
+        self.check_object(models.Data.objects.first(), data)
+
+        data['essential_variables'] = []
+        data['inspire_themes'] = inspire_themes
+        resp = self.client.post(reverse('data:add'), data)
+        self.assertEqual(resp.status_code, 302)
+        self.check_object(models.Data.objects.last(), data)
         self.logging()
 
     def test_detail_data(self):

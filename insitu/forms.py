@@ -190,7 +190,10 @@ class RequirementCloneForm(RequirementForm):
     def clean(self):
         super().clean()
         if self.cleaned_data == self.initial:
-            self.add_error(None, "You must modify at least one field of the cloned requirement.")
+            self.add_error(
+                None,
+                "You must modify at least one field of the cloned requirement."
+            )
         return self.cleaned_data
 
     def save(self, created_by='', commit=True):
@@ -207,6 +210,15 @@ class DataForm(CreatedByFormMixin, forms.ModelForm):
                   'policy', 'data_type', 'data_format',
                   'quality_control_procedure', 'dissemination',
                   'inspire_themes', 'essential_variables']
+
+    def clean(self):
+        cleaned_data = super(DataForm, self).clean()
+        inspire_themes = cleaned_data.get("inspire_themes", [])
+        essential_variables = cleaned_data.get("essential_variables", [])
+        if not inspire_themes and not essential_variables:
+            error = "At least one Inspire Theme or Essential Variable is required."
+            self.add_error("inspire_themes", '')
+            self.add_error("essential_variables", error)
 
 
 class DataRequirementBaseForm(forms.ModelForm):

@@ -7,16 +7,19 @@ from insitu.tests.base import UserFactory
 
 
 class FormCheckTestCase(TestCase):
+    maxDiff = None
     fields = []
     related_fields = []
     many_to_many_fields = []
     required_fields = []
     related_entities_updated = []
     related_entities_fields = []
+    custom_errors = {}
     REQUIRED_ERROR = ['This field is required.']
 
     def setUp(self):
         self.errors = {field: self.REQUIRED_ERROR for field in self.required_fields}
+        self.errors.update(self.custom_errors)
         self.creator = UserFactory(username='Creator')
         self.other_user = UserFactory(username='Other')
 
