@@ -218,7 +218,7 @@ class Requirement(ValidationWorkflowModel, SoftDeleteModel):
     ]
     elastic_delete_signal = signals.requirement_deleted
 
-    name = models.CharField(max_length=100)
+    name = models.CharField(max_length=100, unique=True)
     note = models.TextField(blank=True)
     dissemination = models.ForeignKey(pickmodels.Dissemination,
                                       on_delete=models.CASCADE,

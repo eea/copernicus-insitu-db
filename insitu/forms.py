@@ -189,8 +189,12 @@ class RequirementCloneForm(RequirementForm):
 
     def clean(self):
         super().clean()
-        if self.cleaned_data == self.initial:
-            self.add_error(None, "You must modify at least one field of the cloned requirement.")
+        cleaned_data = dict(self.cleaned_data)
+        initial_data = dict(self.initial)
+        cleaned_data.pop('name')
+        initial_data.pop('name')
+        if cleaned_data == initial_data:
+            self.add_error(None, "This requirement is too similar.")
         return self.cleaned_data
 
     def save(self, created_by='', commit=True):
