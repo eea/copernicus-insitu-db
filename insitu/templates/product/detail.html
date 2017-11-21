@@ -114,20 +114,19 @@
              class="table table-condensed table-bordered table-hover">
         <thead>
         <tr>
+          <th>UID</th>
           <th>Requirement</th>
           <th>Level of definition</th>
           <th>Relevant for</th>
           <th>Criticality</th>
           <th class="no-sort">Barriers</th>
           <th class="no-sort">Note</th>
-          {% if request.user.is_superuser %}
-            <th class="no-sort"></th>
-          {% endif %}
         </tr>
         </thead>
         <tbody>
         {% for rel in product.productrequirement_set.all %}
           <tr>
+            <td>{{ rel.requirement.pk }}</td>
             <td>
               <a
                 href="{% url 'requirement:detail' rel.requirement.pk %}">{{ rel.requirement.name }}</a>
