@@ -76,7 +76,7 @@ class ProductGroupRequirementForm(ProductRequirementBaseForm):
             product for product in products if not
             models.ProductRequirement.objects.filter(
                 product=product,
-                requirement=cleaned_data['requirement']).first()
+                requirement=cleaned_data['requirement']).exists()
         ]
         if not cleaned_products:
             raise forms.ValidationError(
@@ -280,14 +280,11 @@ class RequirementDataRequirementForm(CreatedByFormMixin,
         cleaned_data = super().clean()
         data = cleaned_data.get('data')
         requirement = cleaned_data.get('requirement')
-        try:
-            models.DataRequirement.objects.filter(
+        exists_relation = models.DataRequirement.objects.filter(
                 data=data,
                 requirement=requirement,
-            )[0]
-        except IndexError:
-            pass
-        else:
+            ).exists()
+        if exists_relation:
             raise forms.ValidationError("This relation already exists.")
 
 
@@ -388,14 +385,10 @@ class DataProviderRelationGroupForm(CreatedByFormMixin,
         cleaned_data = super().clean()
         data = cleaned_data.get('data')
         provider = cleaned_data.get('provider')
-        try:
-            models.DataProviderRelation.objects.filter(
-                data=data,
-                provider=provider,
-            )[0]
-        except IndexError:
-            pass
-        else:
+        exists_relation = models.DataProviderRelation.objects.filter(
+            data=data,
+            provider=provider).exists()
+        if exists_relation:
             raise forms.ValidationError("This relation already exists.")
 
 
