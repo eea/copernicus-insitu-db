@@ -42,14 +42,12 @@ class RequirementProductRequirementForm(CreatedByFormMixin,
         cleaned_data = super().clean()
         product = cleaned_data.get('product')
         requirement = cleaned_data.get('requirement')
-        try:
-            models.ProductRequirement.objects.filter(
-                product=product,
-                requirement=requirement,
-            )[0]
-        except IndexError:
-            pass
-        else:
+
+        exists_relation = models.ProductRequirement.objects.filter(
+            product=product,
+            requirement=requirement,
+        ).exists()
+        if exists_relation:
             raise forms.ValidationError("This relation already exists.")
 
 
