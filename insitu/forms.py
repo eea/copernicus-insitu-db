@@ -68,6 +68,8 @@ class ProductGroupRequirementForm(ProductRequirementBaseForm):
 
     def clean(self):
         cleaned_data = super().clean()
+        if 'product_group' not in cleaned_data:
+            return
         products = models.Product.objects.filter(
             group__name=cleaned_data['product_group'].name)
         cleaned_products = [

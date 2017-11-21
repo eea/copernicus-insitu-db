@@ -19,9 +19,9 @@ class ProductRequirementTests(base.FormCheckTestCase):
     def setUp(self):
         super().setUp()
         metrics = base.RequirementFactory.create_metrics(self.creator)
-        requirement = base.RequirementFactory(created_by=self.creator,
-                                              **metrics)
-        product = base.ProductFactory()
+        self.requirement = base.RequirementFactory(created_by=self.creator,
+                                                   **metrics)
+        self.product = base.ProductFactory()
         level_of_definition = base.DefinitionLevelFactory()
         relevance = base.RelevanceFactory()
         criticality = base.CriticalityFactory()
@@ -29,8 +29,8 @@ class ProductRequirementTests(base.FormCheckTestCase):
 
         self._DATA = {
             'note': 'test note',
-            'requirement': requirement.pk,
-            'product': product.pk,
+            'requirement': self.requirement.pk,
+            'product': self.product.pk,
             'level_of_definition': level_of_definition.pk,
             'relevance': relevance.pk,
             'criticality': criticality.pk,
@@ -66,6 +66,19 @@ class ProductRequirementTests(base.FormCheckTestCase):
             data)
         self.assertEqual(resp.status_code, 302)
         self.check_single_object(models.ProductRequirement, data)
+
+    def test_product_requirement_add_unique(self):
+        base.ProductRequirementFactory(product=self.product,
+                                       requirement=self.requirement,
+                                       created_by=self.creator)
+        data = self._DATA
+        resp = self.client.post(
+            reverse('requirement:product:add',
+                    kwargs={'requirement_pk': self.requirement.pk}),
+            data)
+        self.assertEqual(resp.status_code, 200)
+        self.assertEqual(resp.context['form'].errors,
+                         {'__all__': ['This relation already exists.']})
 
     def test_get_product_requirement_edit(self):
         self.login_creator()
@@ -163,6 +176,50 @@ class ProductRequirementTests(base.FormCheckTestCase):
             data)
         self.assertEqual(resp.status_code, 302)
         self.check_single_object(models.ProductRequirement, self._DATA)
+
+    def test_product_group_requirement_add_unique_relation_raise_error(self):
+        data = copy.deepcopy(self._DATA)
+        data.pop('product')
+        product_group = base.ProductGroupFactory()
+        data['product_group'] = product_group.pk
+        self.client.post(
+            reverse('requirement:product:add_group',
+                    kwargs={'requirement_pk': self._DATA['requirement']}),
+            data)
+        resp = self.client.post(
+            reverse('requirement:product:add_group',
+                    kwargs={'requirement_pk': self._DATA['requirement']}),
+            data)
+        self.assertEqual(resp.status_code, 200)
+        unique_relation_error = {
+            '__all__':
+                ['A relation already exists for all products of this group.']
+        }
+        self.assertEqual(resp.context['form'].errors, unique_relation_error)
+
+    def test_product_group_requirement_add_unique_relation_to_products_without(self):
+        data = copy.deepcopy(self._DATA)
+        data.pop('product')
+        product_group = base.ProductGroupFactory()
+        product1 = base.ProductFactory(group=product_group)
+        product2 = base.ProductFactory(group=product_group)
+        base.ProductRequirementFactory(product=product1,
+                                       requirement=self.requirement,
+                                       created_by=self.creator)
+        data['product_group'] = product_group.pk
+        resp = self.client.post(
+            reverse('requirement:product:add_group',
+                    kwargs={'requirement_pk': self._DATA['requirement']}),
+            data)
+        self.assertEqual(resp.status_code, 302)
+        products = [
+            product_requirement.product for product_requirement in
+            models.ProductRequirement.objects.filter(
+                product__group=product_group)
+            ]
+        self.assertEqual(len(products), 2)
+        self.assertIn(product1, products)
+        self.assertIn(product2, products)
 
 
 class ProductRequirementPermissionsTests(base.PermissionsCheckTestCase):
