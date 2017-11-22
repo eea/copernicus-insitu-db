@@ -26,9 +26,9 @@ Copernicus services on in situ data requirements (current and expected), data us
 
 2. Customize env files:
 
-        $ cp docker/app.env.example docker/app.env
+        $ cp docker/app.env.example env/app.env
         $ vim docker/app.env
-        $ cp docker/postgres.env.example docker/postgres.env
+        $ cp docker/postgres.env.example env/postgres.env
         $ vim docker/postgres.env
 
 3. Start application stack:
@@ -46,7 +46,6 @@ Copernicus services on in situ data requirements (current and expected), data us
         $ docker exec -it insitu.app bash
         $ pip install -r requirements-dev.txt
         $ ./manage.py migrate
-        $ ./manage.py loaddata picklists
         $ ./manage.py search_index --rebuild
         $ ./manage.py runserver 0.0.0.0:8000
 

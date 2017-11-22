@@ -13,16 +13,16 @@ class DataProviderRelationTests(base.FormCheckTestCase):
 
     def setUp(self):
         super().setUp()
-        data = base.DataFactory(created_by=self.creator)
+        self.data = base.DataFactory(created_by=self.creator)
         countries = [base.CountryFactory(code='T1'),
                      base.CountryFactory(code='T2')]
-        provider = base.DataProviderFactory(countries=countries,
-                                            created_by=self.creator)
+        self.provider = base.DataProviderFactory(countries=countries,
+                                                 created_by=self.creator)
 
         self._DATA = {
             'role': 1,
-            'data': data.pk,
-            'provider': provider.pk
+            'data': self.data.pk,
+            'provider': self.provider.pk
         }
         user = base.UserFactory()
         self.client.force_login(user)
@@ -49,6 +49,19 @@ class DataProviderRelationTests(base.FormCheckTestCase):
                                 data)
         self.assertEqual(resp.status_code, 302)
         self.check_single_object(models.DataProviderRelation, data)
+
+    def test_provider_relation_add_unique(self):
+        base.DataProviderRelationFactory(data=self.data,
+                                         provider=self.provider,
+                                         created_by=self.creator)
+        data = self._DATA
+        resp = self.client.post(
+            reverse('data:provider:add',
+                    kwargs={'group_pk': self.data.pk}),
+            data)
+        self.assertEqual(resp.status_code, 200)
+        self.assertEqual(resp.context['form'].errors,
+                         {'__all__': ['This relation already exists.']})
 
     def test_get_provider_relation_edit(self):
         self.login_creator()

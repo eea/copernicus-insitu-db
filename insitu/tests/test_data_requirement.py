@@ -13,15 +13,15 @@ class DataRequirementTests(base.FormCheckTestCase):
 
     def setUp(self):
         super().setUp()
-        data = base.DataFactory(created_by=self.creator)
+        self.data = base.DataFactory(created_by=self.creator)
         metrics = base.RequirementFactory.create_metrics(self.creator)
-        requirement = base.RequirementFactory(created_by=self.creator,
-                                              **metrics)
+        self.requirement = base.RequirementFactory(created_by=self.creator,
+                                                   **metrics)
         level_of_compliance = base.ComplianceLevelFactory()
 
         self._DATA = {
-            'data': data.pk,
-            'requirement': requirement.pk,
+            'data': self.data.pk,
+            'requirement': self.requirement.pk,
             'level_of_compliance': level_of_compliance.pk,
             'note': 'TEST note',
             'information_costs': True,
@@ -58,6 +58,19 @@ class DataRequirementTests(base.FormCheckTestCase):
             data)
         self.assertEqual(resp.status_code, 302)
         self.check_single_object(models.DataRequirement, data)
+
+    def test_data_requirement_add_unique(self):
+        base.DataRequirementFactory(data=self.data,
+                                    requirement=self.requirement,
+                                    created_by=self.creator)
+        data = self._DATA
+        resp = self.client.post(
+            reverse('requirement:data:add',
+                    kwargs={'requirement_pk': self.requirement.pk}),
+            data)
+        self.assertEqual(resp.status_code, 200)
+        self.assertEqual(resp.context['form'].errors,
+                         {'__all__': ['This relation already exists.']})
 
     def test_get_data_requirement_edit(self):
         self.login_creator()
