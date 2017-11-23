@@ -25,7 +25,7 @@ class ESDatatableView(BaseDatatableView, ProtectedView):
         search_text = self.request.GET.get('search[value]', '')
         if not search_text:
             return qs
-        return qs.query('query_string', query=search_text)
+        return qs.query('query_string', query='*' + search_text + '*')
 
 
 class CreatedByMixin:
