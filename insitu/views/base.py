@@ -1,5 +1,6 @@
 from django.views.generic.edit import ModelFormMixin
 from django_datatables_view.base_datatable_view import BaseDatatableView
+from elasticsearch_dsl import Q
 
 from insitu.utils import ALL_OPTIONS_LABEL
 from insitu.views.protected.views import ProtectedView
@@ -8,6 +9,12 @@ from insitu.views.protected.views import ProtectedView
 class ESDatatableView(BaseDatatableView, ProtectedView):
     def get_initial_queryset(self):
         return self.document.search()
+
+    def ordering(self, qs):
+        search_text = self.request.GET.get('search[value]', '')
+        if search_text:
+            return qs
+        return super().ordering(qs)
 
     def filter_queryset(self, qs):
         for filter in self.filters:
