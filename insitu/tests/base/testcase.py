@@ -61,7 +61,7 @@ class FormCheckTestCase(TestCase):
             for field in self.related_entities_fields:
                 self.assertEqual(
                     getattr(getattr(object, entity), field),
-                    data["_".join([entity, field])],
+                    data["__".join([entity, field])],
                     entity + "-" + field)
 
     def check_single_object(self, model_cls, data):

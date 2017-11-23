@@ -9,7 +9,6 @@ from picklists.models import (
 
 
 class CreatedByFormMixin:
-
     def save(self, created_by='', commit=True):
         if created_by:
             self.instance.created_by = created_by
@@ -37,7 +36,6 @@ class ProductRequirementBaseForm(forms.ModelForm):
 
 class RequirementProductRequirementForm(CreatedByFormMixin,
                                         ProductRequirementBaseForm):
-
     def clean(self):
         cleaned_data = super().clean()
         product = cleaned_data.get('product')
@@ -52,7 +50,6 @@ class RequirementProductRequirementForm(CreatedByFormMixin,
 
 
 class ProductRequirementEditForm(ProductRequirementBaseForm):
-
     product = forms.ModelChoiceField(disabled=True,
                                      queryset=models.Product.objects.all())
 
@@ -95,35 +92,35 @@ class ProductGroupRequirementForm(ProductRequirementBaseForm):
 
 
 class RequirementForm(forms.ModelForm):
-    uncertainty_threshold = forms.CharField(max_length=100,
+    uncertainty__threshold = forms.CharField(max_length=100,
                                             required=False)
-    uncertainty_breakthrough = forms.CharField(max_length=100,
+    uncertainty__breakthrough = forms.CharField(max_length=100,
                                                required=False)
-    uncertainty_goal = forms.CharField(max_length=100,
+    uncertainty__goal = forms.CharField(max_length=100,
                                        required=False)
-    update_frequency_threshold = forms.CharField(max_length=100,
+    update_frequency__threshold = forms.CharField(max_length=100,
                                                  required=False)
-    update_frequency_breakthrough = forms.CharField(max_length=100,
+    update_frequency__breakthrough = forms.CharField(max_length=100,
                                                     required=False)
-    update_frequency_goal = forms.CharField(max_length=100,
+    update_frequency__goal = forms.CharField(max_length=100,
                                             required=False)
-    timeliness_threshold = forms.CharField(max_length=100,
+    timeliness__threshold = forms.CharField(max_length=100,
                                            required=False)
-    timeliness_breakthrough = forms.CharField(max_length=100,
+    timeliness__breakthrough = forms.CharField(max_length=100,
                                               required=False)
-    timeliness_goal = forms.CharField(max_length=100,
+    timeliness__goal = forms.CharField(max_length=100,
                                       required=False)
-    horizontal_resolution_threshold = forms.CharField(max_length=100,
+    horizontal_resolution__threshold = forms.CharField(max_length=100,
                                                       required=False)
-    horizontal_resolution_breakthrough = forms.CharField(max_length=100,
+    horizontal_resolution__breakthrough = forms.CharField(max_length=100,
                                                          required=False)
-    horizontal_resolution_goal = forms.CharField(max_length=100,
+    horizontal_resolution__goal = forms.CharField(max_length=100,
                                                  required=False)
-    vertical_resolution_threshold = forms.CharField(max_length=100,
+    vertical_resolution__threshold = forms.CharField(max_length=100,
                                                     required=False)
-    vertical_resolution_breakthrough = forms.CharField(max_length=100,
+    vertical_resolution__breakthrough = forms.CharField(max_length=100,
                                                        required=False)
-    vertical_resolution_goal = forms.CharField(max_length=100,
+    vertical_resolution__goal = forms.CharField(max_length=100,
                                                required=False)
 
     class Meta:
@@ -149,7 +146,7 @@ class RequirementForm(forms.ModelForm):
     def _get_metric_data(self, metric, data):
         result = dict()
         for attr in ['threshold', 'breakthrough', 'goal']:
-            result[attr] = data["_".join([metric, attr])]
+            result[attr] = data["__".join([metric, attr])]
         return result
 
     def _clean_metric(self, metrics):
@@ -164,6 +161,13 @@ class RequirementForm(forms.ModelForm):
         metric_fields = ['uncertainty', 'update_frequency', 'timeliness',
                          'horizontal_resolution', 'vertical_resolution']
         self._clean_metric(metric_fields)
+        exists = models.Requirement.objects.filter(**self.cleaned_data).exists()
+        if exists:
+            self.add_error(
+                None,
+                "This requirement is a duplicate. Please use the existing requirement."
+            )
+
         return self.cleaned_data
 
     def save(self, created_by='', commit=True):
@@ -224,16 +228,6 @@ class RequirementForm(forms.ModelForm):
 
 
 class RequirementCloneForm(RequirementForm):
-
-    def clean(self):
-        super().clean()
-        if self.cleaned_data == self.initial:
-            self.add_error(
-                None,
-                "You must modify at least one field of the cloned requirement."
-            )
-        return self.cleaned_data
-
     def save(self, created_by='', commit=True):
         self.initial = None
         return super().save(created_by, commit)
@@ -260,7 +254,6 @@ class DataForm(CreatedByFormMixin, forms.ModelForm):
 
 
 class DataRequirementBaseForm(forms.ModelForm):
-
     requirement = forms.ModelChoiceField(
         disabled=True,
         queryset=models.Requirement.objects.all())
@@ -273,15 +266,14 @@ class DataRequirementBaseForm(forms.ModelForm):
 
 class RequirementDataRequirementForm(CreatedByFormMixin,
                                      DataRequirementBaseForm):
-
     def clean(self):
         cleaned_data = super().clean()
         data = cleaned_data.get('data')
         requirement = cleaned_data.get('requirement')
         exists_relation = models.DataRequirement.objects.filter(
-                data=data,
-                requirement=requirement,
-            ).exists()
+            data=data,
+            requirement=requirement,
+        ).exists()
         if exists_relation:
             raise forms.ValidationError("This relation already exists.")
 
@@ -366,7 +358,6 @@ class DataProviderNonNetworkForm(CreatedByFormMixin, forms.ModelForm):
 
 
 class DataProviderRelationBaseForm(forms.ModelForm):
-
     data = forms.ModelChoiceField(
         disabled=True,
         queryset=models.Data.objects.all())
@@ -378,7 +369,6 @@ class DataProviderRelationBaseForm(forms.ModelForm):
 
 class DataProviderRelationGroupForm(CreatedByFormMixin,
                                     DataProviderRelationBaseForm):
-
     def clean(self):
         cleaned_data = super().clean()
         data = cleaned_data.get('data')

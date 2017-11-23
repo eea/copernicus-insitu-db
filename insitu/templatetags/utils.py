@@ -7,9 +7,9 @@ register = template.Library()
 @register.simple_tag
 def get_metric_value(form, field, attribute):
     if form.data:
-        return form.data["_".join([field, attribute])]
+        return form.data["__".join([field, attribute])]
     elif form.initial:
-        return form.initial["_".join([field, attribute])]
+        return form.initial["__".join([field, attribute])]
 
 
 @register.filter(name='get_field_nice_value')

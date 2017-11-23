@@ -45,7 +45,7 @@ class GetInitialMixin:
         for field in ['uncertainty', 'update_frequency', 'timeliness',
                       'horizontal_resolution', 'vertical_resolution']:
             for attr in ['threshold', 'breakthrough', 'goal']:
-                initial_data["_".join([field, attr])] = getattr(
+                initial_data["__".join([field, attr])] = getattr(
                     getattr(requirement, field), attr
                 )
         return initial_data.copy()
