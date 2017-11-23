@@ -9,22 +9,22 @@
 <div class="form-group container {% if form.non_field_errors %}has-error{% endif %}">
   <div class=" ">
     <div class="col-md-3">
-      <input type="text" name="{{ name }}_threshold"
+      <input type="text" name="{{ name }}__threshold"
              maxlength="100" class=" form-control"
              {% if threshold %} value="{{ threshold }}"{% endif %}
-             id="id_{{ name }}_threshold" placeholder="Threshold">
+             id="id_{{ name }}__threshold" placeholder="Threshold">
     </div>
     <div class="col-md-3">
-      <input type="text" name="{{ name }}_breakthrough"
+      <input type="text" name="{{ name }}__breakthrough"
              maxlength="100" class=" form-control"
              {% if breakthrough %} value="{{ breakthrough }}"{% endif %}
-             id="id_{{ name }}_breakthrough" placeholder="Breakthrough">
+             id="id_{{ name }}__breakthrough" placeholder="Breakthrough">
     </div>
     <div class="col-md-3">
-      <input type="text" name="{{ name }}_goal" maxlength="100"
+      <input type="text" name="{{ name }}__goal" maxlength="100"
              class=" form-control" id="id_{{ name }}_goal"
              {% if goal %} value="{{ goal }}"{% endif %}
-             placeholder="Goal">
+             id="id_{{ name }}__goal" placeholder="Goal">
     </div>
   </div>
 </div>

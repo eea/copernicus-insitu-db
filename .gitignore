@@ -20,6 +20,10 @@ local_settings.py
 # Docker conf
 env/*.env
 docker-compose.yml
+docker-compose.override.yml
 
 # PyCharm conf
 .idea/
+
+# Database dumps
+*.sql

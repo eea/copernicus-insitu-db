@@ -32,12 +32,12 @@ class RequirementTests(base.FormCheckTestCase):
 
         for entity in self.related_entities_updated:
             for field in self.related_entities_fields:
-                self._DATA["_".join([entity, field])] = ''
-        self._DATA['uncertainty_goal'] = '1'
+                self._DATA['__'.join([entity, field])] = ''
+        self._DATA['uncertainty__goal'] = '1'
 
         self.cloned_errors = {}
         self.cloned_errors['__all__'] = [
-            'You must modify at least one field of the cloned requirement.']
+            'This requirement is a duplicate. Please use the existing requirement.']
         self.errors['__all__'] = ['At least one metric is required.']
 
     def _create_clone_data(self, requirement):
@@ -50,7 +50,7 @@ class RequirementTests(base.FormCheckTestCase):
         }
         for entity in self.related_entities_updated:
             for field in self.related_entities_fields:
-                REQUIREMENT_FOR_CLONE["_".join([entity, field])] = (
+                REQUIREMENT_FOR_CLONE['__'.join([entity, field])] = (
                     getattr(getattr(requirement, entity), field)
                 )
         return REQUIREMENT_FOR_CLONE
@@ -69,12 +69,12 @@ class RequirementTests(base.FormCheckTestCase):
     def test_list_requirement_json_filter(self):
 
         metrics = base.RequirementFactory.create_metrics(self.creator)
-        base.RequirementFactory(name="Test requirement",
+        base.RequirementFactory(name='Test requirement',
                                 created_by=self.creator,
                                 **metrics)
 
         metrics = base.RequirementFactory.create_metrics(self.creator)
-        base.RequirementFactory(name="Other requirement",
+        base.RequirementFactory(name='Other requirement',
                                 created_by=self.creator,
                                 **metrics)
         resp = self.client.get(reverse('requirement:json'),
@@ -89,7 +89,7 @@ class RequirementTests(base.FormCheckTestCase):
     def test_list_requirements(self):
         self.erase_logging_file()
         metrics = base.RequirementFactory.create_metrics(self.creator)
-        base.RequirementFactory(name="Test requirement",
+        base.RequirementFactory(name='Test requirement',
                                 created_by=self.creator,
                                 **metrics)
         resp = self.client.get(reverse('requirement:list'))
@@ -99,7 +99,7 @@ class RequirementTests(base.FormCheckTestCase):
     def test_detail_requirement(self):
         self.erase_logging_file()
         metrics = base.RequirementFactory.create_metrics(self.creator)
-        requirement = base.RequirementFactory(name="Test requirement",
+        requirement = base.RequirementFactory(name='Test requirement',
                                               created_by=self.creator,
                                               **metrics)
         resp = self.client.get(reverse('requirement:detail',
@@ -127,7 +127,7 @@ class RequirementTests(base.FormCheckTestCase):
     def test_get_add_with_clone(self):
         self.erase_logging_file()
         metrics = base.RequirementFactory.create_metrics(self.creator)
-        requirement = base.RequirementFactory(name="Test requirement",
+        requirement = base.RequirementFactory(name='Test requirement',
                                               created_by=self.creator,
                                               **metrics)
         resp = self.client.get(reverse('requirement:add'),
@@ -140,7 +140,7 @@ class RequirementTests(base.FormCheckTestCase):
 
     def test_post_add_with_clone_duplicate_error(self):
         metrics = base.RequirementFactory.create_metrics(self.creator)
-        requirement = base.RequirementFactory(name="Test requirement",
+        requirement = base.RequirementFactory(name='Test requirement',
                                               created_by=self.creator,
                                               **metrics)
         cloned_data = self._create_clone_data(requirement)
@@ -156,7 +156,7 @@ class RequirementTests(base.FormCheckTestCase):
     def test_post_add_with_clone(self):
         self.erase_logging_file()
         metrics = base.RequirementFactory.create_metrics(self.creator)
-        requirement = base.RequirementFactory(name="Test requirement",
+        requirement = base.RequirementFactory(name='Test requirement',
                                               created_by=self.creator,
                                               **metrics)
         cloned_data = self._create_clone_data(requirement)
@@ -174,7 +174,7 @@ class RequirementTests(base.FormCheckTestCase):
     def test_get_edit_requirement(self):
         self.login_creator()
         metrics = base.RequirementFactory.create_metrics(self.creator)
-        requirement = base.RequirementFactory(name="Test requirement",
+        requirement = base.RequirementFactory(name='Test requirement',
                                               created_by=self.creator,
                                               **metrics)
         resp = self.client.get(
@@ -187,7 +187,7 @@ class RequirementTests(base.FormCheckTestCase):
         self.login_creator()
         self.erase_logging_file()
         metrics = base.RequirementFactory.create_metrics(self.creator)
-        requirement = base.RequirementFactory(name="Test requirement",
+        requirement = base.RequirementFactory(name='Test requirement',
                                               created_by=self.creator,
                                               **metrics)
         data = self._DATA
@@ -200,7 +200,7 @@ class RequirementTests(base.FormCheckTestCase):
     def test_get_delete_requirement(self):
         self.login_creator()
         metrics = base.RequirementFactory.create_metrics(self.creator)
-        requirement = base.RequirementFactory(name="Test requirement",
+        requirement = base.RequirementFactory(name='Test requirement',
                                               created_by=self.creator,
                                               **metrics)
         resp = self.client.get(reverse('requirement:delete',
@@ -210,7 +210,7 @@ class RequirementTests(base.FormCheckTestCase):
     def test_delete_requirement(self):
         self.login_creator()
         metrics = base.RequirementFactory.create_metrics(self.creator)
-        requirement = base.RequirementFactory(name="Test requirement",
+        requirement = base.RequirementFactory(name='Test requirement',
                                               created_by=self.creator,
                                               **metrics)
         resp = self.client.post(
@@ -222,7 +222,7 @@ class RequirementTests(base.FormCheckTestCase):
     def test_delete_requirement_related_objects(self):
         self.login_creator()
         metrics = base.RequirementFactory.create_metrics(self.creator)
-        requirement = base.RequirementFactory(name="Test requirement",
+        requirement = base.RequirementFactory(name='Test requirement',
                                               created_by=self.creator,
                                               **metrics)
         base.ProductRequirementFactory(requirement=requirement,
@@ -241,15 +241,15 @@ class RequirementTests(base.FormCheckTestCase):
         self.erase_logging_file()
         self.login_creator()
         metrics = base.RequirementFactory.create_metrics(self.creator)
-        requirement = base.RequirementFactory(name="Test requirement",
+        requirement = base.RequirementFactory(name='Test requirement',
                                               created_by=self.creator,
                                               **metrics)
-        data = base.DataFactory(name="Test data",
+        data = base.DataFactory(name='Test data',
                                 created_by=self.creator)
         data_requirement = base.DataRequirementFactory(data=data,
                                                        created_by=self.creator,
                                                        requirement=requirement)
-        provider = base.DataProviderFactory(name="Test provider",
+        provider = base.DataProviderFactory(name='Test provider',
                                             created_by=self.creator)
         data_provider = base.DataProviderRelationFactory(data=data,
                                                          created_by=self.creator,
@@ -289,15 +289,15 @@ class RequirementTests(base.FormCheckTestCase):
     def test_transition_inexistent_state(self):
         self.login_creator()
         metrics = base.RequirementFactory.create_metrics(self.creator)
-        requirement = base.RequirementFactory(name="Test requirement",
+        requirement = base.RequirementFactory(name='Test requirement',
                                               created_by=self.creator,
                                               **metrics)
-        data = base.DataFactory(name="Test data",
+        data = base.DataFactory(name='Test data',
                                 created_by=self.creator)
         data_requirement = base.DataRequirementFactory(data=data,
                                                        created_by=self.creator,
                                                        requirement=requirement)
-        provider = base.DataProviderFactory(name="Test provider",
+        provider = base.DataProviderFactory(name='Test provider',
                                             created_by=self.creator)
         data_provider = base.DataProviderRelationFactory(data=data,
                                                          created_by=self.creator,
@@ -320,15 +320,15 @@ class RequirementTests(base.FormCheckTestCase):
     def test_transition_existent_state_no_transition(self):
         self.login_creator()
         metrics = base.RequirementFactory.create_metrics(self.creator)
-        requirement = base.RequirementFactory(name="Test requirement",
+        requirement = base.RequirementFactory(name='Test requirement',
                                               created_by=self.creator,
                                               **metrics)
-        data = base.DataFactory(name="Test data",
+        data = base.DataFactory(name='Test data',
                                 created_by=self.creator)
         data_requirement = base.DataRequirementFactory(data=data,
                                                        created_by=self.creator,
                                                        requirement=requirement)
-        provider = base.DataProviderFactory(name="Test provider",
+        provider = base.DataProviderFactory(name='Test provider',
                                             created_by=self.creator)
         data_provider = base.DataProviderRelationFactory(data=data,
                                                          created_by=self.creator,
@@ -368,7 +368,7 @@ class RequirementPermissionTests(base.PermissionsCheckTestCase):
 
     def test_requirement_detail_not_auth(self):
         metrics = base.RequirementFactory.create_metrics(self.creator)
-        requirement = base.RequirementFactory(name="Test requirement",
+        requirement = base.RequirementFactory(name='Test requirement',
                                               created_by=self.creator,
                                               **metrics)
         self.check_user_redirect_all_methods(
@@ -382,7 +382,7 @@ class RequirementPermissionTests(base.PermissionsCheckTestCase):
 
     def test_requirement_edit_not_auth(self):
         metrics = base.RequirementFactory.create_metrics(self.creator)
-        requirement = base.RequirementFactory(name="Test requirement",
+        requirement = base.RequirementFactory(name='Test requirement',
                                               created_by=self.creator,
                                               **metrics)
         self.check_user_redirect_all_methods(
@@ -391,7 +391,7 @@ class RequirementPermissionTests(base.PermissionsCheckTestCase):
 
     def test_requirement_edit_auth(self):
         metrics = base.RequirementFactory.create_metrics(self.creator)
-        requirement = base.RequirementFactory(name="Test requirement",
+        requirement = base.RequirementFactory(name='Test requirement',
                                               created_by=self.creator,
                                               **metrics)
         self.check_authenticated_user_redirect_all_methods(
@@ -400,7 +400,7 @@ class RequirementPermissionTests(base.PermissionsCheckTestCase):
 
     def test_requirement_delete_not_auth(self):
         metrics = base.RequirementFactory.create_metrics(self.creator)
-        requirement = base.RequirementFactory(name="Test requirement",
+        requirement = base.RequirementFactory(name='Test requirement',
                                               created_by=self.creator,
                                               **metrics)
         self.check_user_redirect_all_methods(
@@ -409,7 +409,7 @@ class RequirementPermissionTests(base.PermissionsCheckTestCase):
 
     def test_requirement_delete_auth(self):
         metrics = base.RequirementFactory.create_metrics(self.creator)
-        requirement = base.RequirementFactory(name="Test requirement",
+        requirement = base.RequirementFactory(name='Test requirement',
                                               created_by=self.creator,
                                               **metrics)
         self.check_authenticated_user_redirect_all_methods(
