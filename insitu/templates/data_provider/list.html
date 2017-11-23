@@ -139,6 +139,7 @@
         $('#is_network, #provider_type').val('All');
         var table = $table.DataTable();
         table.ajax.reload();
+        table.search('').draw();
       });
     });
   </script>

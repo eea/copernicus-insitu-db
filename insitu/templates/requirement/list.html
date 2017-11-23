@@ -152,6 +152,7 @@
         $('#dissemination,#quality_control_procedure,#group').val('All');
         var table = $table.DataTable();
         table.ajax.reload();
+        table.search('').draw();
       });
     });
   </script>

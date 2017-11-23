@@ -12,8 +12,8 @@ if not getattr(Search, '_patched', False):
     Search.order_by = Search.sort
     Search._patched = True
 
-my_analyzer = analyzer(
-    'my_analyzer',
+case_insensitive_analyzer = analyzer(
+    'case_insensitive_analyzer',
     tokenizer=tokenizer('trigram', 'nGram', min_gram=3, max_gram=3),
     filter=['lowercase']
 )
@@ -22,7 +22,7 @@ my_analyzer = analyzer(
 @insitu.doc_type
 class ProductDoc(DocType):
     acronym = fields.KeywordField()
-    name = fields.TextField(analyzer=my_analyzer, fielddata=True)
+    name = fields.TextField(analyzer=case_insensitive_analyzer, fielddata=True)
     group = fields.KeywordField(attr='group.name')
     status = fields.KeywordField(attr='status.name')
     service = fields.KeywordField(attr='component.service.name')
@@ -50,7 +50,7 @@ class ProductDoc(DocType):
 
 @insitu.doc_type
 class RequirementDoc(DocType):
-    name = fields.TextField(analyzer=my_analyzer, fielddata=True)
+    name = fields.TextField(analyzer=case_insensitive_analyzer, fielddata=True)
     dissemination = fields.KeywordField(attr='dissemination.name')
     quality_control_procedure = fields.KeywordField(
         attr='quality_control_procedure.name'
@@ -91,7 +91,7 @@ class RequirementDoc(DocType):
 
 @insitu.doc_type
 class DataDoc(DocType):
-    name = fields.TextField(analyzer=my_analyzer, fielddata=True)
+    name = fields.TextField(analyzer=case_insensitive_analyzer, fielddata=True)
     update_frequency = fields.KeywordField(attr='update_frequency.name')
     coverage = fields.KeywordField(attr='coverage.name')
     timeliness = fields.KeywordField(attr='timeliness.name')
@@ -123,7 +123,7 @@ class DataDoc(DocType):
 
 @insitu.doc_type
 class DataProviderDoc(DocType):
-    name = fields.TextField(analyzer=my_analyzer, fielddata=True)
+    name = fields.TextField(analyzer=case_insensitive_analyzer, fielddata=True)
     is_network = fields.BooleanField()
     acronym = fields.KeywordField(attr='get_elastic_search_data.acronym')
     address = fields.KeywordField(attr='get_elastic_search_data.address')

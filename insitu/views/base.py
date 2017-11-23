@@ -1,6 +1,5 @@
 from django.views.generic.edit import ModelFormMixin
 from django_datatables_view.base_datatable_view import BaseDatatableView
-from elasticsearch_dsl import Q
 
 from insitu.utils import ALL_OPTIONS_LABEL
 from insitu.views.protected.views import ProtectedView
