@@ -24,9 +24,16 @@
     </h1>
   </div>
 
+  {% bootstrap_form_errors form %}
   <form action="" method="POST">
     {% csrf_token %}
-    {% bootstrap_form form %}
+
+    {% bootstrap_field form.data required_css_class='required' %}
+
+    {% bootstrap_field form.provider required_css_class='required' %}
+
+    {% bootstrap_field form.role required_css_class='required' %}
+
     <input type="hidden" name="data" value="{{ rel.data.pk }}" />
     <input class="btn btn-primary" type="submit" value="Save" />
     <a href="{{ url }}"

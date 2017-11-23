@@ -128,6 +128,11 @@ class RequirementForm(forms.ModelForm):
         fields = ['name', 'note', 'dissemination',
                   'quality_control_procedure', 'group']
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['name'].help_text = (
+            'Please avoid separating words with the character "_"')
+
     def _create_metric(self, threshold, breakthrough, goal):
         return models.Metric.objects.create(
             threshold=threshold,

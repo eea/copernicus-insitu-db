@@ -15,6 +15,10 @@
     color: #007B2B;
 }
 
+.red {
+    color: red;
+}
+
 .no-padding-left {
     padding-left: 0;
 }
@@ -48,6 +52,10 @@
 .european_commission-logo{
   width:134px;
   height:100px;
+}
+
+.required .control-label:after {
+  content:"*";color:red;
 }
 
 #footer{

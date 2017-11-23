@@ -21,9 +21,18 @@
     </h1>
   </div>
 
+  {% include "bits/info_field_required.html" %}
+
+  {% bootstrap_form_errors form %}
   <form action="" method="POST">
     {% csrf_token %}
-    {% bootstrap_form form %}
+
+    {% bootstrap_field form.data required_css_class='required' %}
+
+    {% bootstrap_field form.provider required_css_class='required' %}
+
+    {% bootstrap_field form.role required_css_class='required' %}
+
     <input class="btn btn-primary" type="submit" value="Save" />
     <a href="{{ url }}"
        class="btn btn-default">Cancel</a>
