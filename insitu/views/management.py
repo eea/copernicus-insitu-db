@@ -1,4 +1,5 @@
 from django.urls import reverse_lazy
+from django.conf import settings
 
 from insitu.views import protected
 from insitu.views.protected.views import ProtectedTemplateView
@@ -37,4 +38,5 @@ class HelpPage(ProtectedTemplateView):
                            if field.name not in ('id', 'sort_order')]
             }
             context['models'][model._meta.model_name] = data
+            context['email'] = settings.SUPPORT_EMAIL
         return context

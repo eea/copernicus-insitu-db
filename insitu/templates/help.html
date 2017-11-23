@@ -9,6 +9,10 @@
 {% block title %}Help{% endblock %}
 
 {% block content %}
+  <h4>
+    Can't find a solution? Contact us at
+    <a href="mailto:{{ email }}">{{ email }}</a>
+  </h4>
   {% for model, data in models.items %}
     <div class="row" id="{{ model }}">
       <h1>{{ data.nice_name|capfirst }}</h1>
