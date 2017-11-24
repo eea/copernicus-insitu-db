@@ -9,6 +9,12 @@ class ESDatatableView(BaseDatatableView, ProtectedView):
     def get_initial_queryset(self):
         return self.document.search()
 
+    def ordering(self, qs):
+        search_text = self.request.GET.get('search[value]', '')
+        if search_text:
+            return qs
+        return super().ordering(qs)
+
     def filter_queryset(self, qs):
         for filter in self.filters:
             value = self.request.GET.get(filter)
@@ -19,7 +25,7 @@ class ESDatatableView(BaseDatatableView, ProtectedView):
         search_text = self.request.GET.get('search[value]', '')
         if not search_text:
             return qs
-        return qs.query('query_string', query=search_text)
+        return qs.query('query_string', query='*' + search_text + '*')
 
 
 class CreatedByMixin:

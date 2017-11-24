@@ -182,6 +182,7 @@
         $('#service,#entity,#component,#group,#status,#coverage').val('All');
         var table = $table.DataTable();
         table.ajax.reload();
+        table.search('').draw();
       });
     });
   </script>

@@ -181,6 +181,7 @@
         $('#name,#update_frequency,#coverage,#timeliness,#policy,#data_type,#data_format,#quality_control_procedure,#dissemination').val('All');
         var table = $table.DataTable();
         table.ajax.reload();
+        table.search('').draw();
       });
     });
   </script>
