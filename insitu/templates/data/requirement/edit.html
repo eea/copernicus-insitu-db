@@ -24,9 +24,11 @@
     </h1>
   </div>
 
+  {% include "bits/info_field_required.html" %}
+
   <form action="" method="POST">
     {% csrf_token %}
-    {% bootstrap_field form.data %}
+    {% bootstrap_field form.data required_css_class='required' %}
 
     {% bootstrap_field form.requirement %}
 
@@ -36,7 +38,7 @@
 
     {% bootstrap_field form.note %}
 
-    {% bootstrap_field form.level_of_compliance addon_after='<a target="_blank" href="help#compliancelevel"><span class="glyphicon glyphicon-question-sign"></span></a>' %}
+    {% bootstrap_field form.level_of_compliance required_css_class='required' addon_after='<a target="_blank" href="help#compliancelevel"><span class="glyphicon glyphicon-question-sign"></span></a>' %}
     <input type="hidden" name="data" value="{{ rel.data.pk }}"/>
     <input class="btn btn-primary" type="submit" value="Save"/>
     <a href="{{ url }}"

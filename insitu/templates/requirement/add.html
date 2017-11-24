@@ -21,18 +21,24 @@
     </h1>
   </div>
 
+  <div class="alert alert-info">
+    All fields marked with <span class="red">*</span> are required.<br>
+    At least one metric is required.
+  </div>
+
 {% bootstrap_form_errors form %}
 <form action="" method="post">
   {% csrf_token %}
-  {% bootstrap_field form.name %}
+
+  {% bootstrap_field form.name required_css_class='required' %}
 
   {% bootstrap_field form.note %}
 
-  {% bootstrap_field form.dissemination addon_after='<a target="_blank" href="help#dissemination"><span class="glyphicon glyphicon-question-sign"></span></a>' %}
+  {% bootstrap_field form.dissemination required_css_class='required' addon_after='<a target="_blank" href="help#dissemination"><span class="glyphicon glyphicon-question-sign"></span></a>' %}
 
-  {% bootstrap_field form.quality_control_procedure addon_after='<a target="_blank" href="help#qualitycontrolprocedure"><span class="glyphicon glyphicon-question-sign"></span></a>' %}
+  {% bootstrap_field form.quality_control_procedure required_css_class='required' addon_after='<a target="_blank" href="help#qualitycontrolprocedure"><span class="glyphicon glyphicon-question-sign"></span></a>' %}
 
-  {% bootstrap_field form.group addon_after='<a target="_blank" href="help#requirementgroup"><span class="glyphicon glyphicon-question-sign"></span></a>' %}
+  {% bootstrap_field form.group required_css_class='required' addon_after='<a target="_blank" href="help#requirementgroup"><span class="glyphicon glyphicon-question-sign"></span></a>' %}
 
   <label class="control-label">Uncertainty</label>
 
