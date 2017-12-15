@@ -178,30 +178,25 @@ class RequirementForm(forms.ModelForm):
     def save(self, created_by='', commit=True):
         if created_by:
             self.instance.created_by = created_by
-
-        uncertainty_data = self._get_metric_data('uncertainty', self.data)
+        uncertainty_data = self._get_metric_data('uncertainty', self.cleaned_data)
         update_frequency_data = self._get_metric_data(
             'update_frequency',
-            self.data
+            self.cleaned_data
         )
-        timeliness_data = self._get_metric_data('timeliness', self.data)
+        timeliness_data = self._get_metric_data('timeliness', self.cleaned_data)
         horizontal_resolution_data = self._get_metric_data(
             'horizontal_resolution',
-            self.data
+            self.cleaned_data
         )
         vertical_resolution_data = self._get_metric_data('vertical_resolution',
-                                                         self.data)
+                                                         self.cleaned_data)
         data = {
-            'name': self.data['name'],
-            'note': self.data['note'],
-            'dissemination': Dissemination.objects.get(
-                id=self.data['dissemination']
-            ),
+            'name': self.cleaned_data['name'],
+            'note': self.cleaned_data['note'],
+            'dissemination': self.cleaned_data['dissemination'],
             'quality_control_procedure':
-                QualityControlProcedure.objects.get(
-                    id=self.data['quality_control_procedure']
-                ),
-            'group': RequirementGroup.objects.get(id=self.data['group']),
+                self.cleaned_data['quality_control_procedure'],
+            'group': self.cleaned_data['group'],
         }
 
         if not self.initial:
