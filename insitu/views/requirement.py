@@ -79,10 +79,13 @@ class RequirementList(LoggingProtectedTemplateView):
             'name', model_cls=pickmodels.QualityControlProcedure
         )
         groups = get_choices('name', model_cls=pickmodels.RequirementGroup)
+        states = [{'title': 'All', 'name': 'All'}] + [
+            state for state in models.ValidationWorkflow.states]
         context.update({
             'disseminations': disseminations,
             'quality_control_procedures': quality_control_procedures,
             'groups': groups,
+            'states': states,
         })
         return context
 
@@ -92,7 +95,7 @@ class RequirementListJson(ESDatatableView):
                'uncertainty', 'update_frequency', 'timeliness',
                'horizontal_resolution', 'vertical_resolution', 'state']
     order_columns = columns
-    filters = ['dissemination', 'quality_control_procedure', 'group']
+    filters = ['dissemination', 'quality_control_procedure', 'group', 'state']
     document = documents.RequirementDoc
     permission_classes = (IsAuthenticated, )
 

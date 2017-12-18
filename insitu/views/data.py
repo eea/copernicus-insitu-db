@@ -34,6 +34,8 @@ class DataList(LoggingProtectedTemplateView):
             model_cls=pickmodels.QualityControlProcedure
         )
         disseminations = get_choices('name', model_cls=pickmodels.Dissemination)
+        states = [{'title': 'All', 'name': 'All'}] + [
+            state for state in models.ValidationWorkflow.states]
         context.update({
             'update_frequencies': update_frequencies,
             'coverages': coverages,
@@ -43,6 +45,7 @@ class DataList(LoggingProtectedTemplateView):
             'data_formats': data_formats,
             'quality_control_procedures': quality_control_procedures,
             'disseminations': disseminations,
+            'states': states,
         })
         return context
 
@@ -54,7 +57,7 @@ class DataListJson(ESDatatableView):
     order_columns = columns
     filters = ['update_frequency', 'coverage', 'timeliness', 'policy',
                'data_type', 'data_format', 'quality_control_procedure',
-               'dissemination']
+               'dissemination', 'state']
     document = documents.DataDoc
     permission_classes = (IsAuthenticated, )
 

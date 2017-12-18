@@ -111,6 +111,15 @@
           </div>
 
           <div class="form-group">
+            <label for="state">State:</label>
+            <select id="state" class="form-control">
+              {% for state in states %}
+                <option value="{{ state.name }}">{{ state.title }}</option>
+              {% endfor %}
+            </select>
+          </div>
+
+          <div class="form-group">
             <button type="button" class="btn btn-primary"
                     id="filter-btn">Filter
             </button>
@@ -168,6 +177,7 @@
             d.data_format = $('#data_format').val();
             d.quality_control_procedure = $('#quality_control_procedure').val();
             d.dissemination = $('#dissemination').val();
+            d.state = $('#state').val();
           }
         }
       }).fnFilterOnReturn();
@@ -178,7 +188,7 @@
       });
 
       $('#reset-btn').on('click', function () {
-        $('#name,#update_frequency,#coverage,#timeliness,#policy,#data_type,#data_format,#quality_control_procedure,#dissemination').val('All');
+        $('#name,#update_frequency,#coverage,#timeliness,#policy,#data_type,#data_format,#quality_control_procedure,#dissemination,state').val('All');
         var table = $table.DataTable();
         table.ajax.reload();
         table.search('').draw();

@@ -60,6 +60,15 @@
           </div>
 
           <div class="form-group">
+            <label for="state">State:</label>
+            <select id="state" class="form-control">
+              {% for state in states %}
+                <option value="{{ state.name }}">{{ state.title }}</option>
+              {% endfor %}
+            </select>
+          </div>
+
+          <div class="form-group">
             <button type="button" class="btn btn-primary btn-sm"
                     id="filter-btn">Filter
             </button>
@@ -110,6 +119,7 @@
           "data": function (d) {
             d.is_network = $('#is_network').val();
             d.provider_type = $('#provider_type').val();
+            d.state = $('#state').val();
           }
         },
         "columnDefs": [
@@ -136,7 +146,7 @@
       });
 
       $('#reset-btn').on('click', function () {
-        $('#is_network, #provider_type').val('All');
+        $('#is_network, #provider_type,#state').val('All');
         var table = $table.DataTable();
         table.ajax.reload();
         table.search('').draw();

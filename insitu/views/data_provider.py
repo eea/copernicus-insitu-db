@@ -31,8 +31,11 @@ class DataProviderList(LoggingProtectedTemplateView):
         context = super().get_context_data()
         provider_types = get_choices(
             'name', model_cls=pickmodels.ProviderType)
+        states = [{'title': 'All', 'name': 'All'}] + [
+            state for state in models.ValidationWorkflow.states]
         context.update({
             'provider_types': provider_types,
+            'states': states,
         })
         return context
 
@@ -41,7 +44,7 @@ class DataProviderListJson(ESDatatableView):
     columns = ['name', 'acronym', 'address', 'phone', 'email', 'contact_person',
                'provider_type', 'is_network', 'state']
     order_columns = columns
-    filters = ['is_network', 'provider_type']
+    filters = ['is_network', 'provider_type', 'state']
     document = documents.DataProviderDoc
     permission_classes = (IsAuthenticated,)
 

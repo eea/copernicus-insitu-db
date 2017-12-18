@@ -66,6 +66,15 @@
           </div>
 
           <div class="form-group">
+            <label for="state">State:</label>
+            <select id="state" class="form-control">
+              {% for state in states %}
+                <option value="{{ state.name }}">{{ state.title }}</option>
+              {% endfor %}
+            </select>
+          </div>
+
+          <div class="form-group">
             <button type="button" class="btn btn-primary btn-sm"
                     id="filter-btn">Filter
             </button>
@@ -119,6 +128,7 @@
             d.dissemination = $('#dissemination').val();
             d.quality_control_procedure = $('#quality_control_procedure').val();
             d.group = $('#group').val();
+            d.state = $('#state').val()
           }
         },
         "columnDefs": [
@@ -149,7 +159,7 @@
       });
 
       $('#reset-btn').on('click', function () {
-        $('#dissemination,#quality_control_procedure,#group').val('All');
+        $('#dissemination,#quality_control_procedure,#group,#state').val('All');
         var table = $table.DataTable();
         table.ajax.reload();
         table.search('').draw();
