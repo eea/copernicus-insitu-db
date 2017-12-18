@@ -4,7 +4,7 @@ from insitu.models import Requirement
 
 
 class Command(BaseCommand):
-    help = 'Closes the specified poll for voting'
+    help = 'Strips names and metrics in order for requirement clone to work properly.'
 
     def handle(self, *args, **options):
         requirements = Requirement.objects.all()
