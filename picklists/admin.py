@@ -8,6 +8,7 @@ from picklists import models
 class CountryAdmin(admin.ModelAdmin):
     search_fields = ['code', 'name']
 
+
 class InspireThemeAdmin(admin.ModelAdmin):
     search_fields = ['name', 'annex']
 
