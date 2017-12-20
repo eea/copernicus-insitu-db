@@ -165,6 +165,9 @@
       var $table = $('#data').dataTable({
         "processing": true,
         "serverSide": true,
+        "dom": "<'row'<'col-sm-5'l><'col-sm-12'f><'col-sm-12'p>>" +
+               "<'row'<'col-sm-12'tr>>" +
+               "<'row'<'col-sm-5'i><'col-sm-7'p>>",
         "ajax": {
           "url": "{% url 'data:json' %}",
           "data": function (d) {

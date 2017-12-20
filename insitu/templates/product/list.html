@@ -139,6 +139,9 @@
       var $table = $('#products').dataTable({
         "processing": true,
         "serverSide": true,
+        "dom": "<'row'<'col-sm-5'l><'col-sm-12'f><'col-sm-12'p>>" +
+               "<'row'<'col-sm-12'tr>>" +
+               "<'row'<'col-sm-5'i><'col-sm-7'p>>",
         "ajax": {
           "url": "{% url 'product:json' %}",
           "data": function (d) {
