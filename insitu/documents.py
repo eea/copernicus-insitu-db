@@ -1,6 +1,6 @@
 from django.core.urlresolvers import reverse
-from django_elasticsearch_dsl import DocType, Index, fields, Keyword, Text
-from elasticsearch_dsl import analyzer, tokenizer
+from django_elasticsearch_dsl import DocType, Index, fields
+from elasticsearch_dsl.analysis import analyzer, tokenizer
 from elasticsearch_dsl.search import Search
 
 from insitu.models import Product, Requirement, DataProvider, Data
@@ -14,7 +14,7 @@ if not getattr(Search, '_patched', False):
 
 case_insensitive_analyzer = analyzer(
     'case_insensitive_analyzer',
-    tokenizer=tokenizer('trigram', 'nGram', min_gram=3, max_gram=3),
+    tokenizer=tokenizer('trigram', 'nGram'),
     filter=['lowercase']
 )
 
@@ -22,7 +22,11 @@ case_insensitive_analyzer = analyzer(
 @insitu.doc_type
 class ProductDoc(DocType):
     acronym = fields.KeywordField()
-    name = fields.TextField(analyzer=case_insensitive_analyzer, fielddata=True)
+    name = fields.TextField(
+        analyzer=case_insensitive_analyzer,
+        fielddata=True,
+        fields={'raw': fields.KeywordField(multi=True, index='not_analyzed')}
+    )
     group = fields.KeywordField(attr='group.name')
     status = fields.KeywordField(attr='status.name')
     service = fields.KeywordField(attr='component.service.name')
@@ -50,7 +54,11 @@ class ProductDoc(DocType):
 
 @insitu.doc_type
 class RequirementDoc(DocType):
-    name = fields.TextField(analyzer=case_insensitive_analyzer, fielddata=True)
+    name = fields.TextField(
+        analyzer=case_insensitive_analyzer,
+        fielddata=True,
+        fields={'raw': fields.KeywordField(multi=True, index='not_analyzed')}
+    )
     dissemination = fields.KeywordField(attr='dissemination.name')
     quality_control_procedure = fields.KeywordField(
         attr='quality_control_procedure.name'
@@ -91,7 +99,11 @@ class RequirementDoc(DocType):
 
 @insitu.doc_type
 class DataDoc(DocType):
-    name = fields.TextField(analyzer=case_insensitive_analyzer, fielddata=True)
+    name = fields.TextField(
+        analyzer=case_insensitive_analyzer,
+        fielddata=True,
+        fields={'raw': fields.KeywordField(multi=True, index='not_analyzed')}
+    )
     update_frequency = fields.KeywordField(attr='update_frequency.name')
     coverage = fields.KeywordField(attr='coverage.name')
     timeliness = fields.KeywordField(attr='timeliness.name')
@@ -123,7 +135,11 @@ class DataDoc(DocType):
 
 @insitu.doc_type
 class DataProviderDoc(DocType):
-    name = fields.TextField(analyzer=case_insensitive_analyzer, fielddata=True)
+    name = fields.TextField(
+        analyzer=case_insensitive_analyzer,
+        fielddata=True,
+        fields={'raw': fields.KeywordField(multi=True, index='not_analyzed')}
+    )
     is_network = fields.BooleanField()
     acronym = fields.KeywordField(attr='get_elastic_search_data.acronym')
     address = fields.KeywordField(attr='get_elastic_search_data.address')
