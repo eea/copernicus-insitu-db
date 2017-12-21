@@ -157,10 +157,18 @@
   <script>
     $(function () {
       $('[data-toggle="popover"]').popover({
-        trigger: 'hover',
+        trigger: 'click',
         placement: 'right',
         html: true,
         container: 'table'
+      });
+
+      $(document).on('click', function (e) {
+        $('[data-toggle="popover"]').each(function () {
+          if (!$(this).is(e.target) && $(this).has(e.target).length === 0 && $('.popover').has(e.target).length === 0) {
+            (($(this).popover('hide').data('bs.popover')||{}).inState||{}).click = false;
+          }
+        });
       });
 
       var table = $('#requirements').dataTable({
