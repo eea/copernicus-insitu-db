@@ -100,7 +100,7 @@ is not executed:
 
 
 ## Ubuntu elasticsearch container error:
-* If your host runs ubuntu your elasticsearch container may fail to run with the error "bootstrap checks failed". This happens because max map count is set under the value __26214__
+* If your host runs ubuntu your elasticsearch container may fail to run with the error "bootstrap checks failed". This happens because max map count is set under the value __262144__
 * You can fix this temporarily(till you restart your machine) by running:
 
         sudo sysctl -w vm.max_map_count=262144
