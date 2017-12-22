@@ -1,3 +1,4 @@
+from django.contrib import messages
 from django.core.exceptions import ObjectDoesNotExist
 from django.core.urlresolvers import reverse
 from django.http import Http404
@@ -107,6 +108,11 @@ class RequirementAdd(GetInitialMixin, CreatedByMixin,
     permission_classes = (IsAuthenticated, )
     target_type = 'requirement'
 
+    def form_valid(self, form):
+        response = super().form_valid(form)
+        messages.success(self.request, 'The requirement was created successfully!')
+        return response
+
     def get_form_class(self):
         requirement = self.get_requirement()
         if requirement:
@@ -135,6 +141,11 @@ class RequirementEdit(GetInitialMixin, LoggingProtectedUpdateView):
     permission_classes = (IsOwnerUser, IsDraftObject)
     target_type = 'requirement'
 
+    def form_valid(self, form):
+        response = super().form_valid(form)
+        messages.success(self.request, 'This requirement was updated successfully!')
+        return response
+
     def permission_denied(self, request):
         self.permission_denied_redirect = reverse('requirement:list')
         return super().permission_denied(request)
@@ -159,6 +170,7 @@ class RequirementDelete(LoggingProtectedDeleteView):
         return super().permission_denied(request)
 
     def get_success_url(self):
+        messages.success(self.request, 'The requirement was deleted successfully!')
         return reverse('requirement:list')
 
 

@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
+from django.contrib import messages
+
 from insitu.views.base import CreatedByMixin
 from insitu.views.protected import IsOwnerUser, IsDraftObject, IsAuthenticated
 from django.urls import reverse_lazy
@@ -24,6 +26,11 @@ class DataDataProviderAdd(CreatedByMixin, LoggingProtectedCreateView):
     model = models.Data
     title = "Add a new provider for {}"
     target_type = 'relation between data and data provider'
+
+    def form_valid(self, form):
+        response = super().form_valid(form)
+        messages.success(self.request, 'The relation between data and data provider was created successfully!')
+        return response
 
     def get_form(self):
         form = super().get_form(self.form_class)
@@ -51,6 +58,11 @@ class DataDataProviderEdit(LoggingProtectedUpdateView):
     permission_denied_redirect = reverse_lazy('data:list')
     target_type = 'relation between data and data provider'
 
+    def form_valid(self, form):
+        response = super().form_valid(form)
+        messages.success(self.request, 'This relation between data and data provider was updated successfully!')
+        return response
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['url'] = self.get_success_url()
@@ -75,5 +87,6 @@ class DataDataProviderDelete(LoggingProtectedDeleteView):
         return context
 
     def get_success_url(self):
+        messages.success(self.request, 'The relation between data and data provider was deleted successfully!')
         return reverse_lazy('data:detail',
                             kwargs={'pk': self.kwargs['group_pk']})
