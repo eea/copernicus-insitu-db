@@ -1,6 +1,6 @@
 from django.core.urlresolvers import reverse
 from django_elasticsearch_dsl import DocType, Index, fields
-from elasticsearch_dsl.analysis import analyzer, tokenizer
+from elasticsearch_dsl.analysis import analyzer, tokenizer, normalizer
 from elasticsearch_dsl.search import Search
 
 from insitu.models import Product, Requirement, DataProvider, Data
@@ -18,6 +18,13 @@ case_insensitive_analyzer = analyzer(
     filter=['lowercase']
 )
 
+case_insensitive_normalizer = normalizer(
+    type="custom",
+    name_or_instance='case_insensitive_normalizer',
+    char_filter=[],
+    filter="lowercase",
+)
+
 
 @insitu.doc_type
 class ProductDoc(DocType):
@@ -25,7 +32,8 @@ class ProductDoc(DocType):
     name = fields.TextField(
         analyzer=case_insensitive_analyzer,
         fielddata=True,
-        fields={'raw': fields.KeywordField(multi=True, index='not_analyzed')}
+        fields={'raw': fields.KeywordField(multi=True, ignore_above=256,
+                                           normalizer=case_insensitive_normalizer)}
     )
     group = fields.KeywordField(attr='group.name')
     status = fields.KeywordField(attr='status.name')
@@ -57,7 +65,8 @@ class RequirementDoc(DocType):
     name = fields.TextField(
         analyzer=case_insensitive_analyzer,
         fielddata=True,
-        fields={'raw': fields.KeywordField(multi=True, index='not_analyzed')}
+        fields={'raw': fields.KeywordField(multi=True, ignore_above=256,
+                                           normalizer=case_insensitive_normalizer)}
     )
     dissemination = fields.KeywordField(attr='dissemination.name')
     quality_control_procedure = fields.KeywordField(
@@ -102,7 +111,8 @@ class DataDoc(DocType):
     name = fields.TextField(
         analyzer=case_insensitive_analyzer,
         fielddata=True,
-        fields={'raw': fields.KeywordField(multi=True, index='not_analyzed')}
+        fields={'raw': fields.KeywordField(multi=True, ignore_above=256,
+                                           normalizer=case_insensitive_normalizer)}
     )
     update_frequency = fields.KeywordField(attr='update_frequency.name')
     coverage = fields.KeywordField(attr='coverage.name')
@@ -138,7 +148,8 @@ class DataProviderDoc(DocType):
     name = fields.TextField(
         analyzer=case_insensitive_analyzer,
         fielddata=True,
-        fields={'raw': fields.KeywordField(multi=True, index='not_analyzed')}
+        fields={'raw': fields.KeywordField(multi=True,ignore_above=256,
+                                           normalizer=case_insensitive_normalizer)}
     )
     is_network = fields.BooleanField()
     acronym = fields.KeywordField(attr='get_elastic_search_data.acronym')
