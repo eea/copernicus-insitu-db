@@ -144,6 +144,23 @@
                "<'row'<'col-sm-12'p>>",
         "language": {
           "infoFiltered": "<span class='green-text'>(filtered from _MAX_ total records)<span>",
+        "stateSave": true,
+        "stateSaveParams": function(settings, data){
+          data.service = $('#service').val();
+          data.component = $('#component').val();
+          data.entity = $('#entity').val();
+          data.group = $('#group').val();
+          data.status = $('#status').val();
+          data.coverage = $('#coverage').val();
+        },
+        "stateLoadParams": function (settings, data) {
+          $('#service').val(data.service);
+          $('#component').val(data.component);
+          $('#entity').val(data.entity);
+          $('#group').val(data.group);
+          $('#status').val(data.status);
+          $('#coverage').val(data.coverage);
+>>>>>>> [refs #90824] Keep search and filters options between pages
         },
         "ajax": {
           "url": "{% url 'product:json' %}",
@@ -157,7 +174,6 @@
           }
         }
       }).fnFilterOnReturn();
-
       $('#filter-btn').on('click', function () {
         var table = $table.DataTable();
         table.ajax.reload();

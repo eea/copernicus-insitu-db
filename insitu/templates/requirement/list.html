@@ -137,6 +137,19 @@
             d.state = $('#state').val()
           }
         },
+        "stateSave": true,
+        "stateSaveParams": function(settings, data){
+          data.dissemination = $('#dissemination').val();
+          data.quality_control_procedure = $('#quality_control_procedure').val();
+          data.group = $('#group').val();
+          data.state = $('#state').val();
+        },
+        "stateLoadParams": function (settings, data) {
+          $('#dissemination').val(data.dissemination);
+          $('#quality_control_procedure').val(data.quality_control_procedure);
+          $('#group').val(data.group);
+          $('#state').val(data.state);
+        },
         "columnDefs": [
           {
             "render": function (data, type, row) {

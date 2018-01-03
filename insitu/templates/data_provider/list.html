@@ -53,7 +53,7 @@
           <div class="form-group">
             <label for="is_network">Is network:</label>
             <select id="is_network" class="form-control">
-              <option value="{{ ALL_OPTIONS_LABEL }}">All</option>
+              <option value="All">All</option>
               <option value="true">Yes</option>
               <option value="false">No</option>
             </select>
@@ -127,6 +127,16 @@
                "<'row'<'col-sm-12'p>>",
         "language": {
           "infoFiltered": "<span class='green-text'>(filtered from _MAX_ total records)<span>",
+        "stateSave": true,
+        "stateSaveParams": function(settings, data){
+          data.is_network = $('#is_network').val();
+          data.provider_type = $('#provider_type').val();
+          data.state = $('#state').val();
+        },
+        "stateLoadParams": function (settings, data) {
+          $('#is_network').val(data.is_network);
+          $('#provider_type').val(data.provider_type);
+          $('#state').val(data.state);
         },
         "columnDefs": [
           {

@@ -185,7 +185,30 @@
             d.dissemination = $('#dissemination').val();
             d.state = $('#state').val();
           }
-        }
+        },
+        "stateSave": true,
+        "stateSaveParams": function(settings, data){
+          data.update_frequency = $('#update_frequency').val();
+          data.coverage = $('#coverage').val();
+          data.timeliness = $('#timeliness').val();
+          data.policy = $('#policy').val();
+          data.data_type = $('#data_type').val();
+          data.data_format = $('#data_format').val();
+          data.quality_control_procedure = $('#quality_control_procedure').val();
+          data.dissemination = $('#dissemination').val();
+          data.state = $('#state').val();
+        },
+        "stateLoadParams": function (settings, data) {
+          $('#update_frequency').val(data.update_frequency);
+          $('#coverage').val(data.coverage);
+          $('#timeliness').val(data.timeliness);
+          $('#policy').val(data.policy);
+          $('#data_type').val(data.data_type);
+          $('#data_format').val(data.data_format);
+          $('#quality_control_procedure').val(data.quality_control_procedure);
+          $('#dissemination').val(data.dissemination);
+          $('#state').val(data.state);
+        },
       }).fnFilterOnReturn();
 
       $('#filter-btn').on('click', function () {
@@ -194,7 +217,7 @@
       });
 
       $('#reset-btn').on('click', function () {
-        $('#name,#update_frequency,#coverage,#timeliness,#policy,#data_type,#data_format,#quality_control_procedure,#dissemination,state').val('All');
+        $('#name,#update_frequency,#coverage,#timeliness,#policy,#data_type,#data_format,#quality_control_procedure,#dissemination,#state').val('All');
         var table = $table.DataTable();
         table.ajax.reload();
         table.search('').draw();
