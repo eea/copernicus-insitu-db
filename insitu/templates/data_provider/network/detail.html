@@ -95,9 +95,12 @@
     $(function () {
 
       var table = $('#groups').dataTable({
-        "dom": "<'row'<'col-sm-5'l><'col-sm-12'f><'col-sm-12'p>>" +
+        "dom": "<'row'<'col-sm-5'i><'col-sm-12'f><'col-sm-4 display-margin'l><'col-sm-8'p>>" +
                "<'row'<'col-sm-12'tr>>" +
-               "<'row'<'col-sm-5'i><'col-sm-7'p>>",
+               "<'row'<'col-sm-12'p>>",
+        "language": {
+          "infoFiltered": "<span class='green-text'>(filtered from _MAX_ total records)<span>",
+        },
         columnDefs: [
           {
             targets: 'no-sort',

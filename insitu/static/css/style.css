@@ -65,6 +65,16 @@
   position: fixed;
 }
 
+.display-margin{
+ margin-top: 20px;
+ margin-bottom: 20px;
+}
+
+.green-text{
+ color: green !important;
+ font-weight: bold;
+}
+
 @media (min-width: 1200px){
   .container {
     width: 1250px;
