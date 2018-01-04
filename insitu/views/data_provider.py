@@ -91,7 +91,7 @@ class DataProviderEditNetwork(LoggingProtectedUpdateView):
 
     def form_valid(self, form):
         response = super().form_valid(form)
-        messages.success(self.request, 'This data provider network was updated successfully!')
+        messages.success(self.request, 'The data provider network was updated successfully!')
         return response
 
     def get_success_url(self):
@@ -126,10 +126,10 @@ class DataProviderDeleteNetwork(LoggingProtectedDeleteView):
 
     def form_valid(self, form):
         response = super().form_valid(form)
-        messages.success(self.request, 'The data provider network was deleted successfully!')
         return response
 
     def get_success_url(self):
+        messages.success(self.request, 'The data provider network was deleted successfully!')
         return reverse('provider:list')
 
 
@@ -199,7 +199,7 @@ class DataProviderEditNonNetwork(LoggingProtectedUpdateView):
         if not details_form.is_valid():
             return self.form_invalid(form)
         self._update_objects(form)
-        messages.success(self.request, 'This data provider was updated successfully!')
+        messages.success(self.request, 'The data provider was updated successfully!')
         return HttpResponseRedirect(self.get_success_url())
 
     def form_invalid(self, form):

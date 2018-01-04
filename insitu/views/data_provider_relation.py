@@ -60,7 +60,7 @@ class DataDataProviderEdit(LoggingProtectedUpdateView):
 
     def form_valid(self, form):
         response = super().form_valid(form)
-        messages.success(self.request, 'This relation between data and data provider was updated successfully!')
+        messages.success(self.request, 'The relation between data and data provider was updated successfully!')
         return response
 
     def get_context_data(self, **kwargs):

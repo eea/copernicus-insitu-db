@@ -24,10 +24,11 @@ class BaseProductRequirementAdd(CreatedByMixin, LoggingProtectedCreateView):
     model = models.Requirement
     permission_classes = (IsAuthenticated, )
     permission_denied_redirect = reverse_lazy('requirement:list')
+    message = None
 
     def form_valid(self, form):
         response = super().form_valid(form)
-        messages.success(self.request, 'The relation between product and requirement was created successfully!')
+        messages.success(self.request, self.message)
         return response
 
     def get_form(self):
@@ -53,6 +54,7 @@ class ProductRequirementAdd(BaseProductRequirementAdd):
     form_class = forms.RequirementProductRequirementForm
     title = "Add a new product for {}"
     target_type = 'relation between product and requirement'
+    message = 'The relation between product and requirement was updated successfully!'
 
 
 class ProductGroupRequirementAdd(BaseProductRequirementAdd):
@@ -60,6 +62,7 @@ class ProductGroupRequirementAdd(BaseProductRequirementAdd):
     form_class = forms.ProductGroupRequirementForm
     title = "Add a new product group for {}"
     target_type = 'relations between product group and requirement'
+    message = "The relations between the product group's products and requirement were created succesfully!"
 
     def get_object_id(self):
         if 'product_group' in self.request.POST:
@@ -81,7 +84,7 @@ class ProductRequirementEdit(LoggingProtectedUpdateView):
 
     def form_valid(self, form):
         response = super().form_valid(form)
-        messages.success(self.request, 'This relation between product and requirement was updated successfully!')
+        messages.success(self.request, 'The relation between product and requirement was updated successfully!')
         return response
 
     def get_context_data(self, **kwargs):

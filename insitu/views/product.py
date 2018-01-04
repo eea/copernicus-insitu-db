@@ -108,7 +108,7 @@ class ProductEdit(ProtectedUpdateView):
 
     def form_valid(self, form):
         response = super().form_valid(form)
-        messages.success(self.request, 'This product was updated successfully!')
+        messages.success(self.request, 'The product was updated successfully!')
         return response
 
     def permission_denied(self, request):
