@@ -1,3 +1,4 @@
+from django.contrib import messages
 from django.core.urlresolvers import reverse, reverse_lazy
 
 from insitu import documents
@@ -70,6 +71,11 @@ class DataAdd(CreatedByMixin, LoggingProtectedCreateView):
     permission_denied_redirect = reverse_lazy('data:list')
     target_type = 'data'
 
+    def form_valid(self, form):
+        response = super().form_valid(form)
+        messages.success(self.request, 'The data were created successfully!')
+        return response
+
     def get_success_url(self):
         instance = self.object
         return reverse('data:detail', kwargs={'pk': instance.pk})
@@ -83,6 +89,11 @@ class DataEdit(LoggingProtectedUpdateView):
     permission_classes = (IsOwnerUser, IsDraftObject)
     permission_denied_redirect = reverse_lazy('data:list')
     target_type = 'data'
+
+    def form_valid(self, form):
+        response = super().form_valid(form)
+        messages.success(self.request, 'The data were updated successfully!')
+        return response
 
     def get_success_url(self):
         return reverse('data:detail', kwargs={'pk': self.object.pk})
@@ -107,4 +118,5 @@ class DataDelete(LoggingProtectedDeleteView):
     target_type = 'data'
 
     def get_success_url(self):
+        messages.success(self.request, 'The data were deleted successfully!')
         return reverse('data:list')

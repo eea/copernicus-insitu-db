@@ -9,6 +9,7 @@
     <link rel="stylesheet" type="text/css" href="{% static 'css/bootstrap.min.css.map' %}"/>
     <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}"/>
     <link rel="stylesheet" type="text/css" href="{% static 'hijack/hijack-styles.css' %}" />
+    <link rel="stylesheet" type="text/css" href="{% static 'css/animate.css' %}"/>
     {% block style %}
     {% endblock %}
 
@@ -54,5 +55,27 @@
 
     {% block scripts %}
     {% endblock %}
+
+    <script src="{% static 'js/bootstrap-notify.min.js' %}"></script>
+    <script>
+      {% if messages %}
+        {% for message in messages %}
+          $.notify({
+            message: '{{ message }}'
+          },{
+            position: "absolute",
+            placement: {
+              from: "top",
+              align: "center"
+            },
+            offset: 60,
+            animate: {
+              enter: 'animated fadeInDown',
+              exit: 'animated fadeOutUp'
+            }
+          });
+        {% endfor %}
+      {% endif %}
+    </script>
   </body>
 </html>

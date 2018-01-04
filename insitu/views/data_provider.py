@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from django.contrib import messages
 from django.http import HttpResponseRedirect
 from django.urls import reverse, reverse_lazy
 
@@ -70,6 +71,11 @@ class DataProviderAddNetwork(CreatedByMixin, LoggingProtectedCreateView):
     permission_denied_redirect = reverse_lazy('provider:list')
     target_type = 'data provider network'
 
+    def form_valid(self, form):
+        response = super().form_valid(form)
+        messages.success(self.request, 'The data provider network was created successfully!')
+        return response
+
     def get_success_url(self):
         return reverse('provider:detail', kwargs={'pk': self.object.pk})
 
@@ -83,6 +89,11 @@ class DataProviderEditNetwork(LoggingProtectedUpdateView):
     permission_denied_redirect = reverse_lazy('provider:list')
     target_type = 'data provider network'
 
+    def form_valid(self, form):
+        response = super().form_valid(form)
+        messages.success(self.request, 'The data provider network was updated successfully!')
+        return response
+
     def get_success_url(self):
         return reverse('provider:detail', kwargs={'pk': self.object.pk})
 
@@ -94,6 +105,11 @@ class DataProviderEditNetworkMembers(ProtectedUpdateView):
     model = models.DataProvider
     permission_classes = (IsOwnerUser, IsDraftObject)
     permission_denied_redirect = reverse_lazy('provider:list')
+
+    def form_valid(self, form):
+        response = super().form_valid(form)
+        messages.success(self.request, 'The members for this data provider network were updated successfully!')
+        return response
 
     def get_success_url(self):
         return reverse('provider:detail', kwargs={'pk': self.object.pk})
@@ -108,7 +124,12 @@ class DataProviderDeleteNetwork(LoggingProtectedDeleteView):
     permission_denied_redirect = reverse_lazy('provider:list')
     target_type = 'data provider network'
 
+    def form_valid(self, form):
+        response = super().form_valid(form)
+        return response
+
     def get_success_url(self):
+        messages.success(self.request, 'The data provider network was deleted successfully!')
         return reverse('provider:list')
 
 
@@ -134,6 +155,7 @@ class DataProviderAddNonNetwork(CreatedByMixin, LoggingProtectedCreateView):
         data['data_provider'] = self.object.pk
         details_form = forms.DataProviderDetailsForm(data=data)
         details_form.save(created_by=self.object.created_by)
+        messages.success(self.request, 'The data provider was created successfully!')
         return HttpResponseRedirect(self.get_success_url())
 
     def form_invalid(self, form):
@@ -177,6 +199,7 @@ class DataProviderEditNonNetwork(LoggingProtectedUpdateView):
         if not details_form.is_valid():
             return self.form_invalid(form)
         self._update_objects(form)
+        messages.success(self.request, 'The data provider was updated successfully!')
         return HttpResponseRedirect(self.get_success_url())
 
     def form_invalid(self, form):
@@ -200,4 +223,5 @@ class DataProviderDeleteNonNetwork(LoggingProtectedDeleteView):
     target_type = 'data provider'
 
     def get_success_url(self):
+        messages.success(self.request, 'The data provider was deleted successfully!')
         return reverse('provider:list')

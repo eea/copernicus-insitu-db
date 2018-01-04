@@ -1,3 +1,4 @@
+from django.contrib import messages
 from django.urls import reverse_lazy
 
 from insitu import models
@@ -23,7 +24,12 @@ class DataRequirementAdd(CreatedByMixin, LoggingProtectedCreateView):
     form_field = 'requirement'
     model = models.Requirement
     title = "Add a new data for {}"
-    target_type = 'relation between data and data provider'
+    target_type = 'relation between data and requirement'
+
+    def form_valid(self, form):
+        response = super().form_valid(form)
+        messages.success(self.request, 'The relation between data and requirement was created successfully!')
+        return response
 
     def get_form(self):
         form = super().get_form(self.form_class)
@@ -50,7 +56,12 @@ class DataRequirementEdit(LoggingProtectedUpdateView):
     context_object_name = 'rel'
     permission_classes = (IsOwnerUser, IsDraftObject)
     permission_denied_redirect = reverse_lazy('requirement:list')
-    target_type = 'relation between data and data provider'
+    target_type = 'relation between data and requirement'
+
+    def form_valid(self, form):
+        response = super().form_valid(form)
+        messages.success(self.request, 'The relation between data and requirement was updated successfully!')
+        return response
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -68,7 +79,7 @@ class DataRequirementDelete(LoggingProtectedDeleteView):
     context_object_name = 'rel'
     permission_classes = (IsOwnerUser, IsDraftObject)
     permission_denied_redirect = reverse_lazy('requirement:list')
-    target_type = 'relation between data and data provider'
+    target_type = 'relation between data and requirement'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -76,5 +87,6 @@ class DataRequirementDelete(LoggingProtectedDeleteView):
         return context
 
     def get_success_url(self):
+        messages.success(self.request, 'The relation between data and requirement was deleted successfully!')
         return reverse_lazy('requirement:detail',
                             kwargs={'pk': self.kwargs['requirement_pk']})

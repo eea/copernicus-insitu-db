@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from django.contrib import messages
 from django.core.urlresolvers import reverse
 from django.db import transaction
 from django.db.models.fields.reverse_related import ForeignObjectRel
@@ -83,6 +84,12 @@ class ProductAdd(ProtectedCreateView):
     permission_classes = (IsSuperuser, )
     target_type = 'product'
 
+    def form_valid(self, form):
+        response = super().form_valid(form)
+        messages.success(self.request, 'The product was created successfully!')
+        return response
+
+
     def permission_denied(self, request):
         self.permission_denied_redirect = reverse('product:list')
         return super().permission_denied(request)
@@ -98,6 +105,11 @@ class ProductEdit(ProtectedUpdateView):
     context_object_name = 'product'
     permission_classes = (IsSuperuser, )
     target_type = 'product'
+
+    def form_valid(self, form):
+        response = super().form_valid(form)
+        messages.success(self.request, 'The product was updated successfully!')
+        return response
 
     def permission_denied(self, request):
         self.permission_denied_redirect = reverse('product:list')
@@ -134,6 +146,7 @@ class ProductDelete(ProtectedDeleteView):
         return super().permission_denied(request)
 
     def get_success_url(self):
+        messages.success(self.request, 'The product was deleted successfully!')
         return reverse('product:list')
 
 

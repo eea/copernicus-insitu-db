@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
+from django.contrib import messages
 from django.urls import reverse_lazy
 
 from insitu import models
@@ -23,6 +24,12 @@ class BaseProductRequirementAdd(CreatedByMixin, LoggingProtectedCreateView):
     model = models.Requirement
     permission_classes = (IsAuthenticated, )
     permission_denied_redirect = reverse_lazy('requirement:list')
+    message = None
+
+    def form_valid(self, form):
+        response = super().form_valid(form)
+        messages.success(self.request, self.message)
+        return response
 
     def get_form(self):
         form = super().get_form(self.form_class)
@@ -47,6 +54,7 @@ class ProductRequirementAdd(BaseProductRequirementAdd):
     form_class = forms.RequirementProductRequirementForm
     title = "Add a new product for {}"
     target_type = 'relation between product and requirement'
+    message = 'The relation between product and requirement was updated successfully!'
 
 
 class ProductGroupRequirementAdd(BaseProductRequirementAdd):
@@ -54,6 +62,7 @@ class ProductGroupRequirementAdd(BaseProductRequirementAdd):
     form_class = forms.ProductGroupRequirementForm
     title = "Add a new product group for {}"
     target_type = 'relations between product group and requirement'
+    message = "The relations between the product group's products and requirement were created succesfully!"
 
     def get_object_id(self):
         if 'product_group' in self.request.POST:
@@ -71,7 +80,12 @@ class ProductRequirementEdit(LoggingProtectedUpdateView):
     context_object_name = 'rel'
     permission_classes = (IsOwnerUser, IsDraftObject)
     permission_denied_redirect = reverse_lazy('requirement:list')
-    target_type = 'relation between product and requirement provider'
+    target_type = 'relation between product and requirement'
+
+    def form_valid(self, form):
+        response = super().form_valid(form)
+        messages.success(self.request, 'The relation between product and requirement was updated successfully!')
+        return response
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -97,5 +111,6 @@ class ProductRequirementDelete(LoggingProtectedDeleteView):
         return context
 
     def get_success_url(self):
+        messages.success(self.request, 'The relation between product and requirement was deleted successfully!')
         return reverse_lazy('requirement:detail',
                             kwargs={'pk': self.kwargs['requirement_pk']})
