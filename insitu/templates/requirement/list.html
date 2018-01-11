@@ -98,11 +98,41 @@
           <th>Dissemination</th>
           <th>Quality Control Procedure</th>
           <th>Group</th>
-          <th>Uncertainty</th>
-          <th>Update Frequency</th>
-          <th>Timeliness</th>
-          <th>Horizontal resolution</th>
-          <th>Vertical resolution</th>
+          <th>Uncertainty
+            <span data-toggle="popover" title="Metrics Legend"
+                  class="glyphicon glyphicon-info-sign small"
+                  data-content="{% include 'popovers/metrics_legend.html' %}">
+
+            </span>
+          </th>
+          <th>Update Frequency
+            <span data-toggle="popover" title="Metrics Legend"
+                  class="glyphicon glyphicon-info-sign small"
+                  data-content="{% include 'popovers/metrics_legend.html' %}">
+
+            </span>
+          </th>
+          <th>Timeliness
+            <span data-toggle="popover" title="Metrics Legend"
+                  class="glyphicon glyphicon-info-sign small"
+                  data-content="{% include 'popovers/metrics_legend.html' %}">
+
+            </span>
+          </th>
+          <th>Horizontal resolution
+            <span data-toggle="popover" title="Metrics Legend"
+                  class="glyphicon glyphicon-info-sign small"
+                  data-content="{% include 'popovers/metrics_legend.html' %}">
+
+            </span>
+          </th>
+          <th>Vertical resolution
+            <span data-toggle="popover" title="Metrics Legend"
+                  class="glyphicon glyphicon-info-sign small"
+                  data-content="{% include 'popovers/metrics_legend.html' %}">
+
+            </span>
+          </th>
           <th>State</th>
         </tr>
         </thead>
@@ -114,6 +144,7 @@
 
 {% block scripts %}
   <script src="{% static 'js/jquery-3.2.1.min.js' %}"></script>
+  <script src="{% static 'js/bootstrap.min.js' %}"></script>
   <script src="{% static 'js/jquery.dataTables.min.js' %}"></script>
   <script src="{% static 'js/jquery.dataTables.bootstrap.min.js' %}"></script>
   <script src="{% static 'js/fnFilterOnReturn.js' %}"></script>
@@ -182,6 +213,12 @@
         var table = $table.DataTable();
         table.ajax.reload();
         table.search('').draw();
+      });
+
+      $('[data-toggle="popover"]').popover({
+        trigger: 'hover',
+        placement: 'top',
+        html: true
       });
     });
   </script>
