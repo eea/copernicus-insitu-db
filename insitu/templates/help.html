@@ -24,6 +24,13 @@
   {% for model, data in models.items %}
     <div class="row" id="{{ model }}">
       <h1>{{ data.nice_name|capfirst }}</h1>
+      {% if data.description %}
+        <h4>
+          <strong>
+            {{ data.description }}
+          </strong>
+        </h4>
+      {% endif %}
       <table class="table table-bordered">
         <thead>
           <tr>

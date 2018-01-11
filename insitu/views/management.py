@@ -3,6 +3,7 @@ from django.conf import settings
 
 from insitu.views import protected
 from insitu.views.protected.views import ProtectedTemplateView
+from insitu.utils import PICKLISTS_DESCRIPTION
 from picklists import models
 
 
@@ -33,6 +34,7 @@ class HelpPage(ProtectedTemplateView):
         for model in PICKLISTS:
             data = {
                 'nice_name': model._meta.verbose_name,
+                'description': PICKLISTS_DESCRIPTION.get(model.__name__, None),
                 'objects': model.objects.order_by('pk'),
                 'fields': [field.name for field in model._meta.fields
                            if field.name not in ('id', 'sort_order')]
