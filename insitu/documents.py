@@ -173,6 +173,12 @@ class DataProviderDoc(DocType):
         url = reverse('provider:detail', kwargs={'pk': self.id})
         return '<a href="{url}">{name}</a>'.format(url=url, name=self.name)
 
+    def get_phone_display(self):
+        return '<a href="tel:{phone}">{phone}</a>'.format(phone=self.phone)
+
+    def get_email_display(self):
+        return '<a href="mailto:{email}">{email}</a>'.format(email=self.email)
+
     @staticmethod
     def delete_index(sender, **kwargs):
         document = DataProviderDoc.get(id=sender.id)
