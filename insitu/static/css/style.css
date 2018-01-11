@@ -80,3 +80,13 @@
     width: 1250px;
   }
 }
+
+.rectangle{
+  display: block;
+  float: left;
+  height: 16px;
+  width: 30px;
+  margin-right: 2px;
+  margin-left: 5px;
+  border: 1px solid #999;
+}
