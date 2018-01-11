@@ -60,6 +60,8 @@
     <a href="{% url 'requirement:detail' requirement.pk %}"
        class="btn btn-default">Cancel</a>
 </form>
+{% bootstrap_form_errors form %}
+
 {% endblock %}
 
 {% block scripts %}
