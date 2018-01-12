@@ -84,9 +84,12 @@
 .rectangle{
   display: block;
   float: left;
-  height: 16px;
-  width: 30px;
-  margin-right: 2px;
-  margin-left: 5px;
-  border: 1px solid #999;
+  height: 20px;
+  width: 15px;
+  margin-right: 0px;
+  margin-left: 10px;
+}
+
+.popover-width-limit{
+  min-width: 9%;
 }
