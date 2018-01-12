@@ -80,3 +80,16 @@
     width: 1250px;
   }
 }
+
+.rectangle{
+  display: block;
+  float: left;
+  height: 20px;
+  width: 15px;
+  margin-right: 0px;
+  margin-left: 10px;
+}
+
+.popover-width-limit{
+  min-width: 9%;
+}
