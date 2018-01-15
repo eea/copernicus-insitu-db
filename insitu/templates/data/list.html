@@ -38,7 +38,7 @@
         <div class="panel-heading">Filters</div>
         <div class="panel-body filters form-inline">
 
-          <div class="form-group">
+          <div class="form-group filters-style">
             <label for="update_frequency">Update Frequency:</label>
             <select id="update_frequency" class="form-control">
               {% for update_frequency in update_frequencies %}
@@ -47,7 +47,7 @@
             </select>
           </div>
 
-          <div class="form-group">
+          <div class="form-group filters-style">
             <label for="coverage">Coverage:</label>
             <select id="coverage" class="form-control">
               {% for coverage in coverages %}
@@ -56,7 +56,7 @@
             </select>
           </div>
 
-          <div class="form-group">
+          <div class="form-group filters-style">
             <label for="timeliness">Timeliness:</label>
             <select id="timeliness" class="form-control">
               {% for timeliness in timelinesses %}
@@ -65,7 +65,7 @@
             </select>
           </div>
 
-          <div class="form-group">
+          <div class="form-group filters-style">
             <label for="policy">Policy:</label>
             <select id="policy" class="form-control">
               {% for policy in policies %}
@@ -74,7 +74,7 @@
             </select>
           </div>
 
-          <div class="form-group">
+          <div class="form-group filters-style">
             <label for="data_type">Data type:</label>
             <select id="data_type" class="form-control">
               {% for data_type in data_types %}
@@ -83,7 +83,7 @@
             </select>
           </div>
 
-          <div class="form-group">
+          <div class="form-group filters-style">
             <label for="data_format">Data format:</label>
             <select id="data_format" class="form-control">
               {% for data_format in data_formats %}
@@ -92,7 +92,7 @@
             </select>
           </div>
 
-          <div class="form-group">
+          <div class="form-group filters-style">
             <label for="quality_control_procedure">Quality Control Procedure:</label>
             <select id="quality_control_procedure" class="form-control">
               {% for quality in quality_control_procedures %}
@@ -101,7 +101,7 @@
             </select>
           </div>
 
-          <div class="form-group">
+          <div class="form-group filters-style">
             <label for="dissemination">Dissemination:</label>
             <select id="dissemination" class="form-control">
               {% for dissemination in disseminations %}
@@ -110,7 +110,7 @@
             </select>
           </div>
 
-          <div class="form-group">
+          <div class="form-group filters-style">
             <label for="state">State:</label>
             <select id="state" class="form-control">
               {% for state in states %}
@@ -119,12 +119,12 @@
             </select>
           </div>
 
-          <div class="form-group">
+          <div class="form-group filters-style">
             <button type="button" class="btn btn-primary"
                     id="filter-btn">Filter
             </button>
           </div>
-          <div class="form-group">
+          <div class="form-group filters-style">
             <button type="button" class="btn btn-default"
                     id="reset-btn"><span class="glyphicon glyphicon-trash"></span>
             </button>
@@ -165,7 +165,7 @@
       var $table = $('#data').dataTable({
         "processing": true,
         "serverSide": true,
-        "dom": "<'row'<'col-sm-5'i><'col-sm-12'f><'col-sm-4 display-margin'l><'col-sm-8'p>>" +
+        "dom": "<'row'<'col-sm-6'i><'col-sm-6'f><'col-sm-4 display-margin'l><'col-sm-8'p>>" +
                "<'row'<'col-sm-12'tr>>" +
                "<'row'<'col-sm-12'p>>",
         "language": {
