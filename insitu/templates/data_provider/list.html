@@ -40,7 +40,7 @@
         <div class="panel-heading">Filters</div>
         <div class="panel-body filters form-inline">
 
-          <div class="form-group">
+          <div class="form-group filters-style">
             <label for="provider_type">Provider type:</label>
             <select id="provider_type" class="form-control">
               {% for provider_type in provider_types %}
@@ -50,7 +50,7 @@
             </select>
           </div>
 
-          <div class="form-group">
+          <div class="form-group filters-style">
             <label for="is_network">Is network:</label>
             <select id="is_network" class="form-control">
               <option value="All">All</option>
@@ -59,7 +59,7 @@
             </select>
           </div>
 
-          <div class="form-group">
+          <div class="form-group filters-style">
             <label for="state">State:</label>
             <select id="state" class="form-control">
               {% for state in states %}
@@ -68,12 +68,12 @@
             </select>
           </div>
 
-          <div class="form-group">
+          <div class="form-group filters-style">
             <button type="button" class="btn btn-primary btn-sm"
                     id="filter-btn">Filter
             </button>
           </div>
-          <div class="form-group">
+          <div class="form-group filters-style">
             <button type="button" class="btn btn-default btn-md"
                     id="reset-btn"><span class="glyphicon glyphicon-trash"></span>
             </button>
