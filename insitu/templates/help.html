@@ -9,9 +9,10 @@
 {% block title %}Help{% endblock %}
 
 {% block content %}
+
   <div class="row">
     <h4>
-      Can't find a solution? Contact us at
+      Still need help? Send me an email at
       <a href="mailto:{{ email }}">{{ email }}</a>
     </h4>
     <h1>Summary</h1>
@@ -105,4 +106,28 @@
     </div>
   {% endfor %}
 
+<img id="back-to-top" href="#" class="back-to-top" role="button" title="Click to return on the top page" src="{% static "/images/back_to_top.png"  %}">
+
+{% endblock %}
+
+{% block scripts %}
+  <script src="{% static 'js/jquery-3.2.1.min.js' %}"></script>
+  <script src="{% static 'js/bootstrap.min.js' %}"></script>
+  <script>
+    $(document).ready(function(){
+      $(window).scroll(function () {
+        if ($(this).scrollTop() > 50) {
+            $('#back-to-top').fadeIn();
+        } else {
+            $('#back-to-top').fadeOut();
+        }
+      });
+      $('#back-to-top').click(function () {
+        $('body,html').animate({
+            scrollTop: 0
+        }, 800);
+        return false;
+      });
+    });
+  </script>
 {% endblock %}

@@ -97,3 +97,13 @@
 .popover-width-limit{
   min-width: 9%;
 }
+
+.back-to-top {
+    cursor: pointer;
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 70px;
+    height: 70px;
+    display:none;
+}
