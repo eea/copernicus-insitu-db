@@ -21,7 +21,7 @@
 {% endblock %}
 
 {% block content %}
-
+  <div id="ajax-url" data-ajax-url="{% url 'data:json' %}"></div>
   <div class="row">
     <h1 class="col-sm-12">
       <span>Data</span>
@@ -120,11 +120,6 @@
           </div>
 
           <div class="form-group">
-            <button type="button" class="btn btn-primary"
-                    id="filter-btn">Filter
-            </button>
-          </div>
-          <div class="form-group">
             <button type="button" class="btn btn-default"
                     id="reset-btn"><span class="glyphicon glyphicon-trash"></span>
             </button>
@@ -160,68 +155,5 @@
   <script src="{% static 'js/jquery.dataTables.min.js' %}"></script>
   <script src="{% static 'js/jquery.dataTables.bootstrap.min.js' %}"></script>
   <script src="{% static 'js/fnFilterOnReturn.js' %}"></script>
-  <script>
-    $(document).ready(function () {
-      var $table = $('#data').dataTable({
-        "processing": true,
-        "serverSide": true,
-        "dom": "<'row'<'col-sm-5'i><'col-sm-12'f><'col-sm-4 display-margin'l><'col-sm-8'p>>" +
-               "<'row'<'col-sm-12'tr>>" +
-               "<'row'<'col-sm-12'p>>",
-        "language": {
-          "infoFiltered": "<span class='green-text'>(filtered from _MAX_ total records)<span>",
-        },
-        "ajax": {
-          "url": "{% url 'data:json' %}",
-          "data": function (d) {
-            d.name = $('#name').val();
-            d.update_frequency = $('#update_frequency').val();
-            d.coverage = $('#coverage').val();
-            d.timeliness = $('#timeliness').val();
-            d.policy = $('#policy').val();
-            d.data_type = $('#data_type').val();
-            d.data_format = $('#data_format').val();
-            d.quality_control_procedure = $('#quality_control_procedure').val();
-            d.dissemination = $('#dissemination').val();
-            d.state = $('#state').val();
-          }
-        },
-        "stateSave": true,
-        "stateSaveParams": function(settings, data){
-          data.update_frequency = $('#update_frequency').val();
-          data.coverage = $('#coverage').val();
-          data.timeliness = $('#timeliness').val();
-          data.policy = $('#policy').val();
-          data.data_type = $('#data_type').val();
-          data.data_format = $('#data_format').val();
-          data.quality_control_procedure = $('#quality_control_procedure').val();
-          data.dissemination = $('#dissemination').val();
-          data.state = $('#state').val();
-        },
-        "stateLoadParams": function (settings, data) {
-          $('#update_frequency').val(data.update_frequency);
-          $('#coverage').val(data.coverage);
-          $('#timeliness').val(data.timeliness);
-          $('#policy').val(data.policy);
-          $('#data_type').val(data.data_type);
-          $('#data_format').val(data.data_format);
-          $('#quality_control_procedure').val(data.quality_control_procedure);
-          $('#dissemination').val(data.dissemination);
-          $('#state').val(data.state);
-        },
-      }).fnFilterOnReturn();
-
-      $('#filter-btn').on('click', function () {
-        var table = $table.DataTable();
-        table.ajax.reload();
-      });
-
-      $('#reset-btn').on('click', function () {
-        $('#name,#update_frequency,#coverage,#timeliness,#policy,#data_type,#data_format,#quality_control_procedure,#dissemination,#state').val('All');
-        var table = $table.DataTable();
-        table.ajax.reload();
-        table.search('').draw();
-      });
-    });
-  </script>
+  <script src="{% static 'js/data_list.js' %}"></script>
 {% endblock %}

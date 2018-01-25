@@ -52,13 +52,18 @@ class DataList(LoggingProtectedTemplateView):
 
 
 class DataListJson(ESDatatableView):
-    columns = ['name', 'update_frequency', 'coverage', 'timeliness', 'policy',
-               'data_type', 'data_format', 'quality_control_procedure',
-               'dissemination', 'state']
+    columns = [
+        'name', 'update_frequency', 'coverage', 'timeliness', 'policy',
+        'data_type', 'data_format', 'quality_control_procedure',
+        'dissemination', 'state'
+    ]
     order_columns = columns
-    filters = ['update_frequency', 'coverage', 'timeliness', 'policy',
-               'data_type', 'data_format', 'quality_control_procedure',
-               'dissemination', 'state']
+    filters = [
+        'update_frequency', 'coverage', 'timeliness', 'policy',
+        'data_type', 'data_format', 'quality_control_procedure',
+        'dissemination', 'state'
+    ]
+    filter_fields = [f + '__name' if f != 'state' else 'state' for f in filters]
     document = documents.DataDoc
     permission_classes = (IsAuthenticated, )
 
