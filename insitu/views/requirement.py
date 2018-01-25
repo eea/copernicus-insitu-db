@@ -97,6 +97,10 @@ class RequirementListJson(ESDatatableView):
                'horizontal_resolution', 'vertical_resolution', 'state']
     order_columns = columns
     filters = ['dissemination', 'quality_control_procedure', 'group', 'state']
+    filter_fields = [
+        'dissemination__name', 'quality_control_procedure__name', 'group__name',
+        'state'
+    ]  # This must be in the same order as `filters`
     document = documents.RequirementDoc
     permission_classes = (IsAuthenticated, )
 

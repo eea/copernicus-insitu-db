@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-from django.conf import settings
 from django.contrib import messages
 from django.core.urlresolvers import reverse
 from django.db import transaction
@@ -59,43 +58,12 @@ class ProductListJson(ESDatatableView):
                'status', 'coverage']
     order_columns = columns
     filters = ['service', 'entity', 'component', 'group', 'status', 'coverage']
+    filter_fields = [
+        'component__service__name', 'component__entrusted_entity__acronym',
+        'component__name', 'group__name', 'status__name', 'coverage__name',
+    ]  # This must be in the same order as `filters`
     document = documents.ProductDoc
     permission_classes = (IsAuthenticated, )
-
-    def filter_queryset(self, search):
-        """
-        Where `search` is a django_elasticsearch_dsl.search.Search object.
-        """
-        search = super().filter_queryset(search)
-        if search.count() > settings.MAX_RESULT_WINDOW:
-            # If there are more than MAX_RESULT_WINDOW matching products in the
-            # database, don't bother syncing the filter options. It would be too
-            # complicated and costly.
-            return search
-        search = search[0:settings.MAX_RESULT_WINDOW]
-        qs = search.to_queryset()  # If there are ever more than 10,000
-        # items in the database, this will have to be reimplemented entirely.
-        filter_fields = [
-            'component__service__name', 'component__entrusted_entity__acronym',
-            'component__name', 'group__name', 'status__name', 'coverage__name',
-        ]  # This must be in the same order as `self.filters`
-        products = qs.values_list(*filter_fields)
-
-        self._filter_options = dict([
-            (
-                filter_,
-                {
-                    'options': options,
-                    'selected': self.request.GET.get(filter_)
-                }
-            )
-            for filter_, options in
-            zip(
-                self.filters,
-                [sorted(list(set(options))) for options in zip(*products)]
-            )
-        ])
-        return search
 
 
 class ProductAdd(ProtectedCreateView):

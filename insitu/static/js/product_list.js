@@ -58,7 +58,6 @@ $(document).ready(function () {
   }).fnFilterOnReturn();
 
   $('#service,#entity,#component,#group,#status,#coverage').on('change', function (event) {
-    window.triggerer = event.target.id;
     var table = $table.DataTable();
     table.ajax.reload();
   });
@@ -66,6 +65,7 @@ $(document).ready(function () {
   $('#reset-btn').on('click', function () {
     $('#service,#entity,#component,#group,#status,#coverage').val('All');
     var table = $table.DataTable();
+    table.state.clear();
     table.ajax.reload();
     table.search('').draw();
   });
