@@ -34,10 +34,10 @@ class DataProviderTests(base.FormCheckTestCase):
         provider_type = base.ProviderTypeFactory()
         self._DETAILS_DATA = {
             'acronym': 'acronym',
-            'website': 'test website',
+            'website': 'http://test.website',
             'address': 'test address',
             'phone': 'test phone',
-            'email': 'test email',
+            'email': 'test@email.com',
             'contact_person': 'test person',
             'provider_type': provider_type.pk
         }

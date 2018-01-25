@@ -212,7 +212,9 @@ class ImportProductsView(ProtectedView):
                         data[field] = value
                     if not [val for val in data.values() if val]:
                         continue
-                    models.Product.objects.update_or_create(pk=pk, defaults=data)
+                    data['_deleted'] = False
+                    models.Product.objects.really_all().update_or_create(id=pk,
+                                                                         defaults=data)
         except Exception:
             return HttpResponse(status=400)
         return HttpResponse(status=200)

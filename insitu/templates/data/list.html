@@ -38,7 +38,7 @@
         <div class="panel-heading">Filters</div>
         <div class="panel-body filters form-inline">
 
-          <div class="form-group">
+          <div class="form-group filters-style">
             <label for="update_frequency">Update Frequency:</label>
             <select id="update_frequency" class="form-control">
               {% for update_frequency in update_frequencies %}
@@ -47,7 +47,7 @@
             </select>
           </div>
 
-          <div class="form-group">
+          <div class="form-group filters-style">
             <label for="coverage">Coverage:</label>
             <select id="coverage" class="form-control">
               {% for coverage in coverages %}
@@ -56,7 +56,7 @@
             </select>
           </div>
 
-          <div class="form-group">
+          <div class="form-group filters-style">
             <label for="timeliness">Timeliness:</label>
             <select id="timeliness" class="form-control">
               {% for timeliness in timelinesses %}
@@ -65,7 +65,7 @@
             </select>
           </div>
 
-          <div class="form-group">
+          <div class="form-group filters-style">
             <label for="policy">Policy:</label>
             <select id="policy" class="form-control">
               {% for policy in policies %}
@@ -74,7 +74,7 @@
             </select>
           </div>
 
-          <div class="form-group">
+          <div class="form-group filters-style">
             <label for="data_type">Data type:</label>
             <select id="data_type" class="form-control">
               {% for data_type in data_types %}
@@ -83,7 +83,7 @@
             </select>
           </div>
 
-          <div class="form-group">
+          <div class="form-group filters-style">
             <label for="data_format">Data format:</label>
             <select id="data_format" class="form-control">
               {% for data_format in data_formats %}
@@ -92,7 +92,7 @@
             </select>
           </div>
 
-          <div class="form-group">
+          <div class="form-group filters-style">
             <label for="quality_control_procedure">Quality Control Procedure:</label>
             <select id="quality_control_procedure" class="form-control">
               {% for quality in quality_control_procedures %}
@@ -101,7 +101,7 @@
             </select>
           </div>
 
-          <div class="form-group">
+          <div class="form-group filters-style">
             <label for="dissemination">Dissemination:</label>
             <select id="dissemination" class="form-control">
               {% for dissemination in disseminations %}
@@ -110,7 +110,7 @@
             </select>
           </div>
 
-          <div class="form-group">
+          <div class="form-group filters-style">
             <label for="state">State:</label>
             <select id="state" class="form-control">
               {% for state in states %}
@@ -119,7 +119,7 @@
             </select>
           </div>
 
-          <div class="form-group">
+          <div class="form-group filters-style">
             <button type="button" class="btn btn-default"
                     id="reset-btn"><span class="glyphicon glyphicon-trash"></span>
             </button>
@@ -151,9 +151,75 @@
 {% endblock %}
 
 {% block scripts %}
-  <script src="{% static 'js/jquery-3.2.1.min.js' %}"></script>
   <script src="{% static 'js/jquery.dataTables.min.js' %}"></script>
   <script src="{% static 'js/jquery.dataTables.bootstrap.min.js' %}"></script>
   <script src="{% static 'js/fnFilterOnReturn.js' %}"></script>
+<<<<<<< HEAD
   <script src="{% static 'js/data_list.js' %}"></script>
+=======
+  <script>
+    $(document).ready(function () {
+      var $table = $('#data').dataTable({
+        "processing": true,
+        "serverSide": true,
+        "dom": "<'row'<'col-sm-6'i><'col-sm-6'f><'col-sm-4 display-margin'l><'col-sm-8'p>>" +
+               "<'row'<'col-sm-12'tr>>" +
+               "<'row'<'col-sm-12'p>>",
+        "language": {
+          "infoFiltered": "<span class='green-text'>(filtered from _MAX_ total records)<span>",
+        },
+        "ajax": {
+          "url": "{% url 'data:json' %}",
+          "data": function (d) {
+            d.name = $('#name').val();
+            d.update_frequency = $('#update_frequency').val();
+            d.coverage = $('#coverage').val();
+            d.timeliness = $('#timeliness').val();
+            d.policy = $('#policy').val();
+            d.data_type = $('#data_type').val();
+            d.data_format = $('#data_format').val();
+            d.quality_control_procedure = $('#quality_control_procedure').val();
+            d.dissemination = $('#dissemination').val();
+            d.state = $('#state').val();
+          }
+        },
+        "stateSave": true,
+        "stateSaveParams": function(settings, data){
+          data.update_frequency = $('#update_frequency').val();
+          data.coverage = $('#coverage').val();
+          data.timeliness = $('#timeliness').val();
+          data.policy = $('#policy').val();
+          data.data_type = $('#data_type').val();
+          data.data_format = $('#data_format').val();
+          data.quality_control_procedure = $('#quality_control_procedure').val();
+          data.dissemination = $('#dissemination').val();
+          data.state = $('#state').val();
+        },
+        "stateLoadParams": function (settings, data) {
+          $('#update_frequency').val(data.update_frequency);
+          $('#coverage').val(data.coverage);
+          $('#timeliness').val(data.timeliness);
+          $('#policy').val(data.policy);
+          $('#data_type').val(data.data_type);
+          $('#data_format').val(data.data_format);
+          $('#quality_control_procedure').val(data.quality_control_procedure);
+          $('#dissemination').val(data.dissemination);
+          $('#state').val(data.state);
+        },
+      }).fnFilterOnReturn();
+
+      $('#filter-btn').on('click', function () {
+        var table = $table.DataTable();
+        table.ajax.reload();
+      });
+
+      $('#reset-btn').on('click', function () {
+        $('#name,#update_frequency,#coverage,#timeliness,#policy,#data_type,#data_format,#quality_control_procedure,#dissemination,#state').val('All');
+        var table = $table.DataTable();
+        table.ajax.reload();
+        table.search('').draw();
+      });
+    });
+  </script>
+>>>>>>> 90fd7dfc100febf78d7803d684f1834e614d8a71
 {% endblock %}

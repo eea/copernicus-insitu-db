@@ -44,10 +44,11 @@
     <a href="{{ url }}"
        class="btn btn-default">Cancel</a>
   </form>
+  {% bootstrap_form_errors form %}
+
 {% endblock %}
 
 {% block scripts %}
-  <script src="{% static 'js/jquery-3.2.1.min.js' %}"></script>
   <script src="{% static 'js/select2.min.js' %}"></script>
   <script>
     $(document).ready(function () {

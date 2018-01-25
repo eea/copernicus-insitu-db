@@ -73,7 +73,11 @@
       </tr>
       <tr class="row">
         <th class="col-md-4 col-sm-6">Website</th>
-        <td class="col-md-8 col-sm-6">{{ provider.details.first.website }}</td>
+        <td class="col-md-8 col-sm-6">
+          <a href="{{ provider.details.first.website }}" target="_blank">
+            {{ provider.details.first.website }}
+          </a>
+        </td>
       </tr>
       <tr class="row">
         <th class="col-md-4 col-sm-6">Address</th>
@@ -81,11 +85,19 @@
       </tr>
       <tr class="row">
         <th class="col-md-4 col-sm-6">Phone</th>
-        <td class="col-md-8 col-sm-6">{{ provider.details.first.phone }}</td>
+        <td class="col-md-8 col-sm-6">
+          <a href="tel:{{ provider.details.first.phone }}">
+            {{ provider.details.first.phone }}
+          </a>
+        </td>
       </tr>
       <tr class="row">
         <th class="col-md-4 col-sm-6">Email</th>
-        <td class="col-md-8 col-sm-6">{{ provider.details.first.email }}</td>
+        <td class="col-md-8 col-sm-6">
+          <a href="mailto:{{ provider.details.first.email }}" target="_top">
+            {{ provider.details.first.email }}
+          </a>
+        </td>
       </tr>
       <tr class="row">
         <th class="col-md-4 col-sm-6">Contact person</th>
@@ -116,7 +128,6 @@
 {% endblock %}
 
 {% block scripts %}
-  <script src="{% static 'js/jquery-3.2.1.min.js' %}"></script>
   <script src="{% static 'js/bootstrap.min.js' %}"></script>
   <script src="{% static 'js/jquery.dataTables.min.js' %}"></script>
   <script src="{% static 'js/jquery.dataTables.bootstrap.min.js' %}"></script>

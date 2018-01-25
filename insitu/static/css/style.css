@@ -31,6 +31,10 @@
     padding: 0 !important;
 }
 
+.filters-style{
+    padding-top: 10px;
+}
+
 .margin-left-btn{
     margin-left: 1%
 }
@@ -79,4 +83,27 @@
   .container {
     width: 1250px;
   }
+}
+
+.rectangle{
+  display: block;
+  float: left;
+  height: 20px;
+  width: 15px;
+  margin-right: 0px;
+  margin-left: 10px;
+}
+
+.popover-width-limit{
+  min-width: 9%;
+}
+
+.back-to-top {
+    cursor: pointer;
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 70px;
+    height: 70px;
+    display:none;
 }

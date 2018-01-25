@@ -6,7 +6,6 @@ from django.core.urlresolvers import reverse
 from insitu import models
 from insitu.documents import ProductDoc
 from insitu.tests import base
-from insitu.utils import ALL_OPTIONS_LABEL
 
 
 class ProductTests(base.FormCheckTestCase):
