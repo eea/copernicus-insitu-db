@@ -46,6 +46,7 @@ class DataProviderListJson(ESDatatableView):
                'provider_type', 'is_network', 'state']
     order_columns = columns
     filters = ['is_network', 'provider_type', 'state']
+    filter_fields = ['is_network', 'details__provider_type__name', 'state']
     document = documents.DataProviderDoc
     permission_classes = (IsAuthenticated,)
 

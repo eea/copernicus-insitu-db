@@ -98,7 +98,10 @@ class ESDatatableView(BaseDatatableView, ProtectedView):
             for filter_, options in
             zip(
                 self.filters,
-                [sorted(list(set(options))) for options in zip(*objects)]
+                [
+                    sorted([opt for opt in set(options) if opt])
+                    for options in zip(*objects)
+                ]
             )
         ])
         return search
