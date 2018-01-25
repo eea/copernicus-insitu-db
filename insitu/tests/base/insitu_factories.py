@@ -125,7 +125,7 @@ class DataFactory(DjangoModelFactory):
     update_frequency = SubFactory(factories.UpdateFrequencyFactory)
     coverage = SubFactory(factories.CoverageFactory)
     timeliness = SubFactory(factories.TimelinessFactory)
-    policy = SubFactory(factories.PolicyFactory)
+    data_policy = SubFactory(factories.DataPolicyFactory)
     data_type = SubFactory(factories.DataTypeFactory)
     data_format = SubFactory(factories.DataFormatFactory)
     quality_control_procedure = SubFactory(

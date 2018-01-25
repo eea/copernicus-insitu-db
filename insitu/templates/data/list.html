@@ -66,10 +66,10 @@
           </div>
 
           <div class="form-group filters-style">
-            <label for="policy">Policy:</label>
-            <select id="policy" class="form-control">
-              {% for policy in policies %}
-                <option value="{{ policy }}">{{ policy }}</option>
+            <label for="data_policy">Data Policy:</label>
+            <select id="data_policy" class="form-control">
+              {% for data_policy in data_policies %}
+                <option value="{{ data_policy }}">{{ data_policy }}</option>
               {% endfor %}
             </select>
           </div>
@@ -137,7 +137,7 @@
           <th>Update Frequency</th>
           <th>Coverage</th>
           <th>Timeliness</th>
-          <th>Policy</th>
+          <th>Data Policy</th>
           <th>Data type</th>
           <th>Data format</th>
           <th>Quality Control Procedure</th>

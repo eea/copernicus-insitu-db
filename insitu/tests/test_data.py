@@ -10,11 +10,11 @@ import datetime
 class DataTests(base.FormCheckTestCase):
     fields = ['name', 'note', 'start_time_coverage', 'end_time_coverage']
     related_fields = ['update_frequency', 'coverage', 'timeliness',
-                      'policy', 'data_type', 'data_format',
+                      'data_policy', 'data_type', 'data_format',
                       'quality_control_procedure', 'dissemination']
     many_to_many_fields = ['inspire_themes', 'essential_variables']
     required_fields = ['name', 'update_frequency', 'coverage', 'timeliness',
-                       'policy', 'data_type', 'data_format',
+                       'data_policy', 'data_type', 'data_format',
                        'quality_control_procedure', 'dissemination']
     target_type = 'data'
     custom_errors = {
@@ -28,7 +28,7 @@ class DataTests(base.FormCheckTestCase):
         update_frequency = base.UpdateFrequencyFactory()
         coverage = base.CoverageFactory()
         timeliness = base.TimelinessFactory()
-        policy = base.PolicyFactory()
+        data_policy = base.DataPolicyFactory()
         data_type = base.DataTypeFactory()
         data_format = base.DataFormatFactory()
         quality_control_procedure = base.QualityControlProcedureFactory()
@@ -45,7 +45,7 @@ class DataTests(base.FormCheckTestCase):
             'update_frequency': update_frequency.pk,
             'coverage': coverage.pk,
             'timeliness': timeliness.pk,
-            'policy': policy.pk,
+            'data_policy': data_policy.pk,
             'data_type': data_type.pk,
             'data_format': data_format.pk,
             'quality_control_procedure': quality_control_procedure.pk,

@@ -19,7 +19,7 @@
     <ul class="list-unstyled">
       <li><a href="#metrics">Metrics</a></li>
       {% for model, data in models.items %}
-        <li><a href="#metrics">{{ data.nice_name|capfirst }}</a></li>
+        <li><a href="#{{ model }}">{{ data.nice_name|capfirst }}</a></li>
       {% endfor %}
     </ul>
   </div>

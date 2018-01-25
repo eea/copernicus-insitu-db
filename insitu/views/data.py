@@ -27,7 +27,7 @@ class DataList(LoggingProtectedTemplateView):
                                          model_cls=pickmodels.UpdateFrequency)
         coverages = get_choices('name', model_cls=pickmodels.Coverage)
         timelinesses = get_choices('name', model_cls=pickmodels.Timeliness)
-        policies = get_choices('name', model_cls=pickmodels.Policy)
+        data_policies = get_choices('name', model_cls=pickmodels.DataPolicy)
         data_types = get_choices('name', model_cls=pickmodels.DataType)
         data_formats = get_choices('name', model_cls=pickmodels.DataFormat)
         quality_control_procedures = get_choices(
@@ -41,7 +41,7 @@ class DataList(LoggingProtectedTemplateView):
             'update_frequencies': update_frequencies,
             'coverages': coverages,
             'timelinesses': timelinesses,
-            'policies': policies,
+            'data_policies': data_policies,
             'data_types': data_types,
             'data_formats': data_formats,
             'quality_control_procedures': quality_control_procedures,
@@ -53,13 +53,13 @@ class DataList(LoggingProtectedTemplateView):
 
 class DataListJson(ESDatatableView):
     columns = [
-        'name', 'update_frequency', 'coverage', 'timeliness', 'policy',
+        'name', 'update_frequency', 'coverage', 'timeliness', 'data_policy',
         'data_type', 'data_format', 'quality_control_procedure',
         'dissemination', 'state'
     ]
     order_columns = columns
     filters = [
-        'update_frequency', 'coverage', 'timeliness', 'policy',
+        'update_frequency', 'coverage', 'timeliness', 'data_policy',
         'data_type', 'data_format', 'quality_control_procedure',
         'dissemination', 'state'
     ]

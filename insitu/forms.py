@@ -239,7 +239,7 @@ class DataForm(CreatedByFormMixin, forms.ModelForm):
         auto_created = True
         fields = ['name', 'note', 'update_frequency', 'coverage',
                   'start_time_coverage', 'end_time_coverage', 'timeliness',
-                  'policy', 'data_type', 'data_format',
+                  'data_policy', 'data_type', 'data_format',
                   'quality_control_procedure', 'dissemination',
                   'inspire_themes', 'essential_variables']
 

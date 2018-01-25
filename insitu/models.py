@@ -441,9 +441,9 @@ class Data(ValidationWorkflowModel, SoftDeleteModel):
     timeliness = models.ForeignKey(pickmodels.Timeliness,
                                    on_delete=models.CASCADE,
                                    related_name='+')
-    policy = models.ForeignKey(pickmodels.Policy,
-                               on_delete=models.CASCADE,
-                               related_name='+')
+    data_policy = models.ForeignKey(pickmodels.DataPolicy,
+                                    on_delete=models.CASCADE,
+                                    related_name='+')
     data_type = models.ForeignKey(pickmodels.DataType,
                                   on_delete=models.CASCADE,
                                   related_name='+')

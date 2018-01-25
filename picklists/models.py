@@ -264,7 +264,7 @@ class Timeliness(models.Model):
         return self.name
 
 
-class Policy(models.Model):
+class DataPolicy(models.Model):
     name = models.CharField(max_length=100)
     description = models.TextField(blank=True)
     sort_order = models.IntegerField()
@@ -274,7 +274,7 @@ class Policy(models.Model):
 
     class Meta:
         ordering = ['sort_order']
-        verbose_name_plural = 'policy'
+        verbose_name_plural = 'Data policies'
 
     def __str__(self):
         return self.name

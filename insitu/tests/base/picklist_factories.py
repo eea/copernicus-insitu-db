@@ -144,13 +144,13 @@ class TimelinessFactory(DjangoModelFactory):
         model = models.Timeliness
 
 
-class PolicyFactory(DjangoModelFactory):
-    name = 'Test Policy'
+class DataPolicyFactory(DjangoModelFactory):
+    name = 'Test Data Policy'
     sort_order = 0
     link = ''
 
     class Meta:
-        model = models.Policy
+        model = models.DataPolicy
 
 
 class DataTypeFactory(DjangoModelFactory):

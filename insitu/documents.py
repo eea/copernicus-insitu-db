@@ -119,7 +119,7 @@ class DataDoc(DocType):
     update_frequency = fields.KeywordField(attr='update_frequency.name')
     coverage = fields.KeywordField(attr='coverage.name')
     timeliness = fields.KeywordField(attr='timeliness.name')
-    policy = fields.KeywordField(attr='policy.name')
+    data_policy = fields.KeywordField(attr='data_policy.name')
     data_type = fields.KeywordField(attr='data_type.name')
     data_format = fields.KeywordField(attr='data_format.name')
     quality_control_procedure = fields.KeywordField(
