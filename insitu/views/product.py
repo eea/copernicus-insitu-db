@@ -1,16 +1,17 @@
 # -*- coding: utf-8 -*-
+from django.conf import settings
 from django.contrib import messages
 from django.core.urlresolvers import reverse
 from django.db import transaction
 from django.db.models.fields.reverse_related import ForeignObjectRel
-from django.http.response import JsonResponse, HttpResponse
+from django.http.response import HttpResponse
 from openpyxl import Workbook, load_workbook
 from openpyxl.styles import Font
 
 from insitu import documents
 from insitu import forms
 from insitu import models
-from insitu.utils import get_choices, ALL_OPTIONS_LABEL
+from insitu.utils import get_choices
 from insitu.views.base import ESDatatableView
 from insitu.views.protected import (
     ProtectedView,
@@ -61,21 +62,40 @@ class ProductListJson(ESDatatableView):
     document = documents.ProductDoc
     permission_classes = (IsAuthenticated, )
 
+    def filter_queryset(self, search):
+        """
+        Where `search` is a django_elasticsearch_dsl.search.Search object.
+        """
+        search = super().filter_queryset(search)
+        if search.count() > settings.MAX_RESULT_WINDOW:
+            # If there are more than MAX_RESULT_WINDOW matching products in the
+            # database, don't bother syncing the filter options. It would be too
+            # complicated and costly.
+            return search
+        search = search[0:settings.MAX_RESULT_WINDOW]
+        qs = search.to_queryset()  # If there are ever more than 10,000
+        # items in the database, this will have to be reimplemented entirely.
+        filter_fields = [
+            'component__service__name', 'component__entrusted_entity__acronym',
+            'component__name', 'group__name', 'status__name', 'coverage__name',
+        ]  # This must be in the same order as `self.filters`
+        products = qs.values_list(*filter_fields)
 
-class ComponentsFilter(ProtectedView):
-    permission_classes = (IsAuthenticated, )
-
-    def get(self, request, *args, **kwargs):
-        service = request.GET.get('service', '')
-        entity = request.GET.get('entity', '')
-
-        components = models.Component.objects.all()
-        if service and service != ALL_OPTIONS_LABEL:
-            components = components.filter(service__name=service)
-        if entity and entity != ALL_OPTIONS_LABEL:
-            components = components.filter(entrusted_entity__acronym=entity)
-        data = {'components': get_choices('name', objects=components)}
-        return JsonResponse(data)
+        self._filter_options = dict([
+            (
+                filter_,
+                {
+                    'options': options,
+                    'selected': self.request.GET.get(filter_)
+                }
+            )
+            for filter_, options in
+            zip(
+                self.filters,
+                [sorted(list(set(options))) for options in zip(*products)]
+            )
+        ])
+        return search
 
 
 class ProductAdd(ProtectedCreateView):
@@ -88,7 +108,6 @@ class ProductAdd(ProtectedCreateView):
         response = super().form_valid(form)
         messages.success(self.request, 'The product was created successfully!')
         return response
-
 
     def permission_denied(self, request):
         self.permission_denied_redirect = reverse('product:list')
@@ -202,7 +221,7 @@ class ImportProductsView(ProtectedView):
     permission_classes = (IsSuperuser,)
 
     def post(self, request, *args, **kwargs):
-        if not 'workbook' in request.FILES:
+        if 'workbook' not in request.FILES:
             return HttpResponse(status=400)
         workbook_file = request.FILES['workbook']
         try:
@@ -226,6 +245,6 @@ class ImportProductsView(ProtectedView):
                     if not [val for val in data.values() if val]:
                         continue
                     models.Product.objects.update_or_create(pk=pk, defaults=data)
-        except:
+        except Exception:
             return HttpResponse(status=400)
         return HttpResponse(status=200)

@@ -57,17 +57,26 @@ class ESDatatableView(BaseDatatableView, ProtectedView):
         return qs
 
     def filter_queryset(self, qs):
-        for filter in self.filters:
-            value = self.request.GET.get(filter)
+        for filter_ in self.filters:
+            value = self.request.GET.get(filter_)
             if not value or value == ALL_OPTIONS_LABEL:
                 continue
-            qs = qs.filter('term', **{filter: value})
+            qs = qs.query('term', **{filter_: value})
 
         search_text = self.request.GET.get('search[value]', '')
         if not search_text:
             return qs
-        return qs.query('query_string', default_field='name',
-                        query='"' + search_text + '"')
+        qs = qs.query(
+            'query_string', default_field='name', query='"' + search_text + '"')
+        return qs
+
+    def get_context_data(self, *args, **kwargs):
+        ret = super().get_context_data(*args, **kwargs)
+        if hasattr(self, '_filter_options'):
+            ret.update({
+                'filters': self._filter_options
+            })
+        return ret
 
 
 class CreatedByMixin:

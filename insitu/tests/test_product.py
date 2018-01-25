@@ -1,3 +1,6 @@
+import os
+
+from django.core.management import call_command
 from django.core.urlresolvers import reverse
 
 from insitu import models
@@ -32,6 +35,9 @@ class ProductTests(base.FormCheckTestCase):
             'status': status.pk,
             'coverage': coverage.pk
         }
+
+        with open(os.devnull, 'w') as f:
+            call_command('search_index', '--rebuild', '-f', stdout=f)
 
     def test_create_product_fields_required(self):
         data = {}
@@ -96,68 +102,81 @@ class ProductTests(base.FormCheckTestCase):
         self.assertEqual(resp.status_code, 302)
         self.check_single_object(models.Product, data)
 
-    def test_product_component_filter_service(self):
-        service_1 = base.CopernicusServiceFactory(name="Special service")
-        service_2 = base.CopernicusServiceFactory(name="Other service")
-        base.ComponentFactory(service=service_1)
-        base.ComponentFactory(service=service_2)
+    def test_entity_and_group_sync_other_filters(self):
+        """
+        Whenever any of the filters is selected, this should trigger
+        a synchronization of all other filters. Because of combinatorial
+        explosion it is impractical to test all possible combinations, so this
+        only tests one specific case that was selected at random, namely
+        `entity`, and `group` triggering the synchronization of `service`,
+        `component`, `status` and `coverage`.
+        """
+        service_1 = base.CopernicusServiceFactory(name="Service 1")
+        service_2 = base.CopernicusServiceFactory(name="Service 2")
+        entity_1 = base.EntrustedEntityFactory(acronym="Entity 1")
+        entity_2 = base.EntrustedEntityFactory(acronym="Entity 2")
 
-        resp = self.client.get(reverse('product:filter_components'),
-                               {'service': service_1.name})
+        component_1 = base.ComponentFactory(
+            name='Component 1', service=service_1, entrusted_entity=entity_1)
+        component_2 = base.ComponentFactory(
+            name='Component 2', service=service_1, entrusted_entity=entity_2)
+        component_3 = base.ComponentFactory(
+            name='Component 3', service=service_2, entrusted_entity=entity_1)
+
+        group_1 = base.ProductGroupFactory(name='Group 1')
+        group_2 = base.ProductGroupFactory(name='Group 2')
+        status_1 = base.ProductStatusFactory(name='Status 1')
+        status_2 = base.ProductStatusFactory(name='Status 2')
+        coverage_1 = base.CoverageFactory(name='Coverage 1')
+        coverage_2 = base.CoverageFactory(name='Coverage 2')
+
+        base.ProductFactory(
+            component=component_1, group=group_1, status=status_1,
+            coverage=coverage_1
+        )
+        base.ProductFactory(
+            component=component_2, group=group_1, status=status_1,
+            coverage=coverage_1
+        )
+        base.ProductFactory(
+            component=component_1, group=group_2, status=status_2,
+            coverage=coverage_1
+        )
+        base.ProductFactory(
+            component=component_3, group=group_1, status=status_1,
+            coverage=coverage_2
+        )
+
+        resp = self.client.get(
+            reverse('product:json'),
+            {'entity': entity_1.acronym, 'group': group_1.name}
+        )
+        self.assertEqual(resp.status_code, 200)
+
         data = resp.json()
-        self.assertEqual(len(data['components']), 2)
-        self.assertTrue(ALL_OPTIONS_LABEL in data['components'])
 
-        resp = self.client.get(reverse('product:filter_components'),
-                               {'service': 'No such name'})
-        data = resp.json()
-        self.assertEqual(len(data['components']), 1)
-        self.assertTrue(ALL_OPTIONS_LABEL in data['components'])
+        filters = {
+            'component': {
+                'options': ['Component 1', 'Component 3'], 'selected': None
+            },
+            'coverage': {
+                'options': ['Coverage 1', 'Coverage 2'], 'selected': None
+            },
+            'entity': {
+                'options': ['Entity 1'], 'selected': 'Entity 1'
+            },
+            'group': {
+                'options': ['Group 1'], 'selected': 'Group 1'
+            },
+            'service': {
+                'options': ['Service 1', 'Service 2'], 'selected': None
+            },
+            'status': {
+                'options': ['Status 1'], 'selected': None
+            }
+        }
 
-    def test_product_component_filter_entity(self):
-        entity_1 = base.EntrustedEntityFactory(acronym="Special")
-        entity_2 = base.EntrustedEntityFactory(acronym="Other")
-        base.ComponentFactory(entrusted_entity=entity_1)
-        base.ComponentFactory(entrusted_entity=entity_2)
-
-        resp = self.client.get(reverse('product:filter_components'),
-                               {'entity': entity_1.acronym})
-        data = resp.json()
-        self.assertEqual(len(data['components']), 2)
-        self.assertTrue(ALL_OPTIONS_LABEL in data['components'])
-
-        resp = self.client.get(reverse('product:filter_components'),
-                               {'entity': 'No such name'})
-        data = resp.json()
-        self.assertEqual(len(data['components']), 1)
-        self.assertTrue(ALL_OPTIONS_LABEL in data['components'])
-
-    def test_product_component_filter_entity_and_service(self):
-        service_1 = base.CopernicusServiceFactory(name="Special service")
-        service_2 = base.CopernicusServiceFactory(name="Other service")
-        entity_1 = base.EntrustedEntityFactory(acronym="Special")
-        entity_2 = base.EntrustedEntityFactory(acronym="Other")
-
-        base.ComponentFactory(service=service_1,
-                              entrusted_entity=entity_1)
-        base.ComponentFactory(service=service_1,
-                              entrusted_entity=entity_2)
-        base.ComponentFactory(service=service_2,
-                              entrusted_entity=entity_1)
-
-        resp = self.client.get(reverse('product:filter_components'),
-                               {'service': service_1.name,
-                                'entity': entity_1.acronym})
-        data = resp.json()
-        self.assertEqual(len(data['components']), 2)
-        self.assertTrue(ALL_OPTIONS_LABEL in data['components'])
-
-        resp = self.client.get(reverse('product:filter_components'),
-                               {'service': 'No such name',
-                                'entity': 'No such'})
-        data = resp.json()
-        self.assertEqual(len(data['components']), 1)
-        self.assertTrue(ALL_OPTIONS_LABEL in data['components'])
+        self.assertEqual(data['filters'], filters)
 
     def test_get_delete_product(self):
         product = base.ProductFactory()
