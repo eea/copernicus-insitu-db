@@ -42,7 +42,7 @@ class ProductDoc(DocType):
     service = fields.KeywordField(attr='component.service.name')
     entity = fields.KeywordField(attr='component.entrusted_entity.acronym')
     component = fields.KeywordField(attr='component.name')
-    coverage = fields.KeywordField(attr='coverage.name')
+    area = fields.KeywordField(attr='area.name')
 
     def get_name_display(self):
         url = reverse('product:detail', kwargs={'pk': self.id})
@@ -117,9 +117,9 @@ class DataDoc(DocType):
                                            normalizer=case_insensitive_normalizer)}
     )
     update_frequency = fields.KeywordField(attr='update_frequency.name')
-    coverage = fields.KeywordField(attr='coverage.name')
+    area = fields.KeywordField(attr='area.name')
     timeliness = fields.KeywordField(attr='timeliness.name')
-    policy = fields.KeywordField(attr='policy.name')
+    data_policy = fields.KeywordField(attr='data_policy.name')
     data_type = fields.KeywordField(attr='data_type.name')
     data_format = fields.KeywordField(attr='data_format.name')
     quality_control_procedure = fields.KeywordField(

@@ -99,13 +99,13 @@ class DisseminationFactory(DjangoModelFactory):
         model = models.Dissemination
 
 
-class CoverageFactory(DjangoModelFactory):
-    name = 'Test coverage'
+class AreaFactory(DjangoModelFactory):
+    name = 'Test area'
     sort_order = 0
     link = ''
 
     class Meta:
-        model = models.Coverage
+        model = models.Area
 
 
 class QualityControlProcedureFactory(DjangoModelFactory):
@@ -144,13 +144,13 @@ class TimelinessFactory(DjangoModelFactory):
         model = models.Timeliness
 
 
-class PolicyFactory(DjangoModelFactory):
-    name = 'Test Policy'
+class DataPolicyFactory(DjangoModelFactory):
+    name = 'Test Data Policy'
     sort_order = 0
     link = ''
 
     class Meta:
-        model = models.Policy
+        model = models.DataPolicy
 
 
 class DataTypeFactory(DjangoModelFactory):

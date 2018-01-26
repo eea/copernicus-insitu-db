@@ -39,14 +39,14 @@ class ProductList(ProtectedTemplateView):
         services = get_choices('name', model_cls=models.CopernicusService)
         groups = get_choices('name', model_cls=pickmodels.ProductGroup)
         statuses = get_choices('name', model_cls=pickmodels.ProductStatus)
-        coverages = get_choices('name', model_cls=pickmodels.Coverage)
+        areas = get_choices('name', model_cls=pickmodels.Area)
         components = get_choices('name', model_cls=models.Component)
         entities = get_choices('acronym', model_cls=models.EntrustedEntity)
         context.update({
             'services': services,
             'groups': groups,
             'statuses': statuses,
-            'coverages': coverages,
+            'areas': areas,
             'components': components,
             'entities': entities,
         })
@@ -55,12 +55,12 @@ class ProductList(ProtectedTemplateView):
 
 class ProductListJson(ESDatatableView):
     columns = ['name', 'service', 'entity', 'component', 'group',
-               'status', 'coverage']
+               'status', 'area']
     order_columns = columns
-    filters = ['service', 'entity', 'component', 'group', 'status', 'coverage']
+    filters = ['service', 'entity', 'component', 'group', 'status', 'area']
     filter_fields = [
         'component__service__name', 'component__entrusted_entity__acronym',
-        'component__name', 'group__name', 'status__name', 'coverage__name',
+        'component__name', 'group__name', 'status__name', 'area__name',
     ]  # This must be in the same order as `filters`
     document = documents.ProductDoc
     permission_classes = (IsAuthenticated, )
@@ -181,7 +181,7 @@ RELATED_FIELDS = {
     'group': pickmodels.ProductGroup,
     'component': models.Component,
     'status': pickmodels.ProductStatus,
-    'coverage': pickmodels.Coverage,
+    'area': pickmodels.Area,
 }
 
 

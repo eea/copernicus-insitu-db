@@ -318,9 +318,9 @@ class Product(SoftDeleteModel):
     status = models.ForeignKey(pickmodels.ProductStatus,
                                on_delete=models.CASCADE,
                                related_name='+')
-    coverage = models.ForeignKey(pickmodels.Coverage,
-                                 on_delete=models.CASCADE,
-                                 related_name='+')
+    area = models.ForeignKey(pickmodels.Area,
+                             on_delete=models.CASCADE,
+                             related_name='+')
     requirements = models.ManyToManyField(Requirement,
                                           through='ProductRequirement')
     created_at = models.DateTimeField(auto_now_add=True,
@@ -433,17 +433,17 @@ class Data(ValidationWorkflowModel, SoftDeleteModel):
     update_frequency = models.ForeignKey(pickmodels.UpdateFrequency,
                                          on_delete=models.CASCADE,
                                          related_name='+')
-    coverage = models.ForeignKey(pickmodels.Coverage,
-                                 on_delete=models.CASCADE,
-                                 related_name='+')
+    area = models.ForeignKey(pickmodels.Area,
+                             on_delete=models.CASCADE,
+                             related_name='+')
     start_time_coverage = models.DateField(null=True, blank=True)
     end_time_coverage = models.DateField(null=True, blank=True)
     timeliness = models.ForeignKey(pickmodels.Timeliness,
                                    on_delete=models.CASCADE,
                                    related_name='+')
-    policy = models.ForeignKey(pickmodels.Policy,
-                               on_delete=models.CASCADE,
-                               related_name='+')
+    data_policy = models.ForeignKey(pickmodels.DataPolicy,
+                                    on_delete=models.CASCADE,
+                                    related_name='+')
     data_type = models.ForeignKey(pickmodels.DataType,
                                   on_delete=models.CASCADE,
                                   related_name='+')

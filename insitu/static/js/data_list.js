@@ -26,9 +26,9 @@ $(document).ready(function () {
       "data": function (d) {
         d.name = $('#name').val();
         d.update_frequency = $('#update_frequency').val();
-        d.coverage = $('#coverage').val();
+        d.area = $('#area').val();
         d.timeliness = $('#timeliness').val();
-        d.policy = $('#policy').val();
+        d.data_policy = $('#data_policy').val();
         d.data_type = $('#data_type').val();
         d.data_format = $('#data_format').val();
         d.quality_control_procedure = $('#quality_control_procedure').val();
@@ -45,9 +45,9 @@ $(document).ready(function () {
     "stateSave": true,
     "stateSaveParams": function(settings, data){
       data.update_frequency = $('#update_frequency').val();
-      data.coverage = $('#coverage').val();
+      data.area = $('#area').val();
       data.timeliness = $('#timeliness').val();
-      data.policy = $('#policy').val();
+      data.data_policy = $('#data_policy').val();
       data.data_type = $('#data_type').val();
       data.data_format = $('#data_format').val();
       data.quality_control_procedure = $('#quality_control_procedure').val();
@@ -56,9 +56,9 @@ $(document).ready(function () {
     },
     "stateLoadParams": function (settings, data) {
       $('#update_frequency').val(data.update_frequency);
-      $('#coverage').val(data.coverage);
+      $('#area').val(data.area);
       $('#timeliness').val(data.timeliness);
-      $('#policy').val(data.policy);
+      $('#data_policy').val(data.data_policy);
       $('#data_type').val(data.data_type);
       $('#data_format').val(data.data_format);
       $('#quality_control_procedure').val(data.quality_control_procedure);
@@ -67,7 +67,7 @@ $(document).ready(function () {
     },
   }).fnFilterOnReturn();
 
-  $('#name,#update_frequency,#coverage,#timeliness,#policy,#data_type,\
+  $('#name,#update_frequency,#area,#timeliness,#data_policy,#data_type,\
       #data_format,#quality_control_procedure,#dissemination,#state').on(
       'change', function (event) {
     var table = $table.DataTable();
@@ -75,7 +75,7 @@ $(document).ready(function () {
   });
 
   $('#reset-btn').on('click', function () {
-    $('#name,#update_frequency,#coverage,#timeliness,#policy,#data_type,\
+    $('#name,#update_frequency,#area,#timeliness,#data_policy,#data_type,\
       #data_format,#quality_control_procedure,#dissemination,#state').val('All');
     var table = $table.DataTable();
     table.state.clear();

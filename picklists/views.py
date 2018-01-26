@@ -14,12 +14,12 @@ from picklists import models
 PICKLISTS = [
     insitu_models.CopernicusService, insitu_models.EntrustedEntity,
     insitu_models.Component, models.Barrier, models.ComplianceLevel,
-    models.Coverage, models.Criticality, models.Country, models.DataFormat,
+    models.Area, models.Criticality, models.Country, models.DataFormat,
     models.DataType, models.DefinitionLevel, models.Dissemination,
     models.EssentialVariable, models.UpdateFrequency, models.InspireTheme,
     models.ProductGroup, models.ProductStatus, models.Relevance,
     models.RequirementGroup, models.ProviderType,
-    models.QualityControlProcedure, models.Timeliness, models.Policy
+    models.QualityControlProcedure, models.Timeliness, models.DataPolicy
 ]
 
 SKIP_FIELDS = ['created_at', 'updated_at']

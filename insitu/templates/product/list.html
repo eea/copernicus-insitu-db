@@ -88,10 +88,10 @@
           </div>
 
           <div class="form-group filters-style">
-            <label for="coverage">Coverage:</label>
-            <select id="coverage" class="form-control">
-              {% for coverage in coverages %}
-                <option value="{{ coverage }}">{{ coverage }}</option>
+            <label for="area">Area:</label>
+            <select id="area" class="form-control">
+              {% for area in areas %}
+                <option value="{{ area }}">{{ area }}</option>
               {% endfor %}
             </select>
           </div>
@@ -116,7 +116,7 @@
           <th>Component</th>
           <th>Group</th>
           <th>Status</th>
-          <th>Coverage</th>
+          <th>Area</th>
         </tr>
         </thead>
       </table>

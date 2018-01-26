@@ -28,7 +28,7 @@ $(document).ready(function () {
       data.entity = $('#entity').val();
       data.group = $('#group').val();
       data.status = $('#status').val();
-      data.coverage = $('#coverage').val();
+      data.area = $('#area').val();
     },
     "stateLoadParams": function (settings, data) {
       $('#service').val(data.service);
@@ -36,7 +36,7 @@ $(document).ready(function () {
       $('#entity').val(data.entity);
       $('#group').val(data.group);
       $('#status').val(data.status);
-      $('#coverage').val(data.coverage);
+      $('#area').val(data.area);
     },
     "ajax": {
       "url": $('#ajax-url').data('ajax-url'),
@@ -46,7 +46,7 @@ $(document).ready(function () {
         d.entity = $('#entity').val();
         d.group = $('#group').val();
         d.status = $('#status').val();
-        d.coverage = $('#coverage').val();
+        d.area = $('#area').val();
       },
       "dataSrc": function (json) {
         $.each(json.filters, function(key, value){
@@ -57,13 +57,13 @@ $(document).ready(function () {
     }
   }).fnFilterOnReturn();
 
-  $('#service,#entity,#component,#group,#status,#coverage').on('change', function (event) {
+  $('#service,#entity,#component,#group,#status,#area').on('change', function (event) {
     var table = $table.DataTable();
     table.ajax.reload();
   });
 
   $('#reset-btn').on('click', function () {
-    $('#service,#entity,#component,#group,#status,#coverage').val('All');
+    $('#service,#entity,#component,#group,#status,#area').val('All');
     var table = $table.DataTable();
     table.state.clear();
     table.ajax.reload();
