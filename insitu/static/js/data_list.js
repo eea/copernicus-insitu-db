@@ -26,7 +26,7 @@ $(document).ready(function () {
       "data": function (d) {
         d.name = $('#name').val();
         d.update_frequency = $('#update_frequency').val();
-        d.coverage = $('#coverage').val();
+        d.area = $('#area').val();
         d.timeliness = $('#timeliness').val();
         d.data_policy = $('#data_policy').val();
         d.data_type = $('#data_type').val();

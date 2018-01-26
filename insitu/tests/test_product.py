@@ -108,7 +108,7 @@ class ProductTests(base.FormCheckTestCase):
         explosion it is impractical to test all possible combinations, so this
         only tests one specific case that was selected at random, namely
         `entity`, and `group` triggering the synchronization of `service`,
-        `component`, `status` and `coverage`.
+        `component`, `status` and `area`.
         """
         service_1 = base.CopernicusServiceFactory(name="Service 1")
         service_2 = base.CopernicusServiceFactory(name="Service 2")
@@ -126,24 +126,24 @@ class ProductTests(base.FormCheckTestCase):
         group_2 = base.ProductGroupFactory(name='Group 2')
         status_1 = base.ProductStatusFactory(name='Status 1')
         status_2 = base.ProductStatusFactory(name='Status 2')
-        coverage_1 = base.CoverageFactory(name='Coverage 1')
-        coverage_2 = base.CoverageFactory(name='Coverage 2')
+        area_1 = base.AreaFactory(name='Area 1')
+        area_2 = base.AreaFactory(name='Area 2')
 
         base.ProductFactory(
             component=component_1, group=group_1, status=status_1,
-            coverage=coverage_1
+            area=area_1
         )
         base.ProductFactory(
             component=component_2, group=group_1, status=status_1,
-            coverage=coverage_1
+            area=area_1
         )
         base.ProductFactory(
             component=component_1, group=group_2, status=status_2,
-            coverage=coverage_1
+            area=area_1
         )
         base.ProductFactory(
             component=component_3, group=group_1, status=status_1,
-            coverage=coverage_2
+            area=area_2
         )
 
         resp = self.client.get(
@@ -158,8 +158,8 @@ class ProductTests(base.FormCheckTestCase):
             'component': {
                 'options': ['Component 1', 'Component 3'], 'selected': None
             },
-            'coverage': {
-                'options': ['Coverage 1', 'Coverage 2'], 'selected': None
+            'area': {
+                'options': ['Area 1', 'Area 2'], 'selected': None
             },
             'entity': {
                 'options': ['Entity 1'], 'selected': 'Entity 1'
