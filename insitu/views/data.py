@@ -25,7 +25,7 @@ class DataList(LoggingProtectedTemplateView):
         context = super(DataList, self).get_context_data()
         update_frequencies = get_choices('name',
                                          model_cls=pickmodels.UpdateFrequency)
-        coverages = get_choices('name', model_cls=pickmodels.Coverage)
+        areas = get_choices('name', model_cls=pickmodels.Area)
         timelinesses = get_choices('name', model_cls=pickmodels.Timeliness)
         data_policies = get_choices('name', model_cls=pickmodels.DataPolicy)
         data_types = get_choices('name', model_cls=pickmodels.DataType)
@@ -39,7 +39,7 @@ class DataList(LoggingProtectedTemplateView):
             state for state in models.ValidationWorkflow.states]
         context.update({
             'update_frequencies': update_frequencies,
-            'coverages': coverages,
+            'areas': areas,
             'timelinesses': timelinesses,
             'data_policies': data_policies,
             'data_types': data_types,
@@ -53,13 +53,13 @@ class DataList(LoggingProtectedTemplateView):
 
 class DataListJson(ESDatatableView):
     columns = [
-        'name', 'update_frequency', 'coverage', 'timeliness', 'data_policy',
+        'name', 'update_frequency', 'area', 'timeliness', 'data_policy',
         'data_type', 'data_format', 'quality_control_procedure',
         'dissemination', 'state'
     ]
     order_columns = columns
     filters = [
-        'update_frequency', 'coverage', 'timeliness', 'data_policy',
+        'update_frequency', 'area', 'timeliness', 'data_policy',
         'data_type', 'data_format', 'quality_control_procedure',
         'dissemination', 'state'
     ]

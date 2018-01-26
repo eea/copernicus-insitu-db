@@ -80,7 +80,7 @@ class ProductFactory(DjangoModelFactory):
     group = SubFactory(factories.ProductGroupFactory)
     component = SubFactory(ComponentFactory)
     status = SubFactory(factories.ProductStatusFactory)
-    coverage = SubFactory(factories.CoverageFactory)
+    area = SubFactory(factories.AreaFactory)
 
     class Meta:
         model = models.Product
@@ -123,7 +123,7 @@ class DataProviderDetailsFactory(DjangoModelFactory):
 class DataFactory(DjangoModelFactory):
     name = 'test Data'
     update_frequency = SubFactory(factories.UpdateFrequencyFactory)
-    coverage = SubFactory(factories.CoverageFactory)
+    area = SubFactory(factories.AreaFactory)
     timeliness = SubFactory(factories.TimelinessFactory)
     data_policy = SubFactory(factories.DataPolicyFactory)
     data_type = SubFactory(factories.DataTypeFactory)

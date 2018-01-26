@@ -10,9 +10,9 @@ from insitu.tests import base
 
 class ProductTests(base.FormCheckTestCase):
     fields = ['acronym', 'name', 'note', 'description']
-    related_fields = ['group', 'component', 'status', 'coverage']
+    related_fields = ['group', 'component', 'status', 'area']
     required_fields = ['name', 'group', 'component',
-                       'status', 'coverage']
+                       'status', 'area']
     target_type = 'product'
 
     def setUp(self):
@@ -20,7 +20,7 @@ class ProductTests(base.FormCheckTestCase):
         group = base.ProductGroupFactory()
         component = base.ComponentFactory()
         status = base.ProductStatusFactory()
-        coverage = base.CoverageFactory()
+        area = base.AreaFactory()
         self.user = provider_user = base.UserFactory(is_superuser=True,
                                                      username='New user 1')
         self.client.force_login(provider_user)
@@ -32,7 +32,7 @@ class ProductTests(base.FormCheckTestCase):
             'group': group.pk,
             'component': component.pk,
             'status': status.pk,
-            'coverage': coverage.pk
+            'area': area.pk
         }
 
         with open(os.devnull, 'w') as f:

@@ -23,7 +23,7 @@ class HelpPage(ProtectedTemplateView):
         context['models'] = dict()
 
         PICKLISTS = [
-            models.Barrier, models.ComplianceLevel, models.Coverage,
+            models.Barrier, models.ComplianceLevel, models.Area,
             models.Criticality, models.Country, models.DataFormat,
             models.DataPolicy, models.DataType, models.DefinitionLevel,
             models.Dissemination, models.EssentialVariable, models.InspireTheme,

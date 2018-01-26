@@ -45,7 +45,7 @@ $(document).ready(function () {
     "stateSave": true,
     "stateSaveParams": function(settings, data){
       data.update_frequency = $('#update_frequency').val();
-      data.coverage = $('#coverage').val();
+      data.area = $('#area').val();
       data.timeliness = $('#timeliness').val();
       data.data_policy = $('#data_policy').val();
       data.data_type = $('#data_type').val();
@@ -56,7 +56,7 @@ $(document).ready(function () {
     },
     "stateLoadParams": function (settings, data) {
       $('#update_frequency').val(data.update_frequency);
-      $('#coverage').val(data.coverage);
+      $('#area').val(data.area);
       $('#timeliness').val(data.timeliness);
       $('#data_policy').val(data.data_policy);
       $('#data_type').val(data.data_type);
@@ -67,7 +67,7 @@ $(document).ready(function () {
     },
   }).fnFilterOnReturn();
 
-  $('#name,#update_frequency,#coverage,#timeliness,#data_policy,#data_type,\
+  $('#name,#update_frequency,#area,#timeliness,#data_policy,#data_type,\
       #data_format,#quality_control_procedure,#dissemination,#state').on(
       'change', function (event) {
     var table = $table.DataTable();
@@ -75,7 +75,7 @@ $(document).ready(function () {
   });
 
   $('#reset-btn').on('click', function () {
-    $('#name,#update_frequency,#coverage,#timeliness,#data_policy,#data_type,\
+    $('#name,#update_frequency,#area,#timeliness,#data_policy,#data_type,\
       #data_format,#quality_control_procedure,#dissemination,#state').val('All');
     var table = $table.DataTable();
     table.state.clear();

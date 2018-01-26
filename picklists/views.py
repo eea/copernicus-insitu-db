@@ -14,7 +14,7 @@ from picklists import models
 PICKLISTS = [
     insitu_models.CopernicusService, insitu_models.EntrustedEntity,
     insitu_models.Component, models.Barrier, models.ComplianceLevel,
-    models.Coverage, models.Criticality, models.Country, models.DataFormat,
+    models.Area, models.Criticality, models.Country, models.DataFormat,
     models.DataType, models.DefinitionLevel, models.Dissemination,
     models.EssentialVariable, models.UpdateFrequency, models.InspireTheme,
     models.ProductGroup, models.ProductStatus, models.Relevance,

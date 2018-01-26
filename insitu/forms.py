@@ -19,7 +19,7 @@ class ProductForm(forms.ModelForm):
     class Meta:
         model = models.Product
         fields = ['acronym', 'name', 'description', 'group', 'component',
-                  'status', 'coverage', 'note']
+                  'status', 'area', 'note']
 
 
 class ProductRequirementBaseForm(forms.ModelForm):
@@ -237,7 +237,7 @@ class DataForm(CreatedByFormMixin, forms.ModelForm):
     class Meta:
         model = models.Data
         auto_created = True
-        fields = ['name', 'note', 'update_frequency', 'coverage',
+        fields = ['name', 'note', 'update_frequency', 'area',
                   'start_time_coverage', 'end_time_coverage', 'timeliness',
                   'data_policy', 'data_type', 'data_format',
                   'quality_control_procedure', 'dissemination',

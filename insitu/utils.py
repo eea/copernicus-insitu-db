@@ -4,7 +4,7 @@ PICKLISTS_DESCRIPTION = {
     'Barrier': 'High level barriers used to illustrate the main reasons why a given in situ data requirement cannot be meet for the product in question.',
     'Criticality': 'A measure of the relevance of the requirement for the provision of reliable products.',
     'ComplianceLevel': 'A measure of how much the data set  addresses the given requirement.',
-    'Coverage': 'The specific boundaries of the geographic or political region for which in situ data is required.',
+    'Area': 'The specific boundaries of the geographic or political region for which in situ data is required.',
     'DataFormat': 'The general category of format with whom the in situ data is provided.',
     'DataType': 'Provide a classification of in situ data which characterise how the data contents are represented.',
     'DefinitionLevel': 'A requirement, essential for a product or family of products, for in situ measurement of a critical physical, chemical or biological variable.',

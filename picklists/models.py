@@ -185,7 +185,7 @@ class Dissemination(models.Model):
         return self.name
 
 
-class Coverage(models.Model):
+class Area(models.Model):
     name = models.CharField(max_length=100)
     description = models.TextField(blank=True)
     sort_order = models.IntegerField()
@@ -195,7 +195,7 @@ class Coverage(models.Model):
 
     class Meta:
         ordering = ['sort_order']
-        verbose_name_plural = 'coverage'
+        verbose_name_plural = 'areas'
 
     def __str__(self):
         return self.name
