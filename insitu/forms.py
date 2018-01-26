@@ -166,7 +166,9 @@ class RequirementForm(forms.ModelForm):
         metric_fields = ['uncertainty', 'update_frequency', 'timeliness',
                          'horizontal_resolution', 'vertical_resolution']
         self._clean_metric(metric_fields)
-        exists = models.Requirement.objects.filter(**self.cleaned_data).exists()
+        fields = {field: v for field, v in self.cleaned_data.items()
+                  if field != 'name'}
+        exists = models.Requirement.objects.filter(**fields).exists()
         if exists:
             self.add_error(
                 None,
