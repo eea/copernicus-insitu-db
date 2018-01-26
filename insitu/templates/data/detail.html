@@ -49,7 +49,12 @@
         <th class="col-md-4 col-sm-6">Area</th>
         <td class="col-md-8 col-sm-6">
           {{ data.area }}
-          <br>
+        </td>
+      </tr>
+
+      <tr class="row">
+        <th class="col-md-4 col-sm-6">Temporal</th>
+        <td class="col-md-8 col-sm-6">
           {{ data.start_time_coverage|date:"d N Y" }} -
           {{ data.end_time_coverage|date:"d N Y" }}
         </td>
