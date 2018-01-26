@@ -21,6 +21,7 @@
 {% endblock %}
 
 {% block content %}
+  <div id="ajax-url" data-ajax-url="{% url 'product:json' %}"></div>
 
   <div class="row">
     <h1 class="col-sm-12">
@@ -96,11 +97,6 @@
           </div>
 
           <div class="form-group filters-style">
-            <button type="button" class="btn btn-primary btn-sm"
-                    id="filter-btn">Filter
-            </button>
-          </div>
-          <div class="form-group filters-style">
             <button type="button" class="btn btn-default btn-md"
                     id="reset-btn"><span class="glyphicon glyphicon-trash"></span>
             </button>
@@ -133,78 +129,5 @@
   <script src="{% static 'js/jquery.dataTables.min.js' %}"></script>
   <script src="{% static 'js/jquery.dataTables.bootstrap.min.js' %}"></script>
   <script src="{% static 'js/fnFilterOnReturn.js' %}"></script>
-  <script>
-    $(document).ready(function () {
-      var $table = $('#products').dataTable({
-        "processing": true,
-        "serverSide": true,
-        "dom": "<'row'<'col-sm-6'i><'col-sm-6'f><'col-sm-4 display-margin'l><'col-sm-8'p>>" +
-               "<'row'<'col-sm-12'tr>>" +
-               "<'row'<'col-sm-12'p>>",
-        "language": {
-          "infoFiltered": "<span class='green-text'>(filtered from _MAX_ total records)<span>"
-         },
-        "stateSave": true,
-        "stateSaveParams": function(settings, data){
-          data.service = $('#service').val();
-          data.component = $('#component').val();
-          data.entity = $('#entity').val();
-          data.group = $('#group').val();
-          data.status = $('#status').val();
-          data.coverage = $('#coverage').val();
-        },
-        "stateLoadParams": function (settings, data) {
-          $('#service').val(data.service);
-          $('#component').val(data.component);
-          $('#entity').val(data.entity);
-          $('#group').val(data.group);
-          $('#status').val(data.status);
-          $('#coverage').val(data.coverage);
-        },
-        "ajax": {
-          "url": "{% url 'product:json' %}",
-          "data": function (d) {
-            d.service = $('#service').val();
-            d.component = $('#component').val();
-            d.entity = $('#entity').val();
-            d.group = $('#group').val();
-            d.status = $('#status').val();
-            d.coverage = $('#coverage').val();
-          }
-        }
-      }).fnFilterOnReturn();
-      $('#filter-btn').on('click', function () {
-        var table = $table.DataTable();
-        table.ajax.reload();
-      });
-
-      $('#service,#entity').change(function () {
-        var service = $('#service').val();
-        var entity = $('#entity').val();
-        $.get(
-          "{% url 'product:filter_components' %}",
-          {
-            'entity': entity,
-            'service': service
-          },
-          function (response) {
-            var select = $('#component');
-            var data = response['components'];
-            select.find('option').remove();
-            for (var i = 0; i < data.length; i++) {
-              select.append(
-                '<option value="' + data[i] + '">' + data[i] + '</option>')
-            }
-          }
-        );
-      });
-
-      $('#reset-btn').on('click', function () {
-        $('#service,#entity,#component,#group,#status,#coverage').val('All');
-        var table = $table.DataTable();
-        table.ajax.reload();
-        table.search('').draw();
-      });
-    });
-  </script>
+  <script src="{% static 'js/product_list.js' %}"></script>
 {% endblock %}

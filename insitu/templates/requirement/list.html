@@ -21,6 +21,7 @@
 {% endblock %}
 
 {% block content %}
+  <div id="ajax-url" data-ajax-url="{% url 'requirement:json' %}"></div>
 
   <div class="row">
     <h1 class="col-sm-12">
@@ -75,13 +76,8 @@
           </div>
 
           <div class="form-group filters-style">
-            <button type="button" class="btn btn-primary btn-sm"
-                    id="filter-btn">Filter
-            </button>
-          </div>
-          <div class="form-group filters-style">
-            <button type="button" class="btn btn-default btn-md"
-                    id="reset-btn"><span class="glyphicon glyphicon-trash"></span>
+            <button type="button" class="btn btn-default btn-md" id="reset-btn">
+              <span class="glyphicon glyphicon-trash"></span>
             </button>
           </div>
 
@@ -147,79 +143,5 @@
   <script src="{% static 'js/jquery.dataTables.min.js' %}"></script>
   <script src="{% static 'js/jquery.dataTables.bootstrap.min.js' %}"></script>
   <script src="{% static 'js/fnFilterOnReturn.js' %}"></script>
-  <script>
-    $(document).ready(function () {
-      var $table = $('#requirements').dataTable({
-        "processing": true,
-        "serverSide": true,
-        "dom": "<'row'<'col-sm-6'i><'col-sm-6'f><'col-sm-4 display-margin'l><'col-sm-8'p>>" +
-               "<'row'<'col-sm-12'tr>>" +
-               "<'row'<'col-sm-12'p>>",
-        "language": {
-          "infoFiltered": "<span class='green-text'>(filtered from _MAX_ total records)<span>",
-        },
-        "ajax": {
-          "url": "{% url 'requirement:json' %}",
-          "data": function (d) {
-            d.dissemination = $('#dissemination').val();
-            d.quality_control_procedure = $('#quality_control_procedure').val();
-            d.group = $('#group').val();
-            d.state = $('#state').val()
-          }
-        },
-        "stateSave": true,
-        "stateSaveParams": function(settings, data){
-          data.dissemination = $('#dissemination').val();
-          data.quality_control_procedure = $('#quality_control_procedure').val();
-          data.group = $('#group').val();
-          data.state = $('#state').val();
-        },
-        "stateLoadParams": function (settings, data) {
-          $('#dissemination').val(data.dissemination);
-          $('#quality_control_procedure').val(data.quality_control_procedure);
-          $('#group').val(data.group);
-          $('#state').val(data.state);
-        },
-        "columnDefs": [
-          {
-            "render": function (data, type, row) {
-              function generate_div(color, data) {
-                return "<div class='col-sm-12 " + color + " no-padding-left'>" + data +
-                  "</div>";
-              }
-
-              var threshold = data.split('T: ').pop().split(' - B: ').shift();
-              var breakthrough = data.split('B: ').pop().split(' - G: ').shift();
-              var goal = data.split('G: ').pop();
-              return (
-                generate_div('orange', threshold) +
-                generate_div('blue', breakthrough) +
-                generate_div('green', goal));
-            },
-            "targets": [4, 5, 6, 7, 8],
-            "bSortable": false
-          }
-        ]
-      }).fnFilterOnReturn();
-
-      $('#filter-btn').on('click', function () {
-        var table = $table.DataTable();
-        table.ajax.reload();
-      });
-
-      $('#reset-btn').on('click', function () {
-        $('#dissemination,#quality_control_procedure,#group,#state').val('All');
-        var table = $table.DataTable();
-        table.ajax.reload();
-        table.search('').draw();
-      });
-
-      $('[data-toggle="popover"]').popover({
-        trigger: 'hover',
-        placement: 'top',
-        html: true,
-        template: '<div class="popover popover-width-limit" role="tooltip"><div class="popover-arrow"></div><h3 class="popover-title"></h3><div class="popover-content"></div></div>'
-      });
-    });
-  </script>
+  <script src="{% static 'js/requirement_list.js' %}"></script>
 {% endblock %}

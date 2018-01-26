@@ -2,7 +2,10 @@ version: '2'
 
 services:
   app:
-    build: .
+    build:
+      context: .
+      args:
+        REQFILE: requirements-dev.txt
     ports:
     - 8000:8000
     volumes:

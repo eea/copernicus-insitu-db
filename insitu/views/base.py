@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.views.generic.edit import ModelFormMixin
 from django_datatables_view.base_datatable_view import BaseDatatableView
 from insitu.utils import ALL_OPTIONS_LABEL
@@ -56,18 +57,62 @@ class ESDatatableView(BaseDatatableView, ProtectedView):
             return qs.order_by(*order)
         return qs
 
-    def filter_queryset(self, qs):
-        for filter in self.filters:
-            value = self.request.GET.get(filter)
+    def filter_queryset(self, search):
+        """
+        Where `search` is a django_elasticsearch_dsl.search.Search object.
+        """
+        for filter_ in self.filters:
+            value = self.request.GET.get(filter_)
             if not value or value == ALL_OPTIONS_LABEL:
                 continue
-            qs = qs.filter('term', **{filter: value})
+            search = search.query('term', **{filter_: value})
 
         search_text = self.request.GET.get('search[value]', '')
-        if not search_text:
-            return qs
-        return qs.query('query_string', default_field='name',
-                        query='"' + search_text + '"')
+        if search_text:
+            search = search.query(
+                'query_string', default_field='name',
+                query='"' + search_text + '"'
+            )
+
+        if (
+                search.count() > settings.MAX_RESULT_WINDOW or not
+                hasattr(self, 'filter_fields')):
+            # If there are more than MAX_RESULT_WINDOW matching objects in the
+            # database, don't bother syncing the filter options. It would be too
+            # complicated and costly.
+            return search
+
+        search = search[0:settings.MAX_RESULT_WINDOW]
+        qs = search.to_queryset()  # If there are ever more than 10,000
+        # items in the database, this will have to be reimplemented entirely.
+        objects = qs.values_list(*self.filter_fields)
+
+        self._filter_options = dict([
+            (
+                filter_,
+                {
+                    'options': options,
+                    'selected': self.request.GET.get(filter_)
+                }
+            )
+            for filter_, options in
+            zip(
+                self.filters,
+                [
+                    sorted([opt for opt in set(options) if opt])
+                    for options in zip(*objects)
+                ]
+            )
+        ])
+        return search
+
+    def get_context_data(self, *args, **kwargs):
+        ret = super().get_context_data(*args, **kwargs)
+        if hasattr(self, '_filter_options'):
+            ret.update({
+                'filters': self._filter_options
+            })
+        return ret
 
 
 class CreatedByMixin:

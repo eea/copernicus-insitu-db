@@ -24,44 +24,41 @@ Copernicus services on in situ data requirements (current and expected), data us
         $ git clone https://github.com/eea/copernicus-insitu-db.git
         $ cd copernicus-insitu-db
 
-2. Customize env files:
+1. Customize env files and `docker-compose.yml`:
 
         $ cp docker/app.env.example env/app.env
         $ vim docker/app.env
         $ cp docker/postgres.env.example env/postgres.env
         $ vim docker/postgres.env
+        $ cp docker-compose.yml.example docker-compose.yml
+        $ vim docker-compose.yml
 
-3. Start application stack:
+1. Start application stack:
 
         $ docker-compose up -d
         $ docker-compose logs
 
-4. Create a superuser:
+1. Run migrations, create superuser, create elasticsearch index and start the
+development server:
 
-        $ docker exec -it insitu.app bash
-        $ ./manage.py createsuperuser
-
-5. Run migrations, create elasticsearch index, and start the development server:
-
-        $ docker exec -it insitu.app bash
-        $ pip install -r requirements-dev.txt
+        $ docker exec -it insitu_app bash
         $ ./manage.py migrate
+        $ ./manage.py createsuperuser
         $ ./manage.py search_index --rebuild
         $ ./manage.py runserver 0.0.0.0:8000
 
-6. Run tests:
+1. Run tests:
 
-        $ docker exec -it insitu.app bash
-        # pip install -r requirements-dev.txt
+        $ docker exec -it insitu_app bash
         $ ./manage.py test --settings=copernicus.testsettings
 
-7. Check coverage:
+1. Check coverage:
 
-        $ docker exec -it insitu.app bash
+        $ docker exec -it insitu_app bash
         $ coverage run --source='.' ./manage.py test --settings=copernicus.testsettings
         $ coverage html
 
-8. See it in action: [http://localhost:8000](http://localhost:8000)
+1. See it in action: [http://localhost:8000](http://localhost:8000)
 
 ### Upgrading the application
 
@@ -70,13 +67,13 @@ Copernicus services on in situ data requirements (current and expected), data us
         $ cd copernicus-insitu-db
         $ git pull origin master
 
-2. Update the application stack, all services should be "Up":
+1. Update the application stack, all services should be "Up":
 
         $ docker-compose pull
         $ docker-compose up -d
         $ docker-compose ps
 
-3. See it in action: [http://localhost:8000](http://localhost:8000)
+1. See it in action: [http://localhost:8000](http://localhost:8000)
 
 ### Debugging
 
@@ -93,7 +90,7 @@ is not executed:
 
 * Attach to docker container and start the server in debug mode:
 
-        $ docker exec -it insitu.app bash
+        $ docker exec -it insitu_app bash
         # ./manage.py runserver 0.0.0.0:8000
 
 * See it in action: [http://localhost:8000](http://localhost:8000)

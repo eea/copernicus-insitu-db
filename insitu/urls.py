@@ -26,10 +26,6 @@ product_patterns = [
         views.ProductList.as_view(),
         name='list'),
 
-    url(r'^filter/components/$',
-        views.ComponentsFilter.as_view(),
-        name='filter_components'),
-
     url(r'^data/$',
         views.ProductListJson.as_view(),
         name='json'),

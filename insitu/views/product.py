@@ -3,14 +3,14 @@ from django.contrib import messages
 from django.core.urlresolvers import reverse
 from django.db import transaction
 from django.db.models.fields.reverse_related import ForeignObjectRel
-from django.http.response import JsonResponse, HttpResponse
+from django.http.response import HttpResponse
 from openpyxl import Workbook, load_workbook
 from openpyxl.styles import Font
 
 from insitu import documents
 from insitu import forms
 from insitu import models
-from insitu.utils import get_choices, ALL_OPTIONS_LABEL
+from insitu.utils import get_choices
 from insitu.views.base import ESDatatableView
 from insitu.views.protected import (
     ProtectedView,
@@ -58,24 +58,12 @@ class ProductListJson(ESDatatableView):
                'status', 'coverage']
     order_columns = columns
     filters = ['service', 'entity', 'component', 'group', 'status', 'coverage']
+    filter_fields = [
+        'component__service__name', 'component__entrusted_entity__acronym',
+        'component__name', 'group__name', 'status__name', 'coverage__name',
+    ]  # This must be in the same order as `filters`
     document = documents.ProductDoc
     permission_classes = (IsAuthenticated, )
-
-
-class ComponentsFilter(ProtectedView):
-    permission_classes = (IsAuthenticated, )
-
-    def get(self, request, *args, **kwargs):
-        service = request.GET.get('service', '')
-        entity = request.GET.get('entity', '')
-
-        components = models.Component.objects.all()
-        if service and service != ALL_OPTIONS_LABEL:
-            components = components.filter(service__name=service)
-        if entity and entity != ALL_OPTIONS_LABEL:
-            components = components.filter(entrusted_entity__acronym=entity)
-        data = {'components': get_choices('name', objects=components)}
-        return JsonResponse(data)
 
 
 class ProductAdd(ProtectedCreateView):
@@ -201,7 +189,7 @@ class ImportProductsView(ProtectedView):
     permission_classes = (IsSuperuser,)
 
     def post(self, request, *args, **kwargs):
-        if not 'workbook' in request.FILES:
+        if 'workbook' not in request.FILES:
             return HttpResponse(status=400)
         workbook_file = request.FILES['workbook']
         try:
@@ -227,6 +215,6 @@ class ImportProductsView(ProtectedView):
                     data['_deleted'] = False
                     models.Product.objects.really_all().update_or_create(id=pk,
                                                                          defaults=data)
-        except:
+        except Exception:
             return HttpResponse(status=400)
         return HttpResponse(status=200)
