@@ -83,4 +83,11 @@ $(document).ready(function () {
     table.ajax.reload();
     table.search('').draw();
   });
+
+  $('[data-toggle="popover"]').popover({
+    trigger: 'hover',
+    placement: 'top',
+    html: true,
+    template: '<div class="popover popover-width-limit" role="tooltip"><div class="popover-arrow"></div><h3 class="popover-title"></h3><div class="popover-content"></div></div>'
+  });
 });
