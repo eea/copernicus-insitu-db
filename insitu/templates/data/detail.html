@@ -11,6 +11,13 @@
 {% endblock %}
 
 {% block content %}
+
+  {% if failed_validation %}
+    <div class="alert alert-danger">
+      This Data does not respect the validation! Use <a href="{%url 'data:edit' data.pk %}?ready">this</a> formular to complete the rest of the fields.
+    </div>
+  {% endif %}
+
   <div class="row">
     <h1 class="col-sm-12">
       <span>Data details</span>
@@ -42,13 +49,13 @@
 
       <tr class="row">
         <th class="col-md-4 col-sm-6">Update Frequency</th>
-        <td class="col-md-8 col-sm-6">{{ data.update_frequency }}</td>
+        <td class="col-md-8 col-sm-6">{{ data.update_frequency|default_if_none:"-" }}</td>
       </tr>
 
       <tr class="row">
         <th class="col-md-4 col-sm-6">Area</th>
         <td class="col-md-8 col-sm-6">
-          {{ data.area }}
+          {{ data.area|default_if_none:"-" }}
         </td>
       </tr>
 
@@ -62,32 +69,32 @@
 
       <tr class="row">
         <th class="col-md-4 col-sm-6">Timeliness</th>
-        <td class="col-md-8 col-sm-6">{{ data.timeliness }}</td>
+        <td class="col-md-8 col-sm-6">{{ data.timeliness|default_if_none:"-" }}</td>
       </tr>
 
       <tr class="row">
         <th class="col-md-4 col-sm-6">Data Policy</th>
-        <td class="col-md-8 col-sm-6">{{ data.data_policy }}</td>
+        <td class="col-md-8 col-sm-6">{{ data.data_policy|default_if_none:"-" }}</td>
       </tr>
 
       <tr class="row">
         <th class="col-md-4 col-sm-6">Data type</th>
-        <td class="col-md-8 col-sm-6">{{ data.data_type }}</td>
+        <td class="col-md-8 col-sm-6">{{ data.data_type|default_if_none:"-" }}</td>
       </tr>
 
       <tr class="row">
         <th class="col-md-4 col-sm-6">Data format</th>
-        <td class="col-md-8 col-sm-6">{{ data.data_format }}</td>
+        <td class="col-md-8 col-sm-6">{{ data.data_format|default_if_none:"-" }}</td>
       </tr>
 
       <tr class="row">
         <th class="col-md-4 col-sm-6">Quality Control Procedure</th>
-        <td class="col-md-8 col-sm-6">{{ data.quality_control_procedure }}</td>
+        <td class="col-md-8 col-sm-6">{{ data.quality_control_procedure|default_if_none:"-" }}</td>
       </tr>
 
       <tr class="row">
         <th class="col-md-4 col-sm-6">Dissemination</th>
-        <td class="col-md-8 col-sm-6">{{ data.dissemination }}</td>
+        <td class="col-md-8 col-sm-6">{{ data.dissemination|default_if_none:"-" }}</td>
       </tr>
 
       {% if data.inspire_themes.all|length %}

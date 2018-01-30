@@ -431,38 +431,46 @@ class Data(ValidationWorkflowModel, SoftDeleteModel):
     name = models.CharField(max_length=100)
     note = models.TextField(blank=True)
     update_frequency = models.ForeignKey(pickmodels.UpdateFrequency,
+                                         null=True, blank=True,
                                          on_delete=models.CASCADE,
                                          related_name='+')
     area = models.ForeignKey(pickmodels.Area,
+                             null=True, blank=True,
                              on_delete=models.CASCADE,
                              related_name='+')
     start_time_coverage = models.DateField(null=True, blank=True)
     end_time_coverage = models.DateField(null=True, blank=True)
     timeliness = models.ForeignKey(pickmodels.Timeliness,
+                                   null=True, blank=True,
                                    on_delete=models.CASCADE,
                                    related_name='+')
     data_policy = models.ForeignKey(pickmodels.DataPolicy,
+                                    null=True, blank=True,
                                     on_delete=models.CASCADE,
                                     related_name='+')
     data_type = models.ForeignKey(pickmodels.DataType,
+                                  null=True, blank=True,
                                   on_delete=models.CASCADE,
                                   related_name='+')
     data_format = models.ForeignKey(pickmodels.DataFormat,
+                                    null=True, blank=True,
                                     on_delete=models.CASCADE,
                                     related_name='+')
     quality_control_procedure = models.ForeignKey(
         pickmodels.QualityControlProcedure,
+        null=True, blank=True,
         on_delete=models.CASCADE,
         related_name='+'
     )
     dissemination = models.ForeignKey(pickmodels.Dissemination,
+                                      null=True, blank=True,
                                       on_delete=models.CASCADE,
                                       related_name='+')
     inspire_themes = models.ManyToManyField(pickmodels.InspireTheme,
                                             blank=True)
     essential_variables = models.ManyToManyField(
         pickmodels.EssentialVariable,
-        blank=True
+        blank=True,
     )
     requirements = models.ManyToManyField(Requirement,
                                           through='DataRequirement')

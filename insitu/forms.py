@@ -4,7 +4,7 @@ from django.db import transaction
 from insitu import models
 from insitu import signals
 from picklists.models import (
-    Dissemination, QualityControlProcedure, RequirementGroup, ProductGroup,
+    ProductGroup,
 )
 
 
@@ -13,6 +13,15 @@ class CreatedByFormMixin:
         if created_by:
             self.instance.created_by = created_by
         return super().save(commit)
+
+
+class RequiredFieldsMixin:
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        fields_required = getattr(self.Meta, 'fields_required', None)
+        for key in fields_required:
+            self.fields[key].required = True
 
 
 class ProductForm(forms.ModelForm):
@@ -93,35 +102,35 @@ class ProductGroupRequirementForm(ProductRequirementBaseForm):
 
 class RequirementForm(forms.ModelForm):
     uncertainty__threshold = forms.CharField(max_length=100,
-                                            required=False)
+                                             required=False)
     uncertainty__breakthrough = forms.CharField(max_length=100,
-                                               required=False)
+                                                required=False)
     uncertainty__goal = forms.CharField(max_length=100,
-                                       required=False)
+                                        required=False)
     update_frequency__threshold = forms.CharField(max_length=100,
-                                                 required=False)
+                                                  required=False)
     update_frequency__breakthrough = forms.CharField(max_length=100,
-                                                    required=False)
+                                                     required=False)
     update_frequency__goal = forms.CharField(max_length=100,
-                                            required=False)
+                                             required=False)
     timeliness__threshold = forms.CharField(max_length=100,
-                                           required=False)
+                                            required=False)
     timeliness__breakthrough = forms.CharField(max_length=100,
-                                              required=False)
-    timeliness__goal = forms.CharField(max_length=100,
-                                      required=False)
-    horizontal_resolution__threshold = forms.CharField(max_length=100,
-                                                      required=False)
-    horizontal_resolution__breakthrough = forms.CharField(max_length=100,
-                                                         required=False)
-    horizontal_resolution__goal = forms.CharField(max_length=100,
-                                                 required=False)
-    vertical_resolution__threshold = forms.CharField(max_length=100,
-                                                    required=False)
-    vertical_resolution__breakthrough = forms.CharField(max_length=100,
-                                                       required=False)
-    vertical_resolution__goal = forms.CharField(max_length=100,
                                                required=False)
+    timeliness__goal = forms.CharField(max_length=100,
+                                       required=False)
+    horizontal_resolution__threshold = forms.CharField(max_length=100,
+                                                       required=False)
+    horizontal_resolution__breakthrough = forms.CharField(max_length=100,
+                                                          required=False)
+    horizontal_resolution__goal = forms.CharField(max_length=100,
+                                                  required=False)
+    vertical_resolution__threshold = forms.CharField(max_length=100,
+                                                     required=False)
+    vertical_resolution__breakthrough = forms.CharField(max_length=100,
+                                                        required=False)
+    vertical_resolution__goal = forms.CharField(max_length=100,
+                                                required=False)
 
     class Meta:
         model = models.Requirement
@@ -243,8 +252,22 @@ class DataForm(CreatedByFormMixin, forms.ModelForm):
                   'quality_control_procedure', 'dissemination',
                   'inspire_themes', 'essential_variables']
 
+
+class DataReadyForm(RequiredFieldsMixin, DataForm):
+    class Meta:
+        model = models.Data
+        auto_created = True
+        fields = ['name', 'note', 'update_frequency', 'area',
+                  'start_time_coverage', 'end_time_coverage', 'timeliness',
+                  'data_policy', 'data_type', 'data_format',
+                  'quality_control_procedure', 'dissemination',
+                  'inspire_themes', 'essential_variables']
+        fields_required = ['update_frequency', 'area', 'timeliness',
+                           'data_policy', 'data_type', 'data_format',
+                           'quality_control_procedure', 'dissemination']
+
     def clean(self):
-        cleaned_data = super(DataForm, self).clean()
+        cleaned_data = super(DataReadyForm, self).clean()
         inspire_themes = cleaned_data.get("inspire_themes", [])
         essential_variables = cleaned_data.get("essential_variables", [])
         if not inspire_themes and not essential_variables:
