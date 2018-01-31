@@ -92,7 +92,7 @@ class DataTests(base.FormCheckTestCase):
 
     def test_add_data_required_fields(self):
         data = {}
-        resp = self.client.post(reverse('data:add'), data)
+        resp = self.client.post(reverse('data:add') + '?ready', data)
         self.check_required_errors(resp, self.errors)
 
     def test_get_add_data(self):
@@ -112,7 +112,7 @@ class DataTests(base.FormCheckTestCase):
         data = self._DATA
         essential_variables = data.pop('essential_variables')
         inspire_themes = data.pop('inspire_themes')
-        resp = self.client.post(reverse('data:add'), data)
+        resp = self.client.post(reverse('data:add') + '?ready', data)
 
         self.assertEqual(resp.status_code, 200)
         self.assertIsNot(resp.context['form'].errors, {})
