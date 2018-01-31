@@ -37,11 +37,11 @@ class ProductDoc(DocType):
         fields={'raw': fields.KeywordField(multi=True, ignore_above=256,
                                            normalizer=case_insensitive_normalizer)}
     )
-    group = fields.KeywordField(attr='group.name')
-    status = fields.KeywordField(attr='status.name')
     service = fields.KeywordField(attr='component.service.name')
     entity = fields.KeywordField(attr='component.entrusted_entity.acronym')
     component = fields.KeywordField(attr='component.name')
+    group = fields.KeywordField(attr='group.name')
+    status = fields.KeywordField(attr='status.name')
     area = fields.KeywordField(attr='area.name')
 
     def get_name_display(self):

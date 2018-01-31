@@ -65,7 +65,7 @@ class EssentialVariable(models.Model):
 
 
 class ProductStatus(models.Model):
-    name = models.CharField(max_length=100)
+    name = models.CharField(max_length=100, unique=True)
     description = models.TextField(blank=True)
     sort_order = models.IntegerField()
     link = models.CharField(max_length=300, blank=True)
@@ -81,7 +81,7 @@ class ProductStatus(models.Model):
 
 
 class ProductGroup(models.Model):
-    name = models.CharField(max_length=100)
+    name = models.CharField(max_length=100, unique=True)
     description = models.TextField(blank=True)
     sort_order = models.IntegerField()
 
@@ -186,7 +186,7 @@ class Dissemination(models.Model):
 
 
 class Area(models.Model):
-    name = models.CharField(max_length=100)
+    name = models.CharField(max_length=100, unique=True)
     description = models.TextField(blank=True)
     sort_order = models.IntegerField()
     link = models.CharField(max_length=100, blank=True)

@@ -168,7 +168,7 @@ class Metric(ValidationWorkflowModel):
 
 class CopernicusService(models.Model):
     acronym = models.CharField(max_length=10, null=True)
-    name = models.CharField(max_length=100)
+    name = models.CharField(max_length=100, unique=True)
     description = models.TextField(null=True)
     website = models.CharField(max_length=255, null=True)
     created_at = models.DateTimeField(auto_now_add=True,
@@ -181,7 +181,7 @@ class CopernicusService(models.Model):
 
 
 class EntrustedEntity(models.Model):
-    acronym = models.CharField(max_length=10, blank=True)
+    acronym = models.CharField(max_length=10, unique=True)
     name = models.CharField(max_length=100)
     website = models.CharField(max_length=255, blank=True)
     created_at = models.DateTimeField(auto_now_add=True,
@@ -198,14 +198,12 @@ class EntrustedEntity(models.Model):
 
 class Component(models.Model):
     acronym = models.CharField(max_length=10, blank=True)
-    name = models.CharField(max_length=100)
+    name = models.CharField(max_length=100, unique=True)
     service = models.ForeignKey(CopernicusService, on_delete=models.CASCADE)
-    entrusted_entity = models.ForeignKey(EntrustedEntity,
-                                         on_delete=models.CASCADE)
-    created_at = models.DateTimeField(auto_now_add=True,
-                                      null=True)
-    updated_at = models.DateTimeField(auto_now=True,
-                                      null=True)
+    entrusted_entity = models.ForeignKey(
+        EntrustedEntity, on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True, null=True)
+    updated_at = models.DateTimeField(auto_now=True, null=True)
 
     def __str__(self):
         return self.name
@@ -220,36 +218,28 @@ class Requirement(ValidationWorkflowModel, SoftDeleteModel):
 
     name = models.CharField(max_length=100)
     note = models.TextField(blank=True)
-    dissemination = models.ForeignKey(pickmodels.Dissemination,
-                                      on_delete=models.CASCADE,
-                                      related_name='+')
+    dissemination = models.ForeignKey(
+        pickmodels.Dissemination, on_delete=models.CASCADE, related_name='+')
     quality_control_procedure = models.ForeignKey(
         pickmodels.QualityControlProcedure,
         on_delete=models.CASCADE,
         related_name='+'
     )
-    group = models.ForeignKey(pickmodels.RequirementGroup,
-                              on_delete=models.CASCADE)
-    uncertainty = models.ForeignKey(Metric,
-                                    on_delete=models.CASCADE,
-                                    related_name='+')
-    update_frequency = models.ForeignKey(Metric,
-                                         on_delete=models.CASCADE,
-                                         related_name='+')
-    timeliness = models.ForeignKey(Metric,
-                                   on_delete=models.CASCADE,
-                                   related_name='+')
-    horizontal_resolution = models.ForeignKey(Metric,
-                                              on_delete=models.CASCADE,
-                                              related_name='+')
-    vertical_resolution = models.ForeignKey(Metric,
-                                            on_delete=models.CASCADE,
-                                            related_name='+')
+    group = models.ForeignKey(
+        pickmodels.RequirementGroup, on_delete=models.CASCADE)
+    uncertainty = models.ForeignKey(
+        Metric, on_delete=models.CASCADE, related_name='+')
+    update_frequency = models.ForeignKey(
+        Metric, on_delete=models.CASCADE, related_name='+')
+    timeliness = models.ForeignKey(
+        Metric, on_delete=models.CASCADE, related_name='+')
+    horizontal_resolution = models.ForeignKey(
+        Metric, on_delete=models.CASCADE, related_name='+')
+    vertical_resolution = models.ForeignKey(
+        Metric, on_delete=models.CASCADE, related_name='+')
     created_by = models.ForeignKey(User)
-    created_at = models.DateTimeField(auto_now_add=True,
-                                      null=True)
-    updated_at = models.DateTimeField(auto_now=True,
-                                      null=True)
+    created_at = models.DateTimeField(auto_now_add=True, null=True)
+    updated_at = models.DateTimeField(auto_now=True, null=True)
 
     def __str__(self):
         return self.name

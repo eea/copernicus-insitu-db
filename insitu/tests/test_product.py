@@ -2,6 +2,8 @@ import os
 
 from django.core.management import call_command
 from django.core.urlresolvers import reverse
+from django.db import transaction
+from django.db.utils import IntegrityError
 
 from insitu import models
 from insitu.documents import ProductDoc
@@ -74,6 +76,21 @@ class ProductTests(base.FormCheckTestCase):
         self.assertIsNot(data['recordsTotal'], 0)
         self.assertFalse(data['recordsTotal'] < 2)
         self.assertIs(data['recordsFiltered'], 1)
+
+    def test_product_filter_constraints(self):
+        filter_factories = [
+            (base.CopernicusServiceFactory, 'name'),
+            (base.EntrustedEntityFactory, 'acronym'),
+            (base.ComponentFactory, 'name'),
+            (base.ProductGroupFactory, 'name'),
+            (base.ProductStatusFactory, 'name'),
+            (base.AreaFactory, 'name'),
+        ]
+        for factory, kwarg in filter_factories:
+            with self.assertRaises(IntegrityError):
+                with transaction.atomic():
+                    factory(**{kwarg: 'Foo'}).save()
+                    factory(**{kwarg: 'Foo'}).save()
 
     def test_list_products(self):
         base.ProductFactory()

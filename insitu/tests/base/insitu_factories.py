@@ -1,6 +1,6 @@
 from django.contrib.auth.models import User
 
-from factory import SubFactory, RelatedFactory, post_generation
+from factory import SubFactory, RelatedFactory
 from factory.django import DjangoModelFactory
 
 from insitu import models
@@ -31,6 +31,7 @@ class CopernicusServiceFactory(DjangoModelFactory):
 
 class EntrustedEntityFactory(DjangoModelFactory):
     name = 'Test entity'
+    acronym = 'TST'
 
     class Meta:
         model = models.EntrustedEntity
