@@ -27,3 +27,6 @@ docker-compose.override.yml
 
 # Database dumps
 *.sql
+
+# Local requirements
+requirements-local.txt
