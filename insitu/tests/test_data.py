@@ -90,14 +90,20 @@ class DataTests(base.FormCheckTestCase):
         self.assertTemplateUsed(resp, 'data/list.html')
         self.logging()
 
-    def test_add_data_required_fields(self):
+    def test_get_add_data(self):
+        resp = self.client.get(reverse('data:add'))
+        self.assertEqual(resp.status_code, 200)
+
+    def test_add_data_ready(self):
         data = {}
         resp = self.client.post(reverse('data:add') + '?ready', data)
         self.check_required_errors(resp, self.errors)
 
-    def test_get_add_data(self):
-        resp = self.client.get(reverse('data:add'))
-        self.assertEqual(resp.status_code, 200)
+    def test_add_data_draft(self):
+        data = {}
+        resp = self.client.post(reverse('data:add'), data)
+        self.errors = {'name': self.REQUIRED_ERROR}
+        self.check_required_errors(resp, self.errors)
 
     def test_add_data(self):
         self.erase_logging_file()
@@ -160,6 +166,13 @@ class DataTests(base.FormCheckTestCase):
         self.assertEqual(resp.status_code, 302)
         self.check_single_object(models.Data, data)
         self.logging()
+        resp = self.client.get(
+            reverse('data:edit', kwargs={'pk': data_factory.pk}) + '?ready')
+        self.assertEqual(resp.status_code, 200)
+        resp = self.client.post(
+            reverse('data:edit', kwargs={'pk': data_factory.pk}) + '?ready', data
+        )
+        self.assertEqual(resp.status_code, 302)
 
     def test_get_delete_data(self):
         self.login_creator()

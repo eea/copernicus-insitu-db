@@ -103,13 +103,7 @@ class PermissionsCheckTestCase(TestCase):
         resp = None
         if method == 'GET':
             resp = self.client.get(url)
-        elif method == 'POST':
-            resp = self.client.post(url)
         self.assertEqual(resp.status_code, 403)
-
-    def check_permission_all_methods_denied(self, url):
-        for method in ['GET', 'POST']:
-            self.check_permission_denied(method, url)
 
     def check_user_redirect(self, method, url, redirect_url):
         resp = None
@@ -118,11 +112,6 @@ class PermissionsCheckTestCase(TestCase):
         elif method == 'POST':
             resp = self.client.post(url, follow=True)
         self.assertRedirects(resp, redirect_url)
-
-    def check_authenticated_user_redirect(self, method, url, redirect_url):
-        self._login_user()
-        self.check_user_redirect(method, url, redirect_url)
-        self.client.logout()
 
     def check_user_redirect_all_methods(self, url, redirect_url):
         for method in ['GET', 'POST']:

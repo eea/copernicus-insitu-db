@@ -78,7 +78,20 @@ class DataProviderTests(base.FormCheckTestCase):
 
     def test_detail_provider(self):
         self.erase_logging_file()
-        provider = base.DataProviderFactory(created_by=self.creator)
+        provider = base.DataProviderFactory(is_network=True,
+                                            created_by=self.creator)
+        resp = self.client.get(reverse('provider:detail',
+                                       kwargs={'pk': provider.pk}))
+        self.assertEqual(resp.context['provider'], provider)
+        self.logging()
+
+    def test_detail_provider_non_network(self):
+        self.erase_logging_file()
+        self.login_creator()
+        provider = base.DataProviderFactory(is_network=False,
+                                            created_by=self.creator)
+        details = base.DataProviderDetailsFactory(data_provider=provider,
+                                                  created_by=self.creator)
         resp = self.client.get(reverse('provider:detail',
                                        kwargs={'pk': provider.pk}))
         self.assertEqual(resp.context['provider'], provider)
@@ -311,7 +324,6 @@ class DataProviderTests(base.FormCheckTestCase):
                          data['provider_type'])
         self.logging()
 
-
     def test_get_edit_network(self):
         self.login_creator()
         self.erase_logging_file()
@@ -334,7 +346,7 @@ class DataProviderTests(base.FormCheckTestCase):
     def test_delete_data_provider_network(self):
         self.login_creator()
         self.erase_logging_file()
-        provider = base.DataProviderFactory(is_network=False,
+        provider = base.DataProviderFactory(is_network=True,
                                             created_by=self.creator)
         resp = self.client.post(
             reverse('provider:delete_network',
