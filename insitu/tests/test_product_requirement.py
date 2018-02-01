@@ -10,7 +10,7 @@ REQUIRED_ERROR = ['This field is required.']
 
 class ProductRequirementTests(base.FormCheckTestCase):
     fields = ['note']
-    related_fields = ['requirement', 'product', 'level_of_definition', 
+    related_fields = ['requirement', 'product', 'level_of_definition',
                       'relevance', 'criticality']
     many_to_many_fields = ['barriers']
     required_fields = ['requirement', 'product', 'level_of_definition',
@@ -170,6 +170,8 @@ class ProductRequirementTests(base.FormCheckTestCase):
         data.pop('product')
         product_group = base.ProductGroupFactory()
         data['product_group'] = product_group.pk
+        self.product.group = product_group
+        self.product.save()
         resp = self.client.post(
             reverse('requirement:product:add_group',
                     kwargs={'requirement_pk': self._DATA['requirement']}),

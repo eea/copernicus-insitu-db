@@ -1,4 +1,6 @@
 from django.core.urlresolvers import reverse
+from django.db import transaction
+from django.db.utils import IntegrityError
 
 from insitu import models
 from insitu.documents import RequirementDoc
@@ -85,6 +87,17 @@ class RequirementTests(base.FormCheckTestCase):
         self.assertIsNot(data['recordsTotal'], 0)
         self.assertFalse(data['recordsTotal'] < 2)
         self.assertIs(data['recordsFiltered'], 1)
+
+    def test_requirement_filter_constraints(self):
+        filter_factories = [
+            base.DisseminationFactory,
+            base.QualityControlProcedureFactory,
+        ]
+        for factory in filter_factories:
+            with self.assertRaises(IntegrityError):
+                with transaction.atomic():
+                    factory(name='Foo').save()
+                    factory(name='Foo').save()
 
     def test_list_requirements(self):
         self.erase_logging_file()

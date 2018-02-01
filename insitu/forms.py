@@ -66,7 +66,7 @@ class ProductGroupRequirementForm(ProductRequirementBaseForm):
         if 'product_group' not in cleaned_data:
             return
         products = models.Product.objects.filter(
-            group__name=cleaned_data['product_group'].name)
+            group_id=cleaned_data['product_group'].id)
         cleaned_products = [
             product for product in products if not
             models.ProductRequirement.objects.filter(

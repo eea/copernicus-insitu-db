@@ -170,7 +170,7 @@ class Barrier(models.Model):
 
 
 class Dissemination(models.Model):
-    name = models.CharField(max_length=100)
+    name = models.CharField(max_length=100, unique=True)
     description = models.TextField(blank=True)
     sort_order = models.IntegerField()
     link = models.CharField(max_length=100, blank=True)
@@ -202,7 +202,7 @@ class Area(models.Model):
 
 
 class QualityControlProcedure(models.Model):
-    name = models.CharField(max_length=100)
+    name = models.CharField(max_length=100, unique=True)
     description = models.TextField(blank=True)
     sort_order = models.IntegerField()
     link = models.CharField(max_length=100, blank=True)

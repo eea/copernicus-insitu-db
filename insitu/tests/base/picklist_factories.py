@@ -1,4 +1,5 @@
 from picklists import models
+from factory import Sequence
 from factory.django import DjangoModelFactory
 
 
@@ -31,7 +32,7 @@ class EssentialVariableFactory(DjangoModelFactory):
 
 
 class ProductStatusFactory(DjangoModelFactory):
-    name = 'Test product status'
+    name = Sequence(lambda n: "Test product status %d" % n)
     sort_order = 0
     link = ''
 
@@ -40,7 +41,7 @@ class ProductStatusFactory(DjangoModelFactory):
 
 
 class ProductGroupFactory(DjangoModelFactory):
-    name = 'Test product group'
+    name = Sequence(lambda n: "Test product group %d" % n)
     sort_order = 0
 
     class Meta:
@@ -91,7 +92,7 @@ class BarrierFactory(DjangoModelFactory):
 
 
 class DisseminationFactory(DjangoModelFactory):
-    name = 'Test Dissemination'
+    name = Sequence(lambda n: "Test Dissemination %d" % n)
     sort_order = 0
     link = ''
 
@@ -100,7 +101,7 @@ class DisseminationFactory(DjangoModelFactory):
 
 
 class AreaFactory(DjangoModelFactory):
-    name = 'Test area'
+    name = Sequence(lambda n: "Test area %d" % n)
     sort_order = 0
     link = ''
 
@@ -109,7 +110,7 @@ class AreaFactory(DjangoModelFactory):
 
 
 class QualityControlProcedureFactory(DjangoModelFactory):
-    name = 'Test Quality'
+    name = Sequence(lambda n: "Test Quality %d" % n)
     sort_order = 0
     link = ''
 

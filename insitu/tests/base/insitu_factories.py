@@ -1,6 +1,6 @@
 from django.contrib.auth.models import User
 
-from factory import SubFactory, RelatedFactory
+from factory import Sequence, SubFactory, RelatedFactory
 from factory.django import DjangoModelFactory
 
 from insitu import models
@@ -23,22 +23,22 @@ class MetricFactory(DjangoModelFactory):
 
 
 class CopernicusServiceFactory(DjangoModelFactory):
-    name = 'Test service'
+    name = Sequence(lambda n: "Test service %d" % n)
 
     class Meta:
         model = models.CopernicusService
 
 
 class EntrustedEntityFactory(DjangoModelFactory):
-    name = 'Test entity'
-    acronym = 'TST'
+    name = Sequence(lambda n: "Test entity %d" % n)
+    acronym = Sequence(lambda n: "TST%d" % n)
 
     class Meta:
         model = models.EntrustedEntity
 
 
 class ComponentFactory(DjangoModelFactory):
-    name = 'Test component'
+    name = Sequence(lambda n: "Test component %d" % n)
     service = SubFactory(CopernicusServiceFactory)
     entrusted_entity = SubFactory(EntrustedEntityFactory)
 
