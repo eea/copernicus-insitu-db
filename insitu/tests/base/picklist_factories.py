@@ -173,7 +173,7 @@ class DataFormatFactory(DjangoModelFactory):
 
 
 class ProviderTypeFactory(DjangoModelFactory):
-    name = 'Test DataProvider'
+    name = Sequence(lambda n: "Test DataProvider %d" % n)
     sort_order = 0
     link = ''
 

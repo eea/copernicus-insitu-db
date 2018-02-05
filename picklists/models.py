@@ -311,7 +311,7 @@ class DataFormat(models.Model):
 
 
 class ProviderType(models.Model):
-    name = models.CharField(max_length=100)
+    name = models.CharField(max_length=100, unique=True)
     description = models.TextField(blank=True)
     sort_order = models.IntegerField()
     link = models.CharField(max_length=100, blank=True)
