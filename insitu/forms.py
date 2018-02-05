@@ -3,9 +3,7 @@ from django.db import transaction
 
 from insitu import models
 from insitu import signals
-from picklists.models import (
-    Dissemination, QualityControlProcedure, RequirementGroup, ProductGroup,
-)
+from picklists.models import ProductGroup
 
 
 class CreatedByFormMixin:
@@ -66,7 +64,7 @@ class ProductGroupRequirementForm(ProductRequirementBaseForm):
         if 'product_group' not in cleaned_data:
             return
         products = models.Product.objects.filter(
-            group_id=cleaned_data['product_group'].id)
+            group=cleaned_data['product_group'])
         cleaned_products = [
             product for product in products if not
             models.ProductRequirement.objects.filter(
@@ -92,36 +90,21 @@ class ProductGroupRequirementForm(ProductRequirementBaseForm):
 
 
 class RequirementForm(forms.ModelForm):
-    uncertainty__threshold = forms.CharField(max_length=100,
-                                            required=False)
-    uncertainty__breakthrough = forms.CharField(max_length=100,
-                                               required=False)
-    uncertainty__goal = forms.CharField(max_length=100,
-                                       required=False)
-    update_frequency__threshold = forms.CharField(max_length=100,
-                                                 required=False)
-    update_frequency__breakthrough = forms.CharField(max_length=100,
-                                                    required=False)
-    update_frequency__goal = forms.CharField(max_length=100,
-                                            required=False)
-    timeliness__threshold = forms.CharField(max_length=100,
-                                           required=False)
-    timeliness__breakthrough = forms.CharField(max_length=100,
-                                              required=False)
-    timeliness__goal = forms.CharField(max_length=100,
-                                      required=False)
-    horizontal_resolution__threshold = forms.CharField(max_length=100,
-                                                      required=False)
-    horizontal_resolution__breakthrough = forms.CharField(max_length=100,
-                                                         required=False)
-    horizontal_resolution__goal = forms.CharField(max_length=100,
-                                                 required=False)
-    vertical_resolution__threshold = forms.CharField(max_length=100,
-                                                    required=False)
-    vertical_resolution__breakthrough = forms.CharField(max_length=100,
-                                                       required=False)
-    vertical_resolution__goal = forms.CharField(max_length=100,
-                                               required=False)
+    uncertainty__threshold = forms.CharField(max_length=100, required=False)
+    uncertainty__breakthrough = forms.CharField(max_length=100, required=False)
+    uncertainty__goal = forms.CharField(max_length=100, required=False)
+    update_frequency__threshold = forms.CharField(max_length=100, required=False)
+    update_frequency__breakthrough = forms.CharField(max_length=100, required=False)
+    update_frequency__goal = forms.CharField(max_length=100, required=False)
+    timeliness__threshold = forms.CharField(max_length=100, required=False)
+    timeliness__breakthrough = forms.CharField(max_length=100, required=False)
+    timeliness__goal = forms.CharField(max_length=100, required=False)
+    horizontal_resolution__threshold = forms.CharField(max_length=100, required=False)
+    horizontal_resolution__breakthrough = forms.CharField(max_length=100, required=False)
+    horizontal_resolution__goal = forms.CharField(max_length=100, required=False)
+    vertical_resolution__threshold = forms.CharField(max_length=100, required=False)
+    vertical_resolution__breakthrough = forms.CharField(max_length=100, required=False)
+    vertical_resolution__goal = forms.CharField(max_length=100, required=False)
 
     class Meta:
         model = models.Requirement

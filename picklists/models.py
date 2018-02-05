@@ -233,7 +233,7 @@ class ComplianceLevel(models.Model):
 
 
 class UpdateFrequency(models.Model):
-    name = models.CharField(max_length=100)
+    name = models.CharField(max_length=100, unique=True)
     description = models.TextField(blank=True)
     sort_order = models.IntegerField()
     link = models.CharField(max_length=100, blank=True)
@@ -249,7 +249,7 @@ class UpdateFrequency(models.Model):
 
 
 class Timeliness(models.Model):
-    name = models.CharField(max_length=100)
+    name = models.CharField(max_length=100, unique=True)
     description = models.TextField(blank=True)
     sort_order = models.IntegerField()
     link = models.CharField(max_length=100, blank=True)
@@ -265,7 +265,7 @@ class Timeliness(models.Model):
 
 
 class DataPolicy(models.Model):
-    name = models.CharField(max_length=100)
+    name = models.CharField(max_length=100, unique=True)
     description = models.TextField(blank=True)
     sort_order = models.IntegerField()
     link = models.CharField(max_length=100, blank=True)
@@ -281,7 +281,7 @@ class DataPolicy(models.Model):
 
 
 class DataType(models.Model):
-    name = models.CharField(max_length=100)
+    name = models.CharField(max_length=100, unique=True)
     description = models.TextField(blank=True)
     sort_order = models.IntegerField()
     link = models.CharField(max_length=100, blank=True)
@@ -296,7 +296,7 @@ class DataType(models.Model):
 
 
 class DataFormat(models.Model):
-    name = models.CharField(max_length=100)
+    name = models.CharField(max_length=100, unique=True)
     description = models.TextField(blank=True)
     sort_order = models.IntegerField()
     link = models.CharField(max_length=100, blank=True)

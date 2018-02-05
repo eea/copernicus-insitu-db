@@ -128,7 +128,7 @@ class ComplianceLevelFactory(DjangoModelFactory):
 
 
 class UpdateFrequencyFactory(DjangoModelFactory):
-    name = 'Test UpdateFrequency'
+    name = Sequence(lambda n: "Test UpdateFrequency %d" % n)
     sort_order = 0
     link = ''
 
@@ -137,7 +137,7 @@ class UpdateFrequencyFactory(DjangoModelFactory):
 
 
 class TimelinessFactory(DjangoModelFactory):
-    name = 'Test Timeliness'
+    name = Sequence(lambda n: "Test Timeliness %d" % n)
     sort_order = 0
     link = ''
 
@@ -146,7 +146,7 @@ class TimelinessFactory(DjangoModelFactory):
 
 
 class DataPolicyFactory(DjangoModelFactory):
-    name = 'Test Data Policy'
+    name = Sequence(lambda n: "Test Data Policy %d" % n)
     sort_order = 0
     link = ''
 
@@ -155,7 +155,7 @@ class DataPolicyFactory(DjangoModelFactory):
 
 
 class DataTypeFactory(DjangoModelFactory):
-    name = 'Test DataType'
+    name = Sequence(lambda n: "Test DataType %d" % n)
     sort_order = 0
     link = ''
 
@@ -164,7 +164,7 @@ class DataTypeFactory(DjangoModelFactory):
 
 
 class DataFormatFactory(DjangoModelFactory):
-    name = 'Test DataFormat'
+    name = Sequence(lambda n: "Test DataFormat %d" % n)
     sort_order = 0
     link = ''
 
