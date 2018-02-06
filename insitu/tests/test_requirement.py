@@ -179,6 +179,13 @@ class RequirementTests(base.FormCheckTestCase):
             reverse('requirement:add') + '?pk=' + str(requirement.pk),
             cloned_data
         )
+        self.assertEqual(resp.status_code, 200)
+
+        cloned_data['note'] = 'Updated note'
+        resp = self.client.post(
+            reverse('requirement:add') + '?pk=' + str(requirement.pk),
+            cloned_data
+        )
         requirement.delete()
         self.assertEqual(resp.status_code, 302)
         self.check_single_object(models.Requirement, cloned_data)
@@ -298,6 +305,33 @@ class RequirementTests(base.FormCheckTestCase):
                 getattr(item, 'refresh_from_db')()
                 self.assertEqual((getattr(item, 'state')).name, transition['target'])
         self.logging(check_username=False)
+
+    def test_transition_with_draft_data(self):
+        self.erase_logging_file()
+        self.login_creator()
+        metrics = base.RequirementFactory.create_metrics(self.creator)
+        requirement = base.RequirementFactory(name='Test requirement',
+                                              created_by=self.creator,
+                                              **metrics)
+        data = base.DataFactory(name='Test data',
+                                created_by=self.creator,
+                                update_frequency=None)
+        data_requirement = base.DataRequirementFactory(data=data,
+                                                       created_by=self.creator,
+                                                       requirement=requirement)
+
+        items = ([requirement, data, data_requirement]
+                 + list(metrics.values()))
+        for item in items:
+            self.assertEqual((getattr(item, 'state')).name, 'draft')
+        self.client.force_login(self.creator)
+        response = self.client.get(
+            reverse('requirement:transition',
+                    kwargs={'source': 'draft',
+                            'target': 'ready',
+                            'pk': requirement.pk}))
+        self.assertIn('failed_validation', response.context)
+        self.assertEqual('True', response.context['objects'][6]['failed'])
 
     def test_transition_inexistent_state(self):
         self.login_creator()

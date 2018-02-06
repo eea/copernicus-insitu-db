@@ -24,9 +24,19 @@
 
   <div class="alert alert-info">
     All fields marked with <span class="red">*</span> are required.<br>
-    At least one Inspire Theme or Essential Variable is required.
+    {% if ready_form %}
+      At least one Inspire Theme or Essential Variable is required.
+    {% endif %}
   </div>
-
+  {% if ready_form %}
+  <div class="alert alert-warning">
+    This form has mandatory fields! If you want to access a draft version click <a href="{% url 'data:add' %}">here</a>.
+  </div>
+  {% else %}
+  <div class="alert alert-danger">
+    This form has no mandatory fields! You can access the form with required validation <a href="{% url 'data:add' %}?ready">here</a>.
+  </div>
+  {% endif %}
   <form action="" method="POST">
     {% csrf_token %}
 

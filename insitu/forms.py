@@ -13,6 +13,15 @@ class CreatedByFormMixin:
         return super().save(commit)
 
 
+class RequiredFieldsMixin:
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        fields_required = getattr(self.Meta, 'fields_required', None)
+        for key in fields_required:
+            self.fields[key].required = True
+
+
 class ProductForm(forms.ModelForm):
     class Meta:
         model = models.Product
@@ -90,21 +99,36 @@ class ProductGroupRequirementForm(ProductRequirementBaseForm):
 
 
 class RequirementForm(forms.ModelForm):
-    uncertainty__threshold = forms.CharField(max_length=100, required=False)
-    uncertainty__breakthrough = forms.CharField(max_length=100, required=False)
-    uncertainty__goal = forms.CharField(max_length=100, required=False)
-    update_frequency__threshold = forms.CharField(max_length=100, required=False)
-    update_frequency__breakthrough = forms.CharField(max_length=100, required=False)
-    update_frequency__goal = forms.CharField(max_length=100, required=False)
-    timeliness__threshold = forms.CharField(max_length=100, required=False)
-    timeliness__breakthrough = forms.CharField(max_length=100, required=False)
-    timeliness__goal = forms.CharField(max_length=100, required=False)
-    horizontal_resolution__threshold = forms.CharField(max_length=100, required=False)
-    horizontal_resolution__breakthrough = forms.CharField(max_length=100, required=False)
-    horizontal_resolution__goal = forms.CharField(max_length=100, required=False)
-    vertical_resolution__threshold = forms.CharField(max_length=100, required=False)
-    vertical_resolution__breakthrough = forms.CharField(max_length=100, required=False)
-    vertical_resolution__goal = forms.CharField(max_length=100, required=False)
+    uncertainty__threshold = forms.CharField(max_length=100,
+                                             required=False)
+    uncertainty__breakthrough = forms.CharField(max_length=100,
+                                                required=False)
+    uncertainty__goal = forms.CharField(max_length=100,
+                                        required=False)
+    update_frequency__threshold = forms.CharField(max_length=100,
+                                                  required=False)
+    update_frequency__breakthrough = forms.CharField(max_length=100,
+                                                     required=False)
+    update_frequency__goal = forms.CharField(max_length=100,
+                                             required=False)
+    timeliness__threshold = forms.CharField(max_length=100,
+                                            required=False)
+    timeliness__breakthrough = forms.CharField(max_length=100,
+                                               required=False)
+    timeliness__goal = forms.CharField(max_length=100,
+                                       required=False)
+    horizontal_resolution__threshold = forms.CharField(max_length=100,
+                                                       required=False)
+    horizontal_resolution__breakthrough = forms.CharField(max_length=100,
+                                                          required=False)
+    horizontal_resolution__goal = forms.CharField(max_length=100,
+                                                  required=False)
+    vertical_resolution__threshold = forms.CharField(max_length=100,
+                                                     required=False)
+    vertical_resolution__breakthrough = forms.CharField(max_length=100,
+                                                        required=False)
+    vertical_resolution__goal = forms.CharField(max_length=100,
+                                                required=False)
 
     class Meta:
         model = models.Requirement
@@ -149,7 +173,9 @@ class RequirementForm(forms.ModelForm):
         metric_fields = ['uncertainty', 'update_frequency', 'timeliness',
                          'horizontal_resolution', 'vertical_resolution']
         self._clean_metric(metric_fields)
-        exists = models.Requirement.objects.filter(**self.cleaned_data).exists()
+        fields = {field: v for field, v in self.cleaned_data.items()
+                  if field != 'name'}
+        exists = models.Requirement.objects.filter(**fields).exists()
         if exists:
             self.add_error(
                 None,
@@ -226,8 +252,22 @@ class DataForm(CreatedByFormMixin, forms.ModelForm):
                   'quality_control_procedure', 'dissemination',
                   'inspire_themes', 'essential_variables']
 
+
+class DataReadyForm(RequiredFieldsMixin, DataForm):
+    class Meta:
+        model = models.Data
+        auto_created = True
+        fields = ['name', 'note', 'update_frequency', 'area',
+                  'start_time_coverage', 'end_time_coverage', 'timeliness',
+                  'data_policy', 'data_type', 'data_format',
+                  'quality_control_procedure', 'dissemination',
+                  'inspire_themes', 'essential_variables']
+        fields_required = ['update_frequency', 'area', 'timeliness',
+                           'data_policy', 'data_type', 'data_format',
+                           'quality_control_procedure', 'dissemination']
+
     def clean(self):
-        cleaned_data = super(DataForm, self).clean()
+        cleaned_data = super(DataReadyForm, self).clean()
         inspire_themes = cleaned_data.get("inspire_themes", [])
         essential_variables = cleaned_data.get("essential_variables", [])
         if not inspire_themes and not essential_variables:

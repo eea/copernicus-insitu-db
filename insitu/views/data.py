@@ -70,11 +70,21 @@ class DataListJson(ESDatatableView):
 
 class DataAdd(CreatedByMixin, LoggingProtectedCreateView):
     template_name = 'data/add.html'
-    form_class = forms.DataForm
     model = models.Data
     permission_classes = (IsAuthenticated, )
     permission_denied_redirect = reverse_lazy('data:list')
     target_type = 'data'
+
+    def get_form_class(self):
+        if 'ready' in self.request.GET:
+            return forms.DataReadyForm
+        return forms.DataForm
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        if self.get_form_class() == forms.DataReadyForm:
+            context['ready_form'] = True
+        return context
 
     def form_valid(self, form):
         response = super().form_valid(form)
@@ -88,12 +98,22 @@ class DataAdd(CreatedByMixin, LoggingProtectedCreateView):
 
 class DataEdit(LoggingProtectedUpdateView):
     template_name = 'data/edit.html'
-    form_class = forms.DataForm
     model = models.Data
     context_object_name = 'data'
     permission_classes = (IsOwnerUser, IsDraftObject)
     permission_denied_redirect = reverse_lazy('data:list')
     target_type = 'data'
+
+    def get_form_class(self):
+        if 'ready' in self.request.GET:
+            return forms.DataReadyForm
+        return forms.DataForm
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        if self.get_form_class() == forms.DataReadyForm:
+            context['ready_form'] = True
+        return context
 
     def form_valid(self, form):
         response = super().form_valid(form)
@@ -111,6 +131,33 @@ class DataDetail(LoggingProtectedDetailView):
     permission_classes = (IsAuthenticated, )
     permission_denied_redirect = reverse_lazy('auth:login')
     target_type = 'data'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        data = {
+            'id': self.object.id,
+            'name': self.object.name,
+            'note': self.object.note,
+            'update_frequency': self.object.update_frequency_id,
+            'area': self.object.area_id,
+            'start_time_coverage': self.object.start_time_coverage,
+            'end_time_coverage': self.object.end_time_coverage,
+            'timeliness': self.object.timeliness_id,
+            'data_policy': self.object.data_policy_id,
+            'data_type': self.object.data_type_id,
+            'data_format': self.object.data_format_id,
+            'quality_control_procedure':
+                self.object.quality_control_procedure_id,
+            'dissemination': self.object.dissemination_id,
+            'inspire_themes': [inspire_theme.id for inspire_theme in
+                               self.object.inspire_themes.all()],
+            'essential_variables': [essential_variable for essential_variable in
+                                    self.object.essential_variables.all()],
+        }
+        form = forms.DataReadyForm(data)
+        if not form.is_valid():
+            context['failed_validation'] = True
+        return context
 
 
 class DataDelete(LoggingProtectedDeleteView):
