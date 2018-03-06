@@ -23,7 +23,7 @@ class ProductRequirementTests(base.FormCheckTestCase):
                                                    **metrics)
         self.product = base.ProductFactory()
         level_of_definition = base.DefinitionLevelFactory()
-        relevance = base.RelevanceFactory()
+        self.relevance = base.RelevanceFactory()
         criticality = base.CriticalityFactory()
         barriers = [base.BarrierFactory(), base.BarrierFactory()]
 
@@ -32,7 +32,7 @@ class ProductRequirementTests(base.FormCheckTestCase):
             'requirement': self.requirement.pk,
             'product': self.product.pk,
             'level_of_definition': level_of_definition.pk,
-            'relevance': relevance.pk,
+            'relevance': self.relevance.pk,
             'criticality': criticality.pk,
             'barriers': [barrier.pk for barrier in barriers]
         }
@@ -70,6 +70,7 @@ class ProductRequirementTests(base.FormCheckTestCase):
     def test_product_requirement_add_unique(self):
         base.ProductRequirementFactory(product=self.product,
                                        requirement=self.requirement,
+                                       relevance=self.relevance,
                                        created_by=self.creator)
         data = self._DATA
         resp = self.client.post(
@@ -205,6 +206,7 @@ class ProductRequirementTests(base.FormCheckTestCase):
         product2 = base.ProductFactory(group=product_group)
         base.ProductRequirementFactory(product=product1,
                                        requirement=self.requirement,
+                                       relevance=self.relevance,
                                        created_by=self.creator)
         data['product_group'] = product_group.pk
         resp = self.client.post(

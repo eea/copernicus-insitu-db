@@ -49,10 +49,12 @@ class RequirementProductRequirementForm(CreatedByFormMixin,
         cleaned_data = super().clean()
         product = cleaned_data.get('product')
         requirement = cleaned_data.get('requirement')
+        relevance = cleaned_data.get('relevance')
 
         exists_relation = models.ProductRequirement.objects.filter(
             product=product,
             requirement=requirement,
+            relevance=relevance
         ).exists()
         if exists_relation:
             raise forms.ValidationError("This relation already exists.")
@@ -80,7 +82,9 @@ class ProductGroupRequirementForm(ProductRequirementBaseForm):
             product for product in products if not
             models.ProductRequirement.objects.filter(
                 product=product,
-                requirement=cleaned_data['requirement']).exists()
+                requirement=cleaned_data['requirement'],
+                relevance=cleaned_data['relevance']
+            ).exists()
         ]
         if not cleaned_products:
             raise forms.ValidationError(
