@@ -33,6 +33,8 @@
 
     {% bootstrap_field form.countries required_css_class='required' addon_after='<a target="_blank" href="help#country"><span class="glyphicon glyphicon-question-sign"></span></a>' %}
 
+    <input id="add_eu_28" class="btn btn-xs alert-info" style="display:block;margin-bottom:20px;" value="Add EU 28 countries"/>
+
     {% bootstrap_field form.is_network %}
     <input class="btn btn-primary" type="submit" value="Save" />
     <a href="{% url 'provider:detail' provider.pk %}"
@@ -45,6 +47,33 @@
   <script>
     $(document).ready(function () {
       $('select').select2();
+          eu_countries = [
+      'AT', 'BE', 'BG', 'CZ', 'CY', 'DK', 'DE', 'EE', 'EL', 'ES', 'FI', 'FR',
+      'HR', 'HU', 'IE', 'IT', 'LT', 'LV', 'LU', 'MT', 'NL', 'PL', 'PT', 'RO',
+      'SI', 'SK', 'SE', 'UK'
+      ]
+      $('select').select2();
+      input = $('#add_eu_28')
+      input.click(function() {
+        if (input.val() == 'Add EU 28 countries'){
+          input.val('Remove EU 28 countries');
+          var selected = $('select').select2("val");
+          selected.push.apply(selected, eu_countries);
+          $('select').val(selected);
+          $('select').trigger('change');
+        }
+        else{
+          input.val('Add EU 28 countries');
+          var selected = $('select').select2("val");
+          for (var i = 0; i < eu_countries.length; i++) {
+            selected = selected.filter(function(item){
+              return item !== eu_countries[i]
+            });
+          }
+          $('select').val(selected);
+          $('select').trigger('change');
+        };
+      });
     });
   </script>
 {% endblock %}

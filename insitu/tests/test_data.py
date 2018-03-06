@@ -170,7 +170,8 @@ class DataTests(base.FormCheckTestCase):
             reverse('data:edit', kwargs={'pk': data_factory.pk}) + '?ready')
         self.assertEqual(resp.status_code, 200)
         resp = self.client.post(
-            reverse('data:edit', kwargs={'pk': data_factory.pk}) + '?ready', data
+            reverse('data:edit', kwargs={'pk': data_factory.pk}) + '?ready',
+            data
         )
         self.assertEqual(resp.status_code, 302)
 

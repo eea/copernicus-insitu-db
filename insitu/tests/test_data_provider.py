@@ -90,8 +90,8 @@ class DataProviderTests(base.FormCheckTestCase):
         self.login_creator()
         provider = base.DataProviderFactory(is_network=False,
                                             created_by=self.creator)
-        details = base.DataProviderDetailsFactory(data_provider=provider,
-                                                  created_by=self.creator)
+        base.DataProviderDetailsFactory(data_provider=provider,
+                                        created_by=self.creator)
         resp = self.client.get(reverse('provider:detail',
                                        kwargs={'pk': provider.pk}))
         self.assertEqual(resp.context['provider'], provider)
@@ -196,7 +196,8 @@ class DataProviderTests(base.FormCheckTestCase):
         network.refresh_from_db()
 
         self.assertEqual(resp.status_code, 200)
-        self.assertEqual(resp.context['form'].errors['__all__'][0], 'Members should be different than the network.')
+        self.assertEqual(resp.context['form'].errors['__all__'][0],
+                         'Members should be different than the network.')
 
     def test_delete_network_members_provider(self):
         self.login_creator()
@@ -237,7 +238,8 @@ class DataProviderTests(base.FormCheckTestCase):
         resp = self.client.post(reverse('provider:add_non_network'), data)
         non_network_fields = self.required_fields
         non_network_fields.remove('is_network')
-        provider_errors = {field: self.REQUIRED_ERROR for field in non_network_fields}
+        provider_errors = {field: self.REQUIRED_ERROR
+                           for field in non_network_fields}
         self.check_required_errors(resp, provider_errors)
 
         detail_errors = {field: self.REQUIRED_ERROR for field in

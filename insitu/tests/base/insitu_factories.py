@@ -1,6 +1,6 @@
 from django.contrib.auth.models import User
 
-from factory import SubFactory, RelatedFactory, post_generation
+from factory import SubFactory, RelatedFactory
 from factory.django import DjangoModelFactory
 
 from insitu import models
@@ -133,8 +133,6 @@ class DataFactory(DjangoModelFactory):
     )
     inspire_themes = RelatedFactory(factories.InspireThemeFactory)
     dissemination = SubFactory(factories.DisseminationFactory)
-    # requirements = SubFactory(RequirementFactory)
-    # providers = SubFactory(DataProviderFactory)
 
     class Meta:
         model = models.Data
