@@ -148,6 +148,12 @@ class ValidationWorkflowModel(WorkflowEnabled, models.Model):
         return self.requesting_user != self.created_by
 
 
+class Team(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE,
+                                related_name='team')
+    teammates = models.ManyToManyField(User, related_name='teams')
+
+
 class Metric(ValidationWorkflowModel):
     threshold = models.CharField(max_length=100)
     breakthrough = models.CharField(max_length=100)

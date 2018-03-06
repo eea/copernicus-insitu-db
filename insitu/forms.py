@@ -430,3 +430,39 @@ class DataProviderRelationEditForm(DataProviderRelationBaseForm):
     provider = forms.ModelChoiceField(
         disabled=True,
         queryset=models.DataProvider.objects.all())
+
+
+class TeamForm(forms.ModelForm):
+
+    class Meta:
+        model = models.Team
+        fields = ['teammates']
+
+    def __init__(self, *args, **kwargs):
+        user = kwargs.pop('user')
+        super(TeamForm, self).__init__(*args, **kwargs)
+        team = models.Team.objects.filter(user=user).first()
+        if not team:
+            self.instance.user = user
+            self.instance.save()
+        else:
+            self.instance = team
+        self.initial['teammates'] = self.instance.teammates.all()
+
+    def clean_teammates(self):
+        instance = self.instance
+        clean_teammates = self.cleaned_data['teammates']
+        for teammate in clean_teammates:
+            if instance.user.pk == teammate.pk:
+                self.add_error(None,
+                               'You cannot be your own teammate.')
+        return clean_teammates
+
+    def save(self, commit=True):
+        instance = self.instance
+        if 'teammates' in self.cleaned_data:
+            with transaction.atomic():
+                instance.teammates.clear()
+                for teammate in self.cleaned_data['teammates']:
+                    instance.teammates.add(teammate)
+        return instance
