@@ -105,8 +105,6 @@ class ProductRequirementTests(base.FormCheckTestCase):
             created_by=self.creator
         )
         data = self._DATA
-        data.pop('product')
-        data.pop('requirement')
         resp = self.client.post(
             reverse('requirement:product:edit',
                     kwargs={'requirement_pk': product_requirement.requirement.pk,
