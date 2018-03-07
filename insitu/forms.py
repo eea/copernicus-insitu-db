@@ -64,6 +64,21 @@ class ProductRequirementEditForm(ProductRequirementBaseForm):
     product = forms.ModelChoiceField(disabled=True,
                                      queryset=models.Product.objects.all())
 
+    def clean(self):
+        cleaned_data = super(ProductRequirementEditForm, self).clean()
+
+        requirement = self.data['requirement']
+        product = self.data['product']
+        relevance = cleaned_data['relevance']
+
+        exists_relation = models.ProductRequirement.objects.filter(
+            product=product,
+            requirement=requirement,
+            relevance=relevance
+        ).exists()
+        if exists_relation:
+            raise forms.ValidationError("This relation already exists.")
+
 
 class ProductGroupRequirementForm(ProductRequirementBaseForm):
     product_group = forms.ModelChoiceField(queryset=ProductGroup.objects.all())

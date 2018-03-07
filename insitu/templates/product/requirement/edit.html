@@ -25,7 +25,7 @@
   </div>
 
   {% include "bits/info_field_required.html" %}
-
+  {% bootstrap_form_errors form %}
   <form action="" method="POST">
     {% csrf_token %}
     {% bootstrap_field form.requirement required_css_class='required' %}
@@ -43,10 +43,12 @@
     {% bootstrap_field form.barriers required_css_class='required' addon_after='<a target="_blank" href="help#barrier"><span class="glyphicon glyphicon-question-sign"></span></a>' %}
 
     <input type="hidden" name="product" value="{{ rel.product.pk }}" />
+    <input type="hidden" name="requirement" value="{{ rel.requirement.pk }}" />
     <input class="btn btn-primary" type="submit" value="Save" />
     <a href="{{ url }}"
        class="btn btn-default">Cancel</a>
   </form>
+  {% bootstrap_form_errors form %}
 {% endblock %}
 
 {% block scripts %}

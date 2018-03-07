@@ -83,7 +83,7 @@ class ProductRequirementEdit(LoggingProtectedUpdateView):
     target_type = 'relation between product and requirement'
 
     def form_valid(self, form):
-        response = super().form_valid(form)
+        response = super(ProductRequirementEdit, self).form_valid(form)
         messages.success(self.request, 'The relation between product and requirement was updated successfully!')
         return response
 
