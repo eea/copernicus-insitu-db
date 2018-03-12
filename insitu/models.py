@@ -363,7 +363,7 @@ class DataProvider(ValidationWorkflowModel, SoftDeleteModel):
     ]
     elastic_delete_signal = signals.data_provider_deleted
 
-    name = models.CharField(max_length=100)
+    name = models.CharField(max_length=255)
     description = models.TextField(blank=True)
     is_network = models.BooleanField(default=False)
     networks = models.ManyToManyField('self', blank=True,
