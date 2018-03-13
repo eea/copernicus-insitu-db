@@ -22,7 +22,7 @@
     <h1 class="col-sm-12">
       <span>Data details</span>
       {% if data.state.name == 'draft' %}
-        {% if request.user == data.created_by or request.user.is_superuser %}
+        {% if request.user == data.created_by or request.user.is_superuser or request.user in data.created_by.team.teammates.all %}
           <span class="pull-right margin-left-btn">
         <a class="btn btn-primary pull-right" href="{% url 'data:delete' data.pk %}">Delete data</a>
         </span>
@@ -134,7 +134,7 @@
   <div class="row">
     <h3 class="col-sm-12">
       <span>Data Providers</span>
-      {% if request.user == data.created_by or request.user.is_superuser %}
+      {% if request.user == data.created_by or request.user.is_superuser or request.user in data.created_by.team.teammates.all%}
         <span class="pull-right">
           <a class="btn btn-primary pull-right"
              href="{% url 'data:provider:add' data.pk %}">Add data to data provider
@@ -151,7 +151,7 @@
           <th>Role</th>
           <th class="no-sort">Is network</th>
           {% if data.state.name == 'draft' %}
-            {% if request.user == data.created_by or request.user.is_superuser %}
+            {% if request.user == data.created_by or request.user.is_superuser or request.user in data.created_by.team.teammates.all %}
               <th class="no-sort" width="10%"></th>
             {% endif %}
           {% endif %}
@@ -173,7 +173,7 @@
               {% endif %}
             </td>
             {% if rel.state.name == 'draft' %}
-              {% if request.user == rel.created_by or request.user.is_superuser %}
+              {% if request.user == rel.created_by or request.user.is_superuser or request.user in rel.created_by.team.teammates.all %}
                 <td class="row">
                   <a href="{% url 'data:provider:edit' group_pk=data.pk pk=rel.pk %}"
                      class="col-sm-6">

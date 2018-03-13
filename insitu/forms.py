@@ -443,10 +443,8 @@ class TeamForm(forms.ModelForm):
         super(TeamForm, self).__init__(*args, **kwargs)
         team = models.Team.objects.filter(user=user).first()
         if not team:
-            self.instance.user = user
-            self.instance.save()
-        else:
-            self.instance = team
+            team = models.Team.objects.create(user=user)
+        self.instance = team
         self.initial['teammates'] = self.instance.teammates.all()
 
     def clean_teammates(self):
