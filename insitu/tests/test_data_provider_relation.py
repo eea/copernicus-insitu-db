@@ -24,7 +24,7 @@ class DataProviderRelationTests(base.FormCheckTestCase):
             'data': self.data.pk,
             'provider': self.provider.pk
         }
-        user = base.UserFactory()
+        user = base.UserFactory(username='User DataProvider')
         self.client.force_login(user)
 
     def test_provider_relation_add_required_fields(self):
@@ -174,6 +174,20 @@ class DataProviderRelationPermissionsTests(base.PermissionsCheckTestCase):
                         kwargs={'group_pk': data.pk,
                                 'pk': provider_relation.pk}))
 
+    def test_edit_provider_relation_teammate(self):
+        data = base.DataFactory(created_by=self.creator)
+        provider = base.DataProviderFactory(created_by=self.creator)
+        provider_relation = base.DataProviderRelationFactory(
+            provider=provider,
+            data=data,
+            created_by=self.creator,
+        )
+        self.check_permission_for_teammate(
+            method='GET',
+            url=reverse('data:provider:edit',
+                        kwargs={'group_pk': data.pk,
+                                'pk': provider_relation.pk}))
+
     def test_provider_relation_delete_not_auth(self):
         data = base.DataFactory(created_by=self.creator)
         provider = base.DataProviderFactory(created_by=self.creator)
@@ -198,6 +212,20 @@ class DataProviderRelationPermissionsTests(base.PermissionsCheckTestCase):
         )
         self.check_authenticated_user_redirect_all_methods(
             redirect_url=reverse('data:list'),
+            url=reverse('data:provider:delete',
+                        kwargs={'group_pk': data.pk,
+                                'pk': provider_relation.pk}))
+
+    def test_delete_provider_relation_teammate(self):
+        data = base.DataFactory(created_by=self.creator)
+        provider = base.DataProviderFactory(created_by=self.creator)
+        provider_relation = base.DataProviderRelationFactory(
+            provider=provider,
+            data=data,
+            created_by=self.creator,
+        )
+        self.check_permission_for_teammate(
+            method='GET',
             url=reverse('data:provider:delete',
                         kwargs={'group_pk': data.pk,
                                 'pk': provider_relation.pk}))

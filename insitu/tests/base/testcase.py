@@ -3,7 +3,7 @@ import os
 
 from django.test import TestCase
 from copernicus.testsettings import LOGGING_CSV_FILENAME
-from insitu.tests.base import UserFactory
+from insitu.tests.base import UserFactory, TeamFactory
 
 
 class FormCheckTestCase(TestCase):
@@ -95,16 +95,27 @@ class PermissionsCheckTestCase(TestCase):
     def setUp(self):
         self.creator = UserFactory(is_superuser=True,
                                    username='Creator')
+        TeamFactory(user=self.creator)
 
     def _login_user(self):
-        user = UserFactory()
+        user = UserFactory(username='LoginUser')
         self.client.force_login(user)
+        return user
 
     def check_permission_denied(self, method, url):
         resp = None
         if method == 'GET':
             resp = self.client.get(url)
         self.assertEqual(resp.status_code, 403)
+
+    def check_permission_for_teammate(self, method, url):
+        resp = None
+        user = self._login_user()
+        self.creator.team.teammates.add(user)
+        self.creator.save()
+        if method == 'GET':
+            resp = self.client.get(url)
+        self.assertEqual(resp.status_code, 200)
 
     def check_user_redirect(self, method, url, redirect_url):
         resp = None

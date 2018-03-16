@@ -21,6 +21,7 @@ class RequirementTests(base.FormCheckTestCase):
         quality_control_procedure = base.QualityControlProcedureFactory()
         group = base.RequirementGroupFactory()
         self.creator = base.UserFactory(username='New User 1')
+        base.TeamFactory(user=self.creator)
         self.client.force_login(self.creator)
         self._DATA = {
             'name': 'TEST requirement',
@@ -432,6 +433,15 @@ class RequirementPermissionTests(base.PermissionsCheckTestCase):
             redirect_url=reverse('requirement:list'),
             url=reverse('requirement:edit', kwargs={'pk': requirement.pk}))
 
+    def test_requirement_edit_teammate(self):
+        metrics = base.RequirementFactory.create_metrics(self.creator)
+        requirement = base.RequirementFactory(name='Test requirement',
+                                              created_by=self.creator,
+                                              **metrics)
+        self.check_permission_for_teammate(
+            method='GET',
+            url=reverse('requirement:edit', kwargs={'pk': requirement.pk}))
+
     def test_requirement_delete_not_auth(self):
         metrics = base.RequirementFactory.create_metrics(self.creator)
         requirement = base.RequirementFactory(name='Test requirement',
@@ -448,4 +458,13 @@ class RequirementPermissionTests(base.PermissionsCheckTestCase):
                                               **metrics)
         self.check_authenticated_user_redirect_all_methods(
             redirect_url=reverse('requirement:list'),
+            url=reverse('requirement:delete', kwargs={'pk': requirement.pk}))
+
+    def test_requirement_delete_teammate(self):
+        metrics = base.RequirementFactory.create_metrics(self.creator)
+        requirement = base.RequirementFactory(name='Test requirement',
+                                              created_by=self.creator,
+                                              **metrics)
+        self.check_permission_for_teammate(
+            method='GET',
             url=reverse('requirement:delete', kwargs={'pk': requirement.pk}))

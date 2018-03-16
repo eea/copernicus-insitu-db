@@ -36,7 +36,7 @@ class ProductRequirementTests(base.FormCheckTestCase):
             'criticality': criticality.pk,
             'barriers': [barrier.pk for barrier in barriers]
         }
-        user = base.UserFactory()
+        user = base.UserFactory(username='User ProductRequirement')
         self.client.force_login(user)
 
     def test_product_requirement_add_required_fields(self):
@@ -274,6 +274,20 @@ class ProductRequirementPermissionsTests(base.PermissionsCheckTestCase):
                         kwargs={'requirement_pk': requirement.pk,
                                 'pk': product_requirement.pk}))
 
+    def test_product_requirement_edit_teammate(self):
+        metrics = base.RequirementFactory.create_metrics(self.creator)
+        requirement = base.RequirementFactory(created_by=self.creator,
+                                              **metrics)
+        product_requirement = base.ProductRequirementFactory(
+            requirement=requirement,
+            created_by=self.creator
+        )
+        self.check_permission_for_teammate(
+            method='GET',
+            url=reverse('requirement:product:edit',
+                        kwargs={'requirement_pk': requirement.pk,
+                                'pk': product_requirement.pk}))
+
     def test_product_requirement_delete_not_auth(self):
         metrics = base.RequirementFactory.create_metrics(self.creator)
         requirement = base.RequirementFactory(created_by=self.creator,
@@ -298,6 +312,20 @@ class ProductRequirementPermissionsTests(base.PermissionsCheckTestCase):
         )
         self.check_authenticated_user_redirect_all_methods(
             redirect_url=reverse('requirement:list'),
+            url=reverse('requirement:product:delete',
+                        kwargs={'requirement_pk': requirement.pk,
+                                'pk': product_requirement.pk}))
+
+    def test_product_requirement_delete_teammate(self):
+        metrics = base.RequirementFactory.create_metrics(self.creator)
+        requirement = base.RequirementFactory(created_by=self.creator,
+                                              **metrics)
+        product_requirement = base.ProductRequirementFactory(
+            requirement=requirement,
+            created_by=self.creator
+        )
+        self.check_permission_for_teammate(
+            method='GET',
             url=reverse('requirement:product:delete',
                         kwargs={'requirement_pk': requirement.pk,
                                 'pk': product_requirement.pk}))

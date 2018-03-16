@@ -125,10 +125,6 @@ class DataProviderDeleteNetwork(LoggingProtectedDeleteView):
     permission_denied_redirect = reverse_lazy('provider:list')
     target_type = 'data provider network'
 
-    def form_valid(self, form):
-        response = super().form_valid(form)
-        return response
-
     def get_success_url(self):
         messages.success(self.request, 'The data provider network was deleted successfully!')
         return reverse('provider:list')

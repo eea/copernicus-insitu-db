@@ -9,7 +9,7 @@ from django.urls import reverse
 class ManagementTestCase(TestCase):
 
     def setUp(self):
-        user = base.UserFactory(is_superuser=True)
+        user = base.UserFactory(username='User Management', is_superuser=True)
         self.client.force_login(user)
 
     def test_export(self):

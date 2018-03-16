@@ -13,6 +13,15 @@ class UserFactory(DjangoModelFactory):
         model = User
 
 
+class TeamFactory(DjangoModelFactory):
+
+    user = SubFactory(UserFactory)
+    teammates = RelatedFactory(UserFactory)
+
+    class Meta:
+        model = models.Team
+
+
 class MetricFactory(DjangoModelFactory):
     threshold = 'test threshold'
     breakthrough = 'test breakthrough'
