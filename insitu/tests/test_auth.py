@@ -94,5 +94,22 @@ class UserTeammatesTests(TestCase):
         self.client.force_login(self.creator)
         resp = self.client.post(reverse('auth:edit_teammates'), self._DATA)
         self.assertTrue(resp.status_code, 200)
-        self.assertTrue([x for x in self.creator.team.teammates.all()]
-                        == [self.user1, self.user2])
+        self.assertEqual([x for x in self.creator.team.teammates.all()],
+                         [self.user1, self.user2])
+        self.assertEqual([x for x in self.user1.team.teammates.all()],
+                         [self.creator])
+        self.assertEqual([x for x in self.user2.team.teammates.all()],
+                         [self.creator])
+
+    def test_edit_teammates_remove_succesfully(self):
+        self.client.force_login(self.creator)
+        self.client.post(reverse('auth:edit_teammates'), self._DATA)
+        self.data ={
+            'teammates': [self.user1.id]
+        }
+        resp = self.client.post(reverse('auth:edit_teammates'), self.data)
+        self.assertTrue(resp.status_code, 200)
+        self.assertEqual([x for x in self.user1.team.teammates.all()],
+                         [self.creator])
+        self.assertEqual([x for x in self.user2.team.teammates.all()],
+                         [])

@@ -460,7 +460,17 @@ class TeamForm(forms.ModelForm):
         instance = self.instance
         if 'teammates' in self.cleaned_data:
             with transaction.atomic():
+                for teammate in instance.teammates.all():
+                    if teammate not in self.cleaned_data['teammates']:
+                        team = models.Team.objects.filter(user=teammate).first()
+                        if not team:
+                            models.Team.objects.create(user=teammate)
+                        teammate.team.teammates.remove(instance.user)
                 instance.teammates.clear()
                 for teammate in self.cleaned_data['teammates']:
                     instance.teammates.add(teammate)
+                    team = models.Team.objects.filter(user=teammate).first()
+                    if not team:
+                        team = models.Team.objects.create(user=teammate)
+                    team.teammates.add(instance.user)
         return instance
