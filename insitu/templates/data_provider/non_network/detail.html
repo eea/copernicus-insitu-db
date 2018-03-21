@@ -14,7 +14,7 @@
   <div class="row">
     <h1 class="col-sm-12">
       {% if provider.state.name == 'draft' %}
-        {% if request.user == provider.created_by or request.user.is_superuser %}
+        {% if request.user == provider.created_by or request.user.is_superuser or request.user in provider.created_by.team.teammates.all %}
           <span>Data provider </span>
           <span class="pull-right margin-left-btn">
         <a class="btn btn-primary pull-right"

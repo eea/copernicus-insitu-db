@@ -206,6 +206,9 @@ auth_patterns = [
     url(r'^change-password/',
         views.ChangePasswordView.as_view(),
         name='change_password'),
+    url(r'^edit_teammates/',
+        views.EditTeamMatesView.as_view(),
+        name='edit_teammates'),
 ]
 
 urlpatterns = [

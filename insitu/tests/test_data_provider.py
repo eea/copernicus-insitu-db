@@ -246,6 +246,25 @@ class DataProviderTests(base.FormCheckTestCase):
                          self.details_required_fields}
         self.assertDictEqual(resp.context['details'].errors, detail_errors)
 
+    def test_add_non_network_provider_fail_detail_form_validation(self):
+        self.erase_logging_file()
+        data = self._DATA
+        network_1 = base.DataProviderFactory(name='test network',
+                                             is_network=True,
+                                             created_by=self.creator,
+                                             countries=[
+                                                base.CountryFactory(code="T1").pk])
+        network_2 = base.DataProviderFactory(name='test network 2',
+                                             is_network=True,
+                                             created_by=self.creator,
+                                             countries=[
+                                                base.CountryFactory(code="T2").pk])
+        data['networks'] = [network_1.pk, network_2.pk]
+        resp = self.client.post(reverse('provider:add_non_network'), data)
+        detail_errors = {field: self.REQUIRED_ERROR for field in
+                         self.details_required_fields}
+        self.assertDictEqual(resp.context['details'].errors, detail_errors)
+
     def test_add_non_network_provider(self):
         self.erase_logging_file()
         data = self._DATA
@@ -325,6 +344,22 @@ class DataProviderTests(base.FormCheckTestCase):
         self.assertEqual(getattr(details, 'provider_type').pk,
                          data['provider_type'])
         self.logging()
+
+    def test_edit_non_network_provider_fail_detail_form_validation(self):
+        self.login_creator()
+        self.erase_logging_file()
+        data = self._DATA
+        data['is_network'] = False
+        provider = base.DataProviderFactory(is_network=False,
+                                            created_by=self.creator)
+        details = base.DataProviderDetailsFactory(data_provider=provider,
+                                                  created_by=self.creator)
+        resp = self.client.post(reverse('provider:edit_non_network',
+                                        kwargs={'pk': provider.pk}),
+                                data)
+        detail_errors = {field: self.REQUIRED_ERROR for field in
+                         self.details_required_fields}
+        self.assertDictEqual(resp.context['details'].errors, detail_errors)
 
     def test_get_edit_network(self):
         self.login_creator()
@@ -452,6 +487,13 @@ class DataProviderPermissionsTests(base.PermissionsCheckTestCase):
                         kwargs={'pk': provider.pk}),
             redirect_url=self.redirect_login_url)
 
+    def test_edit_network_provider_teammate(self):
+        provider = base.DataProviderFactory(created_by=self.creator)
+        self.check_permission_for_teammate(method='GET',
+                                           url=reverse('provider:edit_network',
+                                                       kwargs={
+                                                           'pk': provider.pk}))
+
     def test_edit_network_provider_auth(self):
         provider = base.DataProviderFactory(created_by=self.creator)
         self.check_authenticated_user_redirect_all_methods(
@@ -473,6 +515,13 @@ class DataProviderPermissionsTests(base.PermissionsCheckTestCase):
                         kwargs={'pk': provider.pk}),
             redirect_url=reverse('provider:list'))
 
+    def test_delete_network_provider_teammate(self):
+        provider = base.DataProviderFactory(created_by=self.creator)
+        self.check_permission_for_teammate(
+            method='GET',
+            url=reverse('provider:delete_network',
+                        kwargs={'pk': provider.pk}))
+
     def test_add_non_network_provider_non_auth(self):
         self.check_user_redirect_all_methods(
             url=reverse('provider:add_non_network'),
@@ -492,6 +541,13 @@ class DataProviderPermissionsTests(base.PermissionsCheckTestCase):
                         kwargs={'pk': provider.pk}),
             redirect_url=reverse('provider:list'))
 
+    def test_edit_non_network_provider_teammate(self):
+        provider = base.DataProviderFactory(created_by=self.creator)
+        self.check_permission_for_teammate(
+            method='GET',
+            url=reverse('provider:edit_non_network',
+                        kwargs={'pk': provider.pk}))
+
     def test_delete_non_network_provider_non_auth(self):
         provider = base.DataProviderFactory(created_by=self.creator)
         self.check_user_redirect_all_methods(
@@ -505,3 +561,10 @@ class DataProviderPermissionsTests(base.PermissionsCheckTestCase):
             url=reverse('provider:delete_non_network',
                         kwargs={'pk': provider.pk}),
             redirect_url=reverse('provider:list'))
+
+    def test_delete_non_network_provider_teammate(self):
+        provider = base.DataProviderFactory(created_by=self.creator)
+        self.check_permission_for_teammate(
+            method='GET',
+            url=reverse('provider:delete_non_network',
+                        kwargs={'pk': provider.pk}))

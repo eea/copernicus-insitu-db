@@ -29,4 +29,5 @@ class IsSuperuser(IsAuthenticated):
 class IsOwnerUser(IsAuthenticated):
     def has_object_permission(self, request, view, obj):
         return (super().has_object_permission(request, view, obj)
-                and (obj.created_by == request.user or request.user.is_superuser))
+                and (obj.created_by == request.user or request.user.is_superuser
+                     or request.user in obj.created_by.team.teammates.all()))

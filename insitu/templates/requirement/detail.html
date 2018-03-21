@@ -14,8 +14,11 @@
   <div class="row">
     <h1 class="col-sm-12">
       <span>Requirement details</span>
+      {% if request.user == requirement.created_by or request.user.is_superuser or request.user in requirement.created_by.team.teammates.all  %}
+        HI
+      {% endif %}
       {% if requirement.state.name == 'draft' %}
-        {% if request.user == requirement.created_by or request.user.is_superuser %}
+        {% if request.user == requirement.created_by or request.user.is_superuser or request.user in requirement.created_by.team.teammates.all %}
           <span class="pull-right">
           <a class="btn btn-primary pull-right"
              href="{% url 'requirement:delete' requirement.pk %}">Delete
@@ -93,12 +96,12 @@
         <td class="col-md-8 col-sm-6">
           {{ requirement.state.title }}
           <div class="pull-right">
-            {% if requirement.state.name == 'draft' and requirement.created_by == request.user %}
+            {% if requirement.created_by == request.user or request.user in requirement.created_by.team.teammates.all and requirement.state.name == 'draft' %}
               <a class="btn btn-primary"
                  href="{% url 'requirement:transition' pk=requirement.pk source='draft' target='ready' %}">
                 Mark as ready
               </a>
-            {% elif requirement.state.name == 'ready' and requirement.created_by != request.user %}
+            {% elif requirement.created_by != request.user and request.user not in requirement.created_by.team.teammates.all and requirement.state.name == 'ready' %}
               <a class="btn btn-primary"
                  href="{% url 'requirement:transition' pk=requirement.pk source='ready' target='valid' %}">
                 Mark as valid
@@ -107,12 +110,12 @@
                  href="{% url 'requirement:transition' pk=requirement.pk source='ready' target='changes' %}">
                 Request changes
               </a>
-            {% elif requirement.state.name == 'ready' and requirement.created_by == request.user %}
+            {% elif requirement.created_by == request.user or request.user in requirement.created_by.team.teammates.all and requirement.state.name == 'ready' %}
               <a class="btn btn-primary"
                  href="{% url 'requirement:transition' pk=requirement.pk source='ready' target='draft' %}">
                 Move back to draft
               </a>
-            {% elif requirement.state.name == 'changes' and requirement.created_by == request.user %}
+            {% elif requirement.created_by == request.user or request.user in requirement.created_by.team.teammates.all and requirement.state.name == 'changes' %}
               <a class="btn btn-primary"
                  href="{% url 'requirement:transition' pk=requirement.pk source='changes' target='draft' %}">
                 Implement feedback
@@ -135,7 +138,7 @@
     <h3 class="col-sm-12">
       <span>Products</span>
       {% if requirement.state.name == 'draft' %}
-        {% if request.user == requirement.created_by or request.user.is_superuser %}
+        {% if requirement.created_by == request.user or request.user in requirement.created_by.team.teammates.all or request.user.is_superuser %}
           <span class="pull-right">
           <a class="btn btn-primary pull-right"
              href="{% url 'requirement:product:add' requirement.pk %}">Add requirement to product</a>
@@ -159,7 +162,7 @@
           <th class="no-sort">Barriers</th>
           <th class="no-sort">Note</th>
           {% if requirement.state.name == 'draft' %}
-            {% if request.user == requirement.created_by or request.user.is_superuser %}
+            {% if requirement.created_by == request.user or request.user in requirement.created_by.team.teammates.all or request.user.is_superuser %}
               <th class="no-sort"></th>
             {% endif %}
           {% endif %}
@@ -182,7 +185,7 @@
             </td>
             <td>{{ rel.note }}</td>
             {% if rel.state.name == 'draft' %}
-              {% if request.user == rel.created_by or request.user.is_superuser %}
+              {% if requirement.created_by == request.user or request.user in requirement.created_by.team.teammates.all or request.user.is_superuser %}
                 <td class="row">
                   <a
                     href="{% url 'requirement:product:edit' requirement_pk=requirement.pk pk=rel.pk %}"
@@ -208,7 +211,7 @@
     <h3 class="col-sm-12">
       <span>Data</span>
       {% if requirement.state.name == 'draft' %}
-        {% if request.user == requirement.created_by or request.user.is_superuser %}
+        {% if requirement.created_by == request.user or request.user in requirement.created_by.team.teammates.all or request.user.is_superuser %}
           <span class="pull-right">
           <a class="btn btn-primary pull-right"
              href="{% url 'requirement:data:add' requirement.pk %}">Add requirement to data</a>
@@ -227,7 +230,7 @@
           <th class="no-sort">Information costs</th>
           <th class="no-sort">Handling costs</th>
           {% if requirement.state.name == 'draft' %}
-            {% if request.user == requirement.created_by or request.user.is_superuser %}
+            {% if requirement.created_by == request.user or request.user in requirement.created_by.team.teammates.all or request.user.is_superuser %}
               <th class="no-sort"></th>
             {% endif %}
           {% endif %}
@@ -256,7 +259,8 @@
               {% endif %}
             </td>
             {% if rel.state.name == 'draft' %}
-              {% if request.user == rel.created_by or request.user.is_superuser %}
+              {% if rel.created_by == request.user or request.user in rel.created_by.team.teammates.all or request.user.is_superuser %}
+
                 <td class="row">
                   <a
                     href="{% url 'requirement:data:edit' requirement_pk=requirement.pk pk=rel.pk %}"

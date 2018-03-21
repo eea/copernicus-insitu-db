@@ -59,7 +59,8 @@ class DataTests(base.FormCheckTestCase):
             'dissemination': dissemination.pk
         }
 
-        self.creator = base.UserFactory(username='New user 1')
+        self.creator = base.UserFactory(username='User Data')
+        base.TeamFactory(user=self.creator)
         self.client.force_login(self.creator)
 
     def test_list_data_json(self):
@@ -254,6 +255,12 @@ class DataPermissionsTests(base.PermissionsCheckTestCase):
                         kwargs={'pk': data.pk}),
             redirect_url=reverse('data:list'))
 
+    def test_edit_data_teammate(self):
+        data = base.DataFactory(created_by=self.creator)
+        self.check_permission_for_teammate(method='GET',
+                                           url=reverse('data:edit',
+                                                       kwargs={'pk': data.pk}),)
+
     def test_delete_network_data_non_auth(self):
         data = base.DataFactory(created_by=self.creator)
         self.check_user_redirect_all_methods(
@@ -267,3 +274,9 @@ class DataPermissionsTests(base.PermissionsCheckTestCase):
             url=reverse('data:delete',
                         kwargs={'pk': data.pk}),
             redirect_url=reverse('data:list'))
+
+    def test_delete_data_teammate(self):
+        data = base.DataFactory(created_by=self.creator)
+        self.check_permission_for_teammate(method='GET',
+                                           url=reverse('data:delete',
+                                                       kwargs={'pk': data.pk}))
