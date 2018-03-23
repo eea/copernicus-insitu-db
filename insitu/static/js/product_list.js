@@ -15,9 +15,38 @@ $(document).ready(function () {
   var $table = $('#products').dataTable({
     "processing": true,
     "serverSide": true,
-    "dom": "<'row'<'col-sm-6'i><'col-sm-6'f><'col-sm-4 display-margin'l><'col-sm-8'p>>" +
+    "dom": "<'row'<'col-sm-12'B>>" +
+           "<'row'<'col-sm-6'i><'col-sm-6'f><'col-sm-4 display-margin'l><'col-sm-8'p>>" +
            "<'row'<'col-sm-12'tr>>" +
            "<'row'<'col-sm-12'p>>",
+    "lengthMenu": [
+      [ 10, 25, 50, -1 ],
+      [ '10 rows', '25 rows', '50 rows', 'Show all' ]
+    ],
+    "buttons": [{
+      extend: 'pdf',
+      exportOptions: { orthogonal: 'export' },
+      text: 'Save as PDF',
+      filename: 'CIS2_Products',
+      title: 'CIS2 Products',
+      orientation: 'landscape',
+      customize: function (doc){
+        var cols = [];
+        var created = new Date().toDateString();
+        cols[0] = {text: 'https://cis2.eea.europa.eu , ' + created, alignment: 'right', margin:[50, 10], };
+        var objFooter = {};
+        objFooter['columns'] = cols;
+        doc['footer']=objFooter;
+      }
+    },
+    {
+      extend: 'csv',
+      filename: 'CIS2_Products.',
+      title: 'CIS2 Products',
+      extension: 'xlsx',
+      text: 'Save as Excel',
+    },
+    ],
     "language": {
       "infoFiltered": "<span class='green-text'>(filtered from _MAX_ total records)<span>"
      },
