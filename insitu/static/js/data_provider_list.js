@@ -11,7 +11,28 @@ function updateFilterOptions(filter, option_data) {
       '<option value="' + option + '"' + selected + '>' + option + '</option>');
   });
 }
-$(document).ready(function () {
+$(document).ready(function (){
+  var buttonCommon = {
+    exportOptions: {
+      format: {
+        body: function ( data, row, column, node ){
+          if (row === 7 ){
+            if(data.indexOf('glyphicon-ok-circle') != -1){
+              return 'Yes'
+            }
+            else{
+              return 'No'
+            }
+          }
+          if (row === 0 || row === 3 || row === 4){
+            return $.parseHTML(data)[0].innerHTML
+          }
+
+          return data
+        }
+      }
+    }
+  }
   var $table = $('#providers').dataTable({
     "processing": true,
     "serverSide": true,
@@ -29,9 +50,39 @@ $(document).ready(function () {
         return json.data;
       }
     },
-    "dom": "<'row'<'col-sm-6'i><'col-sm-6'f><'col-sm-4 display-margin'l><'col-sm-8'p>>" +
+    "dom": "<'row'<'col-sm-12'B>>" +
+           "<'row'<'col-sm-6'i><'col-sm-6'f><'col-sm-4 display-margin'l><'col-sm-8'p>>" +
            "<'row'<'col-sm-12'tr>>" +
            "<'row'<'col-sm-12'p>>",
+    "lengthMenu": [
+      [ 10, 25, 50, -1 ],
+      [ '10 rows', '25 rows', '50 rows', 'Show all' ]
+    ],
+    "buttons": [
+      $.extend( true, {}, buttonCommon,{
+        extend: 'pdf',
+        exportOptions: { orthogonal: 'export' },
+        text: 'Save as PDF',
+        filename: 'CIS2_DataProviders',
+        title: 'CIS2 Data Providers',
+        orientation: 'landscape',
+        customize: function ( doc ){
+          var cols = [];
+          var created = new Date().toDateString();
+          cols[0] = {text: 'https://cis2.eea.europa.eu , ' + created, alignment: 'right', margin:[50, 10], };
+          var objFooter = {};
+          objFooter['columns'] = cols;
+          doc['footer']=objFooter;
+        }
+      }),
+      $.extend( true, {}, buttonCommon,{
+        extend: 'csv',
+        filename: 'CIS2_DataProviders.',
+        title: 'CIS2 Data Providers',
+        extension: 'xlsx',
+        text: 'Save as Excel',
+      }),
+    ],
     "language": {
       "infoFiltered": "<span class='green-text'>(filtered from _MAX_ total records)<span>",
     },

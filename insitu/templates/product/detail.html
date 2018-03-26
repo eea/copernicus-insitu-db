@@ -4,6 +4,8 @@
 {% block style %}
   <link rel="stylesheet" type="text/css"
         href="{% static 'css/jquery.dataTables.min.css' %}"/>
+  <link rel="stylesheet" type="text/css"
+        href="{% static 'css/buttons.dataTables.min.css' %}"/>
 {% endblock %}
 
 {% block title %}
@@ -153,6 +155,12 @@
   <script src="{% static 'js/bootstrap.min.js' %}"></script>
   <script src="{% static 'js/jquery.dataTables.min.js' %}"></script>
   <script src="{% static 'js/jquery.dataTables.bootstrap.min.js' %}"></script>
+  <script src="{% static 'js/dataTables.buttons.min.js' %}"></script>
+  <script src="{% static 'js/buttons.flash.min.js' %}"></script>
+  <script src="{% static 'js/buttons.html5.min.js' %}"></script>
+  <script src="{% static 'js/jszip.min.js' %}"></script>
+  <script src="{% static 'js/pdfmake.min.js' %}"></script>
+  <script src="{% static 'js/vfs_fonts.js' %}"></script>
   <script>
     $(function () {
       $('[data-toggle="popover"]').popover({
@@ -169,11 +177,41 @@
           }
         });
       });
-
+      var product_name = '{{ product.name }}'
+      product_name = product_name.split(' ').join('_')
       var table = $('#requirements').dataTable({
-        "dom": "<'row'<'col-sm-5'i><'col-sm-12'f><'col-sm-4 display-margin'l><'col-sm-8'p>>" +
+        "dom": "<'row'<'col-sm-12'B>>" +
+               "<'row'<'col-sm-5'i><'col-sm-12'f><'col-sm-4 display-margin'l><'col-sm-8'p>>" +
                "<'row'<'col-sm-12'tr>>" +
                "<'row'<'col-sm-12'p>>",
+        "lengthMenu": [
+          [ 10, 25, 50, -1 ],
+          [ '10 rows', '25 rows', '50 rows', 'Show all' ]
+        ],
+        "buttons": [{
+          extend: 'pdf',
+          exportOptions: { orthogonal: 'export' },
+          text: 'Save as PDF',
+          filename: 'CIS2_Product_' +  product_name + '_relation_with_requirements',
+          title: 'CIS2 Product "{{ product.name }}" relation with requirements',
+          orientation: 'portrait',
+          customize: function ( doc ){
+            var cols = [];
+            var created = new Date().toDateString();
+            cols[0] = {text: 'https://cis2.eea.europa.eu , ' + created, alignment: 'right', margin:[50, 10], };
+            var objFooter = {};
+            objFooter['columns'] = cols;
+            doc['footer']=objFooter;
+          }
+        },
+        {
+          extend: 'csv',
+          filename: 'CIS2_Product_' +  product_name + '_relation_with_requirements',
+          title: 'CIS2 Product "{{ product.name }}" relation with requirements',
+          extension: '.xlsx',
+          text: 'Save as Excel',
+        },
+        ],
         "language": {
           "infoFiltered": "<span class='green-text'>(filtered from _MAX_ total records)<span>",
         },
