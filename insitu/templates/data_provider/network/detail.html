@@ -8,6 +8,8 @@
 {% block style %}
   <link rel="stylesheet" type="text/css"
         href="{% static 'css/jquery.dataTables.min.css' %}"/>
+  <link rel="stylesheet" type="text/css"
+        href="{% static 'css/buttons.dataTables.min.css' %}"/>
 {% endblock %}
 
 {% block content %}
@@ -90,13 +92,52 @@
   <script src="{% static 'js/bootstrap.min.js' %}"></script>
   <script src="{% static 'js/jquery.dataTables.min.js' %}"></script>
   <script src="{% static 'js/jquery.dataTables.bootstrap.min.js' %}"></script>
+  <script src="{% static 'js/dataTables.buttons.min.js' %}"></script>
+  <script src="{% static 'js/buttons.flash.min.js' %}"></script>
+  <script src="{% static 'js/buttons.html5.min.js' %}"></script>
+  <script src="{% static 'js/jszip.min.js' %}"></script>
+  <script src="{% static 'js/pdfmake.min.js' %}"></script>
+  <script src="{% static 'js/vfs_fonts.js' %}"></script>
   <script>
     $(function () {
-
+      var data_provider_name = '{{ provider.name }}'
+      data_provider_name = data_provider_name.split(' ').join('_')
       var table = $('#groups').dataTable({
-        "dom": "<'row'<'col-sm-5'i><'col-sm-12'f><'col-sm-4 display-margin'l><'col-sm-8'p>>" +
+        "dom": "<'row'<'col-sm-12'B>>" +
+               "<'row'<'col-sm-5'i><'col-sm-12'f><'col-sm-4 display-margin'l><'col-sm-8'p>>" +
                "<'row'<'col-sm-12'tr>>" +
                "<'row'<'col-sm-12'p>>",
+        "buttons": [
+        {
+          extend: 'pdf',
+          exportOptions: { orthogonal: 'export' },
+          text: 'Save as PDF',
+          filename: 'CIS2_Data_Provider' +  data_provider_name + '_relation_with_data',
+          title: 'CIS2 Data Provider "{{ provider.name }}" relation with data',
+          orientation: 'portrait',
+          exportOptions: {
+            modifier: {
+              page: 'all'
+            }
+          },
+            customize: function ( doc ){
+            doc.pageMargins = [12,12,12,12]
+            var cols = [];
+            var created = new Date().toDateString();
+            cols[0] = {text: 'https://cis2.eea.europa.eu , ' + created, alignment: 'right', margin:[50, 10], };
+            var objFooter = {};
+            objFooter['columns'] = cols;
+            doc['footer']=objFooter;
+          }
+        },
+        {
+          extend: 'csv',
+          filename: 'CIS2_Data_Provider_' +  data_provider_name + '_relation_with_data',
+          title: 'CIS2 Data Provider "{{ provider.name }}" relation with data',
+          extension: '.xlsx',
+          text: 'Save as Excel',
+        },
+        ],
         "language": {
           "infoFiltered": "<span class='green-text'>(filtered from _MAX_ total records)<span>",
         },
