@@ -98,7 +98,7 @@
         <td class="col-md-8 col-sm-6">
           {{ requirement.state.title }}
           <div class="pull-right">
-            {% if requirement.created_by == request.user or request.user in requirement.created_by.team.teammates.all and requirement.state.name == 'draft' %}
+            {% if requirement.state.name == 'draft' and requirement.created_by == request.user or request.user in requirement.created_by.team.teammates.all  %}
               <a class="btn btn-primary"
                  href="{% url 'requirement:transition' pk=requirement.pk source='draft' target='ready' %}">
                 Mark as ready
@@ -112,7 +112,7 @@
                  href="{% url 'requirement:transition' pk=requirement.pk source='ready' target='changes' %}">
                 Request changes
               </a>
-            {% elif requirement.created_by == request.user or request.user in requirement.created_by.team.teammates.all and requirement.state.name == 'ready' %}
+            {% elif requirement.state.name == 'ready' and requirement.created_by == request.user or request.user in requirement.created_by.team.teammates.all %}
               <a class="btn btn-primary"
                  href="{% url 'requirement:transition' pk=requirement.pk source='ready' target='draft' %}">
                 Move back to draft
