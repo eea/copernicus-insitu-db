@@ -1,7 +1,10 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
-from django.db import transaction
+
+from django.apps import apps
+from django.core.management import call_command
+from django.db import transaction, connection
 from django.db.models.fields.reverse_related import ForeignObjectRel
 from django.http import HttpResponse
 from openpyxl import Workbook, load_workbook
@@ -10,6 +13,9 @@ from openpyxl.styles import Font
 from insitu import models as insitu_models
 from insitu.views import protected
 from picklists import models
+
+import os
+from io import StringIO
 
 PICKLISTS = [
     insitu_models.CopernicusService, insitu_models.EntrustedEntity,
@@ -26,6 +32,18 @@ SKIP_FIELDS = ['created_at', 'updated_at']
 
 RELATED_FIELDS = {'entrusted_entity': insitu_models.EntrustedEntity,
                   'service': insitu_models.CopernicusService}
+
+
+def solve_sql():
+    os.environ['DJANGO_COLORS'] = 'nocolor'
+    commands = StringIO()
+    cursor = connection.cursor()
+
+    for app in apps.get_app_configs():
+        label = app.label
+        call_command('sqlsequencereset', label, stdout=commands)
+
+    cursor.execute(commands.getvalue())
 
 
 class ExportPicklistsView(protected.ProtectedView):
@@ -103,6 +121,7 @@ class ImportPicklistsView(protected.ProtectedView):
                         if not [val for val in data.values() if val]:
                             continue
                         model.objects.update_or_create(pk=pk, defaults=data)
+            solve_sql()
         except:
             return HttpResponse(status=400)
         return HttpResponse(status=200)

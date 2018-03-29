@@ -22,6 +22,7 @@ from insitu.views.protected.permissions import (
     IsSuperuser,
 )
 from picklists import models as pickmodels
+from picklists.views import solve_sql
 
 
 class ProductList(ProtectedTemplateView):
@@ -215,6 +216,7 @@ class ImportProductsView(ProtectedView):
                     data['_deleted'] = False
                     models.Product.objects.really_all().update_or_create(id=pk,
                                                                          defaults=data)
+            solve_sql()
         except Exception:
             return HttpResponse(status=400)
         return HttpResponse(status=200)
