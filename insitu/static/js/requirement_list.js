@@ -28,13 +28,13 @@ $(document).ready(function () {
             threshold = $.parseHTML(data)[2].innerHTML;
             metrics = ''
             if (goal){
-              metrics += 'Goal: ' + '\n' + $.parseHTML(data)[0].innerHTML + '\n'
+              metrics += 'Threshold: ' + '\n' + $.parseHTML(data)[0].innerHTML + '\n'
             }
             if(breakthrough){
               metrics += 'Breakthrough: ' + '\n' + $.parseHTML(data)[1].innerHTML + '\n'
             }
             if(threshold){
-              metrics +=  'Threshold: ' + '\n' + $.parseHTML(data)[2].innerHTML + '\n'
+              metrics +=  'Goal: ' + '\n' + $.parseHTML(data)[2].innerHTML + '\n'
             }
             return metrics.replace(/^\s+|\s+$/g, '')
           }
@@ -123,9 +123,9 @@ $(document).ready(function () {
           var breakthrough = data.split('B: ').pop().split(' - G: ').shift();
           var goal = data.split('G: ').pop();
           return (
-            generate_div('green', threshold) +
+            generate_div('orange', threshold) +
             generate_div('blue', breakthrough) +
-            generate_div('orange', goal));
+            generate_div('green', goal));
         },
         "targets": [4, 5, 6, 7, 8],
         "bSortable": false
