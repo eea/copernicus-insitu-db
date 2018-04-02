@@ -273,6 +273,37 @@ class DataForm(CreatedByFormMixin, forms.ModelForm):
                   'quality_control_procedure', 'dissemination',
                   'inspire_themes', 'essential_variables']
 
+    def save(self, created_by='', commit=True):
+        if created_by:
+            self.instance.created_by = created_by
+        else:
+            created_by = self.instance.created_by
+        inspire_themes = self.cleaned_data.pop('inspire_themes')
+        essential_variables = self.cleaned_data.pop('essential_variables')
+        if not self.initial:
+            data = models.Data.objects.create(created_by=created_by,
+                                              **self.cleaned_data)
+
+        else:
+            data = models.Data.objects.filter(pk=self.instance.pk)
+            data.update(created_by=created_by, **self.cleaned_data)
+            data = data.first()
+            for inspire_theme in data.inspire_themes.all():
+                data.inspire_themes.remove(inspire_theme)
+            for essential_variable in data.essential_variables.all():
+                data.essential_variables.remove(essential_variable)
+
+        for inspire_theme in inspire_themes:
+            data.inspire_themes.add(inspire_theme.id)
+        for essential_variable in essential_variables:
+            data.essential_variables.add(essential_variable.id)
+        return data
+
+class DataCloneForm(DataForm):
+    def save(self, created_by='', commit=True):
+        self.initial = None
+        return super(DataCloneForm, self).save(created_by, commit)
+
 
 class DataReadyForm(RequiredFieldsMixin, DataForm):
     class Meta:
@@ -295,6 +326,12 @@ class DataReadyForm(RequiredFieldsMixin, DataForm):
             error = "At least one Inspire Theme or Essential Variable is required."
             self.add_error("inspire_themes", '')
             self.add_error("essential_variables", error)
+
+
+class DataReadyCloneForm(DataForm):
+    def save(self, created_by='', commit=True):
+        self.initial = None
+        return super(DataReadyCloneForm, self).save(created_by, commit)
 
 
 class DataRequirementBaseForm(forms.ModelForm):

@@ -30,11 +30,11 @@
   </div>
   {% if ready_form %}
   <div class="alert alert-warning">
-    This form has mandatory fields! If you want to access a draft version click <a href="{% url 'data:add' %}">here</a>.
+    This form has mandatory fields! If you want to access a draft version click <a href="{% url 'data:add' %}?pk={{ request.GET.pk }}">here</a>.
   </div>
   {% else %}
   <div class="alert alert-danger">
-    This form has no mandatory fields! You can access the form with required validation <a href="{% url 'data:add' %}?ready">here</a>.
+    This form has no mandatory fields! You can access the form with required validation <a href="{% url 'data:add' %}?ready&pk={{ request.GET.pk }}">here</a>.
   </div>
   {% endif %}
   <form action="" method="POST">
@@ -54,10 +54,12 @@
       </label>
       <div class="input-group input-daterange">
         <input type="text" class="input-sm form-control" name="start_time_coverage"
-               id="id_start_time_coverage" data-provide="datepicker"/>
+               id="id_start_time_coverage" data-provide="datepicker"
+               value="{{ form.start_time_coverage.value|date:'m/d/Y'}}"/>
         <span class="input-group-addon">to</span>
         <input type="text" class="input-sm form-control" name="end_time_coverage"
-               id="id_end_time_coverage" data-provide="datepicker"/>
+               id="id_end_time_coverage" data-provide="datepicker"
+               value="{{ form.end_time_coverage.value|date:'m/d/Y'}}"/>
         <div class="input-group-addon">
           <span class="glyphicon glyphicon-th"></span>
         </div>

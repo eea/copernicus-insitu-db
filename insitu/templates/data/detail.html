@@ -33,6 +33,13 @@
         </span>
         {% endif %}
       {% endif %}
+      <br>
+      <span class="pull-right">
+          <a class="btn btn-primary pull-right"
+             href="{% url 'data:add' %}?pk={{ data.pk }}">
+            Clone data
+          </a>
+      </span>
     </h1>
   </div>
 
