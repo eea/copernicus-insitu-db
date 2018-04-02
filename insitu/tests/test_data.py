@@ -63,6 +63,25 @@ class DataTests(base.FormCheckTestCase):
         base.TeamFactory(user=self.creator)
         self.client.force_login(self.creator)
 
+    def _create_clone_data(self, data):
+        DATA_FOR_CLONE = {
+            'name': data.name,
+            'note': 'TEST note',
+            'dissemination': data.dissemination.pk,
+            'update_frequency': data.update_frequency.pk,
+            'area': data.area.pk,
+            'timeliness': data.timeliness.pk,
+            'data_policy': data.data_policy.pk,
+            'data_type': data.data_type.pk,
+            'data_format': data.data_format.pk,
+            'start_time_coverage': datetime.date(day=1, month=1, year=2000),
+            'end_time_coverage': datetime.date(day=1, month=1, year=2000),
+            'quality_control_procedure': data.quality_control_procedure.pk,
+            'inspire_themes': [],
+            'essential_variables': [],
+        }
+        return DATA_FOR_CLONE
+
     def test_list_data_json(self):
         base.DataFactory(created_by=self.creator)
         resp = self.client.get(reverse('data:json'))
@@ -140,6 +159,32 @@ class DataTests(base.FormCheckTestCase):
         self.assertEqual(resp.status_code, 302)
         self.check_object(models.Data.objects.last(), data)
         self.logging()
+
+    def test_get_add_with_clone(self):
+        self.erase_logging_file()
+        data = base.DataFactory(created_by=self.creator)
+        resp = self.client.get(reverse('data:add')  + '?ready&pk=' + str(data.pk),
+                               {})
+        self.assertEqual(resp.status_code, 200)
+        form_data = [ value for field, value in resp.context['form'].initial.items()]
+        self.assertTrue(form_data)
+        self.logging()
+
+    def test_post_add_with_clone(self):
+        data = base.DataFactory(created_by=self.creator)
+        cloned_data = self._create_clone_data(data)
+        resp = self.client.post(reverse('data:add')  + '?ready&pk=' + str(data.pk),
+                               cloned_data)
+        self.assertEqual(resp.status_code, 302)
+        self.check_object(models.Data.objects.last(), cloned_data)
+
+    def test_post_add_clone_without_ready(self):
+        data = base.DataFactory(created_by=self.creator)
+        cloned_data = self._create_clone_data(data)
+        resp = self.client.post(reverse('data:add') + '?pk=' + str(data.pk),
+                                cloned_data)
+        self.assertEqual(resp.status_code, 302)
+        self.check_object(models.Data.objects.last(), cloned_data)
 
     def test_detail_data(self):
         self.erase_logging_file()
