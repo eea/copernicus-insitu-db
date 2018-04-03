@@ -64,6 +64,8 @@ class DataTests(base.FormCheckTestCase):
         self.client.force_login(self.creator)
 
     def _create_clone_data(self, data):
+        inspire_themes = [base.InspireThemeFactory(),
+                          base.InspireThemeFactory()]
         DATA_FOR_CLONE = {
             'name': data.name,
             'note': 'TEST note',
@@ -77,7 +79,8 @@ class DataTests(base.FormCheckTestCase):
             'start_time_coverage': datetime.date(day=1, month=1, year=2000),
             'end_time_coverage': datetime.date(day=1, month=1, year=2000),
             'quality_control_procedure': data.quality_control_procedure.pk,
-            'inspire_themes': [],
+            'inspire_themes': [inspire_theme.pk for inspire_theme
+                               in inspire_themes],
             'essential_variables': [],
         }
         return DATA_FOR_CLONE
@@ -170,11 +173,19 @@ class DataTests(base.FormCheckTestCase):
         self.assertTrue(form_data)
         self.logging()
 
-    def test_post_add_with_clone(self):
+    def test_post_add_with_clone_ready_errors(self):
+        data = base.DataFactory(created_by=self.creator)
+        self._create_clone_data(data)
+        resp = self.client.post(reverse('data:add')  + '?ready&pk=' + str(data.pk),
+                                {})
+        self.assertEqual(resp.status_code, 200)
+        self.check_required_errors(resp, self.errors)
+
+    def test_post_add_with_clone_ready(self):
         data = base.DataFactory(created_by=self.creator)
         cloned_data = self._create_clone_data(data)
         resp = self.client.post(reverse('data:add')  + '?ready&pk=' + str(data.pk),
-                               cloned_data)
+                                cloned_data)
         self.assertEqual(resp.status_code, 302)
         self.check_object(models.Data.objects.last(), cloned_data)
 
