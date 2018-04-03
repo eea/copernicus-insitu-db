@@ -328,7 +328,7 @@ class DataReadyForm(RequiredFieldsMixin, DataForm):
             self.add_error("essential_variables", error)
 
 
-class DataReadyCloneForm(DataForm):
+class DataReadyCloneForm(DataReadyForm):
     def save(self, created_by='', commit=True):
         self.initial = None
         return super(DataReadyCloneForm, self).save(created_by, commit)
