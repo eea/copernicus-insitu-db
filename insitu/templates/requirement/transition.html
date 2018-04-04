@@ -24,28 +24,14 @@
           <i>{{ item.type }}</i>
           <br>
           {{ item.obj }}
-          {% if item.failed %}
-            <span class="glyphicon glyphicon-remove-circle text-danger">
-            </span>
-            <span class="text-danger"> Complete the object
-              <a href="{% url 'data:edit' item.obj.pk %}?ready" target="_blank">here</a>.
-            </span>
-          {% endif %}
         </li>
       {% endfor %}
     </ul>
   </div>
-  {% if failed_validation %}
-  <div class="row">
-    <div class="alert alert-danger">
-      You have Data objects that do not respect validation. Please correct and then you can proceed to the next step.
-    </div>
-  </div>
-  {% endif %}
   <div class="row">
     <form method="POST">
       {% csrf_token %}
-      <button class="btn btn-primary" type="submit" {% if failed_validation %} disabled {% endif %}>
+      <button class="btn btn-primary" type="submit">
         Accept
       </button>
       <a class="btn btn-default"

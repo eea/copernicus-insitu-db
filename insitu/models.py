@@ -287,13 +287,6 @@ class Requirement(ValidationWorkflowModel, SoftDeleteModel):
 
         objects += [obj for obj in self.productrequirement_set.all()]
         objects += [obj for obj in self.datarequirement_set.all()]
-        objects += [obj for obj in self.data_set.distinct().all()]
-        objects += [obj for obj in DataProviderRelation.objects.filter(
-            data__requirements=self).distinct()]
-        objects += [obj for obj in DataProvider.objects.filter(
-            data__requirements=self).distinct()]
-        objects += [obj for obj in DataProviderDetails.objects.filter(
-            data_provider__data__requirements=self).distinct()]
         return objects
 
     @transition()
