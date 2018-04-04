@@ -14,7 +14,6 @@ from insitu.views.protected import IsAuthenticated, IsOwnerUser
 from insitu.views.protected.permissions import IsDraftObject
 from picklists import models as pickmodels
 
-
 class DataList(LoggingProtectedTemplateView):
     template_name = 'data/list.html'
     permission_classes = (IsAuthenticated, )
@@ -75,14 +74,59 @@ class DataAdd(CreatedByMixin, LoggingProtectedCreateView):
     permission_denied_redirect = reverse_lazy('data:list')
     target_type = 'data'
 
+    def get_data(self):
+        try:
+            return self.get_object()
+        except AttributeError:
+            pk = self.request.GET.get('pk', None)
+            try:
+                return models.Data.objects.get(pk=pk)
+            except ObjectDoesNotExist:
+                return
+
+    def get_initial(self):
+        data = None
+        try:
+            data = self.get_data()
+        except:
+            pass
+        if not data:
+            return super().get_initial()
+
+        initial_data = super().get_initial()
+        for field in ['name', 'note', 'update_frequency',
+                      'area', 'start_time_coverage', 'end_time_coverage',
+                      'timeliness', 'data_policy', 'data_type',
+                      'data_format', 'quality_control_procedure',
+                      'dissemination']:
+            initial_data[field] = getattr(data, field)
+        initial_data['inspire_themes'] = getattr(data, 'inspire_themes').all()
+        initial_data['essential_variables'] = getattr(data, 'essential_variables').all()
+        return initial_data.copy()
+
     def get_form_class(self):
+        data = None
+        try:
+            data = self.get_data()
+        except:
+            pass
+        if data:
+            self.post_action = 'cloned data {pk} to'.format(
+                pk=data.pk)
+            self.post_action_failed = 'tried to clone data {pk} of'.format(
+                pk=data.pk
+            )
+
+            if 'ready' in self.request.GET:
+                return forms.DataReadyCloneForm
+            return forms.DataCloneForm
         if 'ready' in self.request.GET:
             return forms.DataReadyForm
         return forms.DataForm
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        if self.get_form_class() == forms.DataReadyForm:
+        if self.get_form_class() == forms.DataReadyForm or self.get_form_class() == forms.DataReadyCloneForm:
             context['ready_form'] = True
         return context
 
