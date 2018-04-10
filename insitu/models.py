@@ -504,6 +504,42 @@ class Data(ValidationWorkflowModel, SoftDeleteModel):
     def __str__(self):
         return self.name
 
+    def get_related_objects(self):
+        objects = []
+        objects += [obj for obj in self.dataproviderrelation_set.all()]
+        return objects
+
+    @transition()
+    def mark_as_ready(self):
+        for obj in self.get_related_objects():
+            obj.requesting_user = self.requesting_user
+            obj.mark_as_ready()
+
+    @transition()
+    def validate(self):
+        for obj in self.get_related_objects():
+            obj.requesting_user = self.requesting_user
+            obj.validate()
+
+    @transition()
+    def cancel(self):
+        for obj in self.get_related_objects():
+            obj.requesting_user = self.requesting_user
+            obj.cancel()
+
+    @transition()
+    def request_changes(self):
+        for obj in self.get_related_objects():
+            obj.requesting_user = self.requesting_user
+            obj.request_changes()
+
+    @transition()
+    def make_changes(self):
+        for obj in self.get_related_objects():
+            obj.requesting_user = self.requesting_user
+            obj.make_changes()
+
+
 
 class DataRequirement(ValidationWorkflowModel, SoftDeleteModel):
     data = models.ForeignKey(Data, on_delete=models.CASCADE)
