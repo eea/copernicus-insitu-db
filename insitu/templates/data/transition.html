@@ -1,0 +1,45 @@
+{% extends '_layout.html' %}
+{% load static %}
+
+{% block title %}
+  Data change state
+{% endblock %}
+
+{% block content %}
+  <div class="row">
+    <h1 class="col-sm-12">{{ data }}</h1>
+    <h3 class="col-sm-12 text-muted">Mark data as {{ target }}</h3>
+  </div>
+
+  {% if objects %}
+      <div class="row">
+        <div class="col-sm-12">
+          <span class="glyphicon glyphicon-warning-sign text-danger"></span>
+          If you change this data, the following objects will also be marked as
+          <strong>{{ target }}</strong>.
+        </div>
+      </div>
+      <div class="row">
+        <ul class="col-sm-6 list-group">
+          {% for item in objects %}
+            <li class="list-group-item">
+              <i>{{ item.type }}</i>
+              <br>
+              {{ item.obj }}
+            </li>
+          {% endfor %}
+        </ul>
+      </div>
+      <div class="row">
+  {% endif %}
+
+   <form method="POST">
+      {% csrf_token %}
+      <button class="btn btn-primary" type="submit">
+        Accept
+      </button>
+      <a class="btn btn-default"
+         href="{% url 'data:detail' pk=data.pk %}">Cancel</a>
+    </form>
+  </div>
+{% endblock %}

@@ -257,11 +257,6 @@ class RequirementTests(base.FormCheckTestCase):
         data_requirement = base.DataRequirementFactory(data=data,
                                                        created_by=self.creator,
                                                        requirement=requirement)
-        provider = base.DataProviderFactory(name='Test provider',
-                                            created_by=self.creator)
-        data_provider = base.DataProviderRelationFactory(data=data,
-                                                         created_by=self.creator,
-                                                         provider=provider)
 
         items = ([requirement, data_requirement]
                  + list(metrics.values()))
@@ -369,7 +364,7 @@ class RequirementTests(base.FormCheckTestCase):
                                                          created_by=self.creator,
                                                          provider=provider)
 
-        items = ([requirement, data, data_requirement, provider, data_provider]
+        items = ([requirement, data_requirement]
                  + list(metrics.values()))
 
         response = self.client.post(

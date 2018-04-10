@@ -129,7 +129,43 @@
       {% endif %}
       <tr class="row">
         <th class="col-md-4 col-sm-6">State</th>
-        <td class="col-md-8 col-sm-6">{{ data.state.title }}</td>
+        <td class="col-md-8 col-sm-6">{{ data.state.title }}
+          <div class="pull-right">
+            {% if data.state.name == 'draft' %}
+              {% if data.created_by == request.user or request.user in data.created_by.team.teammates.all %}
+              <a class="btn btn-primary"
+                 href="{% url 'data:transition' pk=data.pk source='draft' target='ready' %}">
+                Mark as ready
+              </a>
+              {% endif %}
+            {% endif %}
+            {% if data.state.name == 'ready' %}
+              {% if data.created_by != request.user and request.user not in data.created_by.team.teammates.all %}
+                <a class="btn btn-primary"
+                   href="{% url 'data:transition' pk=data.pk source='ready' target='valid' %}">
+                  Mark as valid
+                </a>
+                <a class="btn btn-primary"
+                   href="{% url 'data:transition' pk=data.pk source='ready' target='changes' %}">
+                  Request changes
+                </a>
+              {% elif data.created_by == request.user or request.user in data.created_by.team.teammates.all %}
+                 <a class="btn btn-primary"
+                     href="{% url 'data:transition' pk=data.pk source='ready' target='draft' %}">
+                    Move back to draft
+                 </a>
+              {% endif %}
+            {% endif %}
+            {% if data.state.name == 'changes' %}
+              {% if data.created_by == request.user or request.user in data.created_by.team.teammates.all %}
+                <a class="btn btn-primary"
+                   href="{% url 'data:transition' pk=data.pk source='changes' target='draft' %}">
+                  Implement feedback
+                </a>
+              {% endif %}
+            {% endif %}
+          </div>
+        </td>
       </tr>
       <tr class="row">
         <th class="col-md-4 col-sm-6">Created by</th>
