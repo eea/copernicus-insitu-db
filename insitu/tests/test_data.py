@@ -326,7 +326,7 @@ class DataTests(base.FormCheckTestCase):
             self.assertEqual((getattr(item, 'state')).name, 'draft')
         self.client.force_login(self.creator)
         response = self.client.get(
-            reverse('requirement:transition',
+            reverse('data:transition',
                     kwargs={'source': 'draft',
                             'target': 'ready',
                             'pk': data.pk}))
@@ -345,7 +345,7 @@ class DataTests(base.FormCheckTestCase):
 
 
         response = self.client.post(
-            reverse('requirement:transition',
+            reverse('data:transition',
                     kwargs={'source': 'draft',
                             'target': 'nosuchstate',
                             'pk': data.pk}))
