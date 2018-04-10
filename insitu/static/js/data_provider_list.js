@@ -76,10 +76,9 @@ $(document).ready(function (){
         }
       }),
       $.extend( true, {}, buttonCommon,{
-        extend: 'csv',
+        extend: 'excel',
         filename: 'CIS2_DataProviders.',
         title: 'CIS2 Data Providers',
-        extension: 'xlsx',
         text: 'Save as Excel',
       }),
     ],

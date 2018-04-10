@@ -334,10 +334,9 @@
           }
         },
         {
-          extend: 'csv',
+          extend: 'excel',
           filename: 'CIS2_Requirement_' +  requirement_name + '_relation_with_products',
           title: 'CIS2 Requirement "{{ requirement.name }}" relation with products',
-          extension: '.xlsx',
           text: 'Save as Excel',
         },
         ],
@@ -408,10 +407,9 @@
             }
         }),
         $.extend( true, {}, buttonCommon,{
-          extend: 'csv',
+          extend: 'excel',
           filename: 'CIS2_Requirement_' +  requirement_name + '_relation_with_data',
           title: 'CIS2 Requirement "{{ requirement.name }}" relation with data',
-          extension: '.xlsx',
           text: 'Save as Excel',
         }),
         ],

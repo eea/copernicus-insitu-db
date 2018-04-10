@@ -40,10 +40,9 @@ $(document).ready(function () {
       }
     },
     {
-      extend: 'csv',
+      extend: 'excel',
       filename: 'CIS2_Products.',
       title: 'CIS2 Products',
-      extension: 'xlsx',
       text: 'Save as Excel',
     },
     ],

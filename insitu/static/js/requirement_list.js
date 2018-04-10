@@ -73,10 +73,9 @@ $(document).ready(function () {
       }),
       $.extend( true, {}, buttonCommon,
       {
-        extend: 'csv',
+        extend: 'excel',
         filename: 'CIS2_Requirements.',
         title: 'CIS2 Requirements',
-        extension: 'xlsx',
         text: 'Save as Excel',
       }),
     ],
