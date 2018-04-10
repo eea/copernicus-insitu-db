@@ -408,6 +408,42 @@ class DataProvider(ValidationWorkflowModel, SoftDeleteModel):
         )
         return data
 
+    def get_related_objects(self):
+        objects = []
+        if self.details.all().first() is not None:
+            objects = [self.details.all().first()]
+        return objects
+
+    @transition()
+    def mark_as_ready(self):
+        for obj in self.get_related_objects():
+            obj.requesting_user = self.requesting_user
+            obj.mark_as_ready()
+
+    @transition()
+    def validate(self):
+        for obj in self.get_related_objects():
+            obj.requesting_user = self.requesting_user
+            obj.validate()
+
+    @transition()
+    def cancel(self):
+        for obj in self.get_related_objects():
+            obj.requesting_user = self.requesting_user
+            obj.cancel()
+
+    @transition()
+    def request_changes(self):
+        for obj in self.get_related_objects():
+            obj.requesting_user = self.requesting_user
+            obj.request_changes()
+
+    @transition()
+    def make_changes(self):
+        for obj in self.get_related_objects():
+            obj.requesting_user = self.requesting_user
+            obj.make_changes()
+
 
 class DataProviderDetails(ValidationWorkflowModel, SoftDeleteModel):
     acronym = models.CharField(max_length=10, blank=True)

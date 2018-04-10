@@ -196,6 +196,11 @@ provider_patterns = [
     url(r'^(?P<pk>[0-9]+)/delete/$',
         views.DataProviderDeleteNonNetwork.as_view(),
         name='delete_non_network'),
+
+    url(
+        r'^(?P<pk>[0-9]+)/transition/(?P<source>[a-z]+)-to-(?P<target>[a-z]+)/$',
+        views.DataProviderTransition.as_view(),
+        name='transition'),
 ]
 
 auth_patterns = [
