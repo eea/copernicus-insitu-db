@@ -1,5 +1,5 @@
 from django.core.management.base import BaseCommand
-from insitu.models import Requirement
+from insitu.models import  Data, DataProvider, Requirement
 
 
 class Command(BaseCommand):
@@ -48,3 +48,35 @@ class Command(BaseCommand):
             if requirement.vertical_resolution.state != requirement.state:
                 requirement.vertical_resolution.state = requirement.state
                 requirement.vertical_resolution.save()
+
+        data_objects = Data.objects.all()
+        faulty_data = [
+            data for data in data_objects if [
+                rel for rel in data.dataproviderrelation_set.all()
+                if rel.state != data.state
+            ]
+        ]
+        print('Relations will be fixed for data:..')
+        for data in faulty_data:
+            print(data.name)
+            for rel in data.dataproviderrelation_set.all():
+                if rel.state != data.state:
+                    rel.state = data.state
+                    rel.save()
+
+
+        data_providers = DataProvider.objects.all()
+        faulty_data_providers = [
+            data_provider for data_provider in data_providers if [
+                rel for rel in data_provider.details.all()
+                if rel.state != data_provider.state
+            ]
+        ]
+
+        print('Relations will be fixed for data provider:..')
+        for data_provider in faulty_data_providers:
+            print(data_provider.name)
+            for rel in data_provider.details.all():
+                if rel.state != data_provider.state:
+                    rel.state = data_provider.state
+                    rel.save()
