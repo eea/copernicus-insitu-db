@@ -4,6 +4,8 @@ from django.core.urlresolvers import reverse
 from django.db import transaction
 from django.db.models.fields.reverse_related import ForeignObjectRel
 from django.http.response import HttpResponse
+from django.utils.safestring import mark_safe
+from django.template import Library
 from openpyxl import Workbook, load_workbook
 from openpyxl.styles import Font
 
@@ -24,6 +26,7 @@ from insitu.views.protected.permissions import (
 from picklists import models as pickmodels
 from picklists.views import solve_sql
 
+import json
 
 class ProductList(ProtectedTemplateView):
     template_name = 'product/list.html'
@@ -220,3 +223,10 @@ class ImportProductsView(ProtectedView):
         except Exception:
             return HttpResponse(status=400)
         return HttpResponse(status=200)
+
+
+register = Library()
+
+@register.filter(is_safe=True)
+def js(obj):
+    return mark_safe(json.dumps(obj))
