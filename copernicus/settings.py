@@ -87,6 +87,9 @@ TEMPLATES = [
                 'insitu.context_processors.sentry',
 
             ],
+            'libraries':{
+                'js': 'insitu.views.product',
+            },
         },
     },
 ]
