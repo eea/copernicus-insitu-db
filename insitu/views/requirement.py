@@ -199,34 +199,6 @@ class RequirementTransition(LoggingTransitionProtectedDetailView):
             }
             for item in self.object.get_related_objects()
         ]
-        for object in objects:
-            if object['type'] == 'Data':
-                data = {
-                    'id': object['obj'].id,
-                    'name': object['obj'].name,
-                    'note': object['obj'].note,
-                    'update_frequency': object['obj'].update_frequency_id,
-                    'area': object['obj'].area_id,
-                    'start_time_coverage': object['obj'].start_time_coverage,
-                    'end_time_coverage': object['obj'].end_time_coverage,
-                    'timeliness': object['obj'].timeliness_id,
-                    'data_policy': object['obj'].data_policy_id,
-                    'data_type': object['obj'].data_type_id,
-                    'data_format': object['obj'].data_format_id,
-                    'quality_control_procedure':
-                        object['obj'].quality_control_procedure_id,
-                    'dissemination': object['obj'].dissemination_id,
-                    'inspire_themes': [inspire_theme.id for inspire_theme in
-                                       object['obj'].inspire_themes.all()],
-                    'essential_variables': [essential_variable for
-                                            essential_variable in
-                                            object['obj'].essential_variables.all()],
-                }
-                form = forms.DataReadyForm(data)
-                if not form.is_valid():
-                    context['failed_validation'] = True
-                    object['failed'] = 'True'
-
         context.update({
             'target': target,
             'source': source,

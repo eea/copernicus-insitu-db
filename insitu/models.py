@@ -287,13 +287,6 @@ class Requirement(ValidationWorkflowModel, SoftDeleteModel):
 
         objects += [obj for obj in self.productrequirement_set.all()]
         objects += [obj for obj in self.datarequirement_set.all()]
-        objects += [obj for obj in self.data_set.distinct().all()]
-        objects += [obj for obj in DataProviderRelation.objects.filter(
-            data__requirements=self).distinct()]
-        objects += [obj for obj in DataProvider.objects.filter(
-            data__requirements=self).distinct()]
-        objects += [obj for obj in DataProviderDetails.objects.filter(
-            data_provider__data__requirements=self).distinct()]
         return objects
 
     @transition()
@@ -510,6 +503,42 @@ class Data(ValidationWorkflowModel, SoftDeleteModel):
 
     def __str__(self):
         return self.name
+
+    def get_related_objects(self):
+        objects = []
+        objects += [obj for obj in self.dataproviderrelation_set.all()]
+        return objects
+
+    @transition()
+    def mark_as_ready(self):
+        for obj in self.get_related_objects():
+            obj.requesting_user = self.requesting_user
+            obj.mark_as_ready()
+
+    @transition()
+    def validate(self):
+        for obj in self.get_related_objects():
+            obj.requesting_user = self.requesting_user
+            obj.validate()
+
+    @transition()
+    def cancel(self):
+        for obj in self.get_related_objects():
+            obj.requesting_user = self.requesting_user
+            obj.cancel()
+
+    @transition()
+    def request_changes(self):
+        for obj in self.get_related_objects():
+            obj.requesting_user = self.requesting_user
+            obj.request_changes()
+
+    @transition()
+    def make_changes(self):
+        for obj in self.get_related_objects():
+            obj.requesting_user = self.requesting_user
+            obj.make_changes()
+
 
 
 class DataRequirement(ValidationWorkflowModel, SoftDeleteModel):
