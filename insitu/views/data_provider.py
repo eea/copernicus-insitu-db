@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 from django.contrib import messages
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, Http404
 from django.urls import reverse, reverse_lazy
+from xworkflows import ForbiddenTransition
 
 from insitu import documents
 from insitu import models
@@ -11,7 +12,7 @@ from insitu.views.protected import ProtectedUpdateView
 from insitu.views.protected import (
     LoggingProtectedTemplateView, LoggingProtectedDetailView,
     LoggingProtectedUpdateView, LoggingProtectedCreateView,
-    LoggingProtectedDeleteView)
+    LoggingProtectedDeleteView, LoggingTransitionProtectedDetailView)
 from insitu.views.protected import IsAuthenticated
 from insitu.views.protected.permissions import (
     IsOwnerUser,
@@ -222,3 +223,54 @@ class DataProviderDeleteNonNetwork(LoggingProtectedDeleteView):
     def get_success_url(self):
         messages.success(self.request, 'The data provider was deleted successfully!')
         return reverse('provider:list')
+
+
+class DataProviderTransition(LoggingTransitionProtectedDetailView):
+    model = models.DataProvider
+    template_name = 'data_provider/transition.html'
+    permission_classes = (IsAuthenticated, )
+    context_object_name = 'provider'
+    target_type = 'data provider'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        source = self.kwargs.get('source')
+        target = self.kwargs.get('target')
+        transition = models.ValidationWorkflow.get_transition(source, target)
+        if not transition:
+            raise Http404()
+        objects = [
+            {
+                'obj': item,
+                'type': item.__class__.__name__
+            }
+            for item in self.object.get_related_objects()
+        ]
+        context.update({
+            'target': target,
+            'source': source,
+            'objects': objects,
+        })
+        return context
+
+    def post(self, request, *args, **kwargs):
+        data_provider = self.get_object(self.get_queryset())
+        source = self.kwargs.get('source')
+        target = self.kwargs.get('target')
+        self.post_action = 'changed state from {source} to {target} for'.format(
+            source=source,
+            target=target
+        )
+        id = self.get_object_id()
+        self.log_action(request, self.post_action, id)
+        try:
+            transition_name = models.ValidationWorkflow.get_transition(source, target)
+            transition = getattr(data_provider, transition_name)
+            data_provider.requesting_user = self.request.user
+            if transition.is_available():
+                transition()
+                return HttpResponseRedirect(reverse('provider:detail',
+                                                    kwargs={'pk': data_provider.pk}))
+        except ForbiddenTransition:
+            pass
+        raise Http404()

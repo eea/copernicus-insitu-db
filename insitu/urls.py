@@ -150,6 +150,10 @@ data_patterns = [
     url(r'^(?P<group_pk>[0-9]+)/provider/',
         include(data_data_provider_patterns,
                 namespace='provider')),
+
+    url(r'^(?P<pk>[0-9]+)/transition/(?P<source>[a-z]+)-to-(?P<target>[a-z]+)/$',
+        views.DataTransition.as_view(),
+        name='transition'),
 ]
 
 provider_patterns = [
@@ -192,6 +196,11 @@ provider_patterns = [
     url(r'^(?P<pk>[0-9]+)/delete/$',
         views.DataProviderDeleteNonNetwork.as_view(),
         name='delete_non_network'),
+
+    url(
+        r'^(?P<pk>[0-9]+)/transition/(?P<source>[a-z]+)-to-(?P<target>[a-z]+)/$',
+        views.DataProviderTransition.as_view(),
+        name='transition'),
 ]
 
 auth_patterns = [

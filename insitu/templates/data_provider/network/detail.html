@@ -72,7 +72,45 @@
       </tr>
       <tr class="row">
         <th class="col-md-4 col-sm-6">State</th>
-        <td class="col-md-8 col-sm-6">{{ provider.state.title }}</td>
+        <td class="col-md-8 col-sm-6">
+          {{ provider.state.title }}
+          <div class="pull-right">
+            {% if provider.state.name == 'draft' %}
+              {% if provider.created_by == request.user or request.user in provider.created_by.team.teammates.all %}
+              <a class="btn btn-primary"
+                 href="{% url 'provider:transition' pk=provider.pk source='draft' target='ready' %}">
+                Mark as ready
+              </a>
+              {% endif %}
+            {% endif %}
+            {% if provider.state.name == 'ready' %}
+              {% if provider.created_by != request.user and request.user not in provider.created_by.team.teammates.all %}
+                <a class="btn btn-primary"
+                   href="{% url 'provider:transition' pk=provider.pk source='ready' target='valid' %}">
+                  Mark as valid
+                </a>
+                <a class="btn btn-primary"
+                   href="{% url 'provider:transition' pk=provider.pk source='ready' target='changes' %}">
+                  Request changes
+                </a>
+              {% elif provider.created_by == request.user or request.user in provider.created_by.team.teammates.all %}
+                 <a class="btn btn-primary"
+                     href="{% url 'provider:transition' pk=provider.pk source='ready' target='draft' %}">
+                    Move back to draft
+                 </a>
+              {% endif %}
+            {% endif %}
+            {% if provider.state.name == 'changes' %}
+              {% if provider.created_by == request.user or request.user in provider.created_by.team.teammates.all %}
+                <a class="btn btn-primary"
+                   href="{% url 'provider:transition' pk=provider.pk source='changes' target='draft' %}">
+                  Implement feedback
+                </a>
+              {% endif %}
+            {% endif %}
+          </div>
+        </td>
+
       </tr>
       <tr class="row">
         <th class="col-md-4 col-sm-6">Created by</th>

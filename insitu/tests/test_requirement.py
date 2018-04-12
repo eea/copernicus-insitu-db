@@ -257,13 +257,8 @@ class RequirementTests(base.FormCheckTestCase):
         data_requirement = base.DataRequirementFactory(data=data,
                                                        created_by=self.creator,
                                                        requirement=requirement)
-        provider = base.DataProviderFactory(name='Test provider',
-                                            created_by=self.creator)
-        data_provider = base.DataProviderRelationFactory(data=data,
-                                                         created_by=self.creator,
-                                                         provider=provider)
 
-        items = ([requirement, data, data_requirement, provider, data_provider]
+        items = ([requirement, data_requirement]
                  + list(metrics.values()))
         for item in items:
             self.assertEqual((getattr(item, 'state')).name, 'draft')
@@ -308,7 +303,7 @@ class RequirementTests(base.FormCheckTestCase):
                                                        created_by=self.creator,
                                                        requirement=requirement)
 
-        items = ([requirement, data, data_requirement]
+        items = ([requirement, data_requirement]
                  + list(metrics.values()))
         for item in items:
             self.assertEqual((getattr(item, 'state')).name, 'draft')
@@ -318,8 +313,8 @@ class RequirementTests(base.FormCheckTestCase):
                     kwargs={'source': 'draft',
                             'target': 'ready',
                             'pk': requirement.pk}))
-        self.assertIn('failed_validation', response.context)
-        self.assertEqual('True', response.context['objects'][6]['failed'])
+        self.assertTrue(response.status_code, 200)
+
 
     def test_transition_inexistent_state(self):
         self.login_creator()
@@ -369,7 +364,7 @@ class RequirementTests(base.FormCheckTestCase):
                                                          created_by=self.creator,
                                                          provider=provider)
 
-        items = ([requirement, data, data_requirement, provider, data_provider]
+        items = ([requirement, data_requirement]
                  + list(metrics.values()))
 
         response = self.client.post(

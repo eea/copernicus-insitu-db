@@ -270,6 +270,116 @@ class DataTests(base.FormCheckTestCase):
         self.check_objects_are_soft_deleted(models.DataProviderRelation)
 
 
+    def test_transition(self):
+        self.erase_logging_file()
+        self.login_creator()
+        data = base.DataFactory(name='Test data',
+                                created_by=self.creator)
+        provider = base.DataProviderFactory(name='Test provider',
+                                            created_by=self.creator)
+        data_provider = base.DataProviderRelationFactory(data=data,
+                                                         created_by=self.creator,
+                                                         provider=provider)
+        items = ([data, data_provider])
+        for item in items:
+            self.assertEqual((getattr(item, 'state')).name, 'draft')
+
+        transitions = [
+            {'source': 'draft', 'target': 'ready', 'user': self.creator},
+            {'source': 'ready', 'target': 'draft', 'user': self.creator},
+            {'source': 'draft', 'target': 'ready', 'user': self.creator},
+            {'source': 'ready', 'target': 'changes', 'user': self.other_user},
+            {'source': 'changes', 'target': 'draft', 'user': self.creator},
+            {'source': 'draft', 'target': 'ready', 'user': self.creator},
+            {'source': 'ready', 'target': 'valid', 'user': self.other_user},
+        ]
+
+        for transition in transitions:
+            for item in items:
+                self.assertEqual((getattr(item, 'state')).name, transition['source'])
+            self.client.force_login(transition['user'])
+            response = self.client.post(
+                reverse('data:transition',
+                        kwargs={'source': transition['source'],
+                                'target': transition['target'],
+                                'pk': data.pk}))
+            self.assertRedirects(response, reverse('data:detail',
+                                                   kwargs={'pk': data.pk}))
+            for item in items:
+                getattr(item, 'refresh_from_db')()
+                self.assertEqual((getattr(item, 'state')).name, transition['target'])
+        self.logging(check_username=False)
+
+    def test_transition_with_draft_data(self):
+        self.erase_logging_file()
+        self.login_creator()
+        data = base.DataFactory(name='Test data',
+                                created_by=self.creator)
+        provider = base.DataProviderFactory(name='Test provider',
+                                            created_by=self.creator)
+        data_provider = base.DataProviderRelationFactory(data=data,
+                                                         created_by=self.creator,
+                                                         provider=provider)
+
+        items = ([data, data_provider])
+        for item in items:
+            self.assertEqual((getattr(item, 'state')).name, 'draft')
+        self.client.force_login(self.creator)
+        response = self.client.get(
+            reverse('data:transition',
+                    kwargs={'source': 'draft',
+                            'target': 'ready',
+                            'pk': data.pk}))
+        self.assertTrue(response.status_code, 200)
+
+    def test_transition_inexistent_state(self):
+        self.login_creator()
+        data = base.DataFactory(name='Test data',
+                                created_by=self.creator)
+        provider = base.DataProviderFactory(name='Test provider',
+                                            created_by=self.creator)
+        data_provider = base.DataProviderRelationFactory(data=data,
+                                                         created_by=self.creator,
+                                                         provider=provider)
+        items = ([data, data_provider])
+
+
+        response = self.client.post(
+            reverse('data:transition',
+                    kwargs={'source': 'draft',
+                            'target': 'nosuchstate',
+                            'pk': data.pk}))
+        self.assertEqual(response.status_code, 404)
+
+        for item in items:
+            getattr(item, 'refresh_from_db')()
+            self.assertEqual((getattr(item, 'state')).name, 'draft')
+
+
+    def test_transition_existent_state_no_transition(self):
+        self.login_creator()
+        data = base.DataFactory(name='Test data',
+                                created_by=self.creator)
+        provider = base.DataProviderFactory(name='Test provider',
+                                            created_by=self.creator)
+        base.DataProviderRelationFactory(data=data,
+                                         created_by=self.creator,
+                                         provider=provider)
+
+        items = ([data, provider])
+
+        response = self.client.post(
+            reverse('data:transition',
+                    kwargs={'source': 'draft',
+                            'target': 'valid',
+                            'pk': data.pk}))
+        self.assertEqual(response.status_code, 404)
+
+        for item in items:
+            getattr(item, 'refresh_from_db')()
+            self.assertEqual((getattr(item, 'state')).name, 'draft')
+
+
 class DataPermissionsTests(base.PermissionsCheckTestCase):
     def setUp(self):
         super().setUp()

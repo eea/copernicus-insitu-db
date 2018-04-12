@@ -42,6 +42,7 @@ class DataProviderTests(base.FormCheckTestCase):
             'provider_type': provider_type.pk
         }
         self.creator = base.UserFactory(username='New user 1')
+        base.TeamFactory(user=self.creator)
         self.client.force_login(self.creator)
 
     def test_list_provider_json(self):
@@ -228,6 +229,107 @@ class DataProviderTests(base.FormCheckTestCase):
         self.assertEqual(resp.status_code, 302)
         self.assertEqual(network.members.count(), 1)
         self.assertEqual(network.members.get(id=member_1.pk).name, member_1.name)
+
+    def test_transition(self):
+        self.erase_logging_file()
+        self.login_creator()
+        provider = base.DataProviderFactory(is_network=True,
+                                            name='Test provider',
+                                            created_by=self.creator)
+        provider_details = base.DataProviderDetailsFactory(
+            data_provider=provider,
+            created_by=self.creator)
+        items = ([provider, provider_details])
+        for item in items:
+            self.assertEqual((getattr(item, 'state')).name, 'draft')
+
+        transitions = [
+            {'source': 'draft', 'target': 'ready', 'user': self.creator},
+            {'source': 'ready', 'target': 'draft', 'user': self.creator},
+            {'source': 'draft', 'target': 'ready', 'user': self.creator},
+            {'source': 'ready', 'target': 'changes', 'user': self.other_user},
+            {'source': 'changes', 'target': 'draft', 'user': self.creator},
+            {'source': 'draft', 'target': 'ready', 'user': self.creator},
+            {'source': 'ready', 'target': 'valid', 'user': self.other_user},
+        ]
+
+        for transition in transitions:
+            for item in items:
+                self.assertEqual((getattr(item, 'state')).name,
+                                 transition['source'])
+            self.client.force_login(transition['user'])
+            response = self.client.post(
+                reverse('provider:transition',
+                        kwargs={'source': transition['source'],
+                                'target': transition['target'],
+                                'pk': provider.pk}))
+            self.assertRedirects(response, reverse('provider:detail',
+                                                   kwargs={'pk': provider.pk}))
+            for item in items:
+                getattr(item, 'refresh_from_db')()
+                self.assertEqual((getattr(item, 'state')).name,
+                                 transition['target'])
+        self.logging(check_username=False)
+
+    def test_transition_with_draft_data(self):
+        self.erase_logging_file()
+        self.login_creator()
+        provider = base.DataProviderFactory(is_network=True,
+                                            name='Test provider',
+                                            created_by=self.creator)
+        provider_details = base.DataProviderDetailsFactory(
+            data_provider=provider,
+            created_by=self.creator)
+        items = ([provider, provider_details])
+        for item in items:
+            self.assertEqual((getattr(item, 'state')).name, 'draft')
+        self.client.force_login(self.creator)
+        response = self.client.get(
+            reverse('provider:transition',
+                    kwargs={'source': 'draft',
+                            'target': 'ready',
+                            'pk': provider.pk}))
+        self.assertTrue(response.status_code, 200)
+
+    def test_transition_inexistent_state(self):
+        self.login_creator()
+        provider = base.DataProviderFactory(is_network=True,
+                                            name='Test provider',
+                                            created_by=self.creator)
+        provider_details = base.DataProviderDetailsFactory(
+            data_provider=provider,
+            created_by=self.creator)
+        items = ([provider, provider_details])
+        response = self.client.post(
+            reverse('provider:transition',
+                    kwargs={'source': 'draft',
+                            'target': 'nosuchstate',
+                            'pk': provider.pk}))
+        self.assertEqual(response.status_code, 404)
+
+        for item in items:
+            getattr(item, 'refresh_from_db')()
+            self.assertEqual((getattr(item, 'state')).name, 'draft')
+
+    def test_transition_existent_state_no_transition(self):
+        self.login_creator()
+        provider = base.DataProviderFactory(is_network=True,
+                                            name='Test provider',
+                                            created_by=self.creator)
+        provider_details = base.DataProviderDetailsFactory(
+            data_provider=provider,
+            created_by=self.creator)
+        items = ([provider, provider_details])
+        response = self.client.post(
+            reverse('provider:transition',
+                    kwargs={'source': 'draft',
+                            'target': 'valid',
+                            'pk': provider.pk}))
+        self.assertEqual(response.status_code, 404)
+
+        for item in items:
+            getattr(item, 'refresh_from_db')()
+            self.assertEqual((getattr(item, 'state')).name, 'draft')
 
     def test_get_add_non_network_provider_required_fields(self):
         resp = self.client.get(reverse('provider:add_non_network'))
@@ -451,6 +553,107 @@ class DataProviderTests(base.FormCheckTestCase):
         )
         self.check_objects_are_soft_deleted(models.DataProviderDetails)
         self.check_objects_are_soft_deleted(models.DataProviderRelation)
+
+    def test_transition_non_network(self):
+        self.erase_logging_file()
+        self.login_creator()
+        provider = base.DataProviderFactory(is_network=False,
+                                            name='Test provider',
+                                            created_by=self.creator)
+        provider_details = base.DataProviderDetailsFactory(
+            data_provider=provider,
+            created_by=self.creator)
+        items = ([provider, provider_details])
+        for item in items:
+            self.assertEqual((getattr(item, 'state')).name, 'draft')
+
+        transitions = [
+            {'source': 'draft', 'target': 'ready', 'user': self.creator},
+            {'source': 'ready', 'target': 'draft', 'user': self.creator},
+            {'source': 'draft', 'target': 'ready', 'user': self.creator},
+            {'source': 'ready', 'target': 'changes', 'user': self.other_user},
+            {'source': 'changes', 'target': 'draft', 'user': self.creator},
+            {'source': 'draft', 'target': 'ready', 'user': self.creator},
+            {'source': 'ready', 'target': 'valid', 'user': self.other_user},
+        ]
+
+        for transition in transitions:
+            for item in items:
+                self.assertEqual((getattr(item, 'state')).name,
+                                 transition['source'])
+            self.client.force_login(transition['user'])
+            response = self.client.post(
+                reverse('provider:transition',
+                        kwargs={'source': transition['source'],
+                                'target': transition['target'],
+                                'pk': provider.pk}))
+            self.assertRedirects(response, reverse('provider:detail',
+                                                   kwargs={'pk': provider.pk}))
+            for item in items:
+                getattr(item, 'refresh_from_db')()
+                self.assertEqual((getattr(item, 'state')).name,
+                                 transition['target'])
+        self.logging(check_username=False)
+
+    def test_transition_with_draft_data_non_network(self):
+        self.erase_logging_file()
+        self.login_creator()
+        provider = base.DataProviderFactory(is_network=False,
+                                            name='Test provider',
+                                            created_by=self.creator)
+        provider_details = base.DataProviderDetailsFactory(
+            data_provider=provider,
+            created_by=self.creator)
+        items = ([provider, provider_details])
+        for item in items:
+            self.assertEqual((getattr(item, 'state')).name, 'draft')
+        self.client.force_login(self.creator)
+        response = self.client.get(
+            reverse('provider:transition',
+                    kwargs={'source': 'draft',
+                            'target': 'ready',
+                            'pk': provider.pk}))
+        self.assertTrue(response.status_code, 200)
+
+    def test_transition_inexistent_state_non_network(self):
+        self.login_creator()
+        provider = base.DataProviderFactory(is_network=False,
+                                            name='Test provider',
+                                            created_by=self.creator)
+        provider_details = base.DataProviderDetailsFactory(
+            data_provider=provider,
+            created_by=self.creator)
+        items = ([provider, provider_details])
+        response = self.client.post(
+            reverse('provider:transition',
+                    kwargs={'source': 'draft',
+                            'target': 'nosuchstate',
+                            'pk': provider.pk}))
+        self.assertEqual(response.status_code, 404)
+
+        for item in items:
+            getattr(item, 'refresh_from_db')()
+            self.assertEqual((getattr(item, 'state')).name, 'draft')
+
+    def test_transition_existent_state_no_transition_non_network(self):
+        self.login_creator()
+        provider = base.DataProviderFactory(is_network=False,
+                                            name='Test provider',
+                                            created_by=self.creator)
+        provider_details = base.DataProviderDetailsFactory(
+            data_provider=provider,
+            created_by=self.creator)
+        items = ([provider, provider_details])
+        response = self.client.post(
+            reverse('provider:transition',
+                    kwargs={'source': 'draft',
+                            'target': 'valid',
+                            'pk': provider.pk}))
+        self.assertEqual(response.status_code, 404)
+
+        for item in items:
+            getattr(item, 'refresh_from_db')()
+            self.assertEqual((getattr(item, 'state')).name, 'draft')
 
 
 class DataProviderPermissionsTests(base.PermissionsCheckTestCase):
