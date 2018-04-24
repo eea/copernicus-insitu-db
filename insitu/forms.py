@@ -417,7 +417,7 @@ class DataProviderDetailsForm(CreatedByFormMixin, forms.ModelForm):
         queryset=models.DataProvider.objects.filter(is_network=False),
         required=False)
     email = forms.EmailField(required=False)
-    website = forms.URLField(required=False)
+    website = forms.URLField(required=False, widget=forms.TextInput)
 
     class Meta:
         model = models.DataProviderDetails
