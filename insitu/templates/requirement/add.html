@@ -58,6 +58,7 @@
   {% include 'bits/metric_field.html' with name='vertical_resolution' initial=form %}
 
   <input class="btn btn-primary" type="submit" value="Save" />
+  <a href="{% url 'requirement:list' %}" class="btn btn-default">Cancel</a>
 </form>
 {% bootstrap_form_errors form %}
 

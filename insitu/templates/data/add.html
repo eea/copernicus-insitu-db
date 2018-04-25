@@ -83,6 +83,7 @@
     {% bootstrap_field form.essential_variables addon_after='<a target="_blank" href="help#essentialvariable"><span class="glyphicon glyphicon-question-sign"></span></a>' %}
 
     <input class="btn btn-primary" type="submit" value="Save"/>
+    <a href="{% url 'data:list' %}" class="btn btn-default">Cancel</a>
   </form>
 {% endblock %}
 

@@ -41,6 +41,8 @@
 
     {% bootstrap_field form.note %}
     <input class="btn btn-primary" type="submit" value="Save" />
+    <a href="{% url 'product:list' %}"
+       class="btn btn-default">Cancel</a>
   </form>
 {% endblock %}
 
