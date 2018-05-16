@@ -1,5 +1,6 @@
 {% extends '_layout.html' %}
 {% load static %}
+{% load js %}
 
 {% block style %}
   <link rel="stylesheet" type="text/css"
@@ -306,7 +307,8 @@
         trigger: 'hover',
       });
 
-      var requirement_name = '{{ requirement.name }}'
+      var requirement_name = '{{ requirement.name | js }}'
+      var requirement_title = requirement_name
       requirement_name = requirement_name.split(' ').join('_')
       var table = $('#products').dataTable({
         "dom": "<'row'<'col-sm-12'B>>" +
@@ -322,7 +324,7 @@
           exportOptions: { orthogonal: 'export' },
           text: 'Save as PDF',
           filename: 'CIS2_Requirement_' +  requirement_name + '_relation_with_products',
-          title: 'CIS2 Requirement "{{ requirement.name }}" relation with products',
+          title: 'CIS2 Requirement "' + requirement_title + '" relation with products',
           orientation: 'portrait',
           customize: function ( doc ){
             var cols = [];
@@ -336,7 +338,7 @@
         {
           extend: 'excel',
           filename: 'CIS2_Requirement_' +  requirement_name + '_relation_with_products',
-          title: 'CIS2 Requirement "{{ requirement.name }}" relation with products',
+          title: 'CIS2 Requirement "' + requirement_title + '" relation with products',
           text: 'Save as Excel',
         },
         ],
@@ -354,7 +356,8 @@
   </script>
   <script>
     $(function () {
-      var requirement_name = '{{ requirement.name }}'
+      var requirement_name = '{{ requirement.name | js }}'
+      var requirement_title = requirement_name
       requirement_name = requirement_name.split(' ').join('_')
       var buttonCommon = {
         exportOptions: {
@@ -390,7 +393,7 @@
             exportOptions: { orthogonal: 'export' },
             text: 'Save as PDF',
             filename: 'CIS2_Requirement_' +  requirement_name + '_relation_with_data',
-            title: 'CIS2 Requirement "{{ requirement.name }}" relation with data',
+            title: 'CIS2 Requirement "' + requirement_title + '" relation with data',
             orientation: 'portrait',
             exportOptions: {
               modifier: {
@@ -409,7 +412,7 @@
         $.extend( true, {}, buttonCommon,{
           extend: 'excel',
           filename: 'CIS2_Requirement_' +  requirement_name + '_relation_with_data',
-          title: 'CIS2 Requirement "{{ requirement.name }}" relation with data',
+          title: 'CIS2 Requirement "' + requirement_title + '" relation with data',
           text: 'Save as Excel',
         }),
         ],

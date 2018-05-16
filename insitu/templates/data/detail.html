@@ -1,5 +1,6 @@
 {% extends '_layout.html' %}
 {% load static %}
+{% load js %}
 
 {% block style %}
   <link rel="stylesheet" type="text/css"
@@ -297,6 +298,7 @@
   <script>
     $(function () {
       var data_name = '{{ data.name }}'
+      var data_title = data_name
       data_name = data_name.split(' ').join('_')
       var buttonCommon = {
         exportOptions: {
@@ -332,7 +334,7 @@
           exportOptions: { orthogonal: 'export' },
           text: 'Save as PDF',
           filename: 'CIS2_Data_' +  data_name + '_relation_with_data_providers',
-          title: 'CIS2 Data "{{ data.name }}" relation with data providers',
+          title: 'CIS2 Data "' + data_title + '" relation with data providers',
           orientation: 'portrait',
           exportOptions: {
             modifier: {
@@ -371,6 +373,7 @@
   <script>
     $(function () {
       var data_name = '{{ data.name }}'
+      var data_title = data_name
       data_name = data_name.split(' ').join('_')
       var buttonCommon = {
         exportOptions: {
@@ -403,7 +406,7 @@
           exportOptions: { orthogonal: 'export' },
           text: 'Save as PDF',
           filename: 'CIS2_Data_' +  data_name + '_relation_with_requirements',
-          title: 'CIS2 Data "{{ data.name }}" relation with requirements',
+          title: 'CIS2 Data "' + data_title + '" relation with requirements',
           orientation: 'portrait',
           exportOptions: {
             modifier: {
@@ -423,7 +426,7 @@
         $.extend( true, {}, buttonCommon,{
           extend: 'excel',
           filename: 'CIS2_Data_' +  data_name + '_relation_with_requirements',
-          title: 'CIS2 Data "{{ data.name }}" relation with requirements',
+          title: 'CIS2 Data "' + data_title + '" relation with requirements',
           text: 'Save as Excel',
         }),
         ],

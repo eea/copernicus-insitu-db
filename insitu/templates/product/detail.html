@@ -179,6 +179,7 @@
         });
       });
       var product_name = '{{ product.name | js }}'
+      var product_title = product_name
       product_name = product_name.split(' ').join('_')
       var table = $('#requirements').dataTable({
         "dom": "<'row'<'col-sm-12'B>>" +
@@ -194,7 +195,7 @@
           exportOptions: { orthogonal: 'export' },
           text: 'Save as PDF',
           filename: 'CIS2_Product_' +  product_name + '_relation_with_requirements',
-          title: 'CIS2 Product "{{ product.name | js }}" relation with requirements',
+          title: 'CIS2 Product "' + product_title + '" relation with requirements',
           orientation: 'portrait',
           customize: function ( doc ){
             var cols = [];
@@ -208,7 +209,7 @@
         {
           extend: 'excel',
           filename: 'CIS2_Product_' +  product_name + '_relation_with_requirements',
-          title: 'CIS2 Product "{{ product.name | js }}" relation with requirements',
+          title: 'CIS2 Product "' + product_title + '" relation with requirements',
           text: 'Save as Excel',
         },
         ],

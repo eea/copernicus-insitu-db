@@ -1,5 +1,6 @@
 {% extends '_layout.html' %}
 {% load static %}
+{% load js %}
 
 {% block title %}
   Data Provider
@@ -178,7 +179,8 @@
   <script src="{% static 'js/vfs_fonts.js' %}"></script>
   <script>
     $(function () {
-      var data_provider_name = '{{ provider.name }}'
+      var data_provider_name = '{{ provider.name | js }}'
+      var data_provider_title = data_provider_name
       data_provider_name = data_provider_name.split(' ').join('_')
       var table = $('#groups').dataTable({
         "dom": "<'row'<'col-sm-12'B>>" +
@@ -191,7 +193,7 @@
           exportOptions: { orthogonal: 'export' },
           text: 'Save as PDF',
           filename: 'CIS2_Data_Provider' +  data_provider_name + '_relation_with_data',
-          title: 'CIS2 Data Provider "{{ provider.name }}" relation with data',
+          title: 'CIS2 Data Provider "' + data_provider_title + '" relation with data',
           orientation: 'portrait',
           exportOptions: {
             modifier: {
@@ -211,7 +213,7 @@
         {
           extend: 'excel',
           filename: 'CIS2_Data_Provider_' +  data_provider_name + '_relation_with_data',
-          title: 'CIS2 Data Provider "{{ provider.name }}" relation with data',
+          title: 'CIS2 Data Provider "' +  data_provider_title  + '" relation with data',
           text: 'Save as Excel',
         },
         ],
