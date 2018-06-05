@@ -226,7 +226,7 @@ class ImportProductsView(ProtectedView):
 
             solve_sql()
             from django.core.management import call_command
-            call_command('search_index', '--rebuild', '-f', '--models', 'insitu.Product')
+            call_command('search_index', '--rebuild', '-f')
         except Exception:
             return HttpResponse(status=400)
         return HttpResponse(status=200)
