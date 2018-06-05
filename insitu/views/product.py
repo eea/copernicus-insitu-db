@@ -12,6 +12,7 @@ from openpyxl.styles import Font
 from insitu import documents
 from insitu import forms
 from insitu import models
+from insitu.signals import DisableSignals
 from insitu.utils import get_choices
 from insitu.views.base import ESDatatableView
 from insitu.views.protected import (
@@ -205,21 +206,27 @@ class ImportProductsView(ProtectedView):
                     for col in ws.iter_cols(min_row=1, max_row=1)
                     if col[0].value is not None
                 ]
-                for row in ws.iter_rows(min_row=2):
-                    data = {}
-                    pk = row[0].value
-                    for i in range(1, len(fields)):
-                        field = fields[i]
-                        value = row[i].value if row[i].value is not None else ''
-                        if field in RELATED_FIELDS.keys():
-                            value = RELATED_FIELDS[field].objects.get(pk=value)
-                        data[field] = value
-                    if not [val for val in data.values() if val]:
-                        continue
-                    data['_deleted'] = False
-                    models.Product.objects.really_all().update_or_create(id=pk,
-                                                                         defaults=data)
+                with DisableSignals():
+                    for row in ws.iter_rows(min_row=2):
+                        data = {}
+                        pk = row[0].value
+                        for i in range(1, len(fields)):
+                            field = fields[i]
+                            value = row[i].value if row[i].value is not None else ''
+                            if field in RELATED_FIELDS.keys():
+                                value = RELATED_FIELDS[field].objects.get(pk=value)
+                            data[field] = value
+                        if not [val for val in data.values() if val]:
+                            continue
+                        data['_deleted'] = False
+                        models.Product.objects.really_all().update_or_create(
+                            id=pk,
+                            defaults=data
+                        )
+
             solve_sql()
+            from django.core.management import call_command
+            call_command('search_index', '--rebuild', '-f', '--models', 'insitu.Product')
         except Exception:
             return HttpResponse(status=400)
         return HttpResponse(status=200)
