@@ -251,6 +251,11 @@ urlpatterns = [
     url(r'help$',
         views.HelpPage.as_view(),
         name='help'),
+
+    url(r'about$',
+        views.AboutView.as_view(),
+        name='about'),
+
     url(r'crashme$',
         views.Crashme.as_view(),
         name='crashme')

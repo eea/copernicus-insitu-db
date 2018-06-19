@@ -44,3 +44,9 @@ class HelpPage(ProtectedTemplateView):
             context['models'][model._meta.model_name] = data
             context['email'] = settings.SUPPORT_EMAIL
         return context
+
+
+class AboutView(ProtectedTemplateView):
+    template_name = 'about.html'
+    permission_classes = (protected.IsAuthenticated,)
+    permission_denied_redirect = reverse_lazy('auth:login')

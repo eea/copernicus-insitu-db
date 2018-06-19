@@ -47,6 +47,12 @@
               <a href="{{ manage }}">Management</a>
             </li>
           {% endif %}
+
+          {% url 'about' as about %}
+          <li class="{% active about %}">
+            <a href="{{ about }}">About</a>
+          </li>
+
         </ul>
       {% endif %}
       <ul class="pull-right nav navbar-nav">
