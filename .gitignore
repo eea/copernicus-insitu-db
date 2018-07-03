@@ -26,3 +26,11 @@ local_settings.py
 docker/*.env
 docker-compose.override.yml
 
+# Database dumps
+*.sql
+
+# Sphinx documentation
+docs/_build/
+docs/_static/
+docs/_templates/
+docs/guide.html
