@@ -14,3 +14,5 @@ django-xworkflows==0.12.1
 django-compat==1.0.14
 django-hijack==2.1.4
 django-hijack-admin==2.1.4
+Sphinx==1.7.5
+sphinxcontrib-websupport==1.1.0
