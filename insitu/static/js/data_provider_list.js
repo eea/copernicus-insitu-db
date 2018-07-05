@@ -4,11 +4,22 @@ function updateFilterOptions(filter, option_data) {
   select.append('<option value="All">All</option>')
   $.each(option_data.options, function(i, option){
     var selected = '';
-    if(option_data.selected == option){
-      selected = ' selected';
+    if(filter == 'is_network') {
+      if(option_data.selected == 'true'){
+        selected = ' selected';
+      }
+      if(option_data.selected == 'false'){
+        selected = ' selected';
+      }
+    }
+    else {
+      if(option_data.selected == option){
+        selected = ' selected';
+      }
     }
     select.append(
-      '<option value="' + option + '"' + selected + '>' + option + '</option>');
+    '<option value="' + option + '"' + selected + '>' + option + '</option>');
+
   });
 }
 $(document).ready(function (){
