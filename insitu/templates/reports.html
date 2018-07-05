@@ -1,0 +1,30 @@
+{% extends '_layout.html' %}
+{% load static %}
+
+{% block title %}Reports{% endblock %}
+
+{% block content %}
+<div class="row" id="metrics">
+  <h1>Reports</h1>
+  <table class="table table-bordered">
+    <thead>
+      <tr>
+        <td><strong>name</strong></td>
+        <td><strong>description</strong></td>
+        <td><strong></strong></td>
+        <td><strong></strong></td>
+      </tr>
+    </thead>
+    <tbody>
+      {% for query in queries %}
+        <tr>
+          <td><strong>{{ query.title }}</strong></td>
+          <td>{{ query.description }}</td>
+          <td><a href="/explorer/{{ query.id }}/download?format=excel" download="{{ query.title}}05.07.2018"><img src="{% static 'images/excel_icon.png' %}"/></a></td>
+          <td><a href="/explorer/{{ query.id }}/download?format=csv"><img src="{% static 'images/csv_icon.png' %}"/></a></td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

@@ -5,6 +5,7 @@ from insitu.views import protected
 from insitu.views.protected.views import ProtectedTemplateView
 from insitu.utils import PICKLISTS_DESCRIPTION
 from picklists import models
+from explorer.models import Query
 
 
 class Manager(ProtectedTemplateView):
@@ -50,3 +51,15 @@ class AboutView(ProtectedTemplateView):
     template_name = 'about.html'
     permission_classes = (protected.IsAuthenticated,)
     permission_denied_redirect = reverse_lazy('auth:login')
+
+
+class ReportsView(ProtectedTemplateView):
+    template_name = 'reports.html'
+    permission_classes = (protected.IsAuthenticated,)
+    permission_denied_redirect = reverse_lazy('auth:login')
+
+    def get_context_data(self, **kwargs):
+        context = super(ReportsView, self).get_context_data(**kwargs)
+        context['queries'] = Query.objects.all().values(
+            'id', 'title', 'description')
+        return context

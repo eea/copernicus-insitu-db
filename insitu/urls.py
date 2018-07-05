@@ -256,6 +256,10 @@ urlpatterns = [
         views.AboutView.as_view(),
         name='about'),
 
+    url(r'reports$',
+        views.ReportsView.as_view(),
+        name='reports'),
+
     url(r'crashme$',
         views.Crashme.as_view(),
         name='crashme')
