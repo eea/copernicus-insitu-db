@@ -93,6 +93,10 @@ $(document).ready(function () {
       $('#dissemination').val(data.dissemination);
       $('#state').val(data.state);
     },
+    "drawCallback": function(settings) {
+      var info = $(this).closest('.dataTables_wrapper').find('.dataTables_info');
+      info.toggle(this.api().page.info().recordsDisplay > 9);
+    },
   }).fnFilterOnReturn();
 
   $('#name,#update_frequency,#area,#timeliness,#data_policy,#data_type,\

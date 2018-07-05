@@ -179,6 +179,10 @@
         "language": {
           "infoFiltered": "<span class='green-text'>(filtered from _MAX_ total records)<span>",
         },
+        "drawCallback": function(settings) {
+          var info = $(this).closest('.dataTables_wrapper').find('.dataTables_info');
+          info.toggle(this.api().page.info().recordsDisplay > 9);
+        },
         columnDefs: [
           {
             targets: 'no-sort',

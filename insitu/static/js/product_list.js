@@ -82,7 +82,11 @@ $(document).ready(function () {
         });
         return json.data;
       }
-    }
+    },
+    "drawCallback": function(settings) {
+      var info = $(this).closest('.dataTables_wrapper').find('.dataTables_info');
+      info.toggle(this.api().page.info().recordsDisplay > 9);
+    },
   }).fnFilterOnReturn();
 
   $('#service,#entity,#component,#group,#status,#area').on('change', function (event) {

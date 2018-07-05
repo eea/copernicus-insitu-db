@@ -110,6 +110,10 @@ $(document).ready(function () {
       $('#group').val(data.group);
       $('#state').val(data.state);
     },
+    "drawCallback": function(settings) {
+      var info = $(this).closest('.dataTables_wrapper').find('.dataTables_info');
+      info.toggle(this.api().page.info().recordsDisplay > 9);
+    },
     "columnDefs": [
       {
         "render": function (data, type, row) {
