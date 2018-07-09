@@ -1,14 +1,11 @@
 function updateFilterOptions(filter, option_data) {
   var select = $('#' + filter);
   select.find('option').remove();
-  select.append('<option value="All">All</option>')
+  select.append('<option value="All">All</option>');
   $.each(option_data.options, function(i, option){
     var selected = '';
     if(filter == 'is_network') {
-      if(option_data.selected == 'true'){
-        selected = ' selected';
-      }
-      if(option_data.selected == 'false'){
+      if(option_data.selected == 'true' || option_data.selected == 'false') {
         selected = ' selected';
       }
     }
@@ -19,7 +16,6 @@ function updateFilterOptions(filter, option_data) {
     }
     select.append(
     '<option value="' + option + '"' + selected + '>' + option + '</option>');
-
   });
 }
 $(document).ready(function (){
