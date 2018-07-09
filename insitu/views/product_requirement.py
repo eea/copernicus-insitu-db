@@ -87,6 +87,16 @@ class ProductRequirementEdit(LoggingProtectedUpdateView):
         messages.success(self.request, 'The relation between product and requirement was updated successfully!')
         return response
 
+    def get_form_kwargs(self):
+        kwargs = super(ProductRequirementEdit, self).get_form_kwargs()
+        kwargs.update({'url': self.kwargs[
+            'pk']})  # or wherever the url parameter is coming from
+        return kwargs
+
+    def post(self, request, *args, **kwargs):
+        return super(ProductRequirementEdit, self).post(request, *args, **kwargs)
+
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['url'] = self.get_success_url()
