@@ -260,6 +260,10 @@ urlpatterns = [
         views.ReportsView.as_view(),
         name='reports'),
 
+    url(r'reports/(?P<query_id>\d+)/download$',
+        views.DownloadReportView.as_view(),
+        name='download_report'),
+
     url(r'crashme$',
         views.Crashme.as_view(),
         name='crashme')

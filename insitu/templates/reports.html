@@ -20,8 +20,8 @@
         <tr>
           <td><strong>{{ query.title }}</strong></td>
           <td>{{ query.description }}</td>
-          <td><a href="/explorer/{{ query.id }}/download?format=excel" download="{{ query.title}}05.07.2018"><img src="{% static 'images/excel_icon.png' %}"/></a></td>
-          <td><a href="/explorer/{{ query.id }}/download?format=csv"><img src="{% static 'images/csv_icon.png' %}"/></a></td>
+          <td><a href="/reports/{{ query.id }}/download?format=excel"><img src="{% static 'images/excel_icon.png' %}"/></a></td>
+          <td><a href="/reports/{{ query.id }}/download?format=csv"><img src="{% static 'images/csv_icon.png' %}"/></a></td>
         </tr>
       {% endfor %}
     </tbody>

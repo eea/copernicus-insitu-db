@@ -1,11 +1,17 @@
+import datetime
+
 from django.urls import reverse_lazy
 from django.conf import settings
+from django.shortcuts import get_object_or_404
 
 from insitu.views import protected
 from insitu.views.protected.views import ProtectedTemplateView
 from insitu.utils import PICKLISTS_DESCRIPTION
 from picklists import models
+
+from explorer.exporters import get_exporter_class
 from explorer.models import Query
+from explorer.views import DownloadQueryView, _export
 
 
 class Manager(ProtectedTemplateView):
@@ -63,3 +69,17 @@ class ReportsView(ProtectedTemplateView):
         context['queries'] = Query.objects.all().values(
             'id', 'title', 'description')
         return context
+
+
+class DownloadReportView(DownloadQueryView):
+
+    def get(self, request, query_id, *args, **kwargs):
+        query = get_object_or_404(Query, pk=query_id)
+        format = request.GET.get('format', 'csv')
+        exporter_class = get_exporter_class(format)
+        file_extension = exporter_class.file_extension
+        date = '_' + datetime.datetime.now().strftime('%m-%d-%Y')
+        response = _export(request, query)
+        response['Content-Disposition'] = (date + file_extension).join(
+            response['Content-Disposition'].split(file_extension))
+        return response
