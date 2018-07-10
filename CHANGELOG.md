@@ -1,5 +1,6 @@
 Changelog
 =========
+* In case of major changes, an email should be sent to all users with the modifications. 
 
 1.1.7 - (2018-06-19)
 ------------------
