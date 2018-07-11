@@ -174,6 +174,13 @@ class RequirementTests(base.FormCheckTestCase):
             reverse('requirement:add') + '?pk=' + str(requirement.pk),
             cloned_data
         )
+        self.assertEqual(resp.status_code, 200)
+
+        cloned_data['uncertainty__threshold'] = 'test threshold 2'
+        resp = self.client.post(
+            reverse('requirement:add') + '?pk=' + str(requirement.pk),
+            cloned_data
+        )
         requirement.delete()
         self.assertEqual(resp.status_code, 302)
         self.check_single_object(models.Requirement, cloned_data)

@@ -199,9 +199,10 @@ class RequirementForm(forms.ModelForm):
                          'horizontal_resolution', 'vertical_resolution']
         self._clean_metric(metric_fields)
         fields = {field: v for field, v in self.cleaned_data.items()
-                  if field != 'name'}
+                  if field != 'name' and field != 'note'}
         if self.instance.id:
-            exists = len(models.Requirement.objects.filter(**fields)) > 1
+            exists = models.Requirement.objects.filter(**fields).exclude(
+                id=self.instance.id).exists()
         else:
             exists = models.Requirement.objects.filter(**fields).exists()
         if exists:
