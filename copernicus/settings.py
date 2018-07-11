@@ -185,5 +185,6 @@ HIJACK_ALLOW_GET_REQUESTS = True
 
 SUPPORT_EMAIL = env('SUPPORT_EMAIL', '')
 
-EXPLORER_CONNECTIONS = { 'Default': 'default'}
+EXPLORER_CONNECTIONS = {'Default': 'default'}
+EXPLORER_SQL_WHITELIST = {'update_frequency', '_deleted', 'Update Frequency'}
 EXPLORER_DEFAULT_CONNECTION = 'default'
