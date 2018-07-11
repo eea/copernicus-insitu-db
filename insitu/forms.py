@@ -64,6 +64,10 @@ class ProductRequirementEditForm(ProductRequirementBaseForm):
     product = forms.ModelChoiceField(disabled=True,
                                      queryset=models.Product.objects.all())
 
+    def __init__(self, *args, **kwargs):
+        self.url = kwargs.pop('url', None)
+        super(ProductRequirementEditForm, self).__init__(*args, **kwargs)
+
     def clean(self):
         cleaned_data = super(ProductRequirementEditForm, self).clean()
 
@@ -75,7 +79,7 @@ class ProductRequirementEditForm(ProductRequirementBaseForm):
             product=product,
             requirement=requirement,
             relevance=relevance
-        ).exists()
+        ).exclude(id=self.url).exists()
         if exists_relation:
             raise forms.ValidationError("This relation already exists.")
 
