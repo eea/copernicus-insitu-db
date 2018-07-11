@@ -1,4 +1,8 @@
 import datetime
+from io import BytesIO
+
+from openpyxl import load_workbook
+from openpyxl.writer.excel import save_virtual_workbook
 
 from django.urls import reverse_lazy
 from django.conf import settings
@@ -71,6 +75,12 @@ class ReportsView(ProtectedTemplateView):
         return context
 
 
+def as_text(value):
+    if value is None:
+        return ""
+    return str(value)
+
+
 class DownloadReportView(DownloadQueryView):
 
     def get(self, request, query_id, *args, **kwargs):
@@ -82,4 +92,17 @@ class DownloadReportView(DownloadQueryView):
         response = _export(request, query)
         response['Content-Disposition'] = (date + file_extension).join(
             response['Content-Disposition'].split(file_extension))
+        if file_extension == '.xlsx':
+            wb = load_workbook(filename=BytesIO(response.content))
+            ws = wb.active
+            dims = {}
+            for row in ws.iter_rows():
+                for cell in row:
+                    dims[cell.column] = max(dims.get(cell.column, 0), len(as_text(cell.value)))
+                    # cell.alignment = cell.alignment.copy(wrapText=True)
+            for col, value in dims.items():
+                ws.column_dimensions[col].width = value
+            wb.close()
+            virtaul_wb = save_virtual_workbook(wb)
+            response.content = virtaul_wb
         return response
