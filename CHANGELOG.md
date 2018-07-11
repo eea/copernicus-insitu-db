@@ -2,6 +2,15 @@ Changelog
 =========
 * In case of major changes, an email should be sent to all users with the modifications. 
 
+1.1.8 - (2018-07-11)
+-------------------
+* Fix Is Network filter on Data Provider listing
+* Set margin for Edit members button
+* Don't show "Showing 1 to 2 of 2 entries"(table info) for less than 10 rows
+* Exclude note from requirement duplicity check
+* Fix links editing
+  [dianaboiangiu]
+
 1.1.7 - (2018-06-19)
 ------------------
 * Add about page
