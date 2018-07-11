@@ -7,6 +7,7 @@ ENV PROJ_DIR=/var/local/copernicus
 
 RUN runDeps="vim netcat libpq-dev" \
  && apt-get update -y \
+ && apt-get install make \
  && apt-get install -y --no-install-recommends $runDeps \
  && rm -vrf /var/lib/apt/lists/*
 
