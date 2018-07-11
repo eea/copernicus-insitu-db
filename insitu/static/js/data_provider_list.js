@@ -1,14 +1,21 @@
 function updateFilterOptions(filter, option_data) {
   var select = $('#' + filter);
   select.find('option').remove();
-  select.append('<option value="All">All</option>')
+  select.append('<option value="All">All</option>');
   $.each(option_data.options, function(i, option){
     var selected = '';
-    if(option_data.selected == option){
-      selected = ' selected';
+    if(filter == 'is_network') {
+      if(option_data.selected == 'true' || option_data.selected == 'false') {
+        selected = ' selected';
+      }
+    }
+    else {
+      if(option_data.selected == option){
+        selected = ' selected';
+      }
     }
     select.append(
-      '<option value="' + option + '"' + selected + '>' + option + '</option>');
+    '<option value="' + option + '"' + selected + '>' + option + '</option>');
   });
 }
 $(document).ready(function (){
@@ -95,6 +102,10 @@ $(document).ready(function (){
       $('#is_network').val(data.is_network);
       $('#provider_type').val(data.provider_type);
       $('#state').val(data.state);
+    },
+    "drawCallback": function(settings) {
+    var info = $(this).closest('.dataTables_wrapper').find('.dataTables_info');
+      info.toggle(this.api().page.info().recordsDisplay > 9);
     },
     "columnDefs": [
       {

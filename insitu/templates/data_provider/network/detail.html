@@ -24,8 +24,8 @@
            href="{% url 'provider:delete_network' provider.pk %}">Delete
           data provider</a>
         </span>
-          <span class="pull-right">
-        <a class="btn btn-primary"
+          <span class="pull-right margin-left-btn">
+        <a class="btn btn-primary pull-right"
            href="{% url 'provider:edit_network_members' provider.pk %}">
           Edit network members
         </a>
@@ -178,6 +178,10 @@
         ],
         "language": {
           "infoFiltered": "<span class='green-text'>(filtered from _MAX_ total records)<span>",
+        },
+        "drawCallback": function(settings) {
+          var info = $(this).closest('.dataTables_wrapper').find('.dataTables_info');
+          info.toggle(this.api().page.info().recordsDisplay > 9);
         },
         columnDefs: [
           {

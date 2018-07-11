@@ -99,7 +99,8 @@ class ESDatatableView(BaseDatatableView, ProtectedView):
             zip(
                 self.filters,
                 [
-                    sorted([opt for opt in set(options) if opt])
+                    sorted([opt for opt in set(options) if opt
+                            not in ['', None]])
                     for options in zip(*objects)
                 ]
             )
