@@ -16,7 +16,7 @@ from picklists import models
 from explorer.exporters import get_exporter_class
 from explorer.models import Query
 from explorer.views import DownloadQueryView, _export
-
+from explorer.utils import extract_params
 
 class Manager(ProtectedTemplateView):
     template_name = 'manage.html'
@@ -63,15 +63,35 @@ class AboutView(ProtectedTemplateView):
     permission_denied_redirect = reverse_lazy('auth:login')
 
 
-class ReportsView(ProtectedTemplateView):
-    template_name = 'reports.html'
+class ReportsListView(ProtectedTemplateView):
+    template_name = 'reports/list.html'
     permission_classes = (protected.IsAuthenticated,)
     permission_denied_redirect = reverse_lazy('auth:login')
 
     def get_context_data(self, **kwargs):
-        context = super(ReportsView, self).get_context_data(**kwargs)
-        context['queries'] = Query.objects.all().values(
+        context = super(ReportsListView, self).get_context_data(**kwargs)
+        context['queries'] = Query.objects.all().order_by('id').values(
             'id', 'title', 'description')
+        return context
+
+
+class ReportsDetailView(ProtectedTemplateView):
+    template_name = 'reports/detail.html'
+    permission_classes = (protected.IsAuthenticated,)
+    permission_denied_redirect = reverse_lazy('auth:login')
+
+    def get(self, request, *args, **kwargs):
+        self.report = get_object_or_404(Query, pk=kwargs['query_id'])
+        return super(ReportsDetailView, self).get(request, *args, **kwargs)
+
+    def get_context_data(self, **kwargs):
+        context = super(ReportsDetailView, self).get_context_data(**kwargs)
+        context['query'] = {
+            'id': self.report.id,
+            'title': self.report.title,
+            'description': self.report.description,
+            'params': extract_params(self.report.sql),
+        }
         return context
 
 
@@ -88,7 +108,7 @@ class DownloadReportView(DownloadQueryView):
         format = request.GET.get('format', 'csv')
         exporter_class = get_exporter_class(format)
         file_extension = exporter_class.file_extension
-        date = '_' + datetime.datetime.now().strftime('%m-%d-%Y')
+        date = '_' + datetime.datetime.now().strftime('%Y%m%d')
         response = _export(request, query)
         response['Content-Disposition'] = (date + file_extension).join(
             response['Content-Disposition'].split(file_extension))

@@ -257,8 +257,12 @@ urlpatterns = [
         name='about'),
 
     url(r'reports$',
-        views.ReportsView.as_view(),
+        views.ReportsListView.as_view(),
         name='reports'),
+
+    url(r'reports/(?P<query_id>\d+)/$',
+        views.ReportsDetailView.as_view(),
+        name='reports_detail'),
 
     url(r'reports/(?P<query_id>\d+)/download$',
         views.DownloadReportView.as_view(),

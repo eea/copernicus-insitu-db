@@ -1,0 +1,61 @@
+{% extends '_layout.html' %}
+{% load static %}
+
+{% block title %}Reports{% endblock %}
+
+{% block style %}
+  <style>
+    label {
+      text-align: right;
+      clear: both;
+      float:left;
+      margin-right:15px;
+    }
+  </style>
+{% endblock %}
+
+{% block content %}
+<div class="row">
+  <h1>
+    <p class="col-sm-12">Report</p>
+    <p class="col-sm-12"><small>{{ query.title }}</small></p>
+  </h1>
+</div>
+
+<div class="row">
+  <table id="detail-table" class="table borderless col-sm-12">
+    <tbody>
+      <tr class="row">
+        <th class="col-md-4 col-sm-6">Description</th>
+        <td class="col-md-8 col-sm-6">{{ query.description }}</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+
+<div class="row">
+  <div class="col-lg-12">
+    <div class="panel panel-default">
+      <div class="panel-heading">Filters</div>
+        <div class="panel-body form-inline filters">
+        {% for param in query.params %}
+          <div class="form-group filters-style">
+            <label for="{{ param }}" class="control-label">{{ param }}</label>
+            <input id="{{ param }}" class="form-control" />
+          </div>
+          </br>
+          {% endfor %}
+
+          <div class="form-group filters-style">
+            <button type="button" class="btn btn-default btn-md"
+                    id="reset-btn">Filter
+            </button>
+          </div>
+
+        </div>
+    </div>
+  </div>
+</div>
+<a class="btn btn-primary" href="/reports/{{ query.id }}/download?format=excel">Download Excel</a>
+{% endblock %}
