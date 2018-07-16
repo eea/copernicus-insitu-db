@@ -2,10 +2,10 @@
 {% load static %}
 {% block head %}
   <link rel="stylesheet" href="{% static 'explorer/explorer.css' %}" />
-  <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+  <script src="{% static 'js/jquery-2.1.4.min.js' %}"></script>
   <script src="{% static 'js/jquery_cookie.js' %}"></script>
-  <link href="//cdnjs.cloudflare.com/ajax/libs/codemirror/5.36.0/codemirror.min.css" rel="stylesheet" />
-  <link href="//cdnjs.cloudflare.com/ajax/libs/pivottable/2.20.0/pivot.min.css" rel="stylesheet" />
+  <link rel="stylesheet" href="{% static 'css/codemirror.min.css' %}" />
+  <link rel="stylesheet" href="{% static 'css/pivot.min.css' %}" />
 
   <script src="{% static 'js/jquery-ui.min.js' %}"></script>
   <script src="{% static 'explorer/explorer.js' %}"></script>
@@ -22,7 +22,7 @@
   <div id="query_area" class="col-md-12">
     <h2>Playground</h2>
     <p>The playground is for experimenting and writing ad-hoc queries. By default, nothing you do here will be saved.</p>
-    <form role="form" action="{% url 'playground' %}" method="post" id="editor" class="playground-form form-horizontal">{% csrf_token %}
+    <form role="form" action="{% url 'reports:playground' %}" method="post" id="editor" class="playground-form form-horizontal">{% csrf_token %}
       {% if error %}
         <div class="alert alert-danger">{{ error|escape }}</div>
       {% endif %}
@@ -75,21 +75,21 @@
 
 {% block sql_explorer_scripts %}
     <script src="{% static 'js/jquery_cookie.js' %}"></script>
-    <script src="//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js"></script>
-    <script src="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
-    <script src="//cdnjs.cloudflare.com/ajax/libs/list.js/1.5.0/list.min.js"></script>
-    <script src="//cdnjs.cloudflare.com/ajax/libs/codemirror/5.36.0/codemirror.min.js"></script>
-    <script src="//cdnjs.cloudflare.com/ajax/libs/codemirror/5.36.0/mode/sql/sql.min.js"></script>
-    <script src="//cdnjs.cloudflare.com/ajax/libs/codemirror/5.36.0/addon/comment/comment.min.js"></script>
-    <script src="//cdnjs.cloudflare.com/ajax/libs/floatthead/2.1.1/jquery.floatThead.min.js"></script>
-    <script src="//cdnjs.cloudflare.com/ajax/libs/pivottable/2.20.0/pivot.min.js"></script>
+    <script src="{% static 'js/underscore.min.js' %}"></script>
+    <script src="{% static 'js/bootstrap.min.js' %}"></script>
+    <script src="{% static 'js/list.min.js' %}"></script>
+    <script src="{% static 'js/codemirror.min.js' %}"></script>
+    <script src="{% static 'js/sql.min.js' %}"></script>
+    <script src="{% static 'js/comment.min.js' %}"></script>
+    <script src="{% static 'js/jquery.floatThead.min.js' %}"></script>
+    <script src="{% static 'js/pivot.min.js' %}"></script>
 
     <script>
         $(function() {
             var e = new ExplorerEditor(queryId);
         });
         $("#refresh_play_button").click(function() {
-            $('#editor').attr('action', '{% url 'playground' %}');
+            $('#editor').attr('action', '{% url 'reports:playground' %}');
             $('#editor').submit()
             event.preventDefault();
         });

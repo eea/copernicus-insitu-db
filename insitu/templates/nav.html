@@ -53,7 +53,7 @@
             <a href="{{ about }}">About</a>
           </li>
 
-          {% url 'reports' as reports %}
+          {% url 'reports:list' as reports %}
           <li class="{% active reports %}">
             <a href="{{ reports }}">Reports</a>
           </li>

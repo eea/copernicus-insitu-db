@@ -221,6 +221,27 @@ auth_patterns = [
         name='edit_teammates'),
 ]
 
+reports_patterns = [
+    url(r'^list/$',
+        views.ReportsListView.as_view(),
+        name='list'),
+
+    url(r'^(?P<query_id>\d+)/$',
+        views.ReportsDetailView.as_view(),
+        name='detail'),
+
+    url(r'^playground/$',
+        views.PlaygroundView.as_view(),
+        name='playground'),
+
+    url(r'^(?P<query_id>\d+)/download/$',
+        views.DownloadReportsView.as_view(),
+        name='download'),
+
+    url(r'^schema/$',
+        RedirectView.as_view(pattern_name='explorer_schema')),
+]
+
 urlpatterns = [
     url(r'^$',
         views.HomeView.as_view(),
@@ -245,6 +266,10 @@ urlpatterns = [
         include(auth_patterns,
                 namespace='auth')),
 
+    url(r'^reports/',
+        include(reports_patterns,
+                namespace='reports')),
+
     url(r'manage$',
         views.Manager.as_view(),
         name='manage'),
@@ -256,25 +281,6 @@ urlpatterns = [
     url(r'about$',
         views.AboutView.as_view(),
         name='about'),
-
-    url(r'reports$',
-        views.ReportsListView.as_view(),
-        name='reports'),
-
-    url(r'reports/(?P<query_id>\d+)/$',
-        views.ReportsDetailView.as_view(),
-        name='reports_detail'),
-
-    url(r'playground$',
-        views.PlaygroundView.as_view(),
-        name='playground'),
-
-    url(r'reports/(?P<query_id>\d+)/download/$',
-        views.DownloadReportView.as_view(),
-        name='download_report'),
-
-    url(r'^schema/$',
-        RedirectView.as_view(pattern_name='explorer_schema')),
 
     url(r'crashme$',
         views.Crashme.as_view(),
