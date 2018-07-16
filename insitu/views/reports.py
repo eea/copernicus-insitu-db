@@ -1,9 +1,15 @@
 import datetime
+import string
 from io import BytesIO
 from openpyxl import load_workbook
 from openpyxl.writer.excel import save_virtual_workbook
 from django.urls import reverse_lazy
 from django.shortcuts import get_object_or_404
+from explorer.app_settings import (
+    ENABLE_TASKS,
+    EXPLORER_DEFAULT_ROWS,
+    UNSAFE_RENDERING,
+)
 from explorer.exporters import get_exporter_class
 from explorer.forms import QueryForm
 from explorer.models import Query
@@ -18,6 +24,12 @@ from explorer.utils import url_get_rows
 
 from insitu.views import protected
 from insitu.views.protected.views import ProtectedTemplateView
+
+
+def as_text(value):
+    if value is None:
+        return ""
+    return str(value)
 
 
 class ReportsListView(ProtectedTemplateView):
@@ -41,21 +53,42 @@ class ReportsDetailView(ProtectedTemplateView):
         self.report = get_object_or_404(Query, pk=kwargs['query_id'])
         return super(ReportsDetailView, self).get(request, *args, **kwargs)
 
+    def get_filename(self, title):
+        valid_chars = '-_.() %s%s' % (string.ascii_letters, string.digits)
+        filename = ''.join(c for c in title if c in valid_chars)
+        filename = filename.replace(' ', '_')
+        return filename
+
     def get_context_data(self, **kwargs):
         context = super(ReportsDetailView, self).get_context_data(**kwargs)
+        res = self.report.execute_query_only()
         context['query'] = {
             'id': self.report.id,
             'title': self.report.title,
             'description': self.report.description,
             'params': extract_params(self.report.sql),
         }
+        context.update({
+            'html_filename': self.get_filename(self.report.title) +
+                             datetime.datetime.now().strftime('%Y%m%d') + '.html',
+            'tasks_enabled': ENABLE_TASKS,
+            'shared': self.report.shared,
+            'query': self.report,
+            'form': None,
+            'message': None,
+            'error': None,
+            'rows': EXPLORER_DEFAULT_ROWS,
+            'data': res.data,
+            'headers': res.headers,
+            'total_rows': len(res.data),
+            'duration': res.duration,
+            'has_stats': len([h for h in res.headers if h.summary]),
+            'no_jquery': True,
+            'snapshots': self.report.snapshots,
+            'ql_id': None,
+            'unsafe_rendering': UNSAFE_RENDERING,
+        })
         return context
-
-
-def as_text(value):
-    if value is None:
-        return ""
-    return str(value)
 
 
 class PlaygroundView(PlayQueryView):
@@ -69,9 +102,10 @@ class PlaygroundView(PlayQueryView):
 
     def render_with_sql(self, request, query, run_query=True, error=None):
         rows = url_get_rows(request)
-        context = query_viewmodel(request.user, query, title="Playground",
-                            run_query=run_query,
-                            error=error, rows=rows)
+        context = query_viewmodel(request.user, query,
+                                  title="Playground",
+                                  run_query=run_query,
+                                  error=error, rows=rows)
         context.update({'no_jquery': True})
         return self.render_template('reports/playground.html', context)
 
@@ -93,7 +127,8 @@ class DownloadReportsView(DownloadQueryView):
             dims = {}
             for row in ws.iter_rows():
                 for cell in row:
-                    dims[cell.column] = max(dims.get(cell.column, 0), len(as_text(cell.value)))
+                    dims[cell.column] = max(dims.get(cell.column, 0),
+                                            len(as_text(cell.value)))
             for col, value in dims.items():
                 ws.column_dimensions[col].width = value
             wb.close()
