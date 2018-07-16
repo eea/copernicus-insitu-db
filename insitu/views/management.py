@@ -14,9 +14,18 @@ from insitu.utils import PICKLISTS_DESCRIPTION
 from picklists import models
 
 from explorer.exporters import get_exporter_class
+from explorer.forms import QueryForm
 from explorer.models import Query
-from explorer.views import DownloadQueryView, _export
+from explorer.views import (
+    DownloadQueryView,
+    PlayQueryView,
+    _export,
+    query_viewmodel
+)
 from explorer.utils import extract_params
+from explorer.utils import (
+    url_get_rows,
+)
 
 class Manager(ProtectedTemplateView):
     template_name = 'manage.html'
@@ -99,6 +108,24 @@ def as_text(value):
     if value is None:
         return ""
     return str(value)
+
+
+class PlaygroundView(PlayQueryView):
+
+    def render(self):
+        return self.render_template(
+            'reports/playground.html',
+            {'title': 'Playground', 'form': QueryForm(),
+             'no_jquery': True}
+        )
+
+    def render_with_sql(self, request, query, run_query=True, error=None):
+        rows = url_get_rows(request)
+        context = query_viewmodel(request.user, query, title="Playground",
+                            run_query=run_query,
+                            error=error, rows=rows)
+        context.update({'no_jquery': True})
+        return self.render_template('reports/playground.html', context)
 
 
 class DownloadReportView(DownloadQueryView):

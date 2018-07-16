@@ -5,6 +5,7 @@
 
 {% block content %}
 <div class="row">
+  <p><a href="{% url 'playground' %}">Playground</a></p>
   <h1>Reports</h1>
   <table class="table table-bordered">
     <thead>
@@ -20,18 +21,6 @@
           <td>{{ query.id }}</td>
           <td><strong><a href="{% url 'reports_detail' query.id %}">{{ query.title }}</strong></td>
           <td>{{ query.description }}</td>
-          <!--<td><a href="/reports/{{ query.id }}/download?format=excel"><img src="{% static 'images/excel_icon.png' %}"/></a></td>-->
-          <!--<td><a href="/reports/{{ query.id }}/download?format=csv"><img src="{% static 'images/csv_icon.png' %}"/></a></td>-->
-          <!--<td style="width:300px;">-->
-            <!--<strong>-->
-              <!--{% for key, value in query.params.items %}-->
-                <!--<div class="form-group">-->
-                  <!--<label for="{{ key }}">{{ key }}:</label>-->
-                  <!--<input id='{{ key }}' name="{{ key }}" value="{{ value }}" />-->
-                <!--</div>-->
-              <!--{% endfor %}-->
-            <!--</strong>-->
-          <!--</td>-->
         </tr>
       {% endfor %}
     </tbody>

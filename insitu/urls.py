@@ -1,4 +1,5 @@
 from django.conf.urls import url, include
+from django.views.generic.base import RedirectView
 
 from insitu import views
 
@@ -264,9 +265,16 @@ urlpatterns = [
         views.ReportsDetailView.as_view(),
         name='reports_detail'),
 
+    url(r'playground$',
+        views.PlaygroundView.as_view(),
+        name='playground'),
+
     url(r'reports/(?P<query_id>\d+)/download$',
         views.DownloadReportView.as_view(),
         name='download_report'),
+
+    url(r'^schema/$',
+        RedirectView.as_view(pattern_name='explorer_schema')),
 
     url(r'crashme$',
         views.Crashme.as_view(),
