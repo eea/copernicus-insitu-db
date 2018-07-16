@@ -24,8 +24,9 @@ from explorer.views import (
 )
 from explorer.utils import extract_params
 from explorer.utils import (
-    url_get_rows,
+    url_get_rows
 )
+
 
 class Manager(ProtectedTemplateView):
     template_name = 'manage.html'
@@ -146,7 +147,6 @@ class DownloadReportView(DownloadQueryView):
             for row in ws.iter_rows():
                 for cell in row:
                     dims[cell.column] = max(dims.get(cell.column, 0), len(as_text(cell.value)))
-                    # cell.alignment = cell.alignment.copy(wrapText=True)
             for col, value in dims.items():
                 ws.column_dimensions[col].width = value
             wb.close()

@@ -39,23 +39,32 @@
     <div class="panel panel-default">
       <div class="panel-heading">Filters</div>
         <div class="panel-body form-inline filters">
-        {% for param in query.params %}
-          <div class="form-group filters-style">
-            <label for="{{ param }}" class="control-label">{{ param }}</label>
-            <input id="{{ param }}" class="form-control" />
-          </div>
-          </br>
+          {% for param, value in query.params.items %}
+            <div class="form-group filters-style">
+              <label for="{{ param }}" class="control-label">{{ param }}</label><br>
+              <input id="{{ param }}" class="form-control" value="{{ value }}"/>
+            </div>
+            </br>
           {% endfor %}
-
-          <div class="form-group filters-style">
-            <button type="button" class="btn btn-default btn-md"
-                    id="reset-btn">Filter
-            </button>
-          </div>
-
         </div>
     </div>
   </div>
 </div>
-<a class="btn btn-primary" href="/reports/{{ query.id }}/download?format=excel">Download Excel</a>
+<a class="btn btn-primary" id="download-excel-btn" download>Download Excel</a>
+{% endblock %}
+
+
+{% block scripts %}
+<script type="text/javascript">
+  $('#download-excel-btn').on('click', function () {
+    var url = '/reports/{{ query.id }}/download?format=excel&params=';
+    {% for param in query.params %}
+      url += '{{param}}' + ':' + $('#{{param}}').val();
+      url += '|';
+    {% endfor %}
+    url = url.slice(0, -1);
+    $("#download-excel-btn").attr("href", url);
+  });
+
+</script>
 {% endblock %}

@@ -269,7 +269,7 @@ urlpatterns = [
         views.PlaygroundView.as_view(),
         name='playground'),
 
-    url(r'reports/(?P<query_id>\d+)/download$',
+    url(r'reports/(?P<query_id>\d+)/download/$',
         views.DownloadReportView.as_view(),
         name='download_report'),
 
