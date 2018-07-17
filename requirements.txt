@@ -7,6 +7,7 @@ django-suit==0.2.25
 elasticsearch-dsl==5.4.0
 psycopg2==2.7.1
 pytz==2017.2
+raven==6.1.0
 openpyxl==2.4.8
 xworkflows==1.0.4
 django-xworkflows==0.12.1
