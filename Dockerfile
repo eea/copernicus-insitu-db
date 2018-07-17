@@ -1,19 +1,16 @@
-FROM python:3.6-slim
-LABEL maintainer="European Environment Agency (EEA): IDM2 S-Team"
+FROM python:3.6-alpine
 
 ARG REQFILE=requirements-dep.txt
+ENV APP_HOME=/var/local/copernicus
 
-ENV PROJ_DIR=/var/local/copernicus
+RUN apk add --no-cache --update gcc netcat-openbsd postgresql-dev pcre-dev musl-dev linux-headers
 
-RUN runDeps="vim netcat libpq-dev" \
- && apt-get update -y \
- && apt-get install -y --no-install-recommends $runDeps \
- && rm -vrf /var/lib/apt/lists/*
+RUN mkdir -p $APP_HOME
+COPY requirements* $APP_HOME/
+WORKDIR $APP_HOME
 
-RUN mkdir -p $PROJ_DIR
-COPY . $PROJ_DIR
-WORKDIR $PROJ_DIR
+RUN pip install --no-cache-dir  -r $REQFILE
 
-RUN pip install -r $REQFILE
+COPY . $APP_HOME
 
 ENTRYPOINT ["./docker-entrypoint.sh"]
