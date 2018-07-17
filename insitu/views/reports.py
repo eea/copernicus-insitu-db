@@ -73,7 +73,6 @@ class ReportsDetailView(ProtectedTemplateView):
                              datetime.datetime.now().strftime('%Y%m%d') + '.html',
             'tasks_enabled': ENABLE_TASKS,
             'shared': self.report.shared,
-            'query': self.report,
             'form': None,
             'message': None,
             'error': None,

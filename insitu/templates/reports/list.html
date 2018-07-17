@@ -4,10 +4,16 @@
 {% block title %}Reports{% endblock %}
 
 {% block content %}
-<div class="row">
-  <p><a href="{% url 'reports:playground' %}">Playground</a></p>
-  <h1>Reports</h1>
-  <table class="table table-bordered">
+  <div class="row">
+    <h1 class="col-sm-12">
+      <span>Reports</span>
+      <span class="pull-right">
+          <a class="btn btn-primary pull-right"
+             href="{% url 'reports:playground' %}">Playground</a>
+        </span>
+    </h1>
+  </div>
+    <table class="table table-bordered">
     <thead>
       <tr>
         <td>UID</td>
@@ -19,7 +25,11 @@
       {% for query in queries %}
         <tr>
           <td>{{ query.id }}</td>
-          <td><strong><a href="{% url 'reports:detail' query.id %}">{{ query.title }}</strong></td>
+          <td>
+            <strong>
+              <a href="{% url 'reports:detail' query.id %}">{{ query.title }}</a>
+            </strong>
+          </td>
           <td>{{ query.description }}</td>
         </tr>
       {% endfor %}

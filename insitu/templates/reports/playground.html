@@ -70,7 +70,12 @@
     </div>
   </div>
 {% include 'preview_pane.html' %}
-
+{% if headers %}
+<button type="button" class="btn btn-primary btn-md" style="margin-bottom:20px;"
+        id="pivot-download">
+    Download Pivot as HTML
+</button>
+{% endif %}
 {% endblock %}
 
 {% block sql_explorer_scripts %}
@@ -78,7 +83,7 @@
     <script src="{% static 'js/underscore.min.js' %}"></script>
     <script src="{% static 'js/bootstrap.min.js' %}"></script>
     <script src="{% static 'js/list.min.js' %}"></script>
-    <script src="{% static 'js/codemirror.min.js' %}"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/codemirror/5.36.0/codemirror.min.js"></script>
     <script src="{% static 'js/sql.min.js' %}"></script>
     <script src="{% static 'js/comment.min.js' %}"></script>
     <script src="{% static 'js/jquery.floatThead.min.js' %}"></script>
@@ -97,6 +102,15 @@
             $('#editor').attr('action', '{% url 'explorer_playground' %}/download?format=excel');
             $('#editor').submit()
             event.preventDefault();
+        });
+        $("#pivot-download").click(function() {
+          var head_html = '<head><link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"><link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/codemirror/5.36.0/codemirror.min.css" ><link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/pivottable/2.20.0/pivot.min.css"></head>'
+          var blob = new Blob([head_html, $(".pvtRendererArea").first().html()], { type: 'text/plain' });
+          var url = window.URL.createObjectURL(blob);
+          var a = document.createElement("a");
+          a.href = url;
+          a.download = "playground.html";
+          a.click();
         });
     </script>
 {% endblock %}

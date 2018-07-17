@@ -52,8 +52,7 @@
     </tbody>
   </table>
 </div>
-
-
+{% if query.params %}
 <div class="row">
   <div class="col-lg-12">
     <div class="panel panel-default">
@@ -70,6 +69,7 @@
     </div>
   </div>
 </div>
+{% endif %}
 
 <a class="btn btn-primary" id="download-excel-btn">Download Excel</a>
 
@@ -79,7 +79,10 @@
 <div style="margin-top:2%;">
   {% include 'preview_pane.html' %}
 </div>
-<button type="button" class="btn btn-default btn-md" id="pivot-download">Download Pivot as HTML</button>
+<button type="button" class="btn btn-primary btn-md" style="margin-bottom:20px;"
+        id="pivot-download">
+    Download Pivot as HTML
+</button>
 {% endblock %}
 
 {% block sql_explorer_scripts %}
