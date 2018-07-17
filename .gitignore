@@ -18,17 +18,10 @@ local_settings.py
 # Logging
 *.csv
 
-# Docker conf
-env/*.env
-docker-compose.yml
-docker-compose.override.yml
-
 # PyCharm conf
 .idea/
 
-# Database dumps
-*.sql
+# Docker conf
+docker/*.env
+docker-compose.override.yml
 
-# docker env
-docker/
-!*.env.example

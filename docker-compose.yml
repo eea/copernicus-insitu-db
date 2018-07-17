@@ -1,0 +1,51 @@
+version: '2'
+
+services:
+  app:
+    image: eeacms/copernicus-insitu-db:latest
+    container_name: insitu.app
+    ports:
+      - 5050:5000
+    environment:
+      - DJANGO_MIGRATE=yes
+      - DJANGO_COLLECT_STATIC=yes
+      - DJANGO_INDEX_CONTENT=yes
+      - UWSGI_PORT=5000
+    env_file:
+      - docker/app.env
+      - docker/postgres.env
+    depends_on:
+      - postgres
+      - elasticsearch
+
+  postgres:
+    image: postgres:alpine
+    container_name: insitu.postgres
+    environment:
+      - POSTGRES_PASSWORD=postgres
+    volumes:
+      - postgresdata:/var/lib/postgresql/data
+      - ./docker/init.sql:/docker-entrypoint-initdb.d/init.sql
+
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:5.4.1
+    container_name: insitu.elasticsearch
+    environment:
+      - cluster.name=docker-cluster
+      - bootstrap.memory_lock=true
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    mem_limit: 1g
+    volumes:
+      - esdata:/usr/share/elasticsearch/data
+    ports:
+      - 9200:9200
+
+volumes:
+  postgresdata:
+    driver: local
+  esdata:
+    driver: local
