@@ -3,6 +3,7 @@ __pycache__/
 *.py[cod]
 .coverage
 htmlcov/
+.cache
 
 # virtualenv
 venv/
@@ -27,3 +28,7 @@ docker-compose.override.yml
 
 # Database dumps
 *.sql
+
+# docker env
+docker/
+!*.env.example
