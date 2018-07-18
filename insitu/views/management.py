@@ -50,3 +50,4 @@ class AboutView(ProtectedTemplateView):
     template_name = 'about.html'
     permission_classes = (protected.IsAuthenticated,)
     permission_denied_redirect = reverse_lazy('auth:login')
+

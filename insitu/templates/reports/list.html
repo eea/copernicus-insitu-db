@@ -1,0 +1,39 @@
+{% extends '_layout.html' %}
+{% load static %}
+
+{% block title %}Reports{% endblock %}
+
+{% block content %}
+  <div class="row">
+    <h1 class="col-sm-12">
+      <span>Reports</span>
+      <span class="pull-right">
+          <a class="btn btn-primary pull-right"
+             href="{% url 'reports:playground' %}">Playground</a>
+        </span>
+    </h1>
+  </div>
+    <table class="table table-bordered">
+    <thead>
+      <tr>
+        <td>UID</td>
+        <td><strong>Name</strong></td>
+        <td><strong>Description</strong></td>
+      </tr>
+    </thead>
+    <tbody>
+      {% for query in queries %}
+        <tr>
+          <td>{{ query.id }}</td>
+          <td>
+            <strong>
+              <a href="{% url 'reports:detail' query.id %}">{{ query.title }}</a>
+            </strong>
+          </td>
+          <td>{{ query.description }}</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

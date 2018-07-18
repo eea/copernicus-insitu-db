@@ -11,6 +11,8 @@
     {% block style %}
     {% endblock %}
 
+    {% block head %}
+    {% endblock %}
     <link rel="shortcut icon" href="{% static "/images/favicon.png" %}" type="image/x-icon" />
 
     <title>
@@ -49,9 +51,14 @@
     <div class="container">
       {% block content %}
       {% endblock %}
-    </div>
 
-    <script src="{% static 'js/jquery-3.2.1.min.js' %}"></script>
+      {% block  sql_explorer_content %}
+      {% endblock %}
+    </div>
+    {% if not no_jquery %}
+      <script src="{% static 'js/jquery-3.2.1.min.js' %}"></script>
+    {% endif %}
+
     {% block scripts %}
     {% endblock %}
     <script src="{% static 'js/bootstrap-notify.min.js' %}"></script>
@@ -75,5 +82,7 @@
         {% endfor %}
       {% endif %}
     </script>
+  {% block sql_explorer_scripts %}
+  {% endblock %}
   </body>
 </html>

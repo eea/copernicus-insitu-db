@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     'insitu',
     'suit',
     'django.contrib.admin',
+    'explorer',
 ]
 
 if not DEBUG:
@@ -78,6 +79,8 @@ TEMPLATES = [
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
+                'django.template.context_processors.static',
+                'django.template.context_processors.media',
                 'django.template.context_processors.debug',
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
@@ -181,3 +184,14 @@ HIJACK_LOGOUT_REDIRECT_URL = '/'
 HIJACK_ALLOW_GET_REQUESTS = True
 
 SUPPORT_EMAIL = env('SUPPORT_EMAIL', '')
+
+EXPLORER_CONNECTIONS = {'Default': 'default'}
+EXPLORER_SQL_WHITELIST = {'update_frequency', '_deleted', 'Update Frequency'}
+EXPLORER_DEFAULT_CONNECTION = 'default'
+EXPLORER_SCHEMA_EXCLUDE_TABLE_PREFIXES = [
+    'auth_group', 'auth_group_permissions', 'auth_permission',
+    'auth_user_groups', 'auth_user_user_permissions',
+    'django_admin_log', 'django_content_type',
+    'django_migrations', 'django_session',
+    'explorer_query', 'explorer_querylog'
+]

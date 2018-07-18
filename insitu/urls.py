@@ -1,4 +1,5 @@
 from django.conf.urls import url, include
+from django.views.generic.base import RedirectView
 
 from insitu import views
 
@@ -220,6 +221,27 @@ auth_patterns = [
         name='edit_teammates'),
 ]
 
+reports_patterns = [
+    url(r'^list/$',
+        views.ReportsListView.as_view(),
+        name='list'),
+
+    url(r'^(?P<query_id>\d+)/$',
+        views.ReportsDetailView.as_view(),
+        name='detail'),
+
+    url(r'^playground/$',
+        views.PlaygroundView.as_view(),
+        name='playground'),
+
+    url(r'^(?P<query_id>\d+)/download/$',
+        views.DownloadReportsView.as_view(),
+        name='download'),
+
+    url(r'^schema/$',
+        RedirectView.as_view(pattern_name='explorer_schema')),
+]
+
 urlpatterns = [
     url(r'^$',
         views.HomeView.as_view(),
@@ -243,6 +265,10 @@ urlpatterns = [
     url(r'',
         include(auth_patterns,
                 namespace='auth')),
+
+    url(r'^reports/',
+        include(reports_patterns,
+                namespace='reports')),
 
     url(r'manage$',
         views.Manager.as_view(),

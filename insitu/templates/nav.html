@@ -53,6 +53,11 @@
             <a href="{{ about }}">About</a>
           </li>
 
+          {% url 'reports:list' as reports %}
+          <li class="{% active reports %}">
+            <a href="{{ reports }}">Reports</a>
+          </li>
+
         </ul>
       {% endif %}
       <ul class="pull-right nav navbar-nav">
