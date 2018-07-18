@@ -12,20 +12,34 @@ services:
       - DJANGO_INDEX_CONTENT=yes
       - UWSGI_PORT=5000
     env_file:
+      - ./docker/postgres.env
       - docker/app.env
-      - docker/postgres.env
     depends_on:
       - postgres
       - elasticsearch
+    volumes:
+      - staticdata:/var/local/static
 
   postgres:
-    image: postgres:alpine
+    image: eeacms/postgres:latest
     container_name: insitu.postgres
     environment:
-      - POSTGRES_PASSWORD=postgres
+      - TZ=Europe/Copenhagen
+    env_file:
+      - ./docker/postgres.env
     volumes:
       - postgresdata:/var/lib/postgresql/data
-      - ./docker/init.sql:/docker-entrypoint-initdb.d/init.sql
+
+  backupdb:
+    image: eeacms/pg_dump:latest
+    container_name: insitu.backupdb
+    depends_on:
+      - postgres
+    env_file:
+      - ./docker/postgres.env
+    volumes:
+      - staticdata:/var/local/static
+    command: /bin/sh -c 'pg_dump -U $$POSTGRES_USER -h $$POSTGRES_HOST $$POSTGRES_DBNAME | gzip > /var/local/static/insitu.sql.gz'
 
   elasticsearch:
     image: docker.elastic.co/elasticsearch/elasticsearch:5.4.1
@@ -45,6 +59,8 @@ services:
       - 9200:9200
 
 volumes:
+  staticdata:
+    driver: local
   postgresdata:
     driver: local
   esdata:
