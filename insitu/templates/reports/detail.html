@@ -107,7 +107,9 @@
           var a = document.createElement("a");
           a.href = url;
           a.download = "{{ html_filename }}";
+          document.body.appendChild(a);
           a.click();
+          a.remove();
         });
     </script>
 {% endblock %}
