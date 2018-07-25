@@ -105,11 +105,11 @@
               {% endif %}
             {% endif %}
             {% if requirement.state.name == 'ready' %}
-              {% if requirement.created_by != request.user and request.user not in requirement.created_by.team.teammates.all %}
                 <a class="btn btn-primary"
                    href="{% url 'requirement:transition' pk=requirement.pk source='ready' target='valid' %}">
                   Mark as valid
                 </a>
+               {% if requirement.created_by != request.user and request.user not in requirement.created_by.team.teammates.all %}
                 <a class="btn btn-primary"
                    href="{% url 'requirement:transition' pk=requirement.pk source='ready' target='changes' %}">
                   Request changes

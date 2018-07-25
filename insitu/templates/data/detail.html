@@ -141,11 +141,11 @@
               {% endif %}
             {% endif %}
             {% if data.state.name == 'ready' %}
+              <a class="btn btn-primary"
+                 href="{% url 'data:transition' pk=data.pk source='ready' target='valid' %}">
+                Mark as valid
+              </a>
               {% if data.created_by != request.user and request.user not in data.created_by.team.teammates.all %}
-                <a class="btn btn-primary"
-                   href="{% url 'data:transition' pk=data.pk source='ready' target='valid' %}">
-                  Mark as valid
-                </a>
                 <a class="btn btn-primary"
                    href="{% url 'data:transition' pk=data.pk source='ready' target='changes' %}">
                   Request changes
