@@ -3,7 +3,7 @@ import os
 
 from django.test import TestCase
 from copernicus.testsettings import LOGGING_CSV_FILENAME
-from insitu.tests.base import UserFactory, TeamFactory
+from insitu.tests.base import UserFactory
 
 
 class FormCheckTestCase(TestCase):
@@ -95,7 +95,6 @@ class PermissionsCheckTestCase(TestCase):
     def setUp(self):
         self.creator = UserFactory(is_superuser=True,
                                    username='Creator')
-        TeamFactory(user=self.creator)
 
     def _login_user(self):
         user = UserFactory(username='LoginUser')

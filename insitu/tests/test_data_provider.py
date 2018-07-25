@@ -42,7 +42,6 @@ class DataProviderTests(base.FormCheckTestCase):
             'provider_type': provider_type.pk
         }
         self.creator = base.UserFactory(username='New user 1')
-        base.TeamFactory(user=self.creator)
         self.client.force_login(self.creator)
 
     def test_list_provider_json(self):

@@ -21,7 +21,6 @@ class RequirementTests(base.FormCheckTestCase):
         quality_control_procedure = base.QualityControlProcedureFactory()
         group = base.RequirementGroupFactory()
         self.creator = base.UserFactory(username='New User 1')
-        base.TeamFactory(user=self.creator)
         self.client.force_login(self.creator)
         self._DATA = {
             'name': 'TEST requirement',
