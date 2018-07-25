@@ -1,6 +1,11 @@
 from django import forms
+from django.core.mail import send_mail
+from django.core.urlresolvers import reverse
 from django.db import transaction
+from django.template.loader import render_to_string
+from django.utils.translation import ugettext_lazy as _
 
+from copernicus.settings import EMAIL_SENDER
 from insitu import models
 from insitu import signals
 from picklists.models import (
@@ -481,7 +486,10 @@ class TeamForm(forms.ModelForm):
 
     class Meta:
         model = models.Team
-        fields = ['teammates']
+        fields = ['requests']
+        labels = {
+            'requests': _('Select users you want to send a teammate request to'),
+        }
 
     def __init__(self, *args, **kwargs):
         user = kwargs.pop('user')
@@ -490,32 +498,41 @@ class TeamForm(forms.ModelForm):
         if not team:
             team = models.Team.objects.create(user=user)
         self.instance = team
-        self.initial['teammates'] = self.instance.teammates.all()
+        self.fields['requests'].queryset = models.User.objects.exclude(
+            id=user.id).exclude(id__in=[user.id for user in
+                                        self.instance.teammates.all()])
+        self.initial['requests'] = self.instance.requests.all()
 
-    def clean_teammates(self):
+    def clean_requests(self):
         instance = self.instance
-        clean_teammates = self.cleaned_data['teammates']
-        for teammate in clean_teammates:
-            if instance.user.pk == teammate.pk:
+        clean_requests = self.cleaned_data['requests']
+        for requests in clean_requests:
+            if instance.user.pk == requests.pk:
                 self.add_error(None,
                                'You cannot be your own teammate.')
-        return clean_teammates
+        return clean_requests
+
+    def send_mail_accept_request(self, sender, receiver):
+        url = reverse('auth:accept_request', kwargs={'sender_user': sender.id})
+        context = {
+            'receiver': receiver,
+            'sender': sender,
+            'url': url,
+        }
+        body_html = render_to_string('auth/teammate_request_mail.html',
+                                     context=context)
+        send_mail('CIS2 Teammate request', body_html,
+                  EMAIL_SENDER, [receiver.email])
 
     def save(self, commit=True):
         instance = self.instance
-        if 'teammates' in self.cleaned_data:
+        if 'requests' in self.cleaned_data:
             with transaction.atomic():
-                for teammate in instance.teammates.all():
-                    if teammate not in self.cleaned_data['teammates']:
-                        team = models.Team.objects.filter(user=teammate).first()
-                        if not team:
-                            models.Team.objects.create(user=teammate)
-                        teammate.team.teammates.remove(instance.user)
-                instance.teammates.clear()
-                for teammate in self.cleaned_data['teammates']:
-                    instance.teammates.add(teammate)
-                    team = models.Team.objects.filter(user=teammate).first()
-                    if not team:
-                        team = models.Team.objects.create(user=teammate)
-                    team.teammates.add(instance.user)
+                for request in instance.requests.all():
+                    if request not in self.cleaned_data['requests']:
+                        instance.requests.remove(request)
+                for request in self.cleaned_data['requests']:
+                    if request not in instance.requests.all():
+                        instance.requests.add(request)
+                        self.send_mail_accept_request(instance.user, request)
         return instance

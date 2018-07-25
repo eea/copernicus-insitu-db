@@ -15,6 +15,11 @@ from picklists import models as pickmodels
 
 User = get_user_model()
 
+def user_model_str(self):
+    return "{} {}".format(self.first_name, self.last_name)
+
+User.add_to_class("__str__", user_model_str)
+
 
 class ValidationWorkflow(Workflow):
     name = 'validation'
@@ -172,6 +177,7 @@ class Team(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE,
                                 related_name='team')
     teammates = models.ManyToManyField(User, related_name='teams')
+    requests = models.ManyToManyField(User, related_name='requests')
 
 
 class Metric(ValidationWorkflowModel):

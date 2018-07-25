@@ -1,3 +1,7 @@
+from django.shortcuts import get_object_or_404
+from insitu.models import User
+
+
 class BasePermission(object):
 
     def has_permission(self, request, view):
@@ -31,3 +35,10 @@ class IsOwnerUser(IsAuthenticated):
         return (super().has_object_permission(request, view, obj)
                 and (obj.created_by == request.user or request.user.is_superuser
                      or request.user in obj.created_by.team.teammates.all()))
+
+
+class IsRequestedUser(IsAuthenticated):
+    def has_permission(self, request, view):
+        requesting_user = get_object_or_404(User, id=view.kwargs['sender_user'])
+        return (super().has_permission(request, view) and
+                requesting_user.team.requests.filter(id=request.user.id).first())
