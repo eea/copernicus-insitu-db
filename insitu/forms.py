@@ -503,14 +503,6 @@ class TeamForm(forms.ModelForm):
                                         self.instance.teammates.all()])
         self.initial['requests'] = self.instance.requests.all()
 
-    def clean_requests(self):
-        instance = self.instance
-        clean_requests = self.cleaned_data['requests']
-        for requests in clean_requests:
-            if instance.user.pk == requests.pk:
-                self.add_error(None,
-                               'You cannot be your own teammate.')
-        return clean_requests
 
     def send_mail_accept_request(self, sender, receiver):
         url = reverse('auth:accept_request', kwargs={'sender_user': sender.id})
