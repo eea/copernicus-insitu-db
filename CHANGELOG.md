@@ -2,6 +2,11 @@ Changelog
 =========
 * In case of major changes, an email should be sent to all users with the modifications. 
 
+1.2.4 - (2018-07-31)
+-------------------
+* Add csrf trusted origin
+  [dianaboiangiu]
+
 1.2.3 - (2018-07-31)
 -------------------
 * Upgrade from ElasticSearch 5.4 to 6.3

@@ -28,6 +28,7 @@ SECRET_KEY = env('SECRET_KEY', 'secret')
 DEBUG = env('DEBUG', False)
 
 ALLOWED_HOSTS = ['localhost', '127.0.0.1', env('ALLOWED_HOSTS')]
+CSRF_TRUSTED_ORIGINS = env('ALLOWED_HOSTS')
 
 
 # Application definition
