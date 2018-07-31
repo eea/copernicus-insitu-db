@@ -12,10 +12,17 @@ insitu_requirements = Index('insitu_requirements')
 insitu_data = Index('insitu_data')
 insitu_dataproviders = Index('insitu_dataproviders')
 
-insitu_products.settings(max_result_window=settings.MAX_RESULT_WINDOW)
-insitu_requirements.settings(max_result_window=settings.MAX_RESULT_WINDOW)
-insitu_data.settings(max_result_window=settings.MAX_RESULT_WINDOW)
-insitu_dataproviders.settings(max_result_window=settings.MAX_RESULT_WINDOW)
+ELASTICSEARCH_INDEX_SETTINGS = {
+    'max_result_window': settings.MAX_RESULT_WINDOW,
+    'number_of_shards': 1,
+    'number_of_replicas': 0
+
+}
+
+insitu_products.settings(**ELASTICSEARCH_INDEX_SETTINGS)
+insitu_requirements.settings(**ELASTICSEARCH_INDEX_SETTINGS)
+insitu_data.settings(**ELASTICSEARCH_INDEX_SETTINGS)
+insitu_dataproviders.settings(**ELASTICSEARCH_INDEX_SETTINGS)
 
 if not getattr(Search, '_patched', False):
     Search.order_by = Search.sort
