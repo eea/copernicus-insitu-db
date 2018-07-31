@@ -2,6 +2,27 @@ Changelog
 =========
 * In case of major changes, an email should be sent to all users with the modifications. 
 
+1.2.3 - (2018-07-31)
+-------------------
+* Upgrade from ElasticSearch 5.4 to 6.3
+  [dianaboiangiu]
+
+1.2.2 - (2018-07-19)
+-------------------
+* Fix pivot HTML download for Internet Explorer and Firefox browsers.
+  [dianaboiangiu]
+
+1.2.1 - (2018-07-18)
+-------------------
+* Add reports generation with excel download
+* Add pivot tables with html download
+  [dianaboiangiu]
+
+1.2.0 - (2018-07-17)
+--------------------
+* Add uswgi
+  [nico4]
+
 1.1.8 - (2018-07-11)
 -------------------
 * Fix Is Network filter on Data Provider listing
