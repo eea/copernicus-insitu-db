@@ -1,11 +1,11 @@
 Django==1.11.1
 django-datatables-view==1.14.0
-django-elasticsearch-dsl==0.4.4
+django-elasticsearch-dsl==0.5.0
 django-getenv==1.3.2
 django-bootstrap3==8.2.3
 django-sql-explorer==1.1.1
 django-suit==0.2.25
-elasticsearch-dsl==5.4.0
+elasticsearch-dsl==6.1.0
 psycopg2==2.7.1
 pytz==2017.2
 openpyxl==2.4.8

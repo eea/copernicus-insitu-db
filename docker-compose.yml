@@ -42,7 +42,7 @@ services:
     command: /bin/sh -c 'pg_dump -U $$POSTGRES_USER -h $$POSTGRES_HOST $$POSTGRES_DBNAME | gzip > /var/local/static/insitu.sql.gz'
 
   elasticsearch:
-    image: docker.elastic.co/elasticsearch/elasticsearch:5.4.1
+    image: docker.elastic.co/elasticsearch/elasticsearch:6.3.1
     container_name: insitu.elasticsearch
     environment:
       - cluster.name=docker-cluster

@@ -7,8 +7,15 @@ from elasticsearch_dsl.search import Search
 from insitu.models import Product, Requirement, DataProvider, Data
 from insitu import signals
 
-insitu = Index('insitu')
-insitu.settings(max_result_window=settings.MAX_RESULT_WINDOW)
+insitu_products = Index('insitu_products')
+insitu_requirements = Index('insitu_requirements')
+insitu_data = Index('insitu_data')
+insitu_dataproviders = Index('insitu_dataproviders')
+
+insitu_products.settings(max_result_window=settings.MAX_RESULT_WINDOW)
+insitu_requirements.settings(max_result_window=settings.MAX_RESULT_WINDOW)
+insitu_data.settings(max_result_window=settings.MAX_RESULT_WINDOW)
+insitu_dataproviders.settings(max_result_window=settings.MAX_RESULT_WINDOW)
 
 if not getattr(Search, '_patched', False):
     Search.order_by = Search.sort
@@ -28,14 +35,16 @@ case_insensitive_normalizer = normalizer(
 )
 
 
-@insitu.doc_type
+@insitu_products.doc_type
 class ProductDoc(DocType):
     acronym = fields.KeywordField()
     name = fields.TextField(
         analyzer=case_insensitive_analyzer,
         fielddata=True,
-        fields={'raw': fields.KeywordField(multi=True, ignore_above=256,
-                                           normalizer=case_insensitive_normalizer)}
+        fields={'raw': fields.KeywordField(
+            multi=True, ignore_above=256,
+            normalizer=case_insensitive_normalizer
+        )}
     )
     group = fields.KeywordField(attr='group.name')
     status = fields.KeywordField(attr='status.name')
@@ -62,7 +71,7 @@ class ProductDoc(DocType):
         ]
 
 
-@insitu.doc_type
+@insitu_requirements.doc_type
 class RequirementDoc(DocType):
     name = fields.TextField(
         analyzer=case_insensitive_analyzer,
@@ -108,7 +117,7 @@ class RequirementDoc(DocType):
         ]
 
 
-@insitu.doc_type
+@insitu_data.doc_type
 class DataDoc(DocType):
     name = fields.TextField(
         analyzer=case_insensitive_analyzer,
@@ -145,7 +154,7 @@ class DataDoc(DocType):
         ]
 
 
-@insitu.doc_type
+@insitu_dataproviders.doc_type
 class DataProviderDoc(DocType):
     name = fields.TextField(
         analyzer=case_insensitive_analyzer,
