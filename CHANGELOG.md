@@ -2,6 +2,11 @@ Changelog
 =========
 * In case of major changes, an email should be sent to all users with the modifications. 
 
+1.2.5 - (2018-08-01)
+-------------------
+* Disable django  module temporarily
+  [dianaboiangiu]
+
 1.2.4 - (2018-07-31)
 -------------------
 * Add csrf trusted origin
