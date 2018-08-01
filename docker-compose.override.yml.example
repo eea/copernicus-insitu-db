@@ -27,3 +27,7 @@ services:
       - esdata_test:/usr/share/elasticsearch/data
     ports:
       - 9201:9201
+
+volumes:
+  esdata_test:
+    driver: local
