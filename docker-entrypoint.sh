@@ -5,12 +5,12 @@ set -e
 # create directory for static and protected files
 mkdir -p /var/local/static/protected
 
-if [ -z "$POSTGRES_HOST" ]; then
-    POSTGRES_HOST="postgres"
+if [ -z "$PGHOST" ]; then
+    PGHOST="postgres"
 fi
 
-while ! nc -z ${POSTGRES_HOST} 5432; do
-  echo "Waiting for PostgreSQL server at '$POSTGRES_HOST' to accept connections on port 5432..."
+while ! nc -z ${PGHOST} 5432; do
+  echo "Waiting for PostgreSQL server at '$PGHOST' to accept connections on port 5432..."
   sleep 1s
 done
 
