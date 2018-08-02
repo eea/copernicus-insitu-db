@@ -20,6 +20,7 @@ local_settings.py
 
 # PyCharm conf
 .idea/
+.vscode
 
 # Docker conf
 docker/*.env
