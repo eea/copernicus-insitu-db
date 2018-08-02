@@ -8,7 +8,8 @@
     <h1 class="col-sm-12">
       <span>Reports</span>
       <span class="pull-right">
-          <a class="btn btn-primary pull-right"
+          <a class="btn btn-primary" href="{% url 'reports:snapshot' %}">Download database</a>
+          <a class="btn btn-primary pull-right" style="margin-left:5px"
              href="{% url 'reports:playground' %}">Playground</a>
         </span>
     </h1>

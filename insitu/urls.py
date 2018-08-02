@@ -230,6 +230,10 @@ reports_patterns = [
         views.ReportsDetailView.as_view(),
         name='detail'),
 
+    url(r'^snapshot/$',
+        views.SnapshotView.as_view(),
+        name='snapshot'),
+
     url(r'^playground/$',
         views.PlaygroundView.as_view(),
         name='playground'),

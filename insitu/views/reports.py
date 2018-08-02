@@ -3,6 +3,7 @@ import string
 from io import BytesIO
 from openpyxl import load_workbook
 from openpyxl.writer.excel import save_virtual_workbook
+from django.http import HttpResponse
 from django.urls import reverse_lazy
 from django.shortcuts import get_object_or_404
 from explorer.app_settings import (
@@ -24,6 +25,7 @@ from explorer.utils import url_get_rows
 
 from insitu.views import protected
 from insitu.views.protected.views import ProtectedTemplateView
+
 
 
 def as_text(value):
@@ -107,6 +109,17 @@ class PlaygroundView(PlayQueryView):
                                   error=error, rows=rows)
         context.update({'no_jquery': True})
         return self.render_template('reports/playground.html', context)
+
+
+class SnapshotView(ProtectedTemplateView):
+
+    def get(self, request, *args, **kwargs):
+        response = HttpResponse()
+        date = datetime.datetime.now().strftime('%Y%m%d')
+        response["Content-Disposition"] = "attachment; filename=insitu_{0}.sql.gz".format(
+            date)
+        response['X-Accel-Redirect'] = "/static/protected/database.sql.gz"
+        return response
 
 
 class DownloadReportsView(DownloadQueryView):
