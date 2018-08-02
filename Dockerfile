@@ -5,8 +5,7 @@ ENV APP_HOME=/var/local/copernicus
 
 RUN apk add --no-cache --update gcc netcat-openbsd postgresql-dev pcre-dev musl-dev linux-headers
 
-RUN mkdir -p $APP_HOME \
-    && mkdir -p /var/local/static/protected
+RUN mkdir -p $APP_HOME
 
 COPY requirements* $APP_HOME/
 WORKDIR $APP_HOME

@@ -2,6 +2,9 @@
 
 set -e
 
+# create directory for static and protected files
+mkdir -p /var/local/static/protected
+
 if [ -z "$POSTGRES_HOST" ]; then
     POSTGRES_HOST="postgres"
 fi
