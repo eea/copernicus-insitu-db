@@ -511,10 +511,11 @@ class TeamForm(forms.ModelForm):
             'sender': sender,
             'url': url,
         }
-        body_html = render_to_string('auth/teammate_request_mail.html',
+        body_html = render_to_string('mails/teammate_request.html',
                                      context=context)
-        send_mail('CIS2 Teammate request', body_html,
-                  EMAIL_SENDER, [receiver.email])
+        send_mail(subject='CIS2 Teammate request', message='',
+                  from_email=EMAIL_SENDER, recipient_list=[receiver.email],
+                  html_message=body_html)
 
     def save(self, commit=True):
         instance = self.instance
