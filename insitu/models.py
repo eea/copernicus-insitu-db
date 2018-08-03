@@ -195,7 +195,7 @@ class Team(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE,
                                 related_name='team')
     teammates = models.ManyToManyField(User, related_name='teams')
-    requests = models.ManyToManyField(User, related_name='requests')
+    requests = models.ManyToManyField(User, related_name='requests', blank=True)
 
 
 class Metric(ValidationWorkflowModel):
