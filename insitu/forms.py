@@ -503,7 +503,6 @@ class TeamForm(forms.ModelForm):
                                         self.instance.teammates.all()])
         self.initial['requests'] = self.instance.requests.all()
 
-
     def send_mail_accept_request(self, sender, receiver):
         url = reverse('auth:accept_request', kwargs={'sender_user': sender.id})
         context = {
@@ -511,11 +510,13 @@ class TeamForm(forms.ModelForm):
             'sender': sender,
             'url': url,
         }
-        body_html = render_to_string('mails/teammate_request.html',
-                                     context=context)
-        send_mail(subject='CIS2 Teammate request', message='',
+        html_message = render_to_string('mails/teammate_request.html',
+                                        context=context)
+        message = render_to_string('mails/teammate_request.txt',
+                                   context=context)
+        send_mail(subject='CIS2 Teammate request', message=message,
                   from_email=EMAIL_SENDER, recipient_list=[receiver.email],
-                  html_message=body_html)
+                  html_message=html_message)
 
     def save(self, commit=True):
         instance = self.instance
