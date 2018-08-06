@@ -1,8 +1,9 @@
 version: '2'
 
 services:
-  app:
-    image: eeacms/copernicus-insitu-db:latest
+  web:
+    build: .
+    # image: eeacms/copernicus-insitu-db:latest
     container_name: insitu.app
     ports:
       - 5050:5000
@@ -12,34 +13,36 @@ services:
       - DJANGO_INDEX_CONTENT=no
       - UWSGI_PORT=5000
     env_file:
-      - ./docker/postgres.env
+      - ./docker/db.env
       - docker/app.env
     depends_on:
-      - postgres
+      - db
       - elasticsearch
     volumes:
-      - staticdata:/var/local/static
+      - static:/var/local/static
 
-  postgres:
+  db:
     image: postgres:10-alpine
     container_name: insitu.postgres
     environment:
       - TZ=Europe/Copenhagen
     env_file:
-      - ./docker/postgres.env
+      - ./docker/db.env
     volumes:
-      - postgresdata:/var/lib/postgresql/data
+      - data:/var/lib/postgresql/data
 
   backupdb:
     image: postgres:10-alpine
     container_name: insitu.backupdb
-    depends_on:
-      - postgres
+    environment:
+      - TZ=Europe/Copenhagen
     env_file:
-      - ./docker/postgres.env
+      - ./docker/db.env
+    depends_on:
+      - db
     volumes:
-      - staticdata:/var/local/static
-    command: /bin/sh -c 'pg_dump --exclude-table=public.auth_* --exclude-table=public.django_*  --exclude-table=public.explorer_* --inserts -U $$POSTGRES_USER $$POSTGRES_DB | gzip > /var/local/static/protected/database.sql.gz'
+      - static:/var/local/static
+    command: /bin/sh -c 'pg_dump --exclude-table=public.auth_* --exclude-table=public.django_*  --exclude-table=public.explorer_* --inserts -h db -U $$POSTGRES_USER $$POSTGRES_DB | gzip > /var/local/static/protected/database.sql.gz'
 
   elasticsearch:
     image: docker.elastic.co/elasticsearch/elasticsearch:6.3.1
@@ -59,9 +62,9 @@ services:
       - 9200:9200
 
 volumes:
-  staticdata:
+  static:
     driver: local
-  postgresdata:
+  data:
     driver: local
   esdata:
     driver: local

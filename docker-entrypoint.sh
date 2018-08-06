@@ -5,7 +5,7 @@ set -e
 # create directory for static and protected files
 mkdir -p /var/local/static/protected
 
-while ! nc -z postgres 5432; do
+while ! nc -z db 5432; do
   echo "Waiting for PostgreSQL server at 5432 to accept connections on port 5432..."
   sleep 1s
 done

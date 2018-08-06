@@ -25,8 +25,8 @@ Copernicus services on in situ data requirements (current and expected), data us
 
         cp docker/app.env.example env/app.env
         vim docker/app.env
-        cp docker/postgres.env.example env/postgres.env
-        vim docker/postgres.env
+        cp docker/db.env.example env/db.env
+        vim docker/db.env
 
 1. Start application stack:
 
