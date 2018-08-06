@@ -187,6 +187,7 @@ SUPPORT_EMAIL = env('SUPPORT_EMAIL', '')
 
 EXPLORER_CONNECTIONS = {'Default': 'default'}
 EXPLORER_SQL_WHITELIST = {'update_frequency', '_deleted', 'Update Frequency'}
+EXPLORER_PERMISSION_VIEW = lambda u: u.is_authenticated
 EXPLORER_DEFAULT_CONNECTION = 'default'
 EXPLORER_SCHEMA_EXCLUDE_TABLE_PREFIXES = [
     'auth_group', 'auth_group_permissions', 'auth_permission',
