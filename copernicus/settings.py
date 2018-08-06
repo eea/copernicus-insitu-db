@@ -50,6 +50,7 @@ INSTALLED_APPS = [
     'suit',
     'django.contrib.admin',
     'explorer',
+    'docs',
 ]
 
 if not DEBUG:
@@ -196,3 +197,6 @@ EXPLORER_SCHEMA_EXCLUDE_TABLE_PREFIXES = [
     'django_migrations', 'django_session',
     'explorer_query', 'explorer_querylog'
 ]
+
+DOCS_ROOT = os.path.join(BASE_DIR, 'docs/_build/html')
+DOCS_ACCESS = 'login_required'

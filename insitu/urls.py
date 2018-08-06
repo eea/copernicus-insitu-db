@@ -1,6 +1,8 @@
 from django.conf.urls import url, include
 from django.views.generic.base import RedirectView
+from django.views.static import serve
 
+from copernicus import settings
 from insitu import views
 
 
@@ -285,6 +287,15 @@ urlpatterns = [
     url(r'about$',
         views.AboutView.as_view(),
         name='about'),
+
+    url(r'^docs/(?P<path>.*)$',
+        serve,
+        {'document_root': settings.DOCS_ROOT}),
+
+    url(r'^docs/guide.html',
+        serve,
+        {'document_root': settings.DOCS_ROOT},
+        name='user_manual'),
 
     url(r'crashme$',
         views.Crashme.as_view(),
