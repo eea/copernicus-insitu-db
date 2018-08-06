@@ -45,6 +45,7 @@ case_insensitive_normalizer = normalizer(
 @insitu_products.doc_type
 class ProductDoc(DocType):
     acronym = fields.KeywordField()
+    description = fields.TextField()
     name = fields.TextField(
         analyzer=case_insensitive_analyzer,
         fielddata=True,
@@ -59,6 +60,7 @@ class ProductDoc(DocType):
     entity = fields.KeywordField(attr='component.entrusted_entity.acronym')
     component = fields.KeywordField(attr='component.name')
     area = fields.KeywordField(attr='area.name')
+    note = fields.TextField()
 
     def get_name_display(self):
         url = reverse('product:detail', kwargs={'pk': self.id})
@@ -73,8 +75,6 @@ class ProductDoc(DocType):
         model = Product
         fields = [
             'id',
-            'description',
-            'note',
         ]
 
 
@@ -100,6 +100,7 @@ class RequirementDoc(DocType):
     vertical_resolution = fields.KeywordField(
         attr='vertical_resolution.to_elastic_search_format')
     state = fields.KeywordField(attr='state.name')
+    note = fields.TextField()
 
     def get_name_display(self):
         url = reverse('requirement:detail', kwargs={'pk': self.id})
@@ -120,7 +121,6 @@ class RequirementDoc(DocType):
         model = Requirement
         fields = [
             'id',
-            'note',
         ]
 
 
@@ -143,6 +143,7 @@ class DataDoc(DocType):
     )
     dissemination = fields.KeywordField(attr='dissemination.name')
     state = fields.KeywordField(attr='state.name')
+    note = fields.TextField()
 
     def get_name_display(self):
         url = reverse('data:detail', kwargs={'pk': self.id})
@@ -157,7 +158,6 @@ class DataDoc(DocType):
         model = Data
         fields = [
             'id',
-            'note'
         ]
 
 
@@ -173,6 +173,7 @@ class DataProviderDoc(DocType):
             )
         }
     )
+    description = fields.TextField()
     is_network = fields.BooleanField()
     acronym = fields.KeywordField(attr='get_elastic_search_data.acronym')
     address = fields.KeywordField(attr='get_elastic_search_data.address')
@@ -187,8 +188,7 @@ class DataProviderDoc(DocType):
     class Meta:
         model = DataProvider
         fields = [
-            'id',
-            'description'
+            'id'
         ]
 
     def get_name_display(self):
