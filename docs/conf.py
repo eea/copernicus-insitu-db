@@ -20,8 +20,8 @@
 # -- Project information -----------------------------------------------------
 
 project = 'CIS2'
-copyright = '2018, Diana Boiangiu'
-author = 'Diana Boiangiu'
+copyright = '2018, Copyright Copernicus Programme'
+author = 'https://land.copernicus.eu/'
 
 # The short X.Y version
 version = ''
