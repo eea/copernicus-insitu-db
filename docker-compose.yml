@@ -20,7 +20,7 @@ services:
 
   db:
     image: postgres:10-alpine
-    container_name: insitu.postgres
+    container_name: insitu.db
     environment:
       - TZ=Europe/Copenhagen
     env_file:
