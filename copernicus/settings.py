@@ -212,3 +212,5 @@ EMAIL_BACKEND = env('EMAIL_BACKEND',
 EMAIL_HOST = env('EMAIL_HOST', 'localhost')
 EMAIL_PORT = env('EMAIL_PORT', 25)
 EMAIL_SENDER = env('EMAIL_SENDER', '')
+
+SITE_URL = env('SITE_URL', '')

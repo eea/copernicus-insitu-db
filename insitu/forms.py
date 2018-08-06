@@ -5,7 +5,7 @@ from django.db import transaction
 from django.template.loader import render_to_string
 from django.utils.translation import ugettext_lazy as _
 
-from copernicus.settings import EMAIL_SENDER
+from copernicus.settings import EMAIL_SENDER, SITE_URL
 from insitu import models
 from insitu import signals
 from picklists.models import (
@@ -508,7 +508,7 @@ class TeamForm(forms.ModelForm):
         context = {
             'receiver': receiver,
             'sender': sender,
-            'url': url,
+            'url': SITE_URL + url,
         }
         html_message = render_to_string('mails/teammate_request.html',
                                         context=context)
