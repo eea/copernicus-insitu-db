@@ -6,6 +6,8 @@ services:
       context: .
       args:
         REQFILE: requirements-dev.txt
+    ports:
+      - 8000:8000
     volumes:
       - .:/var/local/copernicus
     entrypoint: ["/usr/bin/tail", "-f", "/dev/null"]
