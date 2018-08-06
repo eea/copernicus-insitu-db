@@ -2,14 +2,14 @@ version: '2'
 
 services:
   app:
-    image: eeacms/copernicus-insitu-db:latest
+    build: .
     container_name: insitu.app
     ports:
       - 5050:5000
     environment:
       - DJANGO_MIGRATE=yes
       - DJANGO_COLLECT_STATIC=yes
-      - DJANGO_INDEX_CONTENT=yes
+      - DJANGO_INDEX_CONTENT=no
       - UWSGI_PORT=5000
     env_file:
       - ./docker/postgres.env
@@ -21,7 +21,7 @@ services:
       - staticdata:/var/local/static
 
   postgres:
-    image: eeacms/postgres:latest
+    image: postgres:10-alpine
     container_name: insitu.postgres
     environment:
       - TZ=Europe/Copenhagen
@@ -31,7 +31,7 @@ services:
       - postgresdata:/var/lib/postgresql/data
 
   backupdb:
-    image: eeacms/pg_dump:latest
+    image: postgres:10-alpine
     container_name: insitu.backupdb
     depends_on:
       - postgres
@@ -39,7 +39,7 @@ services:
       - ./docker/postgres.env
     volumes:
       - staticdata:/var/local/static
-    command: /bin/sh -c 'pg_dump -U $$POSTGRES_USER -h $$POSTGRES_HOST $$POSTGRES_DBNAME | gzip > /var/local/static/insitu.sql.gz'
+    command: /bin/sh -c 'pg_dump --exclude-table=public.auth_* --exclude-table=public.django_*  --exclude-table=public.explorer_* --inserts -U $$POSTGRES_USER $$POSTGRES_DB | gzip > /var/local/static/protected/database.sql.gz'
 
   elasticsearch:
     image: docker.elastic.co/elasticsearch/elasticsearch:6.3.1
