@@ -2,7 +2,7 @@ version: '2'
 
 services:
   app:
-    build: .
+    image: eeacms/copernicus-insitu-db:latest
     container_name: insitu.app
     ports:
       - 5050:5000
