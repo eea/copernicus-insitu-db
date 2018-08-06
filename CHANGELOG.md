@@ -2,6 +2,11 @@ Changelog
 =========
 * In case of major changes, an email should be sent to all users with the modifications. 
 
+1.2.6 - 1.2.11 - (2018-08-06)
+------------------
+* Fixes
+* Allow regular users to download report excel
+
 1.2.5 - (2018-08-01)
 -------------------
 * Disable django  module temporarily
