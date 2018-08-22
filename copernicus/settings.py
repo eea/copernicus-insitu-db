@@ -66,6 +66,7 @@ MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
+    'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
@@ -188,7 +189,11 @@ SUPPORT_EMAIL = env('SUPPORT_EMAIL', '')
 
 EXPLORER_CONNECTIONS = {'Default': 'default'}
 EXPLORER_SQL_WHITELIST = {'update_frequency', '_deleted', 'Update Frequency'}
-EXPLORER_PERMISSION_VIEW = lambda u: u.is_authenticated
+
+
+def EXPLORER_PERMISSION_VIEW(u): return u.is_authenticated
+
+
 EXPLORER_DEFAULT_CONNECTION = 'default'
 EXPLORER_SCHEMA_EXCLUDE_TABLE_PREFIXES = [
     'auth_group', 'auth_group_permissions', 'auth_permission',
