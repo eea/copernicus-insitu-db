@@ -139,7 +139,7 @@
   <script src="{% static 'js/vfs_fonts.js' %}"></script>
   <script>
     $(function () {
-      var data_provider_name = '{{ provider.name | js }}'
+      var data_provider_name = '{{ provider.name }}'
       data_provider_name = data_provider_name.split(' ').join('_')
       var table = $('#groups').dataTable({
         "dom": "<'row'<'col-sm-12'B>>" +
