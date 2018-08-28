@@ -3,10 +3,21 @@ Changelog
 
 * In case of major changes, an email should be sent to all users with the modifications.
 
+1.3.2 (2018-08-28)
+------------------
+* Fix title escape in detail pages.
+  [dianaboiangiu]
+
+1.3.1 (2018-08-22)
+------------------
+* Re-enable django module
+  [nico4]
+
 1.3.0 (2018-08-06)
 ------------------
 
 * Add user manual (accesible in the Help section), generated automatically with Sphinx.
+  [nico4]
 
 1.2.6 - 1.2.11 - (2018-08-06)
 ------------------
