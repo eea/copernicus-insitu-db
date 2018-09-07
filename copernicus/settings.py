@@ -35,6 +35,7 @@ CSRF_TRUSTED_ORIGINS = env('ALLOWED_HOSTS')
 
 INSTALLED_APPS = [
     'django.contrib.auth',
+    'django.contrib.admin',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
@@ -44,13 +45,13 @@ INSTALLED_APPS = [
     'django_xworkflows',
     'hijack',
     'compat',
+    'docs',
+    'explorer',
     'hijack_admin',
+    'suit',
+    'wkhtmltopdf',
     'picklists',
     'insitu',
-    'suit',
-    'django.contrib.admin',
-    'explorer',
-    'docs',
 ]
 
 if not DEBUG:
@@ -98,7 +99,7 @@ TEMPLATES = [
         },
     },
 ]
-
+WKHTMLTOPDF_CMD = '/usr/bin/wkhtmltopdf'
 WSGI_APPLICATION = 'copernicus.wsgi.application'
 
 

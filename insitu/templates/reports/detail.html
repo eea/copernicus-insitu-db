@@ -17,7 +17,7 @@
     queryId = "{% firstof query.id 'new' %}";
   </script>
   <style>
-    .CodeMirror.cm-s-default{
+    .CodeMirror.cm-s-default {
       display:none;
     }
   </style>
@@ -35,100 +35,142 @@
 {% endblock %}
 
 {% block content %}
-<div class="row">
-  <h1>
-    <p class="col-sm-12">Report</p>
-    <p class="col-sm-12"><small>{{ query.title }}</small></p>
-  </h1>
-</div>
-
-<div class="row">
-  <table id="detail-table" class="table borderless col-sm-12">
-    <tbody>
-      <tr class="row">
-        <th class="col-md-4 col-sm-6">Description</th>
-        <td class="col-md-8 col-sm-6">{{ query.description }}</td>
-      </tr>
-    </tbody>
-  </table>
-</div>
-{% if query.params %}
-<div class="row">
-  <div class="col-lg-12">
-    <div class="panel panel-default">
-      <div class="panel-heading">Filters</div>
-        <div class="panel-body form-inline filters">
-          {% for param, value in query.params.items %}
-            <div class="form-group filters-style">
-              <label for="{{ param }}" class="control-label">{{ param }}</label><br>
-              <input id="{{ param }}" class="form-control" value="{{ value }}"/>
-            </div>
-            </br>
-          {% endfor %}
-        </div>
-    </div>
+  <div class="row">
+    <h1>
+      <p class="col-sm-12">Report</p>
+      <p class="col-sm-12"><small>{{ query.title }}</small></p>
+    </h1>
   </div>
-</div>
-{% endif %}
 
-<a class="btn btn-primary" id="download-excel-btn">Download Excel</a>
+  <div class="row">
+    <table id="detail-table" class="table borderless col-sm-12">
+      <tbody>
+        <tr class="row">
+          <th class="col-md-4 col-sm-6">Description</th>
+          <td class="col-md-8 col-sm-6">{{ query.description }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
 
+  {% if query.params %}
+    <div class="row">
+      <div class="col-lg-12">
+        <div class="panel panel-default">
+          <div class="panel-heading">Filters</div>
+          <div class="panel-body form-inline filters">
+            {% for param, value in query.params.items %}
+              <div class="form-group filters-style">
+                <label for="{{ param }}" class="control-label">{{ param }}</label><br>
+                <input id="{{ param }}" class="form-control" value="{{ value }}"/>
+              </div>
+              </br>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+    </div>
+  {% endif %}
 
-<textarea id="id_sql" name="sql" style="display:none;"></textarea>
+  <a class="btn btn-primary" id="download-excel-btn">Download Excel</a>
+  <textarea id="id_sql" name="sql" style="display:none;"></textarea>
+  <div style="margin-top:2%;">
+    {% include 'preview_pane.html' %}
+  </div>
+  <button type="button" class="btn btn-primary btn-md" style="margin-bottom:20px;" id="pivot-download">
+      Download Pivot as HTML
+  </button>
 
-<div style="margin-top:2%;">
-  {% include 'preview_pane.html' %}
-</div>
-<button type="button" class="btn btn-primary btn-md" style="margin-bottom:20px;"
-        id="pivot-download">
-    Download Pivot as HTML
-</button>
+  <button type="button" class="btn btn-primary btn-md" style="margin-bottom:20px;" id="pivot-download-pdf">
+      Download Pivot as PDF
+  </button>
+
 {% endblock %}
 
 {% block sql_explorer_scripts %}
-    <script src="{% static 'js/jquery_cookie.js' %}"></script>
-    <script src="//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js"></script>
-    <script src="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
-    <script src="//cdnjs.cloudflare.com/ajax/libs/list.js/1.5.0/list.min.js"></script>
-    <script src="//cdnjs.cloudflare.com/ajax/libs/codemirror/5.36.0/codemirror.min.js"></script>
-    <script src="//cdnjs.cloudflare.com/ajax/libs/codemirror/5.36.0/mode/sql/sql.min.js"></script>
-    <script src="//cdnjs.cloudflare.com/ajax/libs/codemirror/5.36.0/addon/comment/comment.min.js"></script>
-    <script src="//cdnjs.cloudflare.com/ajax/libs/floatthead/2.1.1/jquery.floatThead.min.js"></script>
-    <script src="//cdnjs.cloudflare.com/ajax/libs/pivottable/2.20.0/pivot.min.js"></script>
+  <script src="{% static 'js/jquery_cookie.js' %}"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/list.js/1.5.0/list.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/codemirror/5.36.0/codemirror.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/codemirror/5.36.0/mode/sql/sql.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/codemirror/5.36.0/addon/comment/comment.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/floatthead/2.1.1/jquery.floatThead.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/pivottable/2.20.0/pivot.min.js"></script>
+  <script>
+    $(function() {
+      var e = new ExplorerEditor(queryId);
+    });
 
-    <script>
-        $(function() {
-            var e = new ExplorerEditor(queryId);
-        });
-        $("#pivot-download").click(function() {
-          var head_html = '<head><link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"><link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/codemirror/5.36.0/codemirror.min.css" ><link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/pivottable/2.20.0/pivot.min.css"></head>'
-          var blob = new Blob([head_html, $(".pvtRendererArea").first().html()], { type: 'text/plain' });
-          if (navigator.msSaveOrOpenBlob) {
-            navigator.msSaveOrOpenBlob(blob, "{{ html_filename }}");
-          }
-          else {
-            var url = window.URL.createObjectURL(blob);
-            var a = document.createElement("a");
-            a.href = url;
-            a.download = "{{ html_filename }}";
-            document.body.appendChild(a);
-            a.click();
-            a.remove();
-          }
-        });
-    </script>
+    $("#pivot-download").click(function() {
+      var head_html = '<head><link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"><link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/codemirror/5.36.0/codemirror.min.css" ><link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/pivottable/2.20.0/pivot.min.css"></head>'
+      var blob = new Blob([head_html, $(".pvtRendererArea").first().html()], { type: 'text/plain' });
+      if (navigator.msSaveOrOpenBlob) {
+        navigator.msSaveOrOpenBlob(blob, "{{ html_filename }}");
+      }
+      else {
+        var url = window.URL.createObjectURL(blob);
+        var a = document.createElement("a");
+        a.href = url;
+        a.download = "{{ html_filename }}";
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+      }
+    });
+  </script>
 {% endblock %}
-{% block scripts %}
-<script type="text/javascript">
-  $('#download-excel-btn').on('click', function () {
-    var url = '/reports/{{ query.id }}/download?format=excel&params=';
-    {% for param in query.params %}
-      url += '{{param}}' + ':' + $('#{{param}}').val();
-      url += '|';
-    {% endfor %}
-    url = url.slice(0, -1);
-    $("#download-excel-btn").attr("href", url);
-  });
 
-</script>
+{% block scripts %}
+  <script type="text/javascript">
+
+    function getCookie(name) {
+      var cookieValue = null;
+      if (document.cookie && document.cookie != '') {
+        var cookies = document.cookie.split(';');
+        for (var i = 0; i < cookies.length; i++) {
+          var cookie = jQuery.trim(cookies[i]);
+          if (cookie.substring(0, name.length + 1) == (name + '=')) {
+            cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+            break;
+          }
+        }
+      }
+      return cookieValue;
+    }
+
+    $('#download-excel-btn').on('click', function () {
+      var url = '/reports/{{ query.id }}/download?format=excel&params=';
+      {% for param in query.params %}
+        url += '{{param}}' + ':' + $('#{{param}}').val();
+        url += '|';
+      {% endfor %}
+      url = url.slice(0, -1);
+      $("#download-excel-btn").attr("href", url);
+    });
+
+    $('#pivot-download-pdf').click(function () {
+      var head_html = '<html><head><link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"><link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/codemirror/5.36.0/codemirror.min.css" ><link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/pivottable/2.20.0/pivot.min.css"></head><body>'
+      var end = '</body></html>'
+      $('.pvtTable').first().find('.pvtTotalLabel').remove()
+      $('.pvtTable').first().find('.pvtTotal').remove()
+      var html = '<table class="pvtTable">' + $('.pvtTable').first().html() + '</table>'
+
+      var xhr = new XMLHttpRequest();
+      xhr.open('POST', "{% url 'reports:report_pdf' %}", true);
+      xhr.responseType = 'arraybuffer';
+      xhr.setRequestHeader("X-CSRFToken", getCookie('csrftoken'));
+      xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8");
+      xhr.onreadystatechange = function() {
+        if (this.readyState == XMLHttpRequest.DONE && this.status == 200) {
+          var blob=new Blob([this.response], {type:"application/pdf"});
+          var link=document.createElement('a');
+          link.href=window.URL.createObjectURL(blob);
+          link.download="{{ pdf_filename }}";
+          link.click();
+        }
+      }
+      xhr.send(encodeURIComponent('data') + '=' + encodeURIComponent(html) + "&" + encodeURIComponent('title') + '=' + encodeURIComponent('{{ query.title }}'));
+    });
+  </script>
 {% endblock %}
