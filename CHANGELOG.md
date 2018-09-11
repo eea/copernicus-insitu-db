@@ -3,6 +3,10 @@ Changelog
 
 * In case of major changes, an email should be sent to all users with the modifications.
 
+1.4.0 (2018-09-11)
+------------------
+* Export Pivot table as PDF.
+
 1.3.2 (2018-08-28)
 ------------------
 * Fix title escape in detail pages.
