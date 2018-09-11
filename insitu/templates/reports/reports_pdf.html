@@ -1,0 +1,52 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Title</title>
+    <style type="text/css">
+      .pvtUi {color:#9e4242}
+
+      .pvtTable {
+        font-size:10pt;
+        text-align:left;
+        border-collapse:collapse;
+      }
+
+      .pvtTable {
+        border:1px solid #CDCDCD;
+        font-size:12pt;
+        padding:3px;
+      }
+
+      .pvtRowTotalLabel {
+        display: none;
+      }
+
+      .pvtAxisLabel{
+        border:1px solid #CDCDCD;
+        font-size:12pt;
+        padding:3px;
+      }
+
+      .pvtTotal {
+        display: none;
+      }
+
+      .pvtRowLabel {
+        border:1px solid #CDCDCD;
+      }
+
+      p.date {
+        float:right;
+        font-size:12pt;
+      }
+
+    </style>
+  </head>
+  <body>
+    <p class="date">Date: {{ date }}</p>
+    </br>
+    <h1 >{{ title }}</h1>
+    {{ data | safe }}
+  </body>
+</html>

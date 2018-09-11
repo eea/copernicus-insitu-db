@@ -246,6 +246,9 @@ reports_patterns = [
 
     url(r'^schema/$',
         RedirectView.as_view(pattern_name='explorer_schema')),
+
+    url(r'^report/pdf/$',
+        views.Pdf.as_view(), name='report_pdf'),
 ]
 
 urlpatterns = [

@@ -1,11 +1,15 @@
 import datetime
 import string
 from io import BytesIO
+
+from django.template.loader import get_template
 from openpyxl import load_workbook
 from openpyxl.writer.excel import save_virtual_workbook
 from django.http import HttpResponse
 from django.urls import reverse_lazy
 from django.shortcuts import get_object_or_404
+from django.views import View
+
 from explorer.app_settings import (
     ENABLE_TASKS,
     EXPLORER_DEFAULT_ROWS,
@@ -23,9 +27,10 @@ from explorer.views import (
 from explorer.utils import extract_params
 from explorer.utils import url_get_rows
 
+from wkhtmltopdf.views import PDFTemplateResponse, PDFTemplateView
+
 from insitu.views import protected
 from insitu.views.protected.views import ProtectedTemplateView
-
 
 
 def as_text(value):
@@ -73,6 +78,8 @@ class ReportsDetailView(ProtectedTemplateView):
         context.update({
             'html_filename': self.get_filename(self.report.title) +
                              datetime.datetime.now().strftime('%Y%m%d') + '.html',
+            'pdf_filename': self.get_filename(self.report.title) +
+                             datetime.datetime.now().strftime('%Y%m%d') + '.pdf',
             'tasks_enabled': ENABLE_TASKS,
             'shared': self.report.shared,
             'form': None,
@@ -144,6 +151,33 @@ class DownloadReportsView(DownloadQueryView):
             for col, value in dims.items():
                 ws.column_dimensions[col].width = value
             wb.close()
-            virtaul_wb = save_virtual_workbook(wb)
-            response.content = virtaul_wb
+            virtual_wb = save_virtual_workbook(wb)
+            response.content = virtual_wb
         return response
+
+
+class Pdf(View):
+
+    def render(self, context, request):
+        template = get_template('reports/reports_pdf.html')
+        template_response = PDFTemplateResponse(
+            request=request,
+            template=template,
+            filename='test.pdf',
+            context=context,
+            show_content_in_browser=False,
+            cmd_options={
+                'javascript-delay': 3000,
+            },
+        )
+        template_response.render()
+        content = template_response.rendered_content
+        return HttpResponse(content, content_type='application/pdf')
+
+    def post(self, request, *args, **kwargs):
+        context = {
+            "data": request.POST['data'],
+            "title": request.POST['title'],
+            "date": datetime.datetime.now().strftime('%Y %m %d'),
+        }
+        return self.render(context, request)
