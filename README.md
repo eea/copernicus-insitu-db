@@ -23,9 +23,9 @@ Copernicus services on in situ data requirements (current and expected), data us
 
 1. Customize env files and `docker-compose.yml`:
 
-        cp docker/app.env.example env/app.env
+        cp docker/app.env.example docker/app.env
         vim docker/app.env
-        cp docker/db.env.example env/db.env
+        cp docker/db.env.example docker/db.env
         vim docker/db.env
 
 1. Start application stack:
