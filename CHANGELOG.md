@@ -3,9 +3,15 @@ Changelog
 
 * In case of major changes, an email should be sent to all users with the modifications.
 
+1.5.0 (2018-09-13)
+------------------
+* Add email acceptance step for teammates.
+  [dianaboiangiu]
+
 1.4.0 (2018-09-11)
 ------------------
 * Export Pivot table as PDF.
+  [dianaboiangiu]
 
 1.3.2 (2018-08-28)
 ------------------
