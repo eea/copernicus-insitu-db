@@ -60,7 +60,6 @@ class DataTests(base.FormCheckTestCase):
         }
 
         self.creator = base.UserFactory(username='User Data')
-        base.TeamFactory(user=self.creator)
         self.client.force_login(self.creator)
 
     def _create_clone_data(self, data):

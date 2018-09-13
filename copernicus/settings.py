@@ -206,3 +206,11 @@ EXPLORER_SCHEMA_EXCLUDE_TABLE_PREFIXES = [
 
 DOCS_ROOT = os.path.join(BASE_DIR, 'docs/_build/html')
 DOCS_ACCESS = 'login_required'
+
+EMAIL_BACKEND = env('EMAIL_BACKEND',
+                    'django.core.mail.backends.smtp.EmailBackend')
+EMAIL_HOST = env('EMAIL_HOST', 'localhost')
+EMAIL_PORT = env('EMAIL_PORT', 25)
+EMAIL_SENDER = env('EMAIL_SENDER', '')
+
+SITE_URL = env('SITE_URL', '')

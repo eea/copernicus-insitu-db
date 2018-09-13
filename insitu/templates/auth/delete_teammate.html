@@ -1,0 +1,34 @@
+{% extends '_layout.html' %}
+{% load bootstrap3 %}
+
+{% block title %}
+  Delete teammate relation with {{ teammate.first_name }} {{ teammate.last_name }}
+{% endblock %}
+
+{% block content %}
+
+  <div class="row">
+    <h1>
+      <p class="col-sm-12">Delete teammate relation</p>
+      <p class="col-sm-12"><small> with {{ teammate.first_name }} {{ teammate.last_name }}</small></p>
+    </h1>
+  </div>
+
+  <div class="row">
+    <div class="col-sm-12">
+      Are you sure you want to delete the relation with <b> {{ teammate.first_name }} {{ teammate.last_name }} </b>?
+    </div>
+  </div>
+  <br>
+  <div class="row">
+    <div class="col-sm-12">
+      <form method="POST">
+        {% csrf_token %}
+        <input class="btn btn-danger" type="submit" value="Delete"/>
+        <a href="{% url 'auth:edit_teammates' %}" class="btn btn-default">
+            Cancel
+        </a>
+      </form>
+    </div>
+  </div>
+{% endblock %}

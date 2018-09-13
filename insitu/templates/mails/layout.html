@@ -1,0 +1,45 @@
+<!doctype html>
+<html>
+ <head>
+  <meta charset="utf-8"/>
+  <title>Teammates request</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <style>
+    html, body { margin: 0; padding: 0; border: 0; }
+    body {
+      color: #333;
+      font-family: sans-serif;
+      font-size: 100%;
+      line-height: 1.4;
+      padding: 1em;
+      background: #f2f2f2;
+    }
+    h1, h2, h3, h4, h5, h6, p, blockquote, ul, ol, dl {
+      margin-top: auto;
+      margin-bottom: .5em;
+      font-size: 100%;
+    }
+    .header { font-size: 24px; }
+    .header small {
+      display: block;
+      font-size: small;
+      color: gray;
+      font-weight: normal;
+    }
+    .content { margin-bottom: 1em; border: 1px solid #ccc; padding: 16px; background: #fff; }
+    a { color: #296bcc; text-decoration: none; }
+    a:hover { text-decoration: underline; }
+  </style>
+</head>
+<body>
+
+  <h1 class="header">
+    {% block header %}{% endblock %}
+  </h1>
+
+  <div class="content">
+    {% block content %}{% endblock %}
+  </div>
+
+</body>
+</html>

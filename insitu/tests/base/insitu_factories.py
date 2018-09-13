@@ -17,6 +17,7 @@ class TeamFactory(DjangoModelFactory):
 
     user = SubFactory(UserFactory)
     teammates = RelatedFactory(UserFactory)
+    requirements = RelatedFactory(UserFactory)
 
     class Meta:
         model = models.Team

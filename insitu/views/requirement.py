@@ -114,7 +114,8 @@ class RequirementAdd(GetInitialMixin, CreatedByMixin,
 
     def form_valid(self, form):
         response = super().form_valid(form)
-        messages.success(self.request, 'The requirement was created successfully!')
+        messages.success(self.request,
+                         'The requirement was created successfully!')
         return response
 
     def get_form_class(self):
@@ -147,7 +148,8 @@ class RequirementEdit(GetInitialMixin, LoggingProtectedUpdateView):
 
     def form_valid(self, form):
         response = super().form_valid(form)
-        messages.success(self.request, 'The requirement was updated successfully!')
+        messages.success(self.request,
+                         'The requirement was updated successfully!')
         return response
 
     def permission_denied(self, request):

@@ -72,7 +72,7 @@ class UserTeammatesTests(TestCase):
         self.user1 = base.UserFactory(username='User1')
         self.user2 = base.UserFactory(username='User2')
         self._DATA = {
-            'teammates': [self.user1.id, self.user2.id]
+            'requests': [self.user1.id, self.user2.id]
         }
 
     def test_get_edit_teammates(self):
@@ -83,33 +83,30 @@ class UserTeammatesTests(TestCase):
     def test_edit_teammates_error(self):
         self.client.force_login(self.creator)
         self.data = {
-            'teammates': [self.creator.id]
+            'requests': [self.creator]
         }
         resp = self.client.post(reverse('auth:edit_teammates'), self.data)
         self.assertTrue(resp.status_code, 200)
-        self.assertTrue(resp.context['form'].errors ==
-                        {'__all__': ['You cannot be your own teammate.']})
+        self.assertTrue(resp.context['form'].errors['requests'])
 
     def test_edit_teammates_succesfully(self):
         self.client.force_login(self.creator)
         resp = self.client.post(reverse('auth:edit_teammates'), self._DATA)
         self.assertTrue(resp.status_code, 200)
-        self.assertEqual([x for x in self.creator.team.teammates.all()],
+        self.assertEqual([x for x in self.creator.team.requests.all()],
                          [self.user1, self.user2])
-        self.assertEqual([x for x in self.user1.team.teammates.all()],
-                         [self.creator])
-        self.assertEqual([x for x in self.user2.team.teammates.all()],
-                         [self.creator])
+        self.assertEqual([x for x in self.user1.team.requests.all()],
+                         [])
+        self.assertEqual([x for x in self.user2.team.requests.all()],
+                         [])
 
     def test_edit_teammates_remove_succesfully(self):
         self.client.force_login(self.creator)
         self.client.post(reverse('auth:edit_teammates'), self._DATA)
         self.data ={
-            'teammates': [self.user1.id]
+            'requests': [self.user1.id]
         }
         resp = self.client.post(reverse('auth:edit_teammates'), self.data)
         self.assertTrue(resp.status_code, 200)
-        self.assertEqual([x for x in self.user1.team.teammates.all()],
-                         [self.creator])
-        self.assertEqual([x for x in self.user2.team.teammates.all()],
-                         [])
+        self.assertEqual([x for x in self.creator.team.requests.all()],
+                         [self.user1])

@@ -221,6 +221,12 @@ auth_patterns = [
     url(r'^edit_teammates/',
         views.EditTeamMatesView.as_view(),
         name='edit_teammates'),
+    url(r'^accept_teammate_request/(?P<sender_user>[0-9]+)',
+        views.AcceptTeammateRequestView.as_view(),
+        name='accept_request'),
+    url(r'^delete_teammate/(?P<teammate_id>[0-9]+)',
+        views.DeleteTeammateView.as_view(),
+        name='delete_teammate'),
 ]
 
 reports_patterns = [

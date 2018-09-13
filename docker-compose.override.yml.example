@@ -30,6 +30,18 @@ services:
     ports:
       - 9201:9201
 
+  postfix:
+    image: eaudeweb/mailtrap:2.0
+    environment:
+      TZ: Europe/Copenhagen
+    stdin_open: true
+    tty: true
+    ports:
+    - 80:80
+    labels:
+      io.rancher.container.pull_image: always
+      io.rancher.scheduler.affinity:host_label_ne: reserved=yes
+
 volumes:
   esdata_test:
     driver: local

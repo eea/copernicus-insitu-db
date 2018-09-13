@@ -1,8 +1,10 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
+from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth import get_user_model
 from django.db import models
+from django.db.models.signals import post_save, post_delete
 from django.db.models.query import QuerySet
 from django_xworkflows.models import Workflow, WorkflowEnabled, StateField
 from xworkflows import (
@@ -15,7 +17,28 @@ from picklists import models as pickmodels
 
 User = get_user_model()
 
+def user_model_str(self):
+    return "{} {}".format(self.first_name, self.last_name)
 
+User.add_to_class("__str__", user_model_str)
+
+def create_team_for_user(sender, instance, created, **kwargs):
+    if not created:
+        return
+    try:
+        Team.objects.get(user=instance)
+    except ObjectDoesNotExist:
+        Team.objects.create(user=instance)
+
+def delete_team_for_user(sender, instance, **kwargs):
+    try:
+        team = Team.objects.get(user=instance)
+        team.delete()
+    except ObjectDoesNotExist:
+        pass
+
+post_save.connect(create_team_for_user, sender=User)
+post_delete.connect(delete_team_for_user, sender=User)
 class ValidationWorkflow(Workflow):
     name = 'validation'
 
@@ -172,6 +195,7 @@ class Team(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE,
                                 related_name='team')
     teammates = models.ManyToManyField(User, related_name='teams')
+    requests = models.ManyToManyField(User, related_name='requests', blank=True)
 
 
 class Metric(ValidationWorkflowModel):

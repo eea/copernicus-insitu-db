@@ -21,6 +21,30 @@
       <p class="col-sm-12"><small>The users you add in this list will be able to edit/delete the objects you created.</small></p>
     </h1>
   </div>
+
+  {% if request.user.team.teammates.all %}
+  <div class="row">
+    <table id="detail-table" class="table borderless col-sm-12">
+      <tbody>
+        <tr class="row">
+          <th>Your teammates:</th>
+          <td>
+            {% for user in request.user.team.teammates.all %}
+              <span class="col-sm-12 no-padding-left">{{ user.first_name }} {{ user.last_name }}, {{ user.email }}
+                <form style="display:inline;" >
+                  <a href="{% url 'auth:delete_teammate' user.id %}">
+                    <span class="glyphicon glyphicon-remove"></span>
+                  </a>
+                </form>
+              </span>
+            {% endfor %}
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  {% endif %}
+
   <form action="" method="POST">
     {% csrf_token %}
     {% bootstrap_form form %}
