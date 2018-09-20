@@ -111,3 +111,8 @@
 .font-weight-bold {
     font-weight: bold;
 }
+
+.navbar-nav>li>a {
+  padding-right: 10px !important;
+  padding-left: 10px;
+}
