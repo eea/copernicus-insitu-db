@@ -99,3 +99,9 @@ Customize docker orchestration for local development:
 
         sudo vim /proc/sys/vm/max_map_count
         # Change the value from the file with 262144 and save
+
+
+# Generate Sphinx documentation
+
+        cd docs/
+        make html
