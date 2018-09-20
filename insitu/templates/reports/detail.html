@@ -72,16 +72,16 @@
     </div>
   {% endif %}
 
-  <a class="btn btn-primary" id="download-excel-btn">Download Excel</a>
   <textarea id="id_sql" name="sql" style="display:none;"></textarea>
   <div style="margin-top:2%;">
     {% include 'preview_pane.html' %}
   </div>
-  <button type="button" class="btn btn-primary btn-md" style="margin-bottom:20px;" id="pivot-download">
+  <a class="btn btn-primary" id="download-excel-btn" style="margin-bottom:20px;">Download Excel</a>
+  <button type="button" class="btn btn-primary btn-md" style="margin-bottom:20px;display:none;" id="pivot-download">
       Download Pivot as HTML
   </button>
 
-  <button type="button" class="btn btn-primary btn-md" style="margin-bottom:20px;" id="pivot-download-pdf">
+  <button type="button" class="btn btn-primary btn-md" style="margin-bottom:20px;display:none;" id="pivot-download-pdf">
       Download Pivot as PDF
   </button>
 
@@ -172,5 +172,20 @@
       }
       xhr.send(encodeURIComponent('data') + '=' + encodeURIComponent(html) + "&" + encodeURIComponent('title') + '=' + encodeURIComponent('{{ query.title }}'));
     });
+
+    $(document).ready ( function () {
+      $( "#preview-tab-label" ).click(function() {
+        $('#download-excel-btn').show()
+        $('#pivot-download').hide()
+        $('#pivot-download-pdf').hide()
+      });
+
+      $( "#pivot-tab-label" ).click(function() {
+        $('#download-excel-btn').hide()
+        $('#pivot-download').show()
+        $('#pivot-download-pdf').show()
+      });
+    });
+
   </script>
 {% endblock %}
