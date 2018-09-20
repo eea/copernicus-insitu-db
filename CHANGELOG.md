@@ -3,6 +3,13 @@ Changelog
 
 * In case of major changes, an email should be sent to all users with the modifications.
 
+1.5.1 (2018-09-20)
+------------------
+  * Update User Manual with Report generation and new Edit teammates system
+  * Show/hide PDF/Excel/HTML buttons accordingly
+  * Move Download Excel button at the bottom of the page
+  [dianaboiangiu]
+
 1.5.0 (2018-09-13)
 ------------------
 * Add email acceptance step for teammates.
