@@ -3,6 +3,11 @@ Changelog
 
 * In case of major changes, an email should be sent to all users with the modifications.
 
+1.5.3 (2018-09-24)
+------------------
+  * Fix reports detail 500 error.
+  [dianaboiangiu]
+
 1.5.2 (2018-09-24)
 ------------------
   * Fix detail page table errors
