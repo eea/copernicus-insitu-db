@@ -178,7 +178,7 @@
           }
         });
       });
-      var product_name = '{{ product.name }}'
+      var product_name = '{{ product.name | escapejs }}'
       var product_title = product_name
       product_name = product_name.split(' ').join('_')
       var table = $('#requirements').dataTable({

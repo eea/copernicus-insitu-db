@@ -297,7 +297,7 @@
   <script src="{% static 'js/vfs_fonts.js' %}"></script>
   <script>
     $(function () {
-      var data_name = '{{ data.name }}'
+      var data_name = '{{ data.name | escapejs }}'
       var data_title = data_name
       data_name = data_name.split(' ').join('_')
       var buttonCommon = {
@@ -376,7 +376,7 @@
 
   <script>
     $(function () {
-      var data_name = '{{ data.name }}'
+      var data_name = '{{ data.name | escapejs }}'
       var data_title = data_name
       data_name = data_name.split(' ').join('_')
       var buttonCommon = {

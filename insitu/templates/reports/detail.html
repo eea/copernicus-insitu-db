@@ -85,6 +85,10 @@
       Download Pivot as PDF
   </button>
 
+  <button type="button" class="btn btn-primary btn-md" style="margin-bottom:20px;" id="pivot-download-excel">
+      Download Pivot as Excel
+  </button>
+
 {% endblock %}
 
 {% block sql_explorer_scripts %}
@@ -171,6 +175,31 @@
         }
       }
       xhr.send(encodeURIComponent('data') + '=' + encodeURIComponent(html) + "&" + encodeURIComponent('title') + '=' + encodeURIComponent('{{ query.title }}'));
+    });
+
+    $('#pivot-download-excel').click(function () {
+      var head_html = '<html><head><link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"><link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/codemirror/5.36.0/codemirror.min.css" ><link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/pivottable/2.20.0/pivot.min.css"></head><body>'
+      var end = '</body></html>'
+      $('.pvtTable').first().find('.pvtTotalLabel').remove()
+      $('.pvtTable').first().find('.pvtTotal').remove()
+      var html = '<table class="pvtTable">' + $('.pvtTable').first().html() + '</table>'
+
+      var xhr = new XMLHttpRequest();
+      xhr.open('POST', "{% url 'reports:report_excel' %}", true);
+      xhr.responseType = 'arraybuffer';
+      xhr.setRequestHeader("X-CSRFToken", getCookie('csrftoken'));
+      xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8");
+      xhr.onreadystatechange = function() {
+        if (this.readyState == XMLHttpRequest.DONE && this.status == 200) {
+          var blob=new Blob([this.response], {type:"text/csv"});
+          var link=document.createElement('a');
+          link.href=window.URL.createObjectURL(blob);
+          link.download="{{ pdf_filename }}";
+          link.click();
+        }
+      }
+      xhr.send(encodeURIComponent('data') + '=' + encodeURIComponent(html) + "&" + encodeURIComponent('title') + '=' + encodeURIComponent('{{ query.title }}'));
+   
     });
 
     $(document).ready ( function () {
