@@ -3,6 +3,11 @@ Changelog
 
 * In case of major changes, an email should be sent to all users with the modifications.
 
+1.5.2 (2018-09-24)
+------------------
+  * Fix detail page table errors
+  [dianaboiangiu]
+
 1.5.1 (2018-09-20)
 ------------------
   * Update User Manual with Report generation and new Edit teammates system
