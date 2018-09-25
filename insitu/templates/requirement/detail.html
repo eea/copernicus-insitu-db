@@ -307,7 +307,7 @@
         trigger: 'hover',
       });
 
-      var requirement_name = '{{ requirement.name }}'
+      var requirement_name = '{{ requirement.name | escapejs }}'
       var requirement_title = requirement_name
       requirement_name = requirement_name.split(' ').join('_')
       var table = $('#products').dataTable({
@@ -360,7 +360,7 @@
   </script>
   <script>
     $(function () {
-      var requirement_name = '{{ requirement.name }}'
+      var requirement_name = '{{ requirement.name | escapejs }}'
       var requirement_title = requirement_name
       requirement_name = requirement_name.split(' ').join('_')
       var buttonCommon = {
