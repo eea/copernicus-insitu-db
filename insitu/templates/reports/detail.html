@@ -16,8 +16,14 @@
   <script type="text/javascript">
     queryId = "{% firstof query.id 'new' %}";
   </script>
+  <script src="{% static 'js/tableExport.js' %}"></script>
+  <script src="{% static 'js/jquery.base64.js' %}"></script>
   <style>
     .CodeMirror.cm-s-default {
+      display:none;
+    }
+    .pivot-button {
+      margin-bottom:20px;
       display:none;
     }
   </style>
@@ -77,15 +83,17 @@
     {% include 'preview_pane.html' %}
   </div>
   <a class="btn btn-primary" id="download-excel-btn" style="margin-bottom:20px;">Download Excel</a>
-  <button type="button" class="btn btn-primary btn-md" style="margin-bottom:20px;display:none;" id="pivot-download">
+  <button type="button" class="btn btn-primary btn-md pivot-button" id="pivot-download">
       Download Pivot as HTML
   </button>
 
-  <button type="button" class="btn btn-primary btn-md" style="margin-bottom:20px;display:none;" id="pivot-download-pdf">
+  <button type="button" class="btn btn-primary btn-md pivot-button" id="pivot-download-pdf">
       Download Pivot as PDF
   </button>
 
-
+  <button type="button" class="btn btn-primary btn-md pivot-button" id="pivot-download-excel">
+    Download Pivot as Excel
+ </button>
 
 {% endblock %}
 
@@ -180,14 +188,21 @@
         $('#download-excel-btn').show()
         $('#pivot-download').hide()
         $('#pivot-download-pdf').hide()
+        $('#pivot-download-excel').hide()
       });
 
       $( "#pivot-tab-label" ).click(function() {
         $('#download-excel-btn').hide()
         $('#pivot-download').show()
         $('#pivot-download-pdf').show()
+        $('#pivot-download-excel').show()
       });
     });
 
+   $('#pivot-download-excel').click(function () {
+    $('.pvtTable').first().find('.pvtTotalLabel').remove()
+      $('.pvtTable').first().find('.pvtTotal').remove()
+     $('.pvtTable:first').tableExport({type:'excel',escape:'false'});
+   });
   </script>
 {% endblock %}
