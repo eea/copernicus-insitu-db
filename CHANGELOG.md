@@ -3,6 +3,12 @@ Changelog
 
 * In case of major changes, an email should be sent to all users with the modifications.
 
+1.5.4 (2018-09-26)
+------------------
+  * Add excel export from pivot table
+  * Update UserManual
+  [dianaboiangiu]
+
 1.5.3 (2018-09-24)
 ------------------
   * Fix reports detail 500 error.
