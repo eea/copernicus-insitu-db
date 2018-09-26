@@ -415,7 +415,7 @@ By clicking the "Pivot" tab a new table will appear. On the top of this table or
 on the left side, depending on the report,  the available columns are displayed. Those columns
 can then be dragged under the "Count" dropdown. The columns will appear in the preview section
 in the order they were introduced. They can be rearanged to fit the user's need. When the
-preview looks good, the user can export (*Figure 16* and
+preview looks good, the user can export the tables in HTML, PDF or Excel format. (*Figure 16* and
 *Figure 17*) .
 
 ..  figure:: screenshots/report_pivot1.png
