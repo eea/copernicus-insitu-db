@@ -202,7 +202,7 @@
    $('#pivot-download-excel').click(function () {
     $('.pvtTable').first().find('.pvtTotalLabel').remove()
       $('.pvtTable').first().find('.pvtTotal').remove()
-     $('.pvtTable:first').tableExport({type:'excel',escape:'false'});
+     $('.pvtTable:first').tableExport({type:'excel',escape:'false', filename: '{{ excel_filename }}'});
    });
   </script>
 {% endblock %}

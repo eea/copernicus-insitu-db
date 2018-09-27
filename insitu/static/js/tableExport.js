@@ -16,19 +16,27 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.*/
 
+function s2ab(s) {
+    var buf = new ArrayBuffer(s.length);
+    var view = new Uint8Array(buf);
+    for (var i=0; i!=s.length; ++i) view[i] = s.charCodeAt(i) & 0xFF;
+    return buf;
+  }
+
 (function($){
     $.fn.extend({
         tableExport: function(options) {
             var defaults = {
                     separator: ',',
                     ignoreColumn: [],
-                    tableName:'yourTableName',
+                    tableName:'Sheet1',
                     type:'csv',
                     pdfFontSize:14,
                     pdfLeftMargin:20,
                     escape:'true',
                     htmlContent:'false',
-                    consoleLog:'false'
+                    consoleLog:'false',
+                    filename: 'File.xls',
             };
             
             var options = $.extend(defaults, options);
@@ -276,8 +284,11 @@ THE SOFTWARE.*/
                 excelFile += "</html>";
 
                 var base64data = "base64," + $.base64.encode(excelFile);
-                window.open('data:application/vnd.ms-'+defaults.type+';filename=exportData.doc;' + base64data);
-                
+                var blob=new Blob([s2ab(excelFile)], {type:'data:application/vnd.ms-'+defaults.type});
+                var link=document.createElement('a');
+                link.href=window.URL.createObjectURL(blob);
+                link.download=defaults.filename;
+                link.click();
             }else if(defaults.type == 'png'){
                 html2canvas($(el), {
                     onrendered: function(canvas) {										

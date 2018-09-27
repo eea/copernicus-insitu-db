@@ -75,11 +75,15 @@ class ReportsDetailView(ProtectedTemplateView):
             'description': self.report.description,
             'params': extract_params(self.report.sql),
         }
+        filename =  (
+            self.get_filename(self.report.title) +
+            datetime.datetime.now().strftime('%Y%m%d')
+        )
+
         context.update({
-            'html_filename': self.get_filename(self.report.title) +
-                             datetime.datetime.now().strftime('%Y%m%d') + '.html',
-            'pdf_filename': self.get_filename(self.report.title) +
-                             datetime.datetime.now().strftime('%Y%m%d') + '.pdf',
+            'html_filename': filename + '.html',
+            'pdf_filename': filename + '.pdf',
+            'excel_filename': filename + '.xls',
             'tasks_enabled': ENABLE_TASKS,
             'shared': self.report.shared,
             'form': None,
