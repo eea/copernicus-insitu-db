@@ -3,6 +3,13 @@ Changelog
 
 * In case of major changes, an email should be sent to all users with the modifications.
 
+1.5.5 (2018-10-02)
+------------------
+  * Update explorer queries for better format
+  * Add latest changes to homepage
+  * Fix javascript sentry error on data detail page
+  [dianaboiangiu]
+
 1.5.4 (2018-09-26)
 ------------------
   * Add excel export from pivot table
