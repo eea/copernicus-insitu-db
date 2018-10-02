@@ -219,7 +219,7 @@
               {% endif %}
             </td>
             {% if rel.state.name == 'draft' %}
-              {% if request.user == rel.created_by or request.user.is_superuser or request.user in rel.created_by.team.teammates.all %}
+              {% if request.user == rel.created_by or request.user == data.created_by or request.user.is_superuser or request.user in rel.created_by.team.teammates.all %}
                 <td class="row">
                   <a href="{% url 'data:provider:edit' group_pk=data.pk pk=rel.pk %}"
                      class="col-sm-6">

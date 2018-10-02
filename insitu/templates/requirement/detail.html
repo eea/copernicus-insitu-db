@@ -193,7 +193,7 @@
             </td>
             <td>{{ rel.note }}</td>
             {% if requirement.state.name == 'draft' %}
-              {% if rel.created_by == request.user or request.user in rel.created_by.team.teammates.all or request.user.is_superuser %}
+              {% if rel.created_by == request.user  or request.user == requirement.created_by or request.user in rel.created_by.team.teammates.all or request.user.is_superuser %}
                 <td class="row">
                   <a
                     href="{% url 'requirement:product:edit' requirement_pk=requirement.pk pk=rel.pk %}"
@@ -267,7 +267,7 @@
               {% endif %}
             </td>
             {% if requirement.state.name == 'draft' %}
-              {% if rel.created_by == request.user or request.user in rel.created_by.team.teammates.all or request.user.is_superuser %}
+              {% if rel.created_by == request.user or request.user == requirement.created_by or request.user in rel.created_by.team.teammates.all or request.user.is_superuser %}
 
                 <td class="row">
                   <a
