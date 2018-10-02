@@ -41,6 +41,7 @@
 
 .main-title{
   background: #ffffff;
+  padding-bottom:10px;
 }
 
 .logo-copernicus{
@@ -115,4 +116,16 @@
 .navbar-nav>li>a {
   padding-right: 10px !important;
   padding-left: 10px;
+}
+
+.latest-information {
+  width:37%;
+  height:20%;
+  margin-left:60px;
+}
+
+.latest-changes-text {
+  font-size: 16px;
+  font-weight: 700;
+  color:red;
 }

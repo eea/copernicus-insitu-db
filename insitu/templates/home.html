@@ -8,9 +8,20 @@
 {% block content %}
   <div class="jumbotron main-title">
     <h1>In Situ Component</h1>
-    <p> Copernicus In Situ Component Information System </p>
+    <p>Copernicus In Situ Component Information System</p>
   </div>
   <body>
+    <div class="latest-information">
+      <div>
+        <p class="latest-changes-text">Latest changes</p>
+        <h4 class="font-weight-bold">1.5.4 (2018-09-26)</h4>
+        <ul>
+          <li>Add excel export from pivot table.</li>
+          <li>Update UserManual</li>
+        </ul>
+        <p><strong>The UserManual is available <a href="{% url 'user_manual' %}">here.</strong></a></p>
+      </div>
+    </div>
     <div id="footer">
       <img class="logo-copernicus" src="{% static "/images/logo-copernicus.png"  %}" alt="Copernicus Logo" hspace="150">
       <img class="in-situ-logo" src="{% static "/images/in-situ-logo.png" %}" alt="In Situ Logo">
