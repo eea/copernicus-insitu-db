@@ -15,20 +15,18 @@
     <div class="latest-information">
       <div>
         <p class="latest-changes-text">Latest changes</p>
-        <h4 class="font-weight-bold">1.5.5 (2018-10-02)</h4>
+        <h4 class="font-weight-bold">1.5.6 (2018-10-05)</h4>
         <ul>
-          <li>Update explorer queries for better format.</li>
-          <li>Add latest changes to homepage.</li>
-          <li>Fix javascript sentry error on data detail page.</li>
+          <li>Fix homepage latest changes text.</li>
         </ul>
         <p><strong>The UserManual is available <a href="{% url 'user_manual' %}">here.</strong></a></p>
       </div>
     </div>
     {% endif %}
     <div id="footer">
-      <img class="logo-copernicus" src="{% static "images/logo-copernicus.png"  %}" alt="Copernicus Logo" hspace="150">
-      <img class="in-situ-logo" src="{% static "images/in-situ-logo.png" %}" alt="In Situ Logo">
-      <img class="european_commission-logo" src="{% static "images/european_commission.png" %}"
+      <img class="logo-copernicus" src="{% static "/images/logo-copernicus.png"  %}" alt="Copernicus Logo" hspace="150">
+      <img class="in-situ-logo" src="{% static "/images/in-situ-logo.png" %}" alt="In Situ Logo">
+      <img class="european_commission-logo" src="{% static "/images/european_commission.png" %}"
            alt="European Commission Logo" hspace="150">
     </div>
   </body>

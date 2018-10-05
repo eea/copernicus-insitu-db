@@ -3,6 +3,11 @@ Changelog
 
 * In case of major changes, an email should be sent to all users with the modifications.
 
+1.5.6 (2018-10-05)
+------------------
+  * Fix homepage latest changes text
+  [dianaboiangiu]
+
 1.5.5 (2018-10-02)
 ------------------
   * Update explorer queries for better format
