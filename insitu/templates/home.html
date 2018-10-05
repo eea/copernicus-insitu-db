@@ -11,6 +11,7 @@
     <p>Copernicus In Situ Component Information System</p>
   </div>
   <body>
+    {% if request.user.is_authenticated %}
     <div class="latest-information">
       <div>
         <p class="latest-changes-text">Latest changes</p>
@@ -23,10 +24,11 @@
         <p><strong>The UserManual is available <a href="{% url 'user_manual' %}">here.</strong></a></p>
       </div>
     </div>
+    {% endif %}
     <div id="footer">
-      <img class="logo-copernicus" src="{% static "/images/logo-copernicus.png"  %}" alt="Copernicus Logo" hspace="150">
-      <img class="in-situ-logo" src="{% static "/images/in-situ-logo.png" %}" alt="In Situ Logo">
-      <img class="european_commission-logo" src="{% static "/images/european_commission.png" %}"
+      <img class="logo-copernicus" src="{% static "images/logo-copernicus.png"  %}" alt="Copernicus Logo" hspace="150">
+      <img class="in-situ-logo" src="{% static "images/in-situ-logo.png" %}" alt="In Situ Logo">
+      <img class="european_commission-logo" src="{% static "images/european_commission.png" %}"
            alt="European Commission Logo" hspace="150">
     </div>
   </body>
