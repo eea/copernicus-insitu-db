@@ -26,6 +26,7 @@ SECRET_KEY = env('SECRET_KEY', 'secret')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = env('DEBUG', False)
+DEBUG_TOOLBAR = env('DEBUG_TOOLBAR', False)
 
 ALLOWED_HOSTS = ['localhost', '127.0.0.1', env('ALLOWED_HOSTS')]
 CSRF_TRUSTED_ORIGINS = env('ALLOWED_HOSTS')
@@ -63,6 +64,9 @@ if not DEBUG:
         'dsn': env('SENTRY_DSN'),
     }
 
+if DEBUG_TOOLBAR:
+    INSTALLED_APPS += ['debug_toolbar',]
+
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -72,6 +76,11 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+
+if DEBUG_TOOLBAR:
+    MIDDLEWARE += [
+        'debug_toolbar.middleware.DebugToolbarMiddleware',
+    ]
 
 ROOT_URLCONF = 'copernicus.urls'
 
@@ -91,7 +100,6 @@ TEMPLATES = [
                 'insitu.context_processors.google_analytics',
                 'insitu.context_processors.crazy_egg',
                 'insitu.context_processors.sentry',
-
             ],
             'libraries':{
                 'js': 'insitu.views.product',
@@ -177,6 +185,7 @@ LOGGING_CSV_FILENAME = env('LOGGING_CSV_FILENAME', 'user-actions-logging.csv')
 
 GOOGLE_ANALYTICS_PROPERTY_ID = env('GOOGLE_ANALYTICS_PROPERTY_ID', '')
 
+
 CRAZY_EGG = env('CRAZY_EGG', '')
 
 
@@ -214,3 +223,14 @@ EMAIL_PORT = env('EMAIL_PORT', 25)
 EMAIL_SENDER = env('EMAIL_SENDER', '')
 
 SITE_URL = env('SITE_URL', '')
+
+if DEBUG_TOOLBAR:
+    def show_toolbar(request):
+        return request.user.is_authenticated() and request.user.is_superuser
+
+    INTERNAL_IPS=ALLOWED_HOSTS
+
+    DEBUG_TOOLBAR_CONFIG = {
+        'SHOW_TOOLBAR_CALLBACK': 'copernicus.settings.show_toolbar',
+        # Rest of config
+    }

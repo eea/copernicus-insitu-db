@@ -15,6 +15,7 @@ Including another URLconf
 """
 from django.conf.urls import url, include
 from django.contrib import admin
+from .settings import DEBUG_TOOLBAR
 
 handler500 = 'insitu.views.errors.handler500'
 
@@ -25,3 +26,9 @@ urlpatterns = [
     url(r'^picklists/', include('picklists.urls', namespace='pick')),
     url(r'^explorer/', include('explorer.urls')),
 ]
+
+if DEBUG_TOOLBAR:
+    import debug_toolbar
+    urlpatterns = [
+        url(r'^__debug__/', include(debug_toolbar.urls)),
+    ] + urlpatterns
