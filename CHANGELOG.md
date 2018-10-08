@@ -3,6 +3,11 @@ Changelog
 
 * In case of major changes, an email should be sent to all users with the modifications.
 
+1.5.8 (2018-10-08)
+------------------
+  * Fix style on about page
+  [dianaboiangiu]
+
 1.5.7 (2018-10-08)
 ------------------
   * Add debug toolbar option for staging
