@@ -10,6 +10,13 @@ def google_analytics(request):
         }
     return {}
 
+def matomo(request):
+    matomo = getattr(settings, 'MATOMO', False)
+    if not settings.DEBUG and matomo:
+        return {
+            'MATOMO': matomo,
+        }
+    return {}
 
 def crazy_egg(request):
     crazy_egg_path = getattr(settings, 'CRAZY_EGG', '')
