@@ -277,6 +277,7 @@ class RequirementTests(base.FormCheckTestCase):
             {'source': 'changes', 'target': 'draft', 'user': self.creator},
             {'source': 'draft', 'target': 'ready', 'user': self.creator},
             {'source': 'ready', 'target': 'valid', 'user': self.other_user},
+            {'source': 'ready', 'target': 'valid', 'user': self.creator},
         ]
 
         for transition in transitions:
@@ -293,6 +294,10 @@ class RequirementTests(base.FormCheckTestCase):
             for item in items:
                 getattr(item, 'refresh_from_db')()
                 self.assertEqual((getattr(item, 'state')).name, transition['target'])
+            if transition['target'] == 'valid':
+               for item in items:
+                   item.state = transition['source']
+                   item.save()
         self.logging(check_username=False)
 
     def test_transition_with_draft_data(self):
