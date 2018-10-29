@@ -28,10 +28,10 @@
           <td>{{ query.id }}</td>
           <td>
             <strong>
-              <a href="{% url 'reports:detail' query.id %}">{{ query.title }}</a>
+              <a href="{% url 'reports:detail' query.id %}?rows=10000">{{ query.title }}</a>
             </strong>
           </td>
-          <td>{{ query.description }}</td>
+          <td>{{ query.description | linebreaks }}</td>
         </tr>
       {% endfor %}
     </tbody>

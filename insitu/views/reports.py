@@ -89,7 +89,7 @@ class ReportsDetailView(ProtectedTemplateView):
             'form': None,
             'message': None,
             'error': None,
-            'rows': EXPLORER_DEFAULT_ROWS,
+            'rows': 10000,
             'data': res.data,
             'headers': res.headers,
             'total_rows': len(res.data),
