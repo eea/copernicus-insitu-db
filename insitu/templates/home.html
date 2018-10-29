@@ -20,6 +20,9 @@
           <li>Fix style on about page.</li>
         </ul>
         <p><strong>The UserManual is available <a href="{% url 'user_manual' %}">here.</strong></a></p>
+        {% if DEBUG %}
+          <p class="latest-changes-text"><strong>This is a DEMO application</strong></p>
+        {% endif %}
       </div>
     </div>
     {% endif %}
