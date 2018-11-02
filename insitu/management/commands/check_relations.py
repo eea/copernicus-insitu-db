@@ -23,4 +23,4 @@ class Command(BaseCommand):
             rel.state = rel.data.state
             rel.save()
             print("Relation reseted")
-            
+
