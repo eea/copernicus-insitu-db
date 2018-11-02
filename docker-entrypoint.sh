@@ -16,6 +16,7 @@ fi
 
 if [ "x$DJANGO_MIGRATE" = 'xyes' ]; then
     python manage.py migrate --noinput
+    python manage.py loaddata explorer
 fi
 
 if [ "x$DJANGO_COLLECT_STATIC" = "xyes" ]; then

@@ -31,7 +31,7 @@
               <a href="{% url 'reports:detail' query.id %}">{{ query.title }}</a>
             </strong>
           </td>
-          <td>{{ query.description }}</td>
+          <td>{{ query.description | linebreaks }}</td>
         </tr>
       {% endfor %}
     </tbody>

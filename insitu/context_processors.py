@@ -1,6 +1,10 @@
 from django.conf import settings
 from getenv import env
 
+def base(request):
+    return {
+        'DEBUG': settings.DEBUG
+    }
 
 def google_analytics(request):
     ga_prop_id = getattr(settings, 'GOOGLE_ANALYTICS_PROPERTY_ID', False)

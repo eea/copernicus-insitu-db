@@ -97,6 +97,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'insitu.context_processors.base',
                 'insitu.context_processors.google_analytics',
                 'insitu.context_processors.matomo',
                 'insitu.context_processors.crazy_egg',
@@ -199,7 +200,8 @@ HIJACK_ALLOW_GET_REQUESTS = True
 SUPPORT_EMAIL = env('SUPPORT_EMAIL', '')
 
 EXPLORER_CONNECTIONS = {'Default': 'default'}
-EXPLORER_SQL_WHITELIST = {'update_frequency', '_deleted', 'Update Frequency'}
+EXPLORER_DEFAULT_ROWS = 10000
+EXPLORER_SQL_WHITELIST = {'update_frequency', '_deleted', 'Update Frequency', 'picklists_updatefrequency'}
 
 
 def EXPLORER_PERMISSION_VIEW(u): return u.is_authenticated

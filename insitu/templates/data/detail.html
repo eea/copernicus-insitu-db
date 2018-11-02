@@ -180,12 +180,14 @@
   <div class="row">
     <h3 class="col-sm-12">
       <span>Data Providers</span>
-      {% if request.user == data.created_by or request.user.is_superuser or request.user in data.created_by.team.teammates.all%}
-        <span class="pull-right">
-          <a class="btn btn-primary pull-right"
-             href="{% url 'data:provider:add' data.pk %}">Add data to data provider
-          </a>
-        </span>
+      {% if data.state.name == 'draft' %}
+        {% if request.user == data.created_by or request.user.is_superuser or request.user in data.created_by.team.teammates.all%}
+          <span class="pull-right">
+            <a class="btn btn-primary pull-right"
+               href="{% url 'data:provider:add' data.pk %}">Add data to data provider
+            </a>
+          </span>
+        {% endif %}
       {% endif %}
     </h3>
     <div class="col-sm-12">
