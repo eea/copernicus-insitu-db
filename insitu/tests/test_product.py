@@ -40,7 +40,7 @@ class ProductTests(base.FormCheckTestCase):
 
     def test_create_product_fields_required(self):
         data = {}
-        resp = self.client.post(reverse('product:add'), data)
+        resp = self.client.post(reverse('product:add'), data, follow=True)
         self.check_required_errors(resp, self.errors)
 
     def test_get_create_product(self):

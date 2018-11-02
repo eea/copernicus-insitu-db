@@ -167,29 +167,32 @@ class ValidationWorkflowModel(WorkflowEnabled, models.Model):
         """
         Check if the user is the creator or if the is user is in the creator's
         team
-        :param args:
-        :param kwargs:
-        :return:
         """
         return (
             self.requesting_user == self.created_by or
             self.requesting_user in self.created_by.team.teammates.all()
         )
 
-    @transition_check('validate', 'request_changes')
+    @transition_check('request_changes',)
     def check_other_user(self, *args, **kwargs):
         """
         Check if the user is different from the  creator or if the is user is
         not in the creator's team
-        :param args:
-        :param kwargs:
-        :return:
         """
         return (
             self.requesting_user != self.created_by and
             self.requesting_user not in self.created_by.team.teammates.all()
         )
 
+    @transition_check('validate',)
+    def check_validator_user(self, *args, **kwargs):
+        """
+        Check if the user is the creator
+        """
+        return (
+            self.requesting_user == self.created_by or
+            self.requesting_user not in self.created_by.team.teammates.all()
+        )
 
 class Team(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE,

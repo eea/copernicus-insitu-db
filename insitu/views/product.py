@@ -19,7 +19,9 @@ from insitu.views.protected import (
     ProtectedView,
     ProtectedTemplateView, ProtectedDetailView,
     ProtectedUpdateView, ProtectedCreateView,
-    ProtectedDeleteView)
+    ProtectedDeleteView,
+    LoggingProtectedCreateView,
+    )
 from insitu.views.protected.permissions import (
     IsAuthenticated,
     IsSuperuser,
