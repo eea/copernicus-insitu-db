@@ -3,6 +3,14 @@ Changelog
 
 * In case of major changes, an email should be sent to all users with the modifications.
 
+1.5.9 (2018-11-02)
+------------------
+* Add new reports
+* Fix pivot excel download issue
+* Fix Data in ready Data provider link (Data provider should be linked to Data only when Data is in draft status)
+* Resolve ready to valid issue
+  [dianaboiangiu]
+
 1.5.8 (2018-10-08)
 ------------------
   * Fix style on about page
