@@ -167,9 +167,6 @@ class ValidationWorkflowModel(WorkflowEnabled, models.Model):
         """
         Check if the user is the creator or if the is user is in the creator's
         team
-        :param args:
-        :param kwargs:
-        :return:
         """
         return (
             self.requesting_user == self.created_by or
@@ -181,9 +178,6 @@ class ValidationWorkflowModel(WorkflowEnabled, models.Model):
         """
         Check if the user is different from the  creator or if the is user is
         not in the creator's team
-        :param args:
-        :param kwargs:
-        :return:
         """
         return (
             self.requesting_user != self.created_by and
@@ -194,9 +188,6 @@ class ValidationWorkflowModel(WorkflowEnabled, models.Model):
     def check_validator_user(self, *args, **kwargs):
         """
         Check if the user is the creator
-        :param args:
-        :param kwargs:
-        :return:
         """
         return (
             self.requesting_user == self.created_by or
