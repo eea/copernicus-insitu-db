@@ -201,6 +201,7 @@ class ImportProductsView(ProtectedView):
         workbook_file = request.FILES['workbook']
         try:
             wb = load_workbook(workbook_file)
+            id_of_product = 0
             with transaction.atomic():
                 ws = wb.get_sheet_by_name('product')
                 fields = [
@@ -212,6 +213,7 @@ class ImportProductsView(ProtectedView):
                     for row in ws.iter_rows(min_row=2):
                         data = {}
                         pk = row[0].value
+                        id_of_product = pk
                         for i in range(1, len(fields)):
                             field = fields[i]
                             value = row[i].value if row[i].value is not None else ''
@@ -229,7 +231,8 @@ class ImportProductsView(ProtectedView):
             solve_sql()
             from django.core.management import call_command
             call_command('search_index', '--rebuild', '-f')
-        except Exception:
+        except BaseException as e:
+            print(e, " at product id: ", id_of_product)
             return HttpResponse(status=400)
         return HttpResponse(status=200)
 

@@ -100,7 +100,9 @@ class ImportPicklistsView(protected.ProtectedView):
         try:
             wb = load_workbook(workbook_file)
             models = {model._meta.model_name: model for model in PICKLISTS}
+            name_of_sheet = ""
             for sheet_name in wb.get_sheet_names():
+                name_of_sheet = sheet_name
                 with transaction.atomic():
                     ws = wb.get_sheet_by_name(sheet_name)
                     model = models.get(sheet_name)
@@ -122,6 +124,7 @@ class ImportPicklistsView(protected.ProtectedView):
                             continue
                         model.objects.update_or_create(pk=pk, defaults=data)
             solve_sql()
-        except:
+        except BaseException as e:
+            print(e, " at sheet: ", name_of_sheet)
             return HttpResponse(status=400)
         return HttpResponse(status=200)
