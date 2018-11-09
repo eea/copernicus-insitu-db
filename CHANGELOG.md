@@ -3,6 +3,11 @@ Changelog
 
 * In case of major changes, an email should be sent to all users with the modifications.
 
+1.5.10 (2018-11-09)
+------------------
+* Extend acronym length on products
+  [dianaboiangiu]
+
 1.5.9 (2018-11-02)
 ------------------
 * Add new reports
