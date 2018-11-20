@@ -85,10 +85,12 @@
               {% endif %}
             {% endif %}
             {% if provider.state.name == 'ready' %}
+              {% if request.user not in provider.created_by.team.teammates.all %}
                 <a class="btn btn-primary"
                    href="{% url 'provider:transition' pk=provider.pk source='ready' target='valid' %}">
                   Mark as valid
                 </a>
+              {% endif %}
               {% if provider.created_by != request.user and request.user not in provider.created_by.team.teammates.all %}
                 <a class="btn btn-primary"
                    href="{% url 'provider:transition' pk=provider.pk source='ready' target='changes' %}">
