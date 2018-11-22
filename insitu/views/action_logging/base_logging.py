@@ -16,8 +16,8 @@ class BaseLoggingView:
         if 'test' in sys.argv:
             from copernicus.testsettings import LOGGING_CSV_FILENAME
         else:
-            from copernicus.settings import LOGGING_CSV_FILENAME
-        with open(LOGGING_CSV_FILENAME, 'a') as csvfile:
+            from copernicus.settings import LOGGING_CSV_FILENAME, LOGGING_CSV_PATH
+        with open(LOGGING_CSV_PATH, 'a+') as csvfile:
             spamwriter = csv.writer(csvfile, delimiter=',')
             row = ",".join([
                 datetime.now().strftime('%d %B %Y %H:%M'),

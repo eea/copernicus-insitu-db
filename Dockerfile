@@ -11,6 +11,7 @@ RUN apk add qt5-qtbase-dev wkhtmltopdf --no-cache \
             --allow-untrusted
 
 RUN mkdir -p $APP_HOME
+RUN mkdir -p $APP_HOME/logging
 
 COPY requirements* $APP_HOME/
 WORKDIR $APP_HOME

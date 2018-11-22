@@ -17,6 +17,7 @@ services:
       - elasticsearch
     volumes:
       - static:/var/local/static
+      - logging:/var/local/copernicus/logging
 
   db:
     image: postgres:10-alpine
@@ -64,4 +65,6 @@ volumes:
   data:
     driver: local
   esdata:
+    driver: local
+  logging:
     driver: local
