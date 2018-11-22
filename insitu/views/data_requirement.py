@@ -87,6 +87,7 @@ class DataRequirementDelete(LoggingProtectedDeleteView):
         return context
 
     def get_success_url(self):
-        messages.success(self.request, 'The relation between data and requirement was deleted successfully!')
+        if self.request.method  != 'GET':
+            messages.success(self.request, 'The relation between data and requirement was deleted successfully!')
         return reverse_lazy('requirement:detail',
                             kwargs={'pk': self.kwargs['requirement_pk']})

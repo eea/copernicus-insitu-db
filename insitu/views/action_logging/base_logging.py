@@ -26,7 +26,7 @@ class BaseLoggingView:
                 self.target_type,
                 str(id),
                 self.extra
-            ])
+            ]).strip(",")
             spamwriter.writerow(row.split(','))
 
 
@@ -43,9 +43,9 @@ class PostMethodLoggingView(BaseLoggingView):
     post_action = None
 
     def post(self, request, *args, **kwargs):
+        errors = self.get_form().errors
         response = super().post(request, *args, **kwargs)
         action = self.post_action
-        errors = self.get_form().errors
         if errors:
             self.extra = json.dumps(errors)
             action = self.post_action_failed
@@ -58,10 +58,16 @@ class PutMethodLoggingView(BaseLoggingView):
     post_action = None
 
     def post(self, request, *args, **kwargs):
-        errors = self.get_form().errors
+        form = self.get_form()
+        try:
+            self.instance = self.get_object()
+            form.instance = self.instance
+            errors = form.errors
+        except:
+            errors = form.errors
         response = super().post(request, *args, **kwargs)
         action = self.post_action
-        if errors:
+        if errors and response.status_code != 302:
             self.extra = json.dumps(errors)
             action = self.post_action_failed
         id = self.get_object_id()

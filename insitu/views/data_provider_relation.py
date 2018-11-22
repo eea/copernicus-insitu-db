@@ -87,6 +87,7 @@ class DataDataProviderDelete(LoggingProtectedDeleteView):
         return context
 
     def get_success_url(self):
-        messages.success(self.request, 'The relation between data and data provider was deleted successfully!')
+        if self.request.method != 'GET':
+            messages.success(self.request, 'The relation between data and data provider was deleted successfully!')
         return reverse_lazy('data:detail',
                             kwargs={'pk': self.kwargs['group_pk']})

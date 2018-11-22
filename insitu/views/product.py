@@ -17,10 +17,11 @@ from insitu.utils import get_choices
 from insitu.views.base import ESDatatableView
 from insitu.views.protected import (
     ProtectedView,
-    ProtectedTemplateView, ProtectedDetailView,
-    ProtectedUpdateView, ProtectedCreateView,
-    ProtectedDeleteView,
+    LoggingProtectedTemplateView,
+    LoggingProtectedDetailView,
     LoggingProtectedCreateView,
+    LoggingProtectedUpdateView,
+    LoggingProtectedDeleteView,
     )
 from insitu.views.protected.permissions import (
     IsAuthenticated,
@@ -31,7 +32,7 @@ from picklists.views import solve_sql
 
 import json
 
-class ProductList(ProtectedTemplateView):
+class ProductList(LoggingProtectedTemplateView):
     template_name = 'product/list.html'
     permission_classes = (IsAuthenticated, )
     permission_denied_redirect = None
@@ -73,7 +74,7 @@ class ProductListJson(ESDatatableView):
     permission_classes = (IsAuthenticated, )
 
 
-class ProductAdd(ProtectedCreateView):
+class ProductAdd(LoggingProtectedCreateView):
     template_name = 'product/add.html'
     form_class = forms.ProductForm
     permission_classes = (IsSuperuser, )
@@ -92,7 +93,7 @@ class ProductAdd(ProtectedCreateView):
         return reverse('product:list')
 
 
-class ProductEdit(ProtectedUpdateView):
+class ProductEdit(LoggingProtectedUpdateView):
     template_name = 'product/edit.html'
     form_class = forms.ProductForm
     model = models.Product
@@ -114,7 +115,7 @@ class ProductEdit(ProtectedUpdateView):
         return reverse('product:detail', kwargs={'pk': product.pk})
 
 
-class ProductDetail(ProtectedDetailView):
+class ProductDetail(LoggingProtectedDetailView):
     template_name = 'product/detail.html'
     model = models.Product
     context_object_name = 'product'
@@ -126,7 +127,7 @@ class ProductDetail(ProtectedDetailView):
         return super().permission_denied(request)
 
 
-class ProductDelete(ProtectedDeleteView):
+class ProductDelete(LoggingProtectedDeleteView):
 
     template_name = 'product/delete.html'
     form_class = forms.ProductForm
