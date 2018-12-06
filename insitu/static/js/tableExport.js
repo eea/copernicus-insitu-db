@@ -288,7 +288,9 @@ function s2ab(s) {
                 var link=document.createElement('a');
                 link.href=window.URL.createObjectURL(blob);
                 link.download=defaults.filename;
+                document.body.appendChild(link);
                 link.click();
+                link.remove();
             }else if(defaults.type == 'png'){
                 html2canvas($(el), {
                     onrendered: function(canvas) {										
