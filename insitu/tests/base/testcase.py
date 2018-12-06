@@ -2,7 +2,7 @@ import csv
 import os
 
 from django.test import TestCase
-from copernicus.testsettings import LOGGING_CSV_FILENAME
+from copernicus.testsettings import LOGGING_CSV_FILENAME, LOGGING_CSV_PATH
 from insitu.tests.base import UserFactory
 
 
@@ -28,12 +28,10 @@ class FormCheckTestCase(TestCase):
         self.client.force_login(self.creator)
 
     def erase_logging_file(self):
-        file_name = LOGGING_CSV_FILENAME
-        open(file_name, 'w').close()
+        open(LOGGING_CSV_PATH, 'w').close()
 
     def logging(self, check_username=True):
-        file_name = LOGGING_CSV_FILENAME
-        with open(file_name, 'r') as csv_file:
+        with open(LOGGING_CSV_PATH, 'r') as csv_file:
             spamreader = csv.reader(csv_file, delimiter=',')
             for row in spamreader:
                 if check_username:

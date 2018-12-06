@@ -21,4 +21,4 @@ SECRET_KEY = 'app_tests_secret_key'
 
 
 LOGGING_CSV_FILENAME = 'test-user-actions.csv'
-LOGGING_CSV_PATH = None
+LOGGING_CSV_PATH = os.path.join(BASE_DIR, 'logging', LOGGING_CSV_FILENAME)

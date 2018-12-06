@@ -14,7 +14,7 @@ class BaseLoggingView:
 
     def log_action(self, request, action, id=''):
         if 'test' in sys.argv:
-            from copernicus.testsettings import LOGGING_CSV_FILENAME
+            from copernicus.testsettings import LOGGING_CSV_FILENAME, LOGGING_CSV_PATH
         else:
             from copernicus.settings import LOGGING_CSV_FILENAME, LOGGING_CSV_PATH
         with open(LOGGING_CSV_PATH, 'a+') as csvfile:
