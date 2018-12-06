@@ -3,6 +3,13 @@ Changelog
 
 * In case of major changes, an email should be sent to all users with the modifications.
 
+1.5.12 (2018-12-06)
+------------------
+* Make logging persistent
+* Hide valid button for teammates
+* Fix report export for Firefox, Edge and Internet Explorer
+  [dianaboiangiu]
+
 1.5.11 (2018-11-21)
 ------------------
 * Fix links between products and requirements

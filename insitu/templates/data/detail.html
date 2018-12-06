@@ -141,20 +141,22 @@
               {% endif %}
             {% endif %}
             {% if data.state.name == 'ready' %}
-              <a class="btn btn-primary"
-                 href="{% url 'data:transition' pk=data.pk source='ready' target='valid' %}">
-                Mark as valid
-              </a>
+              {% if request.user not in data.created_by.team.teammates.all %}
+                <a class="btn btn-primary"
+                   href="{% url 'data:transition' pk=data.pk source='ready' target='valid' %}">
+                  Mark as valid
+                </a>
+              {% endif %}
               {% if data.created_by != request.user and request.user not in data.created_by.team.teammates.all %}
                 <a class="btn btn-primary"
                    href="{% url 'data:transition' pk=data.pk source='ready' target='changes' %}">
                   Request changes
                 </a>
               {% elif data.created_by == request.user or request.user in data.created_by.team.teammates.all %}
-                 <a class="btn btn-primary"
-                     href="{% url 'data:transition' pk=data.pk source='ready' target='draft' %}">
-                    Move back to draft
-                 </a>
+                <a class="btn btn-primary"
+                   href="{% url 'data:transition' pk=data.pk source='ready' target='draft' %}">
+                  Move back to draft
+                </a>
               {% endif %}
             {% endif %}
             {% if data.state.name == 'changes' %}

@@ -75,7 +75,6 @@ class ProductRequirementEditForm(ProductRequirementBaseForm):
 
     def clean(self):
         cleaned_data = super(ProductRequirementEditForm, self).clean()
-
         requirement = self.data['requirement']
         product = self.data['product']
         relevance = cleaned_data['relevance']

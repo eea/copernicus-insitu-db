@@ -54,7 +54,7 @@ class ProductRequirementAdd(BaseProductRequirementAdd):
     form_class = forms.RequirementProductRequirementForm
     title = "Add a new product for {}"
     target_type = 'relation between product and requirement'
-    message = 'The relation between product and requirement was updated successfully!'
+    message = 'The relation between product and requirement was created successfully!'
 
 
 class ProductGroupRequirementAdd(BaseProductRequirementAdd):
@@ -121,6 +121,7 @@ class ProductRequirementDelete(LoggingProtectedDeleteView):
         return context
 
     def get_success_url(self):
-        messages.success(self.request, 'The relation between product and requirement was deleted successfully!')
+        if self.request.method != 'GET':
+            messages.success(self.request, 'The relation between product and requirement was deleted successfully!')
         return reverse_lazy('requirement:detail',
                             kwargs={'pk': self.kwargs['requirement_pk']})
