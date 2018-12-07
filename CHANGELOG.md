@@ -3,6 +3,11 @@ Changelog
 
 * In case of major changes, an email should be sent to all users with the modifications.
 
+1.5.13 (2018-12-07)
+------------------
+* Use different function for Internet Explorer reports export
+  [dianaboiangiu]
+
 1.5.12 (2018-12-06)
 ------------------
 * Make logging persistent
