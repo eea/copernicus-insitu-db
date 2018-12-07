@@ -285,12 +285,17 @@ function s2ab(s) {
 
                 var base64data = "base64," + $.base64.encode(excelFile);
                 var blob=new Blob([s2ab(excelFile)], {type:'data:application/vnd.ms-'+defaults.type});
-                var link=document.createElement('a');
-                link.href=window.URL.createObjectURL(blob);
-                link.download=defaults.filename;
-                document.body.appendChild(link);
-                link.click();
-                link.remove();
+                if (navigator.msSaveOrOpenBlob) {
+                    navigator.msSaveOrOpenBlob(blob, defaults.filename);
+                }
+                else {
+                  var link=document.createElement('a');
+                  link.href=window.URL.createObjectURL(blob);
+                  link.download=defaults.filename;
+                  document.body.appendChild(link);
+                  link.click();
+                  link.remove();
+                }
             }else if(defaults.type == 'png'){
                 html2canvas($(el), {
                     onrendered: function(canvas) {										

@@ -174,12 +174,17 @@
       xhr.onreadystatechange = function() {
         if (this.readyState == XMLHttpRequest.DONE && this.status == 200) {
           var blob=new Blob([this.response], {type:"application/pdf"});
+          if (navigator.msSaveOrOpenBlob) {
+            navigator.msSaveOrOpenBlob(blob, "{{ pdf_filename }}");
+          }
+          else {
           var link=document.createElement('a');
           link.href=window.URL.createObjectURL(blob);
           link.download="{{ pdf_filename }}";
           document.body.appendChild(link);
           link.click();
           link.remove();
+          }
         }
       }
       xhr.send(encodeURIComponent('data') + '=' + encodeURIComponent(html) + "&" + encodeURIComponent('title') + '=' + encodeURIComponent('{{ query.title }}'));
