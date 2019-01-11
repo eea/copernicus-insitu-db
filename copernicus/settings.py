@@ -98,7 +98,6 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
                 'insitu.context_processors.base',
-                'insitu.context_processors.google_analytics',
                 'insitu.context_processors.matomo',
                 'insitu.context_processors.crazy_egg',
                 'insitu.context_processors.sentry',
@@ -185,7 +184,6 @@ SUIT_CONFIG = {
 LOGGING_CSV_FILENAME = env('LOGGING_CSV_FILENAME', 'user-actions-logging.csv')
 LOGGING_CSV_PATH = os.path.join(BASE_DIR, 'logging', LOGGING_CSV_FILENAME)
 
-GOOGLE_ANALYTICS_PROPERTY_ID = env('GOOGLE_ANALYTICS_PROPERTY_ID', '')
 MATOMO = env('MATOMO', False)
 
 CRAZY_EGG = env('CRAZY_EGG', '')

@@ -30,15 +30,6 @@
       })
     </script>
     {% endif %}
-    {% if GOOGLE_ANALYTICS_PROPERTY_ID %}
-      <script async src="https://www.googletagmanager.com/gtag/js?id={{ GOOGLE_ANALYTICS_PROPERTY_ID }}"></script>
-      <script>
-        window.dataLayer = window.dataLayer || [];
-        function gtag(){dataLayer.push(arguments);}
-        gtag('js', new Date());
-        gtag('config', '{{ GOOGLE_ANALYTICS_PROPERTY_ID }}', { 'anonymize_ip': true });
-      </script>
-    {% endif %}
 
     {% if CRAZY_EGG %}
         <script type="text/javascript" src="{{ CRAZY_EGG }}" async="async"></script>
