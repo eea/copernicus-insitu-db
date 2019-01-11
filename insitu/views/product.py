@@ -17,7 +17,8 @@ from insitu.utils import get_choices
 from insitu.views.base import ESDatatableView
 from insitu.views.protected import (
     ProtectedView,
-    LoggingProtectedTemplateView,
+    ProtectedTemplateView,
+    ProtectedDetailView,
     LoggingProtectedDetailView,
     LoggingProtectedCreateView,
     LoggingProtectedUpdateView,
@@ -32,7 +33,7 @@ from picklists.views import solve_sql
 
 import json
 
-class ProductList(LoggingProtectedTemplateView):
+class ProductList(ProtectedTemplateView):
     template_name = 'product/list.html'
     permission_classes = (IsAuthenticated, )
     permission_denied_redirect = None
@@ -115,7 +116,7 @@ class ProductEdit(LoggingProtectedUpdateView):
         return reverse('product:detail', kwargs={'pk': product.pk})
 
 
-class ProductDetail(LoggingProtectedDetailView):
+class ProductDetail(ProtectedDetailView):
     template_name = 'product/detail.html'
     model = models.Product
     context_object_name = 'product'

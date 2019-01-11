@@ -10,14 +10,14 @@ from insitu import models
 from insitu.utils import get_choices
 from insitu.views.base import ESDatatableView, CreatedByMixin
 from insitu.views.protected import (
-    LoggingProtectedTemplateView, LoggingProtectedDetailView,
+    ProtectedTemplateView, ProtectedDetailView,
     LoggingProtectedUpdateView, LoggingProtectedCreateView,
     LoggingProtectedDeleteView, LoggingTransitionProtectedDetailView)
 from insitu.views.protected import IsAuthenticated, IsOwnerUser
 from insitu.views.protected.permissions import IsDraftObject
 from picklists import models as pickmodels
 
-class DataList(LoggingProtectedTemplateView):
+class DataList(ProtectedTemplateView):
     template_name = 'data/list.html'
     permission_classes = (IsAuthenticated, )
     permission_denied_redirect = reverse_lazy('auth:login')
@@ -171,7 +171,7 @@ class DataEdit(LoggingProtectedUpdateView):
         return reverse('data:detail', kwargs={'pk': self.object.pk})
 
 
-class DataDetail(LoggingProtectedDetailView):
+class DataDetail(ProtectedDetailView):
     template_name = 'data/detail.html'
     model = models.Data
     context_object_name = 'data'

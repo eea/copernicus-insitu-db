@@ -86,8 +86,7 @@ class DeleteMethodLoggingView(BaseLoggingView):
         return response
 
 
-class CreateLoggingView(GetMethodLoggingView, PostMethodLoggingView):
-    get_action = 'visited create page of'
+class CreateLoggingView(PostMethodLoggingView):
     post_action = 'created'
     post_action_failed = 'tried to create'
 
@@ -97,8 +96,7 @@ class CreateLoggingView(GetMethodLoggingView, PostMethodLoggingView):
         return ''
 
 
-class UpdateLoggingView(GetMethodLoggingView, PutMethodLoggingView):
-    get_action = 'visited edit page of'
+class UpdateLoggingView(PutMethodLoggingView):
     post_action = 'updated'
     post_action_failed = 'tried to update'
 
@@ -106,8 +104,7 @@ class UpdateLoggingView(GetMethodLoggingView, PutMethodLoggingView):
         return self.get_object().id
 
 
-class DeleteLoggingView(GetMethodLoggingView, DeleteMethodLoggingView):
-    get_action = 'visited delete page of'
+class DeleteLoggingView(DeleteMethodLoggingView):
     post_action = 'deleted'
 
     def get_object_id(self):
@@ -125,7 +122,7 @@ class DetailLoggingView(GetMethodLoggingView):
         return self.get_object().id
 
 
-class TrasitionLoggingView(GetMethodLoggingView):
+class TrasitionLoggingView(PostMethodLoggingView):
     get_action = 'visited transition page of '
 
     def get_object_id(self):

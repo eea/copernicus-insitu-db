@@ -10,7 +10,7 @@ from insitu import forms
 from insitu.views.base import ESDatatableView, CreatedByMixin
 from insitu.views.protected import ProtectedUpdateView
 from insitu.views.protected import (
-    LoggingProtectedTemplateView, LoggingProtectedDetailView,
+    ProtectedTemplateView,ProtectedDetailView,
     LoggingProtectedUpdateView, LoggingProtectedCreateView,
     LoggingProtectedDeleteView, LoggingTransitionProtectedDetailView)
 from insitu.views.protected import IsAuthenticated
@@ -23,7 +23,7 @@ from insitu.utils import get_choices
 from picklists import models as pickmodels
 
 
-class DataProviderList(LoggingProtectedTemplateView):
+class DataProviderList(ProtectedTemplateView):
     template_name = 'data_provider/list.html'
     permission_classes = (IsAuthenticated,)
     permission_denied_redirect = reverse_lazy('auth:login')
@@ -52,7 +52,7 @@ class DataProviderListJson(ESDatatableView):
     permission_classes = (IsAuthenticated,)
 
 
-class DataProviderDetail(LoggingProtectedDetailView):
+class DataProviderDetail(ProtectedDetailView):
     model = models.DataProvider
     context_object_name = 'provider'
     permission_classes = (IsAuthenticated,)

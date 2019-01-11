@@ -11,7 +11,7 @@ from insitu import models
 from insitu.utils import get_choices
 from insitu.views.base import ESDatatableView, CreatedByMixin
 from insitu.views.protected import (
-    LoggingProtectedTemplateView, LoggingProtectedDetailView,
+    ProtectedTemplateView, ProtectedDetailView,
     LoggingProtectedUpdateView, LoggingProtectedCreateView,
     LoggingProtectedDeleteView, LoggingTransitionProtectedDetailView)
 from picklists import models as pickmodels
@@ -52,7 +52,7 @@ class GetInitialMixin:
         return initial_data.copy()
 
 
-class RequirementDetail(LoggingProtectedDetailView):
+class RequirementDetail(ProtectedDetailView):
     template_name = 'requirement/detail.html'
     model = models.Requirement
     context_object_name = 'requirement'
@@ -64,7 +64,7 @@ class RequirementDetail(LoggingProtectedDetailView):
         return super().permission_denied(request)
 
 
-class RequirementList(LoggingProtectedTemplateView):
+class RequirementList(ProtectedTemplateView):
     template_name = 'requirement/list.html'
     permission_classes = (IsAuthenticated, )
     target_type = 'requirements'
