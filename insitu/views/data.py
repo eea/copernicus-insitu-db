@@ -8,7 +8,11 @@ from insitu import documents
 from insitu import forms
 from insitu import models
 from insitu.utils import get_choices
-from insitu.views.base import ESDatatableView, CreatedByMixin
+from insitu.views.base import (
+    ESDatatableView,
+    CreatedByMixin,
+    ChangesRequestedMailMixin,
+)
 from insitu.views.protected import (
     ProtectedTemplateView, ProtectedDetailView,
     LoggingProtectedUpdateView, LoggingProtectedCreateView,
@@ -221,7 +225,7 @@ class DataDelete(LoggingProtectedDeleteView):
         return reverse('data:list')
 
 
-class DataTransition(LoggingTransitionProtectedDetailView):
+class DataTransition(ChangesRequestedMailMixin, LoggingTransitionProtectedDetailView):
     model = models.Data
     template_name = 'data/transition.html'
     permission_classes = (IsAuthenticated, )
@@ -249,6 +253,10 @@ class DataTransition(LoggingTransitionProtectedDetailView):
         })
         return context
 
+    def get_success_url(self, **kwargs):
+        data =  self.get_object(self.get_queryset())
+        return reverse('data:detail', kwargs={'pk': data.pk})
+
     def post(self, request, *args, **kwargs):
         data = self.get_object(self.get_queryset())
         source = self.kwargs.get('source')
@@ -265,6 +273,8 @@ class DataTransition(LoggingTransitionProtectedDetailView):
             data.requesting_user = self.request.user
             if transition.is_available():
                 transition()
+                if self.transition_name == transition_name:
+                    self.send_mail(data)
                 return HttpResponseRedirect(reverse('data:detail',
                                                     kwargs={'pk': data.pk}))
         except ForbiddenTransition:

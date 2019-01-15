@@ -9,7 +9,12 @@ from insitu import documents
 from insitu import forms
 from insitu import models
 from insitu.utils import get_choices
-from insitu.views.base import ESDatatableView, CreatedByMixin
+from insitu.views.base import (
+    ESDatatableView,
+    CreatedByMixin,
+    ChangesRequestedMailMixin,
+)
+
 from insitu.views.protected import (
     ProtectedTemplateView, ProtectedDetailView,
     LoggingProtectedUpdateView, LoggingProtectedCreateView,
@@ -180,7 +185,7 @@ class RequirementDelete(LoggingProtectedDeleteView):
         return reverse('requirement:list')
 
 
-class RequirementTransition(LoggingTransitionProtectedDetailView):
+class RequirementTransition(ChangesRequestedMailMixin, LoggingTransitionProtectedDetailView):
     model = models.Requirement
     template_name = 'requirement/transition.html'
     permission_classes = (IsAuthenticated, )
@@ -208,6 +213,10 @@ class RequirementTransition(LoggingTransitionProtectedDetailView):
         })
         return context
 
+    def get_success_url(self, **kwargs):
+        requirement =  self.get_object(self.get_queryset())
+        return reverse('requirement:detail', kwargs={'pk': requirement.pk})
+
     def post(self, request, *args, **kwargs):
         requirement = self.get_object(self.get_queryset())
         source = self.kwargs.get('source')
@@ -224,6 +233,8 @@ class RequirementTransition(LoggingTransitionProtectedDetailView):
             requirement.requesting_user = self.request.user
             if transition.is_available():
                 transition()
+                if self.transition_name == transition_name:
+                    self.send_mail(requirement)
                 return HttpResponseRedirect(reverse('requirement:detail',
                                                     kwargs={'pk': requirement.pk}))
         except ForbiddenTransition:

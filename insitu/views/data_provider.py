@@ -7,7 +7,11 @@ from xworkflows import ForbiddenTransition
 from insitu import documents
 from insitu import models
 from insitu import forms
-from insitu.views.base import ESDatatableView, CreatedByMixin
+from insitu.views.base import (
+    ESDatatableView,
+    CreatedByMixin,
+    ChangesRequestedMailMixin,
+)
 from insitu.views.protected import ProtectedUpdateView
 from insitu.views.protected import (
     ProtectedTemplateView,ProtectedDetailView,
@@ -225,7 +229,7 @@ class DataProviderDeleteNonNetwork(LoggingProtectedDeleteView):
         return reverse('provider:list')
 
 
-class DataProviderTransition(LoggingTransitionProtectedDetailView):
+class DataProviderTransition(ChangesRequestedMailMixin, LoggingTransitionProtectedDetailView):
     model = models.DataProvider
     template_name = 'data_provider/transition.html'
     permission_classes = (IsAuthenticated, )
@@ -253,6 +257,10 @@ class DataProviderTransition(LoggingTransitionProtectedDetailView):
         })
         return context
 
+    def get_success_url(self, **kwargs):
+        data_provider =  self.get_object(self.get_queryset())
+        return reverse('provider:detail', kwargs={'pk': data_provider.pk})
+
     def post(self, request, *args, **kwargs):
         data_provider = self.get_object(self.get_queryset())
         source = self.kwargs.get('source')
@@ -269,6 +277,8 @@ class DataProviderTransition(LoggingTransitionProtectedDetailView):
             data_provider.requesting_user = self.request.user
             if transition.is_available():
                 transition()
+                if self.transition_name == transition_name:
+                    self.send_mail(data_provider)
                 return HttpResponseRedirect(reverse('provider:detail',
                                                     kwargs={'pk': data_provider.pk}))
         except ForbiddenTransition:

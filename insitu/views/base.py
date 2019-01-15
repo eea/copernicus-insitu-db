@@ -1,6 +1,10 @@
 from django.conf import settings
+from django.core.mail import send_mail
 from django.views.generic.edit import ModelFormMixin
 from django_datatables_view.base_datatable_view import BaseDatatableView
+from django.template.loader import render_to_string
+
+from copernicus.settings import EMAIL_SENDER, SITE_URL
 from insitu.utils import ALL_OPTIONS_LABEL
 from insitu.views.protected.views import ProtectedView
 
@@ -120,3 +124,32 @@ class CreatedByMixin:
     def form_valid(self, form):
         self.object = form.save(created_by=self.request.user)
         return super(ModelFormMixin, self).form_valid(form)
+
+
+class ChangesRequestedMailMixin:
+    transition_name = 'request_changes'
+
+    def send_mail(self, target_object):
+        sender = self.request.user
+        receiver = target_object.created_by
+        subject = 'Changes requested for "{}" {}'.format(
+            target_object.name,
+            self.target_type,
+        )
+        context = {
+            "target": self.target_type,
+            "receiver": receiver,
+            "sender": sender,
+            "object": target_object,
+            "url": SITE_URL + self.get_success_url(),
+        }
+        html_message = render_to_string('mails/request_changes.html',
+                                        context=context)
+        message = render_to_string('mails/request_changes.txt',
+                                   context=context)
+        send_mail(subject=subject,
+                  message=message,
+                  from_email=EMAIL_SENDER,
+                  recipient_list=[receiver.email],
+                  html_message=html_message
+        )
