@@ -15,6 +15,8 @@ install:
   - pip install -r requirements-dev.txt
 before_script:
   - sudo service elasticsearch start
+  - mkdir logging
+  - chmod -R 777 logging
 script:
   - wget -q --waitretry=1 --retry-connrefused -T 10 -O - http://127.0.0.1:9200
   - ./manage.py check
