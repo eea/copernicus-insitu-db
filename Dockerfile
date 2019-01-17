@@ -5,9 +5,10 @@ ENV APP_HOME=/var/local/copernicus
 
 RUN apk add --no-cache --update gcc netcat-openbsd postgresql-dev \
                                 pcre-dev musl-dev linux-headers make \
-                                xvfb  ttf-freefont fontconfig dbus
+                                xvfb  ttf-freefont fontconfig dbus qt5-qtbase-dev \
+                                qt5-qtwebkit-dev qt5-qtsvg-dev qt5-qtxmlpatterns-dev
 RUN apk add qt5-qtbase-dev wkhtmltopdf --no-cache \
-            --repository http://dl-3.alpinelinux.org/alpine/edge/testing/ \
+            --repository http://dl-3.alpinelinux.org/alpine/edge/community/ \
             --allow-untrusted
 
 RUN mkdir -p $APP_HOME
