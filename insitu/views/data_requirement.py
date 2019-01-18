@@ -7,18 +7,19 @@ from insitu.views.base import CreatedByMixin
 from insitu.views.protected import (
     LoggingProtectedUpdateView,
     LoggingProtectedCreateView,
-    LoggingProtectedDeleteView
+    LoggingProtectedDeleteView,
 )
 from insitu.views.protected.permissions import (
-    IsOwnerUser,
+    IsAuthenticated,
     IsDraftObject,
-    IsAuthenticated
+    IsOwnerUser,
+    IsNotReadOnlyUser,
 )
 
 
 class DataRequirementAdd(CreatedByMixin, LoggingProtectedCreateView):
     template_name = 'data/requirement/add.html'
-    permission_classes = (IsAuthenticated, )
+    permission_classes = (IsAuthenticated, IsNotReadOnlyUser)
     permission_denied_redirect = reverse_lazy('requirement:list')
     form_class = forms.RequirementDataRequirementForm
     form_field = 'requirement'
@@ -54,7 +55,7 @@ class DataRequirementEdit(LoggingProtectedUpdateView):
     template_name = 'data/requirement/edit.html'
     form_class = forms.DataRequirementEditForm
     context_object_name = 'rel'
-    permission_classes = (IsOwnerUser, IsDraftObject)
+    permission_classes = (IsOwnerUser, IsDraftObject, IsNotReadOnlyUser)
     permission_denied_redirect = reverse_lazy('requirement:list')
     target_type = 'relation between data and requirement'
 
@@ -77,7 +78,7 @@ class DataRequirementDelete(LoggingProtectedDeleteView):
     model = models.DataRequirement
     template_name = 'data/requirement/delete.html'
     context_object_name = 'rel'
-    permission_classes = (IsOwnerUser, IsDraftObject)
+    permission_classes = (IsOwnerUser, IsDraftObject, IsNotReadOnlyUser)
     permission_denied_redirect = reverse_lazy('requirement:list')
     target_type = 'relation between data and requirement'
 

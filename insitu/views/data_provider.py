@@ -14,10 +14,14 @@ from insitu.views.base import (
 )
 from insitu.views.protected import ProtectedUpdateView
 from insitu.views.protected import (
-    ProtectedTemplateView,ProtectedDetailView,
-    LoggingProtectedUpdateView, LoggingProtectedCreateView,
-    LoggingProtectedDeleteView, LoggingTransitionProtectedDetailView)
-from insitu.views.protected import IsAuthenticated
+    ProtectedTemplateView,
+    ProtectedDetailView,
+    LoggingProtectedUpdateView,
+    LoggingProtectedCreateView,
+    LoggingProtectedDeleteView,
+    LoggingTransitionProtectedDetailView
+)
+from insitu.views.protected import IsAuthenticated, IsNotReadOnlyUser
 from insitu.views.protected.permissions import (
     IsOwnerUser,
     IsDraftObject
@@ -73,7 +77,7 @@ class DataProviderDetail(ProtectedDetailView):
 class DataProviderAddNetwork(CreatedByMixin, LoggingProtectedCreateView):
     template_name = 'data_provider/network/add.html'
     form_class = forms.DataProviderNetworkForm
-    permission_classes = (IsAuthenticated, )
+    permission_classes = (IsAuthenticated, IsNotReadOnlyUser)
     permission_denied_redirect = reverse_lazy('provider:list')
     target_type = 'data provider network'
 
@@ -91,7 +95,7 @@ class DataProviderEditNetwork(LoggingProtectedUpdateView):
     form_class = forms.DataProviderNetworkForm
     context_object_name = 'provider'
     model = models.DataProvider
-    permission_classes = (IsOwnerUser, IsDraftObject)
+    permission_classes = (IsOwnerUser, IsDraftObject, IsNotReadOnlyUser)
     permission_denied_redirect = reverse_lazy('provider:list')
     target_type = 'data provider network'
 
@@ -109,7 +113,7 @@ class DataProviderEditNetworkMembers(ProtectedUpdateView):
     form_class = forms.DataProviderNetworkMembersForm
     context_object_name = 'provider'
     model = models.DataProvider
-    permission_classes = (IsOwnerUser, IsDraftObject)
+    permission_classes = (IsOwnerUser, IsDraftObject, IsNotReadOnlyUser)
     permission_denied_redirect = reverse_lazy('provider:list')
 
     def form_valid(self, form):
@@ -126,7 +130,7 @@ class DataProviderDeleteNetwork(LoggingProtectedDeleteView):
     form_class = forms.DataProviderNetworkForm
     context_object_name = 'provider'
     model = models.DataProvider
-    permission_classes = (IsOwnerUser, IsDraftObject)
+    permission_classes = (IsOwnerUser, IsDraftObject, IsNotReadOnlyUser)
     permission_denied_redirect = reverse_lazy('provider:list')
     target_type = 'data provider network'
 
@@ -138,7 +142,7 @@ class DataProviderDeleteNetwork(LoggingProtectedDeleteView):
 class DataProviderAddNonNetwork(CreatedByMixin, LoggingProtectedCreateView):
     template_name = 'data_provider/non_network/add.html'
     form_class = forms.DataProviderNonNetworkForm
-    permission_classes = (IsAuthenticated, )
+    permission_classes = (IsAuthenticated, IsNotReadOnlyUser)
     permission_denied_redirect = reverse_lazy('provider:list')
     target_type = 'data provider'
 
@@ -176,7 +180,7 @@ class DataProviderEditNonNetwork(LoggingProtectedUpdateView):
     form_class = forms.DataProviderNonNetworkForm
     context_object_name = 'provider'
     model = models.DataProvider
-    permission_classes = (IsOwnerUser, IsDraftObject)
+    permission_classes = (IsOwnerUser, IsDraftObject, IsNotReadOnlyUser)
     permission_denied_redirect = reverse_lazy('provider:list')
     target_type = 'data provider'
 
@@ -220,7 +224,7 @@ class DataProviderDeleteNonNetwork(LoggingProtectedDeleteView):
     form_class = forms.DataProviderNonNetworkForm
     context_object_name = 'provider'
     model = models.DataProvider
-    permission_classes = (IsOwnerUser, IsDraftObject)
+    permission_classes = (IsOwnerUser, IsDraftObject, IsNotReadOnlyUser)
     permission_denied_redirect = reverse_lazy('provider:list')
     target_type = 'data provider'
 
@@ -232,7 +236,7 @@ class DataProviderDeleteNonNetwork(LoggingProtectedDeleteView):
 class DataProviderTransition(ChangesRequestedMailMixin, LoggingTransitionProtectedDetailView):
     model = models.DataProvider
     template_name = 'data_provider/transition.html'
-    permission_classes = (IsAuthenticated, )
+    permission_classes = (IsAuthenticated, IsNotReadOnlyUser)
     context_object_name = 'provider'
     target_type = 'data provider'
 

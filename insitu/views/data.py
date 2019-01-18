@@ -14,10 +14,18 @@ from insitu.views.base import (
     ChangesRequestedMailMixin,
 )
 from insitu.views.protected import (
-    ProtectedTemplateView, ProtectedDetailView,
-    LoggingProtectedUpdateView, LoggingProtectedCreateView,
-    LoggingProtectedDeleteView, LoggingTransitionProtectedDetailView)
-from insitu.views.protected import IsAuthenticated, IsOwnerUser
+    ProtectedTemplateView,
+    ProtectedDetailView,
+    LoggingProtectedUpdateView,
+    LoggingProtectedCreateView,
+    LoggingProtectedDeleteView,
+    LoggingTransitionProtectedDetailView,
+)
+from insitu.views.protected import (
+    IsAuthenticated,
+    IsNotReadOnlyUser,
+    IsOwnerUser,
+)
 from insitu.views.protected.permissions import IsDraftObject
 from picklists import models as pickmodels
 
@@ -77,7 +85,7 @@ class DataListJson(ESDatatableView):
 class DataAdd(CreatedByMixin, LoggingProtectedCreateView):
     template_name = 'data/add.html'
     model = models.Data
-    permission_classes = (IsAuthenticated, )
+    permission_classes = (IsAuthenticated, IsNotReadOnlyUser)
     permission_denied_redirect = reverse_lazy('data:list')
     target_type = 'data'
 
@@ -151,7 +159,7 @@ class DataEdit(LoggingProtectedUpdateView):
     template_name = 'data/edit.html'
     model = models.Data
     context_object_name = 'data'
-    permission_classes = (IsOwnerUser, IsDraftObject)
+    permission_classes = (IsOwnerUser, IsDraftObject, IsNotReadOnlyUser)
     permission_denied_redirect = reverse_lazy('data:list')
     target_type = 'data'
 
@@ -216,7 +224,7 @@ class DataDelete(LoggingProtectedDeleteView):
     form_class = forms.DataForm
     model = models.Data
     context_object_name = 'data'
-    permission_classes = (IsOwnerUser, IsDraftObject)
+    permission_classes = (IsOwnerUser, IsDraftObject, IsNotReadOnlyUser)
     permission_denied_redirect = reverse_lazy('data:list')
     target_type = 'data'
 
@@ -228,7 +236,7 @@ class DataDelete(LoggingProtectedDeleteView):
 class DataTransition(ChangesRequestedMailMixin, LoggingTransitionProtectedDetailView):
     model = models.Data
     template_name = 'data/transition.html'
-    permission_classes = (IsAuthenticated, )
+    permission_classes = (IsAuthenticated, IsNotReadOnlyUser)
     context_object_name = 'data'
     target_type = 'data'
 

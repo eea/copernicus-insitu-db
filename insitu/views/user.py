@@ -9,6 +9,7 @@ from insitu.models import User
 from insitu.forms import TeamForm
 from insitu.views.protected import (
     IsAuthenticated,
+    IsNotReadOnlyUser,
     IsRequestedUser,
     ProtectedFormView,
     ProtectedUpdateView,
@@ -66,7 +67,7 @@ class EditTeamMatesView(ProtectedUpdateView):
     template_name = 'auth/edit_teammates.html'
     form_class = TeamForm
     context_object_name = 'user'
-    permission_classes = (IsAuthenticated,)
+    permission_classes = (IsAuthenticated, IsNotReadOnlyUser)
     permission_denied_redirect = reverse_lazy('auth:login')
     model = User
 

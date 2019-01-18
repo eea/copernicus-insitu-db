@@ -1,5 +1,6 @@
 from django.shortcuts import get_object_or_404
 from insitu.models import User
+from copernicus.settings import READ_ONLY_GROUP
 
 
 class BasePermission(object):
@@ -22,6 +23,11 @@ class IsAuthenticated(BasePermission):
         return (request.user and
                 request.user.is_authenticated() and
                 request.user.is_active)
+
+
+class IsNotReadOnlyUser(IsAuthenticated):
+    def has_permission(self, request, view):
+        return not request.user.groups.filter(name=READ_ONLY_GROUP).exists()
 
 
 class IsSuperuser(IsAuthenticated):

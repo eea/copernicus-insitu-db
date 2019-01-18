@@ -4,7 +4,12 @@ from __future__ import unicode_literals
 from django.contrib import messages
 
 from insitu.views.base import CreatedByMixin
-from insitu.views.protected import IsOwnerUser, IsDraftObject, IsAuthenticated
+from insitu.views.protected import (
+    IsAuthenticated,
+    IsDraftObject,
+    IsNotReadOnlyUser,
+    IsOwnerUser,
+)
 from django.urls import reverse_lazy
 
 from insitu.views.protected import (
@@ -19,7 +24,7 @@ from insitu import forms
 
 class DataDataProviderAdd(CreatedByMixin, LoggingProtectedCreateView):
     template_name = 'data/data_provider/add.html'
-    permission_classes = (IsAuthenticated, )
+    permission_classes = (IsAuthenticated, IsNotReadOnlyUser)
     permission_denied_redirect = reverse_lazy('data:list')
     form_class = forms.DataProviderRelationGroupForm
     form_field = 'data'
@@ -54,7 +59,7 @@ class DataDataProviderEdit(LoggingProtectedUpdateView):
     template_name = 'data/data_provider/edit.html'
     form_class = forms.DataProviderRelationEditForm
     context_object_name = 'rel'
-    permission_classes = (IsOwnerUser, IsDraftObject)
+    permission_classes = (IsOwnerUser, IsDraftObject, IsNotReadOnlyUser)
     permission_denied_redirect = reverse_lazy('data:list')
     target_type = 'relation between data and data provider'
 
@@ -77,7 +82,7 @@ class DataDataProviderDelete(LoggingProtectedDeleteView):
     model = models.DataProviderRelation
     template_name = 'data/data_provider/delete.html'
     context_object_name = 'rel'
-    permission_classes = (IsOwnerUser, IsDraftObject)
+    permission_classes = (IsOwnerUser, IsDraftObject, IsNotReadOnlyUser)
     permission_denied_redirect = reverse_lazy('data:list')
     target_type = 'relation between data and data provider'
 

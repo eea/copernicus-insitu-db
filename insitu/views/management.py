@@ -1,7 +1,11 @@
 from django.urls import reverse_lazy
 from django.conf import settings
 
-from insitu.views import protected
+from insitu.views.protected import (
+    IsAuthenticated,
+    IsNotReadOnlyUser,
+    IsSuperuser,
+)
 from insitu.views.protected.views import ProtectedTemplateView
 from insitu.utils import PICKLISTS_DESCRIPTION
 from picklists import models
@@ -9,13 +13,13 @@ from picklists import models
 
 class Manager(ProtectedTemplateView):
     template_name = 'manage.html'
-    permission_classes = (protected.IsSuperuser,)
+    permission_classes = (IsSuperuser,)
     permission_denied_redirect = reverse_lazy('auth:login')
 
 
 class HelpPage(ProtectedTemplateView):
     template_name = 'help.html'
-    permission_classes = (protected.IsAuthenticated,)
+    permission_classes = (IsAuthenticated, IsNotReadOnlyUser)
     permission_denied_redirect = reverse_lazy('auth:login')
 
     def get_context_data(self, **kwargs):
@@ -48,6 +52,6 @@ class HelpPage(ProtectedTemplateView):
 
 class AboutView(ProtectedTemplateView):
     template_name = 'about.html'
-    permission_classes = (protected.IsAuthenticated,)
+    permission_classes = (IsAuthenticated,)
     permission_denied_redirect = reverse_lazy('auth:login')
 

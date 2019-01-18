@@ -14,17 +14,21 @@ from insitu.views.base import (
     CreatedByMixin,
     ChangesRequestedMailMixin,
 )
-
 from insitu.views.protected import (
-    ProtectedTemplateView, ProtectedDetailView,
-    LoggingProtectedUpdateView, LoggingProtectedCreateView,
-    LoggingProtectedDeleteView, LoggingTransitionProtectedDetailView)
-from picklists import models as pickmodels
+    ProtectedTemplateView,
+    ProtectedDetailView,
+    LoggingProtectedUpdateView,
+    LoggingProtectedCreateView,
+    LoggingProtectedDeleteView,
+    LoggingTransitionProtectedDetailView
+)
 from insitu.views.protected.permissions import (
     IsAuthenticated,
+    IsDraftObject,
     IsOwnerUser,
-    IsDraftObject
+    IsNotReadOnlyUser,
 )
+from picklists import models as pickmodels
 
 
 class GetInitialMixin:
@@ -114,7 +118,7 @@ class RequirementAdd(GetInitialMixin, CreatedByMixin,
                      LoggingProtectedCreateView):
     template_name = 'requirement/add.html'
     model = models.Requirement
-    permission_classes = (IsAuthenticated, )
+    permission_classes = (IsAuthenticated, IsNotReadOnlyUser)
     target_type = 'requirement'
 
     def form_valid(self, form):
@@ -148,7 +152,7 @@ class RequirementEdit(GetInitialMixin, LoggingProtectedUpdateView):
     form_class = forms.RequirementForm
     model = models.Requirement
     context_object_name = 'requirement'
-    permission_classes = (IsOwnerUser, IsDraftObject)
+    permission_classes = (IsOwnerUser, IsDraftObject, IsNotReadOnlyUser)
     target_type = 'requirement'
 
     def form_valid(self, form):
@@ -173,7 +177,7 @@ class RequirementDelete(LoggingProtectedDeleteView):
     form_class = forms.RequirementForm
     model = models.Requirement
     context_object_name = 'requirement'
-    permission_classes = (IsOwnerUser, IsDraftObject)
+    permission_classes = (IsOwnerUser, IsDraftObject, IsNotReadOnlyUser)
     target_type = 'requirement'
 
     def permission_denied(self, request):
@@ -188,7 +192,7 @@ class RequirementDelete(LoggingProtectedDeleteView):
 class RequirementTransition(ChangesRequestedMailMixin, LoggingTransitionProtectedDetailView):
     model = models.Requirement
     template_name = 'requirement/transition.html'
-    permission_classes = (IsAuthenticated, )
+    permission_classes = (IsAuthenticated, IsNotReadOnlyUser)
     context_object_name = 'requirement'
     target_type = 'requirement'
 

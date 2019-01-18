@@ -144,6 +144,7 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+READ_ONLY_GROUP = env('READ_ONLY_GROUP', 'ReadOnly')
 
 # Internationalization
 # https://docs.djangoproject.com/en/1.11/topics/i18n/
