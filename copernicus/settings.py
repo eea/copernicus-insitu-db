@@ -170,6 +170,7 @@ ELASTICSEARCH_DSL = {
     'default': {
         'hosts': env('ELASTICSEARCH_HOST'),
         'http_auth': env('ELASTICSEARCH_AUTH'),
+        'timeout': env('ELASTICSEARCH_TIMEOUT', 120),
     },
 }
 
