@@ -1,5 +1,6 @@
 {% extends '_layout.html' %}
 {% load static %}
+{% load utils %}
 
 {% block title %}Reports{% endblock %}
 
@@ -7,7 +8,7 @@
   <div class="row">
     <h1 class="col-sm-12">
       <span>Reports</span>
-      {% if READ_ONLY_GROUP not in user.groups %}
+      {% if not user|has_group:READ_ONLY_GROUP %}
         <span class="pull-right">
           <a class="btn btn-primary" href="{% url 'reports:snapshot' %}">Download database</a>
           <a class="btn btn-primary pull-right" style="margin-left:5px" href="{% url 'reports:playground' %}">Playground</a>

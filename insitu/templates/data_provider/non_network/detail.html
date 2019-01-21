@@ -1,6 +1,7 @@
 {% extends '_layout.html' %}
-{% load static %}
 {% load js %}
+{% load static %}
+{% load utils %}
 
 {% block title %}
   Data Provider
@@ -17,7 +18,7 @@
   <div class="row">
     <h1 class="col-sm-12">
       <span>Data provider</span>
-      {% if READ_ONLY_GROUP not in user.groups %}
+      {% if not user|has_group:READ_ONLY_GROUP %}
         {% if provider.state.name == 'draft' %}
           {% if request.user == provider.created_by or request.user.is_superuser or request.user in provider.created_by.team.teammates.all %}
             <span class="pull-right margin-left-btn">
@@ -117,7 +118,7 @@
         <th class="col-md-4 col-sm-6">State</th>
         <td class="col-md-8 col-sm-6">
           {{ provider.state.title }}
-          {% if READ_ONLY_GROUP not in user.groups %}
+          {% if not user|has_group:READ_ONLY_GROUP %}
             <div class="pull-right">
               {% if provider.state.name == 'draft' %}
                 {% if provider.created_by == request.user or request.user in provider.created_by.team.teammates.all %}

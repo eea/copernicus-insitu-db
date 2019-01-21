@@ -1,6 +1,7 @@
 {% extends '_layout.html' %}
 {% load static %}
 {% load js %}
+{% load utils %}
 
 {% block style %}
   <link rel="stylesheet" type="text/css"
@@ -15,7 +16,7 @@
 
 {% block content %}
 
-  {% if READ_ONLY_GROUP not in user.groups %}
+  {% if not user|has_group:READ_ONLY_GROUP %}
     {% if failed_validation %}
       <div class="alert alert-danger">
         This Data does not respect the validation! Use <a href="{%url 'data:edit' data.pk %}?ready">this</a> formular to complete the rest of the fields.
@@ -26,7 +27,7 @@
   <div class="row">
     <h1 class="col-sm-12">
       <span>Data details</span>
-      {% if READ_ONLY_GROUP not in user.groups %}
+      {% if not user|has_group:READ_ONLY_GROUP %}
         {% if data.state.name == 'draft' %}
           {% if request.user == data.created_by or request.user.is_superuser or request.user in data.created_by.team.teammates.all %}
             <span class="pull-right margin-left-btn">
@@ -39,7 +40,7 @@
         {% endif %}
       {% endif %}
       <br>
-      {% if READ_ONLY_GROUP not in user.groups %}
+      {% if not user|has_group:READ_ONLY_GROUP %}
         <span class="pull-right">
           <a class="btn btn-primary pull-right"
              href="{% url 'data:add' %}?pk={{ data.pk }}">
@@ -185,7 +186,7 @@
   <div class="row">
     <h3 class="col-sm-12">
       <span>Data Providers</span>
-      {% if READ_ONLY_GROUP not in user.groups %}
+      {% if not user|has_group:READ_ONLY_GROUP %}
         {% if data.state.name == 'draft' %}
           {% if request.user == data.created_by or request.user.is_superuser or request.user in data.created_by.team.teammates.all %}
             <span class="pull-right">
@@ -227,7 +228,7 @@
                 <span class='glyphicon glyphicon-remove-circle text-danger'></span>
               {% endif %}
             </td>
-            {% if READ_ONLY_GROUP not in user.groups %}
+            {% if not user|has_group:READ_ONLY_GROUP %}
               {% if rel.state.name == 'draft' %}
                 {% if request.user == rel.created_by or request.user == data.created_by or request.user.is_superuser or request.user in rel.created_by.team.teammates.all %}
                   <td class="row">

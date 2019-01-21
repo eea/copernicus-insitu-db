@@ -1,6 +1,7 @@
 {% extends '_layout.html' %}
 {% load static %}
 {% load js %}
+{% load utils %}
 
 {% block style %}
   <link rel="stylesheet" type="text/css"
@@ -17,7 +18,8 @@
   <div class="row">
     <h1 class="col-sm-12">
       <span>Requirement details</span>
-      {% if READ_ONLY_GROUP not in user.groups %}
+
+      {% if not user|has_group:READ_ONLY_GROUP %}
         {% if requirement.state.name == 'draft' %}
           {% if request.user == requirement.created_by or request.user.is_superuser or request.user in requirement.created_by.team.teammates.all %}
             <span class="pull-right">
@@ -96,7 +98,7 @@
         <th class="col-md-4 col-sm-6">State</th>
         <td class="col-md-8 col-sm-6">
           {{ requirement.state.title }}
-          {% if READ_ONLY_GROUP not in user.groups %}
+          {% if not user|has_group:READ_ONLY_GROUP %}
             <div class="pull-right">
               {% if requirement.state.name == 'draft' %}
                 {% if requirement.created_by == request.user or request.user in requirement.created_by.team.teammates.all %}
@@ -150,7 +152,7 @@
   <div class="row">
     <h3 class="col-sm-12">
       <span>Products</span>
-      {% if READ_ONLY_GROUP not in user.groups %}
+      {% if not user|has_group:READ_ONLY_GROUP %}
         {% if requirement.state.name == 'draft' %}
           {% if requirement.created_by == request.user or request.user in requirement.created_by.team.teammates.all or request.user.is_superuser %}
           <span class="pull-right">
@@ -199,7 +201,7 @@
               {% endfor %}
             </td>
             <td>{{ rel.note }}</td>
-            {% if READ_ONLY_GROUP not in user.groups %}
+            {% if not user|has_group:READ_ONLY_GROUP %}
               {% if requirement.state.name == 'draft' %}
                 {% if rel.created_by == request.user  or request.user == requirement.created_by or request.user in rel.created_by.team.teammates.all or request.user.is_superuser %}
                   <td class="row">
@@ -225,7 +227,7 @@
   <div class="row">
     <h3 class="col-sm-12">
       <span>Data</span>
-      {% if READ_ONLY_GROUP not in user.groups %}
+      {% if not user|has_group:READ_ONLY_GROUP %}
         {% if requirement.state.name == 'draft' %}
           {% if requirement.created_by == request.user or request.user in requirement.created_by.team.teammates.all or request.user.is_superuser %}
             <span class="pull-right">
@@ -275,7 +277,7 @@
                 <span class='glyphicon glyphicon-remove-circle text-danger'></span>
               {% endif %}
             </td>
-            {% if READ_ONLY_GROUP not in user.groups %}
+            {% if not user|has_group:READ_ONLY_GROUP %}
               {% if requirement.state.name == 'draft' %}
                 {% if rel.created_by == request.user or request.user == requirement.created_by or request.user in rel.created_by.team.teammates.all or request.user.is_superuser %}
                   <td class="row">

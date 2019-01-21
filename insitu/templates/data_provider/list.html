@@ -1,5 +1,6 @@
 {% extends '_layout.html' %}
 {% load static %}
+{% load utils %}
 
 {% block style %}
   <link rel="stylesheet" type="text/css"
@@ -27,7 +28,7 @@
   <div class="row">
     <h1 class="col-sm-12">
       <span class="">Data providers </span>
-      {% if READ_ONLY_GROUP not in user.groups %}
+      {% if not user|has_group:READ_ONLY_GROUP %}
         <span class="pull-right">
           <a class="btn btn-primary pull-right"
              href="{% url 'provider:add_network' %}">New data provider network</a>
