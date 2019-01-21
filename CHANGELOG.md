@@ -3,6 +3,13 @@ Changelog
 
 * In case of major changes, an email should be sent to all users with the modifications.
 
+1.5.14 (2019-01-21)
+------------------
+* Add read-only user account type
+* Remove logging for get actions
+* On changes requested status e-mail is sent to object owner.
+  [dianaboiangiu]
+
 1.5.13 (2018-12-07)
 ------------------
 * Use different function for Internet Explorer reports export
