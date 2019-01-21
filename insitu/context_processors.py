@@ -3,7 +3,8 @@ from getenv import env
 
 def base(request):
     return {
-        'DEBUG': settings.DEBUG
+        'DEBUG': settings.DEBUG,
+        'READ_ONLY_GROUP': settings.READ_ONLY_GROUP
     }
 
 def matomo(request):

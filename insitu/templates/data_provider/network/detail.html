@@ -17,25 +17,25 @@
   <div class="row">
     <h1 class="col-sm-12">
       <span>Data provider network</span>
-      {% if provider.state.name == 'draft' %}
-        {% if request.user == provider.created_by or request.user.is_superuser or request.user in provider.created_by.team.teammates.all %}
-          <span class="pull-right margin-left-btn">
-        <a class="btn btn-primary pull-right"
-           href="{% url 'provider:delete_network' provider.pk %}">Delete
-          data provider</a>
-        </span>
-          <span class="pull-right margin-left-btn">
-        <a class="btn btn-primary pull-right"
-           href="{% url 'provider:edit_network_members' provider.pk %}">
-          Edit network members
-        </a>
-        </span>
-          <span class="pull-right">
-        <a class="btn btn-primary pull-right"
-           href="{% url 'provider:edit_network' provider.pk %}">
-          Edit data provider
-        </a>
-        </span>
+      {% if READ_ONLY_GROUP not in user.groups %}
+        {% if provider.state.name == 'draft' %}
+          {% if request.user == provider.created_by or request.user.is_superuser or request.user in provider.created_by.team.teammates.all %}
+            <span class="pull-right margin-left-btn">
+              <a class="btn btn-primary pull-right" href="{% url 'provider:delete_network' provider.pk %}">
+                Delete data provider
+              </a>
+            </span>
+            <span class="pull-right margin-left-btn">
+              <a class="btn btn-primary pull-right" href="{% url 'provider:edit_network_members' provider.pk %}">
+                Edit network members
+              </a>
+            </span>
+            <span class="pull-right">
+              <a class="btn btn-primary pull-right" href="{% url 'provider:edit_network' provider.pk %}">
+                Edit data provider
+              </a>
+            </span>
+          {% endif %}
         {% endif %}
       {% endif %}
     </h1>
@@ -75,43 +75,45 @@
         <th class="col-md-4 col-sm-6">State</th>
         <td class="col-md-8 col-sm-6">
           {{ provider.state.title }}
-          <div class="pull-right">
-            {% if provider.state.name == 'draft' %}
-              {% if provider.created_by == request.user or request.user in provider.created_by.team.teammates.all %}
-              <a class="btn btn-primary"
-                 href="{% url 'provider:transition' pk=provider.pk source='draft' target='ready' %}">
-                Mark as ready
-              </a>
+          {% if READ_ONLY_GROUP not in user.groups %}
+            <div class="pull-right">
+              {% if provider.state.name == 'draft' %}
+                {% if provider.created_by == request.user or request.user in provider.created_by.team.teammates.all %}
+                  <a class="btn btn-primary"
+                     href="{% url 'provider:transition' pk=provider.pk source='draft' target='ready' %}">
+                    Mark as ready
+                  </a>
+                {% endif %}
               {% endif %}
-            {% endif %}
-            {% if provider.state.name == 'ready' %}
-              {% if request.user not in provider.created_by.team.teammates.all %}
-                <a class="btn btn-primary"
-                   href="{% url 'provider:transition' pk=provider.pk source='ready' target='valid' %}">
-                  Mark as valid
-                </a>
-              {% endif %}
-              {% if provider.created_by != request.user and request.user not in provider.created_by.team.teammates.all %}
-                <a class="btn btn-primary"
-                   href="{% url 'provider:transition' pk=provider.pk source='ready' target='changes' %}">
-                  Request changes
-                </a>
-              {% elif provider.created_by == request.user or request.user in provider.created_by.team.teammates.all %}
-                 <a class="btn btn-primary"
+              {% if provider.state.name == 'ready' %}
+                {% if request.user not in provider.created_by.team.teammates.all %}
+                  <a class="btn btn-primary"
+                     href="{% url 'provider:transition' pk=provider.pk source='ready' target='valid' %}">
+                    Mark as valid
+                  </a>
+                {% endif %}
+                {% if provider.created_by != request.user and request.user not in provider.created_by.team.teammates.all %}
+                  <a class="btn btn-primary"
+                     href="{% url 'provider:transition' pk=provider.pk source='ready' target='changes' %}">
+                    Request changes
+                  </a>
+                {% elif provider.created_by == request.user or request.user in provider.created_by.team.teammates.all %}
+                  <a class="btn btn-primary"
                      href="{% url 'provider:transition' pk=provider.pk source='ready' target='draft' %}">
                     Move back to draft
-                 </a>
+                  </a>
+                {% endif %}
               {% endif %}
-            {% endif %}
-            {% if provider.state.name == 'changes' %}
-              {% if provider.created_by == request.user or request.user in provider.created_by.team.teammates.all %}
-                <a class="btn btn-primary"
-                   href="{% url 'provider:transition' pk=provider.pk source='changes' target='draft' %}">
-                  Implement feedback
-                </a>
+              {% if provider.state.name == 'changes' %}
+                {% if provider.created_by == request.user or request.user in provider.created_by.team.teammates.all %}
+                  <a class="btn btn-primary"
+                     href="{% url 'provider:transition' pk=provider.pk source='changes' target='draft' %}">
+                    Implement feedback
+                  </a>
+                {% endif %}
               {% endif %}
-            {% endif %}
-          </div>
+            </div>
+          {% endif %}
         </td>
 
       </tr>

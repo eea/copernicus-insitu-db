@@ -36,10 +36,12 @@
             <a href="{{ provider_list }}">Data providers</a>
           </li>
 
-          {% url 'auth:edit_teammates' as edit_teammates %}
-          <li class="{% active edit_teammates %}">
-            <a href="{{ edit_teammates }}">Edit teammates</a>
-          </li>
+          {% if READ_ONLY_GROUP not in request.user.groups %}
+            {% url 'auth:edit_teammates' as edit_teammates %}
+            <li class="{% active edit_teammates %}">
+              <a href="{{ edit_teammates }}">Edit teammates</a>
+            </li>
+          {% endif %}
 
           {% if request.user.is_superuser %}
             {% url 'manage' as manage %}

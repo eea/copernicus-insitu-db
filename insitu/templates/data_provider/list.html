@@ -27,12 +27,14 @@
   <div class="row">
     <h1 class="col-sm-12">
       <span class="">Data providers </span>
-      <span class="pull-right">
+      {% if READ_ONLY_GROUP not in user.groups %}
+        <span class="pull-right">
           <a class="btn btn-primary pull-right"
              href="{% url 'provider:add_network' %}">New data provider network</a>
           <a class="btn btn-primary pull-right" style="margin-right:5px"
              href="{% url 'provider:add_non_network' %}">New data provider</a>
         </span>
+      {% endif %}
     </h1>
   </div>
 

@@ -3,7 +3,6 @@ from django.conf import settings
 
 from insitu.views.protected import (
     IsAuthenticated,
-    IsNotReadOnlyUser,
     IsSuperuser,
 )
 from insitu.views.protected.views import ProtectedTemplateView
@@ -19,7 +18,7 @@ class Manager(ProtectedTemplateView):
 
 class HelpPage(ProtectedTemplateView):
     template_name = 'help.html'
-    permission_classes = (IsAuthenticated, IsNotReadOnlyUser)
+    permission_classes = (IsAuthenticated, )
     permission_denied_redirect = reverse_lazy('auth:login')
 
     def get_context_data(self, **kwargs):

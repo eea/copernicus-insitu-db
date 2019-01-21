@@ -15,32 +15,38 @@
 
 {% block content %}
 
-  {% if failed_validation %}
-    <div class="alert alert-danger">
-      This Data does not respect the validation! Use <a href="{%url 'data:edit' data.pk %}?ready">this</a> formular to complete the rest of the fields.
-    </div>
+  {% if READ_ONLY_GROUP not in user.groups %}
+    {% if failed_validation %}
+      <div class="alert alert-danger">
+        This Data does not respect the validation! Use <a href="{%url 'data:edit' data.pk %}?ready">this</a> formular to complete the rest of the fields.
+      </div>
+    {% endif %}
   {% endif %}
 
   <div class="row">
     <h1 class="col-sm-12">
       <span>Data details</span>
-      {% if data.state.name == 'draft' %}
-        {% if request.user == data.created_by or request.user.is_superuser or request.user in data.created_by.team.teammates.all %}
-          <span class="pull-right margin-left-btn">
-        <a class="btn btn-primary pull-right" href="{% url 'data:delete' data.pk %}">Delete data</a>
-        </span>
-          <span class="pull-right">
-        <a class="btn btn-primary pull-right" href="{% url 'data:edit' data.pk %}">Edit data</a>
-        </span>
+      {% if READ_ONLY_GROUP not in user.groups %}
+        {% if data.state.name == 'draft' %}
+          {% if request.user == data.created_by or request.user.is_superuser or request.user in data.created_by.team.teammates.all %}
+            <span class="pull-right margin-left-btn">
+              <a class="btn btn-primary pull-right" href="{% url 'data:delete' data.pk %}">Delete data</a>
+            </span>
+            <span class="pull-right">
+              <a class="btn btn-primary pull-right" href="{% url 'data:edit' data.pk %}">Edit data</a>
+            </span>
+          {% endif %}
         {% endif %}
       {% endif %}
       <br>
-      <span class="pull-right">
+      {% if READ_ONLY_GROUP not in user.groups %}
+        <span class="pull-right">
           <a class="btn btn-primary pull-right"
              href="{% url 'data:add' %}?pk={{ data.pk }}">
             Clone data
           </a>
-      </span>
+        </span>
+      {% endif %}
     </h1>
   </div>
 
@@ -131,43 +137,40 @@
       <tr class="row">
         <th class="col-md-4 col-sm-6">State</th>
         <td class="col-md-8 col-sm-6">{{ data.state.title }}
-          <div class="pull-right">
-            {% if data.state.name == 'draft' %}
-              {% if data.created_by == request.user or request.user in data.created_by.team.teammates.all %}
-              <a class="btn btn-primary"
-                 href="{% url 'data:transition' pk=data.pk source='draft' target='ready' %}">
-                Mark as ready
-              </a>
+          {% if READ_ONLY_GROUP not in user.groups %}
+            <div class="pull-right">
+              {% if data.state.name == 'draft' %}
+                {% if data.created_by == request.user or request.user in data.created_by.team.teammates.all %}
+                  <a class="btn btn-primary" href="{% url 'data:transition' pk=data.pk source='draft' target='ready' %}">
+                    Mark as ready
+                  </a>
+                {% endif %}
               {% endif %}
-            {% endif %}
-            {% if data.state.name == 'ready' %}
-              {% if request.user not in data.created_by.team.teammates.all %}
-                <a class="btn btn-primary"
-                   href="{% url 'data:transition' pk=data.pk source='ready' target='valid' %}">
-                  Mark as valid
-                </a>
+              {% if data.state.name == 'ready' %}
+                {% if request.user not in data.created_by.team.teammates.all %}
+                  <a class="btn btn-primary" href="{% url 'data:transition' pk=data.pk source='ready' target='valid' %}">
+                    Mark as valid
+                  </a>
+                {% endif %}
+                {% if data.created_by != request.user and request.user not in data.created_by.team.teammates.all %}
+                  <a class="btn btn-primary" href="{% url 'data:transition' pk=data.pk source='ready' target='changes' %}">
+                    Request changes
+                  </a>
+                {% elif data.created_by == request.user or request.user in data.created_by.team.teammates.all %}
+                  <a class="btn btn-primary" href="{% url 'data:transition' pk=data.pk source='ready' target='draft' %}">
+                    Move back to draft
+                  </a>
+                {% endif %}
               {% endif %}
-              {% if data.created_by != request.user and request.user not in data.created_by.team.teammates.all %}
-                <a class="btn btn-primary"
-                   href="{% url 'data:transition' pk=data.pk source='ready' target='changes' %}">
-                  Request changes
-                </a>
-              {% elif data.created_by == request.user or request.user in data.created_by.team.teammates.all %}
-                <a class="btn btn-primary"
-                   href="{% url 'data:transition' pk=data.pk source='ready' target='draft' %}">
-                  Move back to draft
-                </a>
+              {% if data.state.name == 'changes' %}
+                {% if data.created_by == request.user or request.user in data.created_by.team.teammates.all %}
+                  <a class="btn btn-primary" href="{% url 'data:transition' pk=data.pk source='changes' target='draft' %}">
+                    Implement feedback
+                  </a>
+                {% endif %}
               {% endif %}
-            {% endif %}
-            {% if data.state.name == 'changes' %}
-              {% if data.created_by == request.user or request.user in data.created_by.team.teammates.all %}
-                <a class="btn btn-primary"
-                   href="{% url 'data:transition' pk=data.pk source='changes' target='draft' %}">
-                  Implement feedback
-                </a>
-              {% endif %}
-            {% endif %}
-          </div>
+            </div>
+          {% endif %}
         </td>
       </tr>
       <tr class="row">
@@ -182,13 +185,15 @@
   <div class="row">
     <h3 class="col-sm-12">
       <span>Data Providers</span>
-      {% if data.state.name == 'draft' %}
-        {% if request.user == data.created_by or request.user.is_superuser or request.user in data.created_by.team.teammates.all%}
-          <span class="pull-right">
-            <a class="btn btn-primary pull-right"
-               href="{% url 'data:provider:add' data.pk %}">Add data to data provider
-            </a>
-          </span>
+      {% if READ_ONLY_GROUP not in user.groups %}
+        {% if data.state.name == 'draft' %}
+          {% if request.user == data.created_by or request.user.is_superuser or request.user in data.created_by.team.teammates.all %}
+            <span class="pull-right">
+              <a class="btn btn-primary pull-right"
+                 href="{% url 'data:provider:add' data.pk %}">Add data to data provider
+              </a>
+            </span>
+          {% endif %}
         {% endif %}
       {% endif %}
     </h3>
@@ -222,18 +227,18 @@
                 <span class='glyphicon glyphicon-remove-circle text-danger'></span>
               {% endif %}
             </td>
-            {% if rel.state.name == 'draft' %}
-              {% if request.user == rel.created_by or request.user == data.created_by or request.user.is_superuser or request.user in rel.created_by.team.teammates.all %}
-                <td class="row">
-                  <a href="{% url 'data:provider:edit' group_pk=data.pk pk=rel.pk %}"
-                     class="col-sm-6">
-                    <span class="glyphicon glyphicon-edit"></span>
-                  </a>
-                  <a href="{% url 'data:provider:delete' group_pk=data.pk pk=rel.pk %}"
-                     class="col-sm-6">
-                    <span class="glyphicon glyphicon-trash"></span>
-                  </a>
-                </td>
+            {% if READ_ONLY_GROUP not in user.groups %}
+              {% if rel.state.name == 'draft' %}
+                {% if request.user == rel.created_by or request.user == data.created_by or request.user.is_superuser or request.user in rel.created_by.team.teammates.all %}
+                  <td class="row">
+                    <a href="{% url 'data:provider:edit' group_pk=data.pk pk=rel.pk %}" class="col-sm-6">
+                      <span class="glyphicon glyphicon-edit"></span>
+                    </a>
+                    <a href="{% url 'data:provider:delete' group_pk=data.pk pk=rel.pk %}" class="col-sm-6">
+                      <span class="glyphicon glyphicon-trash"></span>
+                    </a>
+                  </td>
+                {% endif %}
               {% endif %}
             {% endif %}
           </tr>

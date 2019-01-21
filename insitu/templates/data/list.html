@@ -27,10 +27,12 @@
   <div class="row">
     <h1 class="col-sm-12">
       <span>Data</span>
-      <span class="pull-right">
+      {% if READ_ONLY_GROUP not in user.groups %}
+        <span class="pull-right">
           <a class="btn btn-primary pull-right"
              href="{% url 'data:add' %}">New data</a>
         </span>
+      {% endif %}
     </h1>
   </div>
 
