@@ -24,9 +24,9 @@
     <script>
       Raven.config('{{ sentry_public_id }}').install()
       Raven.setUserContext({
-        email: '{{ request.user.email }}',
-        username: '{{ request.user.username }}',
-        id: '{{ request.user.id }}',
+        email: '{{ user.email }}',
+        username: '{{ user.username }}',
+        id: '{{ user.id }}',
       })
     </script>
     {% endif %}

@@ -32,6 +32,7 @@ services:
 
   postfix:
     image: eaudeweb/mailtrap:2.0
+    container_name: insitu.mailtrap
     environment:
       TZ: Europe/Copenhagen
     stdin_open: true

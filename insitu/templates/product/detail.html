@@ -17,7 +17,7 @@
   <div class="row">
     <h1 class="col-sm-12">
       <span>Product details</span>
-      {% if request.user.is_superuser %}
+      {% if user.is_superuser %}
         <span class="pull-right margin-left-btn">
         <a class="btn btn-primary pull-right"
            href="{% url 'product:delete' product.pk %}">Delete

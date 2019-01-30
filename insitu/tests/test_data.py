@@ -172,6 +172,11 @@ class DataTests(base.FormCheckTestCase):
         self.assertTrue(form_data)
         self.logging()
 
+    def test_get_add_clone_nonexistent_object(self):
+        self.erase_logging_file()
+        resp = self.client.get(reverse('data:add')  + '?ready&pk=20', {})
+        self.assertEqual(resp.status_code, 200)
+
     def test_post_add_with_clone_ready_errors(self):
         data = base.DataFactory(created_by=self.creator)
         self._create_clone_data(data)

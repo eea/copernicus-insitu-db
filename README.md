@@ -35,7 +35,7 @@ Copernicus services on in situ data requirements (current and expected), data us
 
 1. Run migrations, create superuser, create elasticsearch index and start the development server:
 
-        docker exec -it insitu_app bash
+        docker exec -it insitu.app sh
         python manage.py migrate
         python manage.py createsuperuser
         python manage.py search_index -f --rebuild
@@ -43,12 +43,12 @@ Copernicus services on in situ data requirements (current and expected), data us
 
 1. Run tests:
 
-        docker exec -it insitu_app bash
+        docker exec -it insitu.app sh
         python manage.py test --settings=copernicus.testsettings
 
 1. Check coverage:
 
-        docker exec -it insitu_app bash
+        docker exec -it insitu.app sh
         coverage run --source='.' ./manage.py test --settings=copernicus.testsettings
         python coverage html
 
@@ -83,7 +83,7 @@ Customize docker orchestration for local development:
 
 * Attach to docker container and start the server in debug mode:
 
-        docker exec -it insitu_app bash
+        docker exec -it insitu.app sh
         python manage.py runserver 0.0.0.0:8000
 
 * See it in action: <http://localhost:8000>

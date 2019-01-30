@@ -119,6 +119,39 @@ class ProductRequirementTests(base.FormCheckTestCase):
         data['requirement'] = product_requirement.requirement.pk
         self.check_single_object(models.ProductRequirement, data)
 
+    def test_product_requirement_edit_unique(self):
+        self.login_creator()
+        self.product_two = base.ProductFactory()
+        metrics = base.RequirementFactory.create_metrics(self.creator)
+        requirement = base.RequirementFactory(created_by=self.creator,
+                                              **metrics)
+        product_requirement = base.ProductRequirementFactory(
+            product=self.product,
+            requirement=requirement,
+            created_by=self.creator,
+            relevance=self.relevance,
+        )
+        product_to_test_against = base.ProductRequirementFactory(
+            requirement=requirement,
+            product=self.product_two,
+            created_by=self.creator,
+            relevance=self.relevance,
+        )
+        data = self._DATA
+        data['product'] = self.product_two.id
+        data['requirement'] = product_requirement.requirement.id
+        data['relevance'] =  product_requirement.relevance.id
+
+        resp = self.client.post(
+            reverse('requirement:product:edit',
+                    kwargs={'requirement_pk': product_requirement.requirement.pk,
+                            'pk': product_requirement.pk}),
+            data)
+        data = self._DATA
+        self.assertEqual(resp.status_code, 200)
+        self.assertEqual(resp.context['form'].errors,
+                         {'__all__': ['This relation already exists.']})
+
     def test_get_product_requirement_delete(self):
         self.login_creator()
         metrics = base.RequirementFactory.create_metrics(self.creator)

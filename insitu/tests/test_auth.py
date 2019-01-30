@@ -78,7 +78,7 @@ class UserTeammatesTests(TestCase):
     def test_get_edit_teammates(self):
         self.client.force_login(self.creator)
         resp = self.client.get(reverse('auth:edit_teammates'))
-        self.assertTrue(resp.status_code, 200)
+        self.assertEqual(resp.status_code, 200)
 
     def test_edit_teammates_error(self):
         self.client.force_login(self.creator)
@@ -86,13 +86,13 @@ class UserTeammatesTests(TestCase):
             'requests': [self.creator]
         }
         resp = self.client.post(reverse('auth:edit_teammates'), self.data)
-        self.assertTrue(resp.status_code, 200)
+        self.assertEqual(resp.status_code, 200)
         self.assertTrue(resp.context['form'].errors['requests'])
 
     def test_edit_teammates_succesfully(self):
         self.client.force_login(self.creator)
         resp = self.client.post(reverse('auth:edit_teammates'), self._DATA)
-        self.assertTrue(resp.status_code, 200)
+        self.assertEqual(resp.status_code, 302)
         self.assertEqual([x for x in self.creator.team.requests.all()],
                          [self.user1, self.user2])
         self.assertEqual([x for x in self.user1.team.requests.all()],
@@ -107,6 +107,67 @@ class UserTeammatesTests(TestCase):
             'requests': [self.user1.id]
         }
         resp = self.client.post(reverse('auth:edit_teammates'), self.data)
-        self.assertTrue(resp.status_code, 200)
+        self.assertEqual(resp.status_code, 302)
         self.assertEqual([x for x in self.creator.team.requests.all()],
                          [self.user1])
+
+    def test_edit_teammates_accept_friend_request(self):
+        self.client.force_login(self.creator)
+        self.client.post(reverse('auth:edit_teammates'), self._DATA)
+        self.data ={
+            'requests': [self.user1.id]
+        }
+        self.client.post(reverse('auth:edit_teammates'), self.data)
+        self.client.force_login(self.user1)
+        resp = self.client.get(reverse('auth:accept_request',
+                                kwargs={'sender_user': self.creator.pk}))
+        self.assertEqual(resp.status_code, 302)
+        self.assertIn(self.creator, self.user1.team.teammates.all())
+
+    def test_edit_teammates_accept_friend_request_no_permission(self):
+        self.client.force_login(self.user1)
+        resp = self.client.get(reverse('auth:accept_request',
+                                kwargs={'sender_user': self.creator.pk}))
+        self.assertEqual(resp.status_code, 302)
+        self.assertNotIn(self.creator, self.user1.team.teammates.all())
+
+    def test_get_delete_teammate(self):
+        self.creator.team.teammates.add(self.user1)
+        self.user1.team.teammates.add(self.creator)
+        self.client.force_login(self.creator)
+        resp = self.client.get(reverse(
+            'auth:delete_teammate',
+            kwargs={'teammate_id': self.user1.id}
+            )
+        )
+        self.assertEqual(resp.status_code, 200)
+
+    def test_get_delete_teammate_no_permission(self):
+        self.client.force_login(self.creator)
+        resp = self.client.get(reverse(
+            'auth:delete_teammate',
+            kwargs={'teammate_id': self.user1.id}
+            )
+        )
+        self.assertEqual(resp.status_code, 200)
+
+    def test_post_delete_teammate_no_permission(self):
+        self.client.force_login(self.creator)
+        resp = self.client.post(reverse(
+            'auth:delete_teammate',
+            kwargs={'teammate_id': self.user1.id}
+            )
+        )
+        self.assertEqual(resp.status_code, 302)
+
+    def test_delete_teammate(self):
+        self.creator.team.teammates.add(self.user1)
+        self.user1.team.teammates.add(self.creator)
+        self.client.force_login(self.creator)
+        resp = self.client.post(reverse(
+            'auth:delete_teammate',
+            kwargs={'teammate_id': self.user1.id}
+            )
+        )
+        self.assertEqual(resp.status_code, 302)
+        self.assertNotIn(self.creator, self.user1.team.teammates.all())

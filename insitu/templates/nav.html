@@ -15,7 +15,7 @@
 
     <!-- Collect the nav links, forms, and other content for toggling -->
     <div class="collapse navbar-collapse" id="main-menu">
-      {% if request.user.is_authenticated %}
+      {% if user.is_authenticated %}
         <ul class="nav navbar-nav">
           {% url 'product:list' as products_list %}
           <li class="{% active products_list %}">
@@ -44,7 +44,7 @@
             </li>
           {% endif %}
 
-          {% if request.user.is_superuser %}
+          {% if user.is_superuser %}
             {% url 'manage' as manage %}
             <li class="{% active manage %}">
               <a href="{{ manage }}">Management</a>
