@@ -3,6 +3,12 @@ Changelog
 
 * In case of major changes, an email should be sent to all users with the modifications.
 
+1.5.15 (2019-02-15)
+-------------------
+* Remove preview from reports detail page
+* Modify report 8 to add all fields for requirement and data
+  [dianaboiangiu]
+
 1.5.14 (2019-01-21)
 ------------------
 * Add read-only user account type
