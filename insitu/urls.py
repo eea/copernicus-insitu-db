@@ -238,6 +238,10 @@ reports_patterns = [
         views.ReportsDetailView.as_view(),
         name='detail'),
 
+    url(r'^(?P<query_id>\d+)/json/$',
+        views.ReportDataJsonView.as_view(),
+        name='json'),
+
     url(r'^snapshot/$',
         views.SnapshotView.as_view(),
         name='snapshot'),

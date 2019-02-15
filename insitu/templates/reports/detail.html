@@ -12,7 +12,7 @@
   <link href="//cdnjs.cloudflare.com/ajax/libs/pivottable/2.20.0/pivot.min.css" rel="stylesheet" />
 
   <script src="{% static 'js/jquery-ui.min.js' %}"></script>
-  <script src="{% static 'explorer/explorer.js' %}"></script>
+  <script src="{% static 'js/explorer.js' %}"></script>
   <script type="text/javascript">
     queryId = "{% firstof query.id 'new' %}";
   </script>
@@ -23,8 +23,7 @@
       display:none;
     }
     .pivot-button {
-      margin-bottom:20px;
-      display:none;
+      margin-bottom: 40px;
     }
   </style>
 {% endblock  %}
@@ -82,7 +81,7 @@
   <div style="margin-top:2%;">
     {% include 'preview_pane.html' %}
   </div>
-  <a class="btn btn-primary" id="download-excel-btn" style="margin-bottom:20px;">Download Excel</a>
+
   <button type="button" class="btn btn-primary btn-md pivot-button" id="pivot-download">
       Download Pivot as HTML
   </button>
@@ -149,16 +148,6 @@
       return cookieValue;
     }
 
-    $('#download-excel-btn').on('click', function () {
-      var url = '/reports/{{ query.id }}/download?format=excel&params=';
-      {% for param in query.params %}
-        url += '{{param}}' + ':' + $('#{{param}}').val();
-        url += '|';
-      {% endfor %}
-      url = url.slice(0, -1);
-      $("#download-excel-btn").attr("href", url);
-    });
-
     $('#pivot-download-pdf').click(function () {
       var head_html = '<html><head><link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"><link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/codemirror/5.36.0/codemirror.min.css" ><link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/pivottable/2.20.0/pivot.min.css"></head><body>'
       var end = '</body></html>'
@@ -188,22 +177,6 @@
         }
       }
       xhr.send(encodeURIComponent('data') + '=' + encodeURIComponent(html) + "&" + encodeURIComponent('title') + '=' + encodeURIComponent('{{ query.title }}'));
-    });
-
-    $(document).ready ( function () {
-      $( "#preview-tab-label" ).click(function() {
-        $('#download-excel-btn').show()
-        $('#pivot-download').hide()
-        $('#pivot-download-pdf').hide()
-        $('#pivot-download-excel').hide()
-      });
-
-      $( "#pivot-tab-label" ).click(function() {
-        $('#download-excel-btn').hide()
-        $('#pivot-download').show()
-        $('#pivot-download-pdf').show()
-        $('#pivot-download-excel').show()
-      });
     });
 
    $('#pivot-download-excel').click(function () {

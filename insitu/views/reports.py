@@ -1,11 +1,12 @@
 import datetime
+import json
 import string
 from io import BytesIO
 
 from django.template.loader import get_template
 from openpyxl import load_workbook
 from openpyxl.writer.excel import save_virtual_workbook
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from django.urls import reverse_lazy
 from django.shortcuts import get_object_or_404
 from django.views import View
@@ -30,7 +31,7 @@ from explorer.utils import url_get_rows
 from wkhtmltopdf.views import PDFTemplateResponse, PDFTemplateView
 
 from insitu.views import protected
-from insitu.views.protected.views import ProtectedTemplateView
+from insitu.views.protected.views import ProtectedTemplateView, ProtectedView
 
 
 def as_text(value):
@@ -79,29 +80,30 @@ class ReportsDetailView(ProtectedTemplateView):
             self.get_filename(self.report.title) +
             datetime.datetime.now().strftime('%Y%m%d')
         )
-
         context.update({
             'html_filename': filename + '.html',
             'pdf_filename': filename + '.pdf',
             'excel_filename': filename + '.xls',
-            'tasks_enabled': ENABLE_TASKS,
-            'shared': self.report.shared,
-            'form': None,
-            'message': None,
-            'error': None,
-            'rows': EXPLORER_DEFAULT_ROWS,
-            'data': res.data,
-            'headers': res.headers,
-            'total_rows': len(res.data),
-            'duration': res.duration,
-            'has_stats': len([h for h in res.headers if h.summary]),
             'no_jquery': True,
-            'snapshots': self.report.snapshots,
-            'ql_id': None,
             'unsafe_rendering': UNSAFE_RENDERING,
         })
         return context
 
+class ReportDataJsonView(ProtectedView):
+
+    def get(self, request, *args, **kwargs):
+        self.report = get_object_or_404(Query, pk=kwargs['query_id'])
+        res = self.report.execute_query_only()
+        data = []
+        for row in res.data:
+            column_count = 0
+            row_data = {}
+            for column in res.headers:
+                row_data[column.title] = str(row[column_count])
+                column_count = column_count + 1
+            data.append(row_data)
+
+        return JsonResponse(data, safe=False)
 
 class PlaygroundView(PlayQueryView):
 
