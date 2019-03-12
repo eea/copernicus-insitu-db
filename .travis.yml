@@ -4,7 +4,7 @@ python:
 env:
   global:
     - DEBUG=True
-    - ES_VERSION=5.4.1
+    - ES_VERSION=6.6.1
     - ES_DOWNLOAD_URL=https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-${ES_VERSION}.tar.gz
     - ELASTICSEARCH_HOST=127.0.0.1
     - ELASTICSEARCH_AUTH=elastic:changeme
