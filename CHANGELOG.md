@@ -3,6 +3,12 @@ Changelog
 
 * In case of major changes, an email should be sent to all users with the modifications.
 
+1.5.16 (2019-03-14)
+------------------
+* Add data note to Report 8
+* Add loading animation while pivot loads
+* Upgrade Elasticsearch to 6.6.1
+
 1.5.15 (2019-02-15)
 -------------------
 * Remove preview from reports detail page
