@@ -76,6 +76,7 @@ CREATE VIEW insitu_datarequirement_view as
 CREATE VIEW insitu_data_view as
     SELECT d.id AS "data_id",
            d.name AS "data_name",
+           d.note AS "data_note",
            a.name AS "data_area",
            df.name AS "data_format",
            dt.name AS "data_type",
