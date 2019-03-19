@@ -64,6 +64,7 @@ CREATE VIEW insitu_requirement_view as
 CREATE VIEW insitu_datarequirement_view as
     SELECT dr.data_id as "datarequirement_data_id",
            dr.requirement_id as "datarequirement_requirement_id",
+           dr.note as "datarequirement_note",
            dr.information_costs  as "datarequirement_information_costs",
            dr.handling_costs as "datarequirement_handling_costs",
            cl.name as "datarequirement_level_of_compliance"
@@ -122,6 +123,6 @@ CREATE VIEW insitu_dataprovider_view as
            dpd.contact_person AS "data_provider_contact_person",
            pt.name AS "data_provider_type"
     FROM insitu_dataprovider dp
-    INNER JOIN insitu_dataproviderdetails dpd ON dp.id = dpd.provider_type_id
+    INNER JOIN insitu_dataproviderdetails dpd ON dp.id = dpd.data_provider_id
     INNER JOIN picklists_providertype pt ON pt.id = dpd.provider_type_id
     WHERE dp._deleted = FALSE;
