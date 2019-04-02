@@ -2,6 +2,12 @@ Changelog
 =========
 
 * In case of major changes, an email should be sent to all users with the modifications.
+
+1.5.18 (2019-04-02)
+------------------
+* Fix links between data in reports
+  [dianaboiangiu]
+
 1.5.17 (2019-03-19)
 ------------------
 * Change data note to data note link on Report 8
