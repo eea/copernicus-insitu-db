@@ -26,11 +26,15 @@ CREATE VIEW insitu_productrequirement_view as
            requirement_id as "productrequirement_requirement_id",
            c.name as "productrequirement_criticality",
            dl.name as "productrequirement_level_of_definition",
-           r.name as "product_relevance"
+           r.name as "product_relevance",
+           pr.note as "productrequirement_note",
+           b.name as "productrequirement_barrier"
     FROM insitu_productrequirement pr
     INNER JOIN picklists_criticality c ON c.id = pr.criticality_id
     INNER JOIN picklists_definitionlevel dl ON dl.id = pr.level_of_definition_id
     INNER JOIN picklists_relevance r ON r.id = pr.relevance_id
+    FULL OUTER JOIN insitu_productrequirement_barriers prb ON pr.id = prb.productrequirement_id
+    FULL OUTER JOIN picklists_barrier b ON b.id = prb.barrier_id
     WHERE pr._deleted = FALSE;
 
 -- requirement
@@ -46,7 +50,8 @@ CREATE VIEW insitu_requirement_view as
            uncertainty.threshold  || ' ' || uncertainty.breakthrough || ' ' || uncertainty.goal as "requirement_uncertainty",
            vertical_resolution.threshold || ' ' || vertical_resolution.breakthrough || ' ' ||  vertical_resolution.goal as "requirement_vertical_resolution",
            rp.name as "requirement_group",
-           u.first_name || ' ' || u.last_name as "requirement_owner"
+           u.first_name || ' ' || u.last_name as "requirement_owner",
+           r.state as "requirement_state"
     FROM insitu_requirement r
     INNER JOIN picklists_dissemination d ON d.id = r.dissemination_id
     INNER JOIN insitu_metric uf ON uf.id = r.update_frequency_id 
@@ -88,17 +93,24 @@ CREATE VIEW insitu_data_view as
            d.start_time_coverage AS "data_start_time_coverage",
            d.end_time_coverage AS "data_end_time_coverage",
            di.name AS "data_dissemination",
-           u.first_name || ' ' ||  u.last_name as "data_owner"
+           u.first_name || ' ' ||  u.last_name AS "data_owner",
+           d.state AS "data_state",
+           ev.domain || ' - ' ||  ev.component || ' - ' || ev.parameter AS "data_essential_variable",
+           it.annex || ' ' || it.name AS "data_inspiretheme"
     FROM insitu_data d
-    INNER JOIN picklists_area a ON a.id = d.area_id
-    INNER JOIN picklists_dataformat df ON df.id = d.data_format_id
-    INNER JOIN picklists_datatype dt ON dt.id = d.data_type_id
-    INNER JOIN picklists_updatefrequency uf ON uf.id = d.update_frequency_id
-    INNER JOIN picklists_datapolicy dp ON dp.id = d.data_policy_id
-    INNER JOIN picklists_qualitycontrolprocedure qcp ON qcp.id = d.quality_control_procedure_id
-    INNER JOIN picklists_timeliness t ON t.id = d.timeliness_id
-    INNER JOIN picklists_dissemination di ON di.id = d.dissemination_id
-    INNER JOIN auth_user u ON u.id = d.created_by_id
+    FULL OUTER JOIN picklists_area a ON a.id = d.area_id
+    FULL OUTER JOIN picklists_dataformat df ON df.id = d.data_format_id
+    FULL OUTER JOIN picklists_datatype dt ON dt.id = d.data_type_id
+    FULL OUTER JOIN picklists_updatefrequency uf ON uf.id = d.update_frequency_id
+    FULL OUTER JOIN picklists_datapolicy dp ON dp.id = d.data_policy_id
+    FULL OUTER JOIN picklists_qualitycontrolprocedure qcp ON qcp.id = d.quality_control_procedure_id
+    FULL OUTER JOIN picklists_timeliness t ON t.id = d.timeliness_id
+    FULL OUTER JOIN picklists_dissemination di ON di.id = d.dissemination_id
+    FULL OUTER JOIN auth_user u ON u.id = d.created_by_id
+    FULL OUTER JOIN insitu_data_essential_variables dev ON  d.id = dev.data_id
+    FULL OUTER JOIN picklists_essentialvariable ev ON ev.id = dev.essentialvariable_id
+    FULL OUTER JOIN insitu_data_inspire_themes dit ON d.id = dit.data_id
+    FULL OUTER JOIN picklists_inspiretheme it ON it.id = dit.inspiretheme_id
     WHERE d._deleted = FALSE;
 
 -- insitu_dataproviderrelation
@@ -123,6 +135,6 @@ CREATE VIEW insitu_dataprovider_view as
            dpd.contact_person AS "data_provider_contact_person",
            pt.name AS "data_provider_type"
     FROM insitu_dataprovider dp
-    INNER JOIN insitu_dataproviderdetails dpd ON dp.id = dpd.data_provider_id
-    INNER JOIN picklists_providertype pt ON pt.id = dpd.provider_type_id
+    FULL OUTER JOIN insitu_dataproviderdetails dpd ON dp.id = dpd.data_provider_id
+    FULL OUTER JOIN picklists_providertype pt ON pt.id = dpd.provider_type_id
     WHERE dp._deleted = FALSE;
