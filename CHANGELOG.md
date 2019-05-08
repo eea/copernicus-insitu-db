@@ -3,6 +3,18 @@ Changelog
 
 * In case of major changes, an email should be sent to all users with the modifications.
 
+1.5.19 (2019-05-07)
+------------------
+* Set case insensitive ordering in reports
+* Add count of products on Report 4
+* Add notes for product and requirement on Report 1
+* Remove the unusefull aggregator functions from the pivot
+* Separate threshold, breakthrough and goal in reports
+* Style column names in browser
+* Limit the drag and drop pivot function to only the area near the field list
+* Add missing attributes to reports: requirement note(report1, report 8), service and components (report 3), data name (report 7)
+  [dianaboiangiu]
+
 1.5.18 (2019-04-02)
 ------------------
 * Fix links between data in reports
