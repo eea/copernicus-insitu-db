@@ -83,7 +83,7 @@ class ReportsDetailView(ProtectedTemplateView):
         context.update({
             'html_filename': filename + '.html',
             'pdf_filename': filename + '.pdf',
-            'excel_filename': filename + '.xls',
+            'excel_filename': filename + '.xlsx',
             'no_jquery': True,
             'unsafe_rendering': UNSAFE_RENDERING,
         })
