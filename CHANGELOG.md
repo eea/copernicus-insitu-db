@@ -3,6 +3,11 @@ Changelog
 
 * In case of major changes, an email should be sent to all users with the modifications.
 
+1.5.20 (2019-05-09)
+------------------
+* Fix excel download error
+  [dianaboiangiu]
+
 1.5.19 (2019-05-07)
 ------------------
 * Set case insensitive ordering in reports
