@@ -3,6 +3,11 @@ Changelog
 
 * In case of major changes, an email should be sent to all users with the modifications.
 
+1.5.21 (2019-05-27)
+------------------
+* Add 2 special reports
+  [dianaboiangiu]
+
 1.5.20 (2019-05-09)
 ------------------
 * Fix excel download error
