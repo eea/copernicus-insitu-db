@@ -108,7 +108,9 @@ CREATE VIEW insitu_data_view as
            u.first_name || ' ' ||  u.last_name AS "data_owner",
            d.state AS "data_state",
            ev.domain || ' - ' ||  ev.component || ' - ' || ev.parameter AS "data_essential_variable",
-           it.annex || ' ' || it.name AS "data_inspiretheme"
+           it.annex || ' ' || it.name AS "data_inspiretheme",
+           d.created_at AS "data_created_at",
+           d.updated_at AS "data_updated_at"
     FROM insitu_data d
     FULL OUTER JOIN picklists_area a ON a.id = d.area_id
     FULL OUTER JOIN picklists_dataformat df ON df.id = d.data_format_id
@@ -145,8 +147,15 @@ CREATE VIEW insitu_dataprovider_view as
            dpd.phone AS "data_provider_phone",
            dpd.email AS "data_provider_email",
            dpd.contact_person AS "data_provider_contact_person",
-           pt.name AS "data_provider_type"
+           pt.name AS "data_provider_type",
+           c.name AS "data_provider_country",
+           dpnetwork.name AS "data_provider_network_name",
+           dp.state AS "data_provider_state"
     FROM insitu_dataprovider dp
     FULL OUTER JOIN insitu_dataproviderdetails dpd ON dp.id = dpd.data_provider_id
     FULL OUTER JOIN picklists_providertype pt ON pt.id = dpd.provider_type_id
-    WHERE dp._deleted = FALSE;
+    FULL OUTER JOIN insitu_dataprovider_countries dpc ON dp.id = dpc.dataprovider_id
+    FULL OUTER JOIN picklists_country c ON c.code = dpc.country_id
+    FULL OUTER JOIN insitu_dataprovider_networks dpn ON dp.id = dpn.from_dataprovider_id
+    FULL OUTER JOIN insitu_dataprovider dpnetwork ON dpnetwork.id = dpn.to_dataprovider_id
+    WHERE dp._deleted = FALSE and dpnetwork._deleted = FALSE;

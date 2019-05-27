@@ -201,7 +201,7 @@ SUPPORT_EMAIL = env('SUPPORT_EMAIL', '')
 
 EXPLORER_CONNECTIONS = {'Default': 'default'}
 EXPLORER_DEFAULT_ROWS = 50000
-EXPLORER_SQL_WHITELIST = {'update_frequency', '_deleted', 'Update Frequency', 'picklists_updatefrequency'}
+EXPLORER_SQL_WHITELIST = {'update_frequency', '_deleted', 'Update Frequency', 'picklists_updatefrequency', 'Data updated', 'data_updated'}
 
 
 def EXPLORER_PERMISSION_VIEW(u): return u.is_authenticated

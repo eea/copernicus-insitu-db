@@ -16,6 +16,24 @@
       {% endif %}
     </h1>
   </div>
+
+  <div class="container" style="margin-bottom:20px;">
+    <h3>Special reports:</h3>
+    <p>Those reports are exported as spreadsheet files with unmerged cells that can be filtered afterwards with specialized tools.</p>
+    <h4>1.This report contains all relevant columns from products, requirements, data and data requirements for the following services:</h4>
+    <p>a) Copernicus Emergency Management Service</p>
+    <p>b) Copernicus Land Monitoring Service</p>
+    <p>c) Copernicus Security Service</p>
+    <a id="" class="btn btn-primary" href="/explorer/11/download?rows=all&format=excel">Download Excel</a>
+
+    <h4>2.This report contains all relevant columns from products, requirements, data and data requirements for the following services:</h4>
+    <p>a) Copernicus Atmosphere Monitoring Service</p>
+    <p>b) Copernicus Marine Environment Monitoring Service</p>
+    <p>c) Copernicus Climate Change Service</p>
+    <a id="" class="btn btn-primary" href="/explorer/12/download?rows=all&format=excel">Download Excel</a>
+  </div>
+
+  <div>
     <table class="table table-bordered">
     <thead>
       <tr>
@@ -26,15 +44,17 @@
     </thead>
     <tbody>
       {% for query in queries %}
-        <tr>
-          <td>{{ query.id }}</td>
-          <td>
-            <strong>
-              <a href="{% url 'reports:detail' query.id %}">{{ query.title }}</a>
-            </strong>
-          </td>
-          <td>{{ query.description | linebreaks }}</td>
-        </tr>
+        {% if query.id != 11 and query.id != 12 %}
+          <tr>
+            <td>{{ query.id }}</td>
+            <td>
+              <strong>
+                <a href="{% url 'reports:detail' query.id %}">{{ query.title }}</a>
+              </strong>
+            </td>
+            <td>{{ query.description | linebreaks }}</td>
+          </tr>
+        {% endif %}
       {% endfor %}
     </tbody>
   </table>
