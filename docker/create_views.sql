@@ -136,6 +136,27 @@ CREATE VIEW insitu_dataproviderrelation_view as
     FROM insitu_dataproviderrelation dpr
     WHERE dpr._deleted = FALSE;
 
+
+
+-- insitu_dataprovider without networks
+CREATE VIEW insitu_dataprovider_without_networks_view as
+    SELECT dp.id AS "data_provider_id",
+           dpd.acronym AS "data_provider_acronym",
+           dp.name AS "data_provider_name",
+           dp.is_network AS "data_provider_is_network",
+           dpd.website AS "data_provider_website",
+           dpd.address AS "data_provider_address",
+           dpd.phone AS "data_provider_phone",
+           dpd.email AS "data_provider_email",
+           dpd.contact_person AS "data_provider_contact_person",
+           pt.name AS "data_provider_type",
+           dp.state AS "data_provider_state"
+    FROM insitu_dataprovider dp
+    FULL OUTER JOIN insitu_dataproviderdetails dpd ON dp.id = dpd.data_provider_id
+    FULL OUTER JOIN picklists_providertype pt ON pt.id = dpd.provider_type_id
+    WHERE dp._deleted = FALSE;
+
+
 -- insitu_dataprovider
 CREATE VIEW insitu_dataprovider_view as
     SELECT dp.id AS "data_provider_id",
@@ -157,5 +178,5 @@ CREATE VIEW insitu_dataprovider_view as
     FULL OUTER JOIN insitu_dataprovider_countries dpc ON dp.id = dpc.dataprovider_id
     FULL OUTER JOIN picklists_country c ON c.code = dpc.country_id
     FULL OUTER JOIN insitu_dataprovider_networks dpn ON dp.id = dpn.from_dataprovider_id
-    FULL OUTER JOIN insitu_dataprovider dpnetwork ON dpnetwork.id = dpn.to_dataprovider_id
-    WHERE dp._deleted = FALSE and dpnetwork._deleted = FALSE;
+    LEFT OUTER JOIN insitu_dataprovider dpnetwork ON dpnetwork.id = dpn.to_dataprovider_id and dpnetwork._deleted = FALSE
+    WHERE dp._deleted = FALSE;
