@@ -3,6 +3,11 @@ Changelog
 
 * In case of major changes, an email should be sent to all users with the modifications.
 
+1.5.22 (2019-05-29)
+------------------
+* Fix dataprovider issue on Report 8
+  [dianaboiangiu]
+
 1.5.21 (2019-05-27)
 ------------------
 * Add 2 special reports
