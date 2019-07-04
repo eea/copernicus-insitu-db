@@ -20,7 +20,7 @@
 # -- Project information -----------------------------------------------------
 
 project = 'CIS2'
-copyright = '2018, Copyright Copernicus Programme'
+copyright = '2019, Copyright Copernicus In Situ Component Information System'
 author = 'https://land.copernicus.eu/'
 
 # The short X.Y version
