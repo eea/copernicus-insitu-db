@@ -3,10 +3,16 @@ Changelog
 
 * In case of major changes, an email should be sent to all users with the modifications.
 
+2.0.1 (2019-07-05)
+-----------------
+* Use official name in User Manual
+  [catalinjitea]
+
 2.0.0 (2019-06-27)
 ------------------
 * Migrate to version 2.0.0
 * Update User Manual
+  [dianaboiangiu]
 
 1.5.22 (2019-05-29)
 ------------------
