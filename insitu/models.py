@@ -641,3 +641,9 @@ class DataProviderRelation(ValidationWorkflowModel, SoftDeleteModel):
 
     def __str__(self):
         return '{} - {}'.format(self.data.name, self.provider.name)
+
+
+class UserLog(models.Model):
+    text = models.CharField(max_length=255)
+    date = models.DateTimeField()
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
