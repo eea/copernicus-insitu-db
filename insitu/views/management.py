@@ -1,3 +1,7 @@
+import re
+import json
+import requests
+from datetime import datetime
 from django.urls import reverse_lazy
 from django.conf import settings
 
@@ -53,4 +57,44 @@ class AboutView(ProtectedTemplateView):
     template_name = 'about.html'
     permission_classes = (IsAuthenticated,)
     permission_denied_redirect = reverse_lazy('auth:login')
+
+    @staticmethod
+    def get_issues(status='unresolved'):
+        base_url = settings.SENTRY_BASE_URL
+        endpoint = 'issues/?query=is:' + status
+
+        url = ''.join((base_url, endpoint))
+        r = requests.get(
+            url,
+            headers={
+                "Authorization": f"Bearer {settings.SENTRY_AUTH_TOKEN}"
+            }
+        )
+
+        response = json.loads(r.text)
+        issues = list()
+        for message in response:
+            issue = dict()
+
+            issue['title'] = message['title']
+            issue['resolved'] = (message['status'] == 'resolved')
+            parsed_date = re.sub('[A-Z]', '', message['lastSeen'])
+            issue['timestamp'] = datetime.strptime(parsed_date, '%Y-%m-%d%H:%M:%S.%f')
+
+            issues.append(issue)
+
+        return issues
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        resolved = AboutView.get_issues(status='resolved')
+        unresolved = AboutView.get_issues(status='unresolved')
+
+        issues = resolved + unresolved
+        issues.sort(key=lambda i: i['timestamp'], reverse=True)
+
+        context['issues'] = issues
+
+        return context
 
