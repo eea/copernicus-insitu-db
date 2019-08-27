@@ -1,42 +1,42 @@
 .popover {
-    min-width: 40%;
-    max-width: 100%;
+  min-width: 40%;
+  max-width: 100%;
 }
 
 .orange {
-    color: #FC7300;
+  color: #FC7300;
 }
 
 .blue {
-    color: #00529B;
+  color: #00529B;
 }
 
 .green {
-    color: #007B2B;
+  color: #007B2B;
 }
 
 .red {
-    color: red;
+  color: red;
 }
 
 .no-padding-left {
-    padding-left: 0;
+  padding-left: 0;
 }
 
 .paginate_button:hover {
-    border: 0px !important;
+  border: 0px !important;
 }
 
 .paginate_button {
-    padding: 0 !important;
+  padding: 0 !important;
 }
 
 .filters-style{
-    padding-top: 10px;
+  padding-top: 10px;
 }
 
 .margin-left-btn{
-    margin-left: 1%
+  margin-left: 1%
 }
 
 .main-title{
@@ -71,13 +71,13 @@
 }
 
 .display-margin{
- margin-top: 20px;
- margin-bottom: 20px;
+  margin-top: 20px;
+  margin-bottom: 20px;
 }
 
 .green-text{
- color: green !important;
- font-weight: bold;
+  color: green !important;
+  font-weight: bold;
 }
 
 @media (min-width: 1200px){
@@ -110,7 +110,7 @@
 }
 
 .font-weight-bold {
-    font-weight: bold;
+  font-weight: bold;
 }
 
 .navbar-nav>li>a {
@@ -124,10 +124,39 @@
   margin-left:60px;
 }
 
+.user_log {
+  width:30%;
+  height:20%;
+  padding-top: 68px;
+}
+
+.padding_user_log {
+  padding: 0px 16px 16px 0px;
+}
+
 .latest-changes-text {
   font-size: 16px;
   font-weight: 700;
   color:red;
+}
+
+.quiet {
+  font-size: 11px;
+  font-weight: normal;
+  color: #999999;
+}
+
+.recent_action {
+  padding: 16px;
+  margin-bottom: 16px;
+  border-bottom: 1px solid #e7e7e7;
+  font-size: 16px;
+  color: #337ab7;
+  font-weight: 700;
+}
+
+.recent_action_bg {
+  background: #f8f8f8;
 }
 
 .statistics-bar {

@@ -2,6 +2,7 @@ import csv
 import json
 import sys
 from datetime import datetime
+from insitu.models import UserLog
 
 
 class BaseLoggingView:
@@ -28,6 +29,22 @@ class BaseLoggingView:
                 self.extra
             ]).strip(",")
             spamwriter.writerow(row.split(','))
+
+        BaseLoggingView.add_user_log(request.user, action, id, self.target_type)
+
+    @staticmethod
+    def add_user_log(user, action, id, target_type):
+        text = " ".join([
+                action,
+                target_type,
+                str(id)
+            ]).strip(" ")
+        log = {
+            'text': text,
+            'date': datetime.now(),
+            'user': user
+        }
+        UserLog.objects.create(**log)
 
 
 class GetMethodLoggingView(BaseLoggingView):
