@@ -19,7 +19,6 @@ class HomeView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        user_log = UserLog.objects.filter().order_by('-date')
-        user_log = user_log[:10] if len(user_log) >= 10 else user_log
+        user_log = UserLog.objects.filter().order_by('-date')[:10]
         context['user_log'] = user_log
         return context
