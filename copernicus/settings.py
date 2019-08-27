@@ -101,10 +101,10 @@ TEMPLATES = [
                 'insitu.context_processors.matomo',
                 'insitu.context_processors.crazy_egg',
                 'insitu.context_processors.sentry',
+                'insitu.context_processors.statistics',
             ],
             'libraries':{
                 'js': 'insitu.views.product',
-                'tags': 'insitu.templatetags.tags',
             },
         },
     },
