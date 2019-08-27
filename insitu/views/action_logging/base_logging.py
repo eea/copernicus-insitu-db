@@ -30,16 +30,14 @@ class BaseLoggingView:
             ]).strip(",")
             spamwriter.writerow(row.split(','))
 
-        BaseLoggingView.add_user_log(request.user, action, id,
-                                     self.target_type, self.extra)
+        BaseLoggingView.add_user_log(request.user, action, id, self.target_type)
 
     @staticmethod
-    def add_user_log(user, action, id, target_type, extra):
+    def add_user_log(user, action, id, target_type):
         text = " ".join([
                 action,
                 target_type,
-                str(id),
-                extra
+                str(id)
             ]).strip(" ")
         log = {
             'text': text,
