@@ -7,14 +7,37 @@
 </head>
 
 {% block content %}
-  <div class="jumbotron main-title">
-    <h1>In Situ Component</h1>
-    <p>Copernicus In Situ Component Information System</p>
-  </div>
-  <body>
-  {% if user.is_authenticated %}
-    <div class="row">
-      <div class="latest-information col-sm-1">
+  <div class="row">
+    <div class="jumbotron main-title col-lg-7">
+      <h1>In Situ Component</h1>
+      <p>Copernicus In Situ Component Information System</p>
+    </div>
+    {% if user.is_authenticated %}
+      <div class="user_log col-sm-1 col-xs-offset-1">
+        <div class="recent_action_bg">
+          <p class="recent_action">Recent Actions</p>
+          <div class="padding_user_log">
+            {% if user_log %}
+              {% for log in user_log %}
+                <ul>
+                  <li> <b>{{ log.user.username }}</b> {{log.text }}
+                    <br>
+                    <span class="quiet"> {{ log.date }}</span>
+                  </li>
+                </ul>
+              {% endfor %}
+            {% else %}
+              <ul>
+                <li> <b>No recent actions</b></li>
+              </ul>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    {% endif %}
+    <body>
+    {% if user.is_authenticated %}
+      <div class="latest-information">
         <div>
           <p class="latest-changes-text">Latest changes</p>
           <h4 class="font-weight-bold">2.0.1 (2019-07-05)</h4>
@@ -27,24 +50,14 @@
           {% endif %}
         </div>
       </div>
-      <div class="latest-information col-sm-1">
-        <div>
-          <p class="latest-changes-text">My actions</p>
-          {% for log in user_log %}
-            <ul>
-              <li>{{ log.text }}</li>
-            </ul>
-          {% endfor %}
-        </div>
-      </div>
-    </div>
-  {% endif %}
-  <div id="footer">
-    <img class="logo-copernicus" src="{% static "/images/logo-copernicus.png"  %}" alt="Copernicus Logo" hspace="150">
-    <img class="in-situ-logo" src="{% static "/images/in-situ-logo.png" %}" alt="In Situ Logo">
-    <img class="european_commission-logo" src="{% static "/images/european_commission.png" %}"
-         alt="European Commission Logo" hspace="150">
-  </div>
-  </body>
 
+    {% endif %}
+    <div id="footer">
+      <img class="logo-copernicus" src="{% static "/images/logo-copernicus.png"  %}" alt="Copernicus Logo" hspace="150">
+      <img class="in-situ-logo" src="{% static "/images/in-situ-logo.png" %}" alt="In Situ Logo">
+      <img class="european_commission-logo" src="{% static "/images/european_commission.png" %}"
+           alt="European Commission Logo" hspace="150">
+    </div>
+    </body>
+  </div>
 {% endblock %}

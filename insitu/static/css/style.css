@@ -40,73 +40,73 @@
 }
 
 .main-title{
-  background: #ffffff;
-  padding-bottom:10px;
+    background: #ffffff;
+    padding-bottom:10px;
 }
 
 .logo-copernicus{
-  width:205px;
-  height:75px;
+    width:205px;
+    height:75px;
 }
 
 .in-situ-logo{
-  width:126px;
-  height:75px;
+    width:126px;
+    height:75px;
 }
 
 .european_commission-logo{
-  width:134px;
-  height:100px;
+    width:134px;
+    height:100px;
 }
 
 .required .control-label:after {
-  content:"*";color:red;
+    content:"*";color:red;
 }
 
 #footer{
-  width: inherit;
-  height: 10px;
-  bottom: 100px;
-  position: fixed;
+    width: inherit;
+    height: 10px;
+    bottom: 100px;
+    position: fixed;
 }
 
 .display-margin{
- margin-top: 20px;
- margin-bottom: 20px;
+    margin-top: 20px;
+    margin-bottom: 20px;
 }
 
 .green-text{
- color: green !important;
- font-weight: bold;
+    color: green !important;
+    font-weight: bold;
 }
 
 @media (min-width: 1200px){
-  .container {
-    width: 1250px;
-  }
+    .container {
+        width: 1250px;
+    }
 }
 
 .rectangle{
-  display: block;
-  float: left;
-  height: 20px;
-  width: 15px;
-  margin-right: 0px;
-  margin-left: 10px;
+    display: block;
+    float: left;
+    height: 20px;
+    width: 15px;
+    margin-right: 0px;
+    margin-left: 10px;
 }
 
 .popover-width-limit{
-  min-width: 9%;
+    min-width: 9%;
 }
 
 .back-to-top {
-  cursor: pointer;
-  position: fixed;
-  bottom: 20px;
-  right: 20px;
-  width: 70px;
-  height: 70px;
-  display:none;
+    cursor: pointer;
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 70px;
+    height: 70px;
+    display:none;
 }
 
 .font-weight-bold {
@@ -114,20 +114,49 @@
 }
 
 .navbar-nav>li>a {
-  padding-right: 10px !important;
-  padding-left: 10px;
+    padding-right: 10px !important;
+    padding-left: 10px;
 }
 
 .latest-information {
-  width:37%;
-  height:20%;
-  margin-left:60px;
+    width:37%;
+    height:20%;
+    margin-left:60px;
+}
+
+.user_log {
+    width:30%;
+    height:20%;
+    padding-top: 68px;
+}
+
+.padding_user_log {
+    padding: 0px 16px 16px 0px;
 }
 
 .latest-changes-text {
-  font-size: 16px;
-  font-weight: 700;
-  color:red;
+    font-size: 16px;
+    font-weight: 700;
+    color:red;
+}
+
+.quiet {
+    font-size: 11px;
+    font-weight: normal;
+    color: #999999;
+}
+
+.recent_action {
+    padding: 16px;
+    margin-bottom: 16px;
+    border-bottom: 1px solid #e7e7e7;
+    font-size: 16px;
+    color: #337ab7;
+    font-weight: 700;
+}
+
+.recent_action_bg {
+    background: #f8f8f8;
 }
 
 .statistics-bar {
