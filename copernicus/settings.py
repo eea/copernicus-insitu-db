@@ -104,6 +104,7 @@ TEMPLATES = [
             ],
             'libraries':{
                 'js': 'insitu.views.product',
+                'tags': 'insitu.templatetags.tags',
             },
         },
     },

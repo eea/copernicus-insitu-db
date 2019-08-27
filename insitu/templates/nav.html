@@ -1,5 +1,6 @@
 {% load navigation %}
 {% load utils %}
+{% load tags %}
 
 <nav class="navbar navbar-default" role="navigation">
   <div class="container-fluid">
@@ -12,7 +13,6 @@
       </button>
       <a class="navbar-brand" href="{% url 'home' %}">CIS<sup>2</sup></a>
     </div>
-
     <!-- Collect the nav links, forms, and other content for toggling -->
     <div class="collapse navbar-collapse" id="main-menu">
       {% if user.is_authenticated %}
@@ -99,3 +99,26 @@
     </div><!-- /.navbar-collapse -->
   </div><!-- /.container-fluid -->
 </nav>
+
+<div class="statistics-bar">
+    <div class="row">
+        <div class="col-sm-2">
+            <p>Logged users: {% get_logged_users_number %}</p>
+        </div>
+        <div class="col-sm-2">
+            <p>Registered users: {% get_registered_users_number %}</p>
+        </div>
+        <div class="col-sm-2">
+            <p>Products: {% get_product_number %}</p>
+        </div>
+        <div class="col-sm-2">
+            <p>Requirements: {% get_requirement_number %}</p>
+        </div>
+        <div class="col-sm-2">
+            <p>Data: {% get_data_number %}</p>
+        </div>
+        <div class="col-sm-2">
+            <p>Data providers: {% get_data_provider_number %}</p>
+        </div>
+    </div>
+</div>
