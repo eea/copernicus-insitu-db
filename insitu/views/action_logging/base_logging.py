@@ -35,12 +35,12 @@ class BaseLoggingView:
 
     @staticmethod
     def add_user_log(user, action, id, target_type, extra):
-        text = ",".join([
+        text = " ".join([
                 action,
                 target_type,
                 str(id),
                 extra
-            ])
+            ]).strip(" ")
         log = {
             'text': text,
             'date': datetime.now(),
