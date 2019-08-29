@@ -34,14 +34,17 @@ CSRF_TRUSTED_ORIGINS = env('ALLOWED_HOSTS')
 
 # Sentry
 SENTRY_DSN = env('SENTRY_DSN', '')
-sentry_sdk.init(
-    dsn=SENTRY_DSN,
-    integrations=[DjangoIntegration()]
-)
-SENTRY_ORG_SLUG = env('SENTRY_ORG_SLUG', '')
-SENTRY_PROJ_SLUG = env('SENTRY_PROJ_SLUG', '')
-SENTRY_AUTH_TOKEN = env('SENTRY_AUTH_TOKEN', '')
-SENTRY_BASE_URL = f"https://sentry.io/api/0/projects/{SENTRY_ORG_SLUG}/{SENTRY_PROJ_SLUG}/"
+
+if SENTRY_DSN:
+    sentry_sdk.init(
+        dsn=SENTRY_DSN,
+        integrations=[DjangoIntegration()]
+    )
+
+    SENTRY_ORG_SLUG = env('SENTRY_ORG_SLUG', '')
+    SENTRY_PROJ_SLUG = env('SENTRY_PROJ_SLUG', '')
+    SENTRY_AUTH_TOKEN = env('SENTRY_AUTH_TOKEN', '')
+    SENTRY_BASE_URL = f"https://sentry.io/api/0/projects/{SENTRY_ORG_SLUG}/{SENTRY_PROJ_SLUG}/"
 
 # Application definition
 

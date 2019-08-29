@@ -59,9 +59,9 @@ class AboutView(ProtectedTemplateView):
     permission_denied_redirect = reverse_lazy('auth:login')
 
     @staticmethod
-    def get_issues(status='unresolved'):
+    def get_issues():
         base_url = settings.SENTRY_BASE_URL
-        endpoint = 'issues/?query=is:' + status
+        endpoint = 'issues/?query=&sort=date&statsPeriod=14d'
 
         url = ''.join((base_url, endpoint))
         r = requests.get(
@@ -71,30 +71,26 @@ class AboutView(ProtectedTemplateView):
             }
         )
 
-        response = json.loads(r.text)
-        issues = list()
-        for message in response:
-            issue = dict()
+        if r.status_code == 200:
+            response = json.loads(r.text)
+            issues = []
+            for message in response:
+                parsed_date = re.sub('[A-Z]', '', message['lastSeen'])
+                issue = {
+                    'name': message['title'],
+                    'timestamp': datetime.strptime(parsed_date, '%Y-%m-%d%H:%M:%S.%f'),
+                    'resolved': (message['status'] == 'resolved')
+                }
+                issues.append(issue)
+            return issues
 
-            issue['name'] = message['title']
-            parsed_date = re.sub('[A-Z]', '', message['lastSeen'])
-            issue['timestamp'] = datetime.strptime(parsed_date, '%Y-%m-%d%H:%M:%S.%f')
-            issue['resolved'] = (message['status'] == 'resolved')
-
-            issues.append(issue)
-
-        return issues
+        return []
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
-        resolved = AboutView.get_issues(status='resolved')
-        unresolved = AboutView.get_issues(status='unresolved')
-
-        issues = resolved + unresolved
-        issues.sort(key=lambda i: i['timestamp'], reverse=True)
-
-        context['issues'] = issues
+        if settings.SENTRY_PROJ_SLUG and settings.SENTRY_ORG_SLUG:
+            context['issues'] = AboutView.get_issues()
 
         return context
 
