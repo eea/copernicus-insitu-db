@@ -6,27 +6,27 @@
 {% block content %}
   <h1>About</h1>
 
-    <h3><b>&emsp;Sentry errors</b></h3>
-    <br>
-    <table class="sentry-table">
+  <h3><b>&emsp;Sentry errors</b></h3>
+  <br>
+  <table class="sentry-table">
     <tr class="sentry-tr">
-        <th class="sentry-th">Name</th>
-        <th class="sentry-th">Last Occur</th>
-        <th class="sentry-th">Resolved</th>
+      <th class="sentry-th">Name</th>
+      <th class="sentry-th">Last Occur</th>
+      <th class="sentry-th">Resolved</th>
     </tr>
     {% for issue in issues %}
-        <tr class="sentry-tr">
-            <td class="sentry-title">{{ issue.name }}</td>
-            <td class="sentry-td">{{ issue.timestamp }}</td>
-            {% if issue.resolved %}
-                <td class="sentry-td"><img src="{% static "images/success.png" alt="success" %}"></td>
-            {% else %}
-                <td class="sentry-td"><img src="{% static "images/error.png" alt="error" %}"></td>
-            {% endif %}
-        </tr>
+    <tr class="sentry-tr">
+      <td class="sentry-title">{{ issue.name }}</td>
+      <td class="sentry-td">{{ issue.timestamp }}</td>
+      {% if issue.resolved %}
+      <td class="sentry-td"><span class="glyphicon glyphicon-ok-circle text-success"></span></td>
+      {% else %}
+      <td class="sentry-td"><span class="glyphicon glyphicon-remove-circle text-danger"></span></td>
+      {% endif %}
+    </tr>
     {% endfor %}
-    </table>
-    <br>
+  </table>
+  <br>
 
   <div id="id_changelog_container" class="changelog_container">
     <table id="id_changelog" class="table-hover table-condensed" style="width:100%">
