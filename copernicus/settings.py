@@ -11,7 +11,8 @@ https://docs.djangoproject.com/en/1.11/ref/settings/
 """
 
 import os
-
+import sentry_sdk
+from sentry_sdk.integrations.django import DjangoIntegration
 from getenv import env
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
@@ -31,6 +32,19 @@ DEBUG_TOOLBAR = env('DEBUG_TOOLBAR', False)
 ALLOWED_HOSTS = ['localhost', '127.0.0.1', env('ALLOWED_HOSTS')]
 CSRF_TRUSTED_ORIGINS = env('ALLOWED_HOSTS')
 
+# Sentry
+SENTRY_DSN = env('SENTRY_DSN', '')
+
+if SENTRY_DSN:
+    sentry_sdk.init(
+        dsn=SENTRY_DSN,
+        integrations=[DjangoIntegration()]
+    )
+
+    SENTRY_ORG_SLUG = env('SENTRY_ORG_SLUG', '')
+    SENTRY_PROJ_SLUG = env('SENTRY_PROJ_SLUG', '')
+    SENTRY_AUTH_TOKEN = env('SENTRY_AUTH_TOKEN', '')
+    SENTRY_BASE_URL = f"https://sentry.io/api/0/projects/{SENTRY_ORG_SLUG}/{SENTRY_PROJ_SLUG}/"
 
 # Application definition
 

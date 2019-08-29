@@ -171,3 +171,8 @@
   height: 45%;
   margin: 0 auto;
 }
+
+.sentry-center {
+  width: 100%;
+  text-align: center;
+}

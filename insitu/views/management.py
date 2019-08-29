@@ -1,3 +1,7 @@
+import re
+import json
+import requests
+from datetime import datetime
 from django.urls import reverse_lazy
 from django.conf import settings
 
@@ -53,4 +57,40 @@ class AboutView(ProtectedTemplateView):
     template_name = 'about.html'
     permission_classes = (IsAuthenticated,)
     permission_denied_redirect = reverse_lazy('auth:login')
+
+    @staticmethod
+    def get_issues():
+        base_url = settings.SENTRY_BASE_URL
+        endpoint = 'issues/?query=&sort=date&statsPeriod=14d'
+
+        url = ''.join((base_url, endpoint))
+        r = requests.get(
+            url,
+            headers={
+                "Authorization": f"Bearer {settings.SENTRY_AUTH_TOKEN}"
+            }
+        )
+
+        issues = []
+
+        if r.status_code == 200:
+            response = json.loads(r.text)
+            for message in response:
+                parsed_date = re.sub('[A-Z]', '', message['lastSeen'])
+                issue = {
+                    'name': message['title'],
+                    'timestamp': datetime.strptime(parsed_date, '%Y-%m-%d%H:%M:%S.%f'),
+                    'resolved': (message['status'] == 'resolved')
+                }
+                issues.append(issue)
+
+        return issues
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        if settings.SENTRY_PROJ_SLUG and settings.SENTRY_ORG_SLUG:
+            context['issues'] = AboutView.get_issues()
+
+        return context
 

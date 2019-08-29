@@ -6,12 +6,41 @@
 {% block content %}
   <h1>About</h1>
 
+  <h3><b>&emsp;Incidents</b></h3>
+  <br>
+  {% if issues %}
+  <table class="table table-striped">
+    <thead>
+    <tr>
+      <th scope="col">Name</th>
+      <th scope="col">Last Occur</th>
+      <th scope="col" style="text-align: center">Resolved</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for issue in issues %}
+    <tr>
+      <th scope="row">{{ issue.name }}</th>
+      <td>{{ issue.timestamp }}</td>
+      {% if issue.resolved %}
+      <td><span class="glyphicon glyphicon-ok-circle text-success sentry-center"></span></td>
+      {% else %}
+      <td><span class="glyphicon glyphicon-remove-circle text-danger sentry-center"></span></td>
+      {% endif %}
+    </tr>
+    {% endfor %}
+  </tbody>
+  </table>
+  {% else %}
+    <p>No issues have occurred recently.</p>
+  {% endif %}
+
   <div id="id_changelog_container" class="changelog_container">
     <table id="id_changelog" class="table-hover table-condensed" style="width:100%">
       <thead>
       <tr>
         <th>
-          <h3>Changelog</h3>
+          <h3><b>&emsp;Changelog</b></h3>
         </th>
       </tr>
       </thead>
