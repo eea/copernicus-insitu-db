@@ -166,3 +166,8 @@
   float: right !important;
   font-size: 12px;
 }
+
+.changelog_container {
+  height: 45%;
+  margin: 0 auto;
+}
