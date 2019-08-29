@@ -9,6 +9,7 @@ from .user import *
 from .management import *
 from .reports import *
 from .crash_me import *
+from .user_records import *
 
 from django.views.generic import TemplateView
 from insitu.models import UserLog

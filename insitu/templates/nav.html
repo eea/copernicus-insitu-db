@@ -66,7 +66,7 @@
       <ul class="pull-right nav navbar-nav">
         {% if user.is_authenticated %}
            <li>
-            <a>Hello, {{ user.username }}</a>
+            <a href="{% url 'user_records' %}">Hello, {{ user.username }}</a>
           </li>         {% url 'help' as help %}
           <li class="{% active help %}">
             <a href="{{ help }}">
