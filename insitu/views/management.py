@@ -71,9 +71,10 @@ class AboutView(ProtectedTemplateView):
             }
         )
 
+        issues = []
+
         if r.status_code == 200:
             response = json.loads(r.text)
-            issues = []
             for message in response:
                 parsed_date = re.sub('[A-Z]', '', message['lastSeen'])
                 issue = {
@@ -82,9 +83,8 @@ class AboutView(ProtectedTemplateView):
                     'resolved': (message['status'] == 'resolved')
                 }
                 issues.append(issue)
-            return issues
 
-        return []
+        return issues
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
