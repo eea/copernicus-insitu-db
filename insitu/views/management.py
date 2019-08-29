@@ -76,10 +76,10 @@ class AboutView(ProtectedTemplateView):
         for message in response:
             issue = dict()
 
-            issue['title'] = message['title']
-            issue['resolved'] = (message['status'] == 'resolved')
+            issue['name'] = message['title']
             parsed_date = re.sub('[A-Z]', '', message['lastSeen'])
             issue['timestamp'] = datetime.strptime(parsed_date, '%Y-%m-%d%H:%M:%S.%f')
+            issue['resolved'] = (message['status'] == 'resolved')
 
             issues.append(issue)
 

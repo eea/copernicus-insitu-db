@@ -171,3 +171,24 @@
   height: 45%;
   margin: 0 auto;
 }
+
+.sentry-table {
+  font-family: arial, sans-serif;
+  border-collapse: collapse;
+  width: 100%;
+}
+
+.sentry-td, .sentry-th {
+  border: 1px solid #dddddd;
+  padding: 8px;
+  text-align: center;
+}
+
+.sentry-title {
+  text-align: left;
+  padding-left: 40px;
+}
+
+.sentry-tr:nth-child(even) {
+  background-color: #dddddd;
+}

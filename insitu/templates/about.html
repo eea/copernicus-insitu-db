@@ -6,12 +6,34 @@
 {% block content %}
   <h1>About</h1>
 
+    <h3><b>&emsp;Sentry errors</b></h3>
+    <br>
+    <table class="sentry-table">
+    <tr class="sentry-tr">
+        <th class="sentry-th">Name</th>
+        <th class="sentry-th">Last Occur</th>
+        <th class="sentry-th">Resolved</th>
+    </tr>
+    {% for issue in issues %}
+        <tr class="sentry-tr">
+            <td class="sentry-title">{{ issue.name }}</td>
+            <td class="sentry-td">{{ issue.timestamp }}</td>
+            {% if issue.resolved %}
+                <td class="sentry-td"><img src="{% static "images/success.png" alt="success" %}"></td>
+            {% else %}
+                <td class="sentry-td"><img src="{% static "images/error.png" alt="error" %}"></td>
+            {% endif %}
+        </tr>
+    {% endfor %}
+    </table>
+    <br>
+
   <div id="id_changelog_container" class="changelog_container">
     <table id="id_changelog" class="table-hover table-condensed" style="width:100%">
       <thead>
       <tr>
         <th>
-          <h3>Changelog</h3>
+          <h3><b>&emsp;Changelog</b></h3>
         </th>
       </tr>
       </thead>
