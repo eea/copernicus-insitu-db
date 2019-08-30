@@ -8,13 +8,13 @@ from insitu.models import (
     Requirement,
     User
 )
-from insitu.views import ProtectedDetailView
+from insitu.views import ProtectedTemplateView
 from insitu.views.protected import (
     IsCurrentUser,
 )
 
 
-class UserRecordsView(ProtectedDetailView):
+class UserRecordsView(ProtectedTemplateView):
     model = User
     template_name = 'user_records.html'
     permission_classes = (IsCurrentUser, )

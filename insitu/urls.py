@@ -314,7 +314,7 @@ urlpatterns = [
         views.Crashme.as_view(),
         name='crashme'),
 
-    url(r'^user/(?P<pk>\w+)/records$',
+    url(r'^user/(?P<pk>\d+)/records$',
         views.UserRecordsView.as_view(),
         name='user_records'),
 ]
