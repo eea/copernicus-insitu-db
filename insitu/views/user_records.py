@@ -38,9 +38,6 @@ class UserRecordsView(ProtectedDetailView):
         context['product_requirements'] = ProductRequirement.objects.filter(
             created_by=current_user
         )
-        context['product_requirements'] = Requirement.objects.filter(
-            created_by=current_user
-        )
         context['requirements_list'] = Requirement.objects.filter(
             created_by=current_user
         )
