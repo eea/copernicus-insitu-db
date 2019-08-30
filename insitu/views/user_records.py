@@ -1,11 +1,23 @@
 from django.urls import reverse_lazy
-from insitu.models import Data, DataProvider,DataProviderRelation, DataRequirement, Product, ProductRequirement, Requirement
-from insitu.views import ProtectedTemplateView, IsAuthenticated
+from insitu.models import (
+    Data,
+    DataProvider,
+    DataProviderRelation,
+    DataRequirement,
+    ProductRequirement,
+    Requirement,
+    User
+)
+from insitu.views import ProtectedDetailView
+from insitu.views.protected import (
+    IsCurrentUser,
+)
 
 
-class UserRecordsView(ProtectedTemplateView):
+class UserRecordsView(ProtectedDetailView):
+    model = User
     template_name = 'user_records.html'
-    permission_classes = (IsAuthenticated,)
+    permission_classes = (IsCurrentUser, )
     permission_denied_redirect = reverse_lazy('auth:login')
 
     def get_context_data(self, **kwargs):

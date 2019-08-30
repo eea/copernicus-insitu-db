@@ -48,3 +48,10 @@ class IsRequestedUser(IsAuthenticated):
         requesting_user = get_object_or_404(User, id=view.kwargs['sender_user'])
         return (super().has_permission(request, view) and
                 requesting_user.team.requests.filter(id=request.user.id).first())
+
+
+class IsCurrentUser(IsAuthenticated):
+    def has_permission(self, request, view):
+        requesting_user = get_object_or_404(User, id=view.kwargs['pk'])
+        return (super().has_permission(request, view) and
+                requesting_user.id == request.user.id)
