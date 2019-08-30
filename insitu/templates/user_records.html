@@ -18,173 +18,192 @@
 
   <div class="row">
     <h1 class="col-sm-12">
-      <span>Records</span>
+      <span>Records added by you</span>
     </h1>
   </div>
 
-  <div class="row">
-    <h3 class="col-sm-12">
-      <span>Data</span>
-    </h3>
-  </div>
-
-  <div class="row" >
-    <div class="col-lg-12">
-      <table id="user_data" width="100%"
-             class="table table-condensed table-bordered table-hover">
-        <thead>
-        <tr>
-          <th>Name</th>
-        </tr>
-        </thead>
-        <tbody>
-        {% for data in data_list %}
-          <tr>
-            <td><a href="{% url 'data:detail' data.id %}">{{ data.name }}</a></td>
-          </tr>
-        {% endfor %}
-        </tbody>
-      </table>
+  {% if requirements_list %}
+    <div class="row">
+      <h3 class="col-sm-12">
+        <span>Requirements</span>
+      </h3>
     </div>
-  </div>
 
-  <div class="row">
-    <h3 class="col-sm-12">
-      <span>Data Providers</span>
-    </h3>
-  </div>
-
-  <div class="row" >
-    <div class="col-lg-12">
-      <table id="user_providers" width="100%"
-             class="table table-condensed table-bordered table-hover">
-        <thead>
-        <tr>
-          <th>Name</th>
-        </tr>
-        </thead>
-        <tbody>
-        {% for provider in providers_list %}
+    <div class="row" >
+      <div class="col-lg-12">
+        <table id="user_requirements" width="100%"
+               class="table table-condensed table-bordered table-hover">
+          <thead>
           <tr>
-            <td><a href="{% url 'provider:detail' provider.id %}">{{ provider.name }}</a></td>
+            <th>Name</th>
           </tr>
-        {% endfor %}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+          {% for requirement in requirements_list %}
+            <tr>
+              <td><a href={% url 'requirement:detail' requirement.id %}>{{ requirement.name }}</a></td>
+            </tr>
+          {% endfor %}
+          </tbody>
+        </table>
+      </div>
     </div>
-  </div>
+  {% endif %}
 
-  <div class="row">
-    <h3 class="col-sm-12">
-      <span>Requirements</span>
-    </h3>
-  </div>
+  {% if product_requirements %}
+    <div class="row">
+      <h3 class="col-sm-12">
+        <span>Links between Products and Requirements</span>
+      </h3>
+    </div>
 
-  <div class="row" >
-    <div class="col-lg-12">
-      <table id="user_requirements" width="100%"
-             class="table table-condensed table-bordered table-hover">
-        <thead>
-        <tr>
-          <th>Name</th>
-        </tr>
-        </thead>
-        <tbody>
-        {% for requirement in requirements_list %}
+    <div class="row" >
+      <div class="col-lg-12">
+        <table id="user_product_requirements" width="100%"
+               class="table table-condensed table-bordered table-hover">
+          <thead>
           <tr>
-            <td><a href={% url 'requirement:detail' requirement.id %}>{{ requirement.name }}</a></td>
+            <th>Product</th>
+            <th>Requirements</th>
           </tr>
-        {% endfor %}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+          {% for product_req in product_requirements %}
+            <tr>
+              <td><a href={% url 'product:detail' product_req.product.id %}>{{ product_req.product.name }}</a></td>
+              <td><a href={% url 'requirement:detail' product_req.requirement.id %}>{{ product_req.requirement.name }}</a></td>
+            </tr>
+          {% endfor %}
+          </tbody>
+        </table>
+      </div>
     </div>
-  </div>
+  {% endif %}
 
-  <div class="row">
-    <h3 class="col-sm-12">
-      <span>Links between Data and Requirements</span>
-    </h3>
-  </div>
+  {% if  data_requirements %}
+    <div class="row">
+      <h3 class="col-sm-12">
+        <span>Links between Data and Requirements</span>
+      </h3>
+    </div>
 
-  <div class="row" >
-    <div class="col-lg-12">
-      <table id="user_data_requirements" width="100%"
-             class="table table-condensed table-bordered table-hover">
-        <thead>
-        <tr>
-          <th>Data</th>
-          <th>Requirement</th>
-        </tr>
-        </thead>
-        <tbody>
-        {% for data_req in data_requirements %}
+
+    <div class="row" >
+      <div class="col-lg-12">
+        <table id="user_data_requirements" width="100%"
+               class="table table-condensed table-bordered table-hover">
+          <thead>
           <tr>
-            <td><a href={% url 'data:detail' data_req.data.id %}>{{ data_req.data.name }}</a></td>
-            <td><a href={% url 'requirement:detail' data_req.requirement.id %}>{{ data_req.requirement.name }}</a></td>
+            <th>Data</th>
+            <th>Requirement</th>
           </tr>
-        {% endfor %}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+          {% for data_req in data_requirements %}
+            <tr>
+              <td><a href={% url 'data:detail' data_req.data.id %}>{{ data_req.data.name }}</a></td>
+              <td><a href={% url 'requirement:detail' data_req.requirement.id %}>{{ data_req.requirement.name }}</a></td>
+            </tr>
+          {% endfor %}
+          </tbody>
+        </table>
+      </div>
     </div>
-  </div>
+  {% endif %}
 
+  {% if data_list %}
+    <div class="row">
+      <h3 class="col-sm-12">
+        <span>Data</span>
+      </h3>
+    </div>
 
-  <div class="row">
-    <h3 class="col-sm-12">
-      <span>Links between Data and Data Providers</span>
-    </h3>
-  </div>
-
-  <div class="row" >
-    <div class="col-lg-12">
-      <table id="user_provider_relationships" width="100%"
-             class="table table-condensed table-bordered table-hover">
-        <thead>
-        <tr>
-          <th>Data</th>
-          <th>Provider</th>
-        </tr>
-        </thead>
-        <tbody>
-        {% for provider_rel in provider_relations %}
+    <div class="row" >
+      <div class="col-lg-12">
+        <table id="user_data" width="100%"
+               class="table table-condensed table-bordered table-hover">
+          <thead>
           <tr>
-            <td><a href={% url 'data:detail' provider_rel.data.id %}>{{ provider_rel.data.name }}</a></td>
-            <td><a href={% url 'provider:detail' provider_rel.provider.id %}>{{ provider_rel.provider.name }}</a></td>
+            <th>Name</th>
           </tr>
-        {% endfor %}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+          {% for data in data_list %}
+            <tr>
+              <td><a href="{% url 'data:detail' data.id %}">{{ data.name }}</a></td>
+            </tr>
+          {% endfor %}
+          </tbody>
+        </table>
+      </div>
     </div>
-  </div>
+  {% endif %}
 
+  {% if provider_relations %}
+    <div class="row">
+      <h3 class="col-sm-12">
+        <span>Links between Data and Data Providers</span>
+      </h3>
+    </div>
 
-  <div class="row">
-    <h3 class="col-sm-12">
-      <span>Links between Products and Requirements</span>
-    </h3>
-  </div>
-
-  <div class="row" >
-    <div class="col-lg-12">
-      <table id="user_product_requirements" width="100%"
-             class="table table-condensed table-bordered table-hover">
-        <thead>
-        <tr>
-          <th>Product</th>
-          <th>Requirements</th>
-        </tr>
-        </thead>
-        <tbody>
-        {% for product_req in product_requirements %}
+    <div class="row" >
+      <div class="col-lg-12">
+        <table id="user_provider_relationships" width="100%"
+               class="table table-condensed table-bordered table-hover">
+          <thead>
           <tr>
-            <td><a href={% url 'product:detail' product_req.product.id %}>{{ product_req.product.name }}</a></td>
-            <td><a href={% url 'requirement:detail' product_req.requirement.id %}>{{ product_req.requirement.name }}</a></td>
+            <th>Data</th>
+            <th>Provider</th>
           </tr>
-        {% endfor %}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+          {% for provider_rel in provider_relations %}
+            <tr>
+              <td><a href={% url 'data:detail' provider_rel.data.id %}>{{ provider_rel.data.name }}</a></td>
+              <td><a href={% url 'provider:detail' provider_rel.provider.id %}>{{ provider_rel.provider.name }}</a></td>
+            </tr>
+          {% endfor %}
+          </tbody>
+        </table>
+      </div>
     </div>
-  </div>
+  {% endif %}
+
+  {% if providers_list %}
+    <div class="row">
+      <h3 class="col-sm-12">
+        <span>Data Providers</span>
+      </h3>
+    </div>
+
+    <div class="row" >
+      <div class="col-lg-12">
+        <table id="user_providers" width="100%"
+               class="table table-condensed table-bordered table-hover">
+          <thead>
+          <tr>
+            <th>Name</th>
+          </tr>
+          </thead>
+          <tbody>
+          {% for provider in providers_list %}
+            <tr>
+              <td><a href="{% url 'provider:detail' provider.id %}">{{ provider.name }}</a></td>
+            </tr>
+          {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  {% endif %}
+
+  {% if no_records %}
+    <div class="row no_records">
+      <h2 class="col-sm-12">
+        <span>No records added</span>
+      </h2>
+    </div>
+  {% endif %}
 
 {% endblock %}
 

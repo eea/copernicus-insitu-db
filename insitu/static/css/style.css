@@ -188,3 +188,8 @@
   font-weight: bold;
   padding-left: 10px;
 }
+
+.no_records{
+  text-align: center;
+  color: grey;
+}

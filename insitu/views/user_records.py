@@ -41,4 +41,15 @@ class UserRecordsView(ProtectedDetailView):
         context['requirements_list'] = Requirement.objects.filter(
             created_by=current_user
         )
+
+        context['no_records'] = not any(
+            [
+                context['requirements_list'],
+                context['data_requirements'],
+                context['data_list'],
+                context['providers_list'],
+                context['provider_relations'],
+                context['product_requirements'],
+            ]
+        )
         return context
