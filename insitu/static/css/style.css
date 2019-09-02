@@ -176,3 +176,20 @@
   width: 100%;
   text-align: center;
 }
+
+.padding_user_record {
+  padding-top: 35px;
+  padding-left: 0px;
+}
+
+.text_user_record {
+  color: #337ab7;
+  font-size: 18px;
+  font-weight: bold;
+  padding-left: 10px;
+}
+
+.no_records{
+  text-align: center;
+  color: grey;
+}

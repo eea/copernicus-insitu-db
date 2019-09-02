@@ -9,6 +9,7 @@ from .user import *
 from .management import *
 from .reports import *
 from .crash_me import *
+from .user_records import *
 
 from django.views.generic import TemplateView
 from insitu.models import UserLog
@@ -19,6 +20,6 @@ class HomeView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        user_log = UserLog.objects.filter().order_by('-date')[:10]
+        user_log = UserLog.objects.filter().order_by('-date')[:5]
         context['user_log'] = user_log
         return context
