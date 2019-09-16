@@ -6,6 +6,16 @@
 {% block content %}
   <h1>About</h1>
 
+  <h3><b>&emsp;Statistics</b></h3>
+
+  <div class="container">
+    <h4>Logged users: {{ logged_users }}</h4>
+    <h4>Registered users: {{ registered_users }}</h4>
+    <h4>Products: {{ products }}</h4>
+    <h4>Requirements: {{ requirements }}</h4>
+    <h4>Data: {{ data }}</h4>
+    <h4>Data providers: {{ data_providers }}</h4>
+  </div>
   <h3><b>&emsp;Incidents</b></h3>
   <br>
   {% if issues %}

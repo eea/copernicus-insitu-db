@@ -138,6 +138,7 @@
   font-size: 16px;
   font-weight: 700;
   color:red;
+  margin-top: 20px;
 }
 
 .quiet {
@@ -162,8 +163,6 @@
 .statistics-bar {
   margin-top: -15px;
   text-align: center;
-  width: 50% !important;
-  float: right !important;
   font-size: 12px;
 }
 
