@@ -40,7 +40,7 @@ def statistics(request):
     return {
         'products': Product.objects.all().count(),
         'requirements': Requirement.objects.all().count(),
-        'data': Data.objects.all().count(),
+        'data_count': Data.objects.all().count(),
         'data_providers': DataProvider.objects.all().count(),
         'logged_users': Session.objects.filter(expire_date__gte=timezone.now()).count(),
         'registered_users': User.objects.all().count(),
