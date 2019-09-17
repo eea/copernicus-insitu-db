@@ -83,10 +83,14 @@ class AboutView(ProtectedTemplateView):
         if r.status_code == 200:
             response = json.loads(r.text)
             for message in response:
-                parsed_date = re.sub('[A-Z]', '', message['lastSeen'])
+                parsed_date = re.sub('[A-Z]', '', message['lastSeen'])[0:18]
+                try:
+                    date = datetime.strptime(parsed_date, '%Y-%m-%d%H:%M:%S')
+                except:
+                    date = parsed_date
                 issue = {
                     'name': message['title'],
-                    'timestamp': datetime.strptime(parsed_date, '%Y-%m-%d%H:%M:%S.%f'),
+                    'timestamp': date,
                     'resolved': (message['status'] == 'resolved')
                 }
                 issues.append(issue)
