@@ -3,6 +3,15 @@ Changelog
 
 * In case of major changes, an email should be sent to all users with the modifications.
 
+2.1.1 (2019-09-17)
+------------------
+* Show Records added by user on User page (click "Hello user")
+* Show logging details in Homepage
+* Show application statistics on About page
+* Show recent incidents in About page
+* Bug fix
+  [dianaboiangiu]
+
 2.1.0 (2019-09-17)
 ------------------
 * Show Records added by user on User page (click "Hello user")
