@@ -4,6 +4,9 @@ import requests
 from datetime import datetime
 from django.urls import reverse_lazy
 from django.conf import settings
+from django.contrib.auth.models import User
+from django.contrib.sessions.models import Session
+from django.utils import timezone
 
 from insitu.views.protected import (
     IsAuthenticated,
@@ -12,6 +15,10 @@ from insitu.views.protected import (
 from insitu.views.protected.views import ProtectedTemplateView
 from insitu.utils import PICKLISTS_DESCRIPTION
 from picklists import models
+from insitu.models import Product, Requirement, Data, DataProvider
+
+
+
 
 
 class Manager(ProtectedTemplateView):
@@ -86,8 +93,19 @@ class AboutView(ProtectedTemplateView):
 
         return issues
 
+    def statistics(self):
+        return {
+            'products': Product.objects.all().count(),
+            'requirements': Requirement.objects.all().count(),
+            'data': Data.objects.all().count(),
+            'data_providers': DataProvider.objects.all().count(),
+            'logged_users': Session.objects.filter(expire_date__gte=timezone.now()).count(),
+            'registered_users': User.objects.all().count(),
+        }
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        context.update(**self.statistics())
 
         if settings.SENTRY_PROJ_SLUG and settings.SENTRY_ORG_SLUG:
             context['issues'] = AboutView.get_issues()

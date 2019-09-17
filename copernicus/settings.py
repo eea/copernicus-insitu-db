@@ -33,11 +33,11 @@ ALLOWED_HOSTS = ['localhost', '127.0.0.1', env('ALLOWED_HOSTS')]
 CSRF_TRUSTED_ORIGINS = env('ALLOWED_HOSTS')
 
 # Sentry
-SENTRY_DSN = env('SENTRY_DSN', '')
+SENTRY_PUBLIC_DSN = env('SENTRY_PUBLIC_DSN', '')
 
-if SENTRY_DSN:
+if SENTRY_PUBLIC_DSN:
     sentry_sdk.init(
-        dsn=SENTRY_DSN,
+        dsn=SENTRY_PUBLIC_DSN,
         integrations=[DjangoIntegration()]
     )
 
@@ -75,7 +75,7 @@ if not DEBUG:
     INSTALLED_APPS += ['raven.contrib.django.raven_compat', ]
 
     RAVEN_CONFIG = {
-        'dsn': env('SENTRY_DSN'),
+        'dsn': env('SENTRY_PUBLIC_DSN'),
     }
 
 if DEBUG_TOOLBAR:
@@ -115,7 +115,6 @@ TEMPLATES = [
                 'insitu.context_processors.matomo',
                 'insitu.context_processors.crazy_egg',
                 'insitu.context_processors.sentry',
-                'insitu.context_processors.statistics',
             ],
             'libraries':{
                 'js': 'insitu.views.product',
