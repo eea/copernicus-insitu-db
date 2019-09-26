@@ -3,6 +3,11 @@ Changelog
 
 * In case of major changes, an email should be sent to all users with the modifications.
 
+2.1.2 (2019-09-26)
+-----------------
+* Fix product description display
+  [dianaboiangiu]
+
 2.1.1 (2019-09-17)
 ------------------
 * Show Records added by user on User page (click "Hello user")
