@@ -3,6 +3,11 @@ Changelog
 
 * In case of major changes, an email should be sent to all users with the modifications.
 
+2.1.3 (2019-10-24)
+-----------------
+* Move CIS2 to new Sentry
+  [dianaboiangiu]
+
 2.1.2 (2019-09-26)
 -----------------
 * Fix product description display
