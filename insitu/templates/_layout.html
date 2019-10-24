@@ -19,10 +19,10 @@
     {% block title %}
     {% endblock %}
     </title>
-    {% if sentry_public_id %}
+    {% if sentry_dsn %}
     <script src="https://cdn.ravenjs.com/3.17.0/raven.min.js" crossorigin="anonymous"></script>
     <script>
-      Raven.config('{{ sentry_public_id }}').install()
+      Raven.config('{{ sentry_dsn }}').install()
       Raven.setUserContext({
         email: '{{ user.email }}',
         username: '{{ user.username }}',

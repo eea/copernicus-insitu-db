@@ -33,19 +33,18 @@ ALLOWED_HOSTS = ['localhost', '127.0.0.1', env('ALLOWED_HOSTS')]
 CSRF_TRUSTED_ORIGINS = env('ALLOWED_HOSTS')
 
 # Sentry
-SENTRY_PUBLIC_DSN = env('SENTRY_PUBLIC_DSN', '')
+SENTRY_DSN = env('SENTRY_DSN', '')
 
-if SENTRY_PUBLIC_DSN:
+if SENTRY_DSN:
     sentry_sdk.init(
-        dsn=SENTRY_PUBLIC_DSN,
+        dsn=SENTRY_DSN,
         integrations=[DjangoIntegration()]
     )
 
     SENTRY_ORG_SLUG = env('SENTRY_ORG_SLUG', '')
     SENTRY_PROJ_SLUG = env('SENTRY_PROJ_SLUG', '')
     SENTRY_AUTH_TOKEN = env('SENTRY_AUTH_TOKEN', '')
-    SENTRY_BASE_URL = f"https://sentry.io/api/0/projects/{SENTRY_ORG_SLUG}/{SENTRY_PROJ_SLUG}/"
-
+    SENTRY_BASE_URL = f"https://sentry.edw.ro/api/0/projects/{SENTRY_ORG_SLUG}/{SENTRY_PROJ_SLUG}/"
 # Application definition
 
 INSTALLED_APPS = [
@@ -75,7 +74,7 @@ if not DEBUG:
     INSTALLED_APPS += ['raven.contrib.django.raven_compat', ]
 
     RAVEN_CONFIG = {
-        'dsn': env('SENTRY_PUBLIC_DSN'),
+        'dsn': env('SENTRY_DSN'),
     }
 
 if DEBUG_TOOLBAR:

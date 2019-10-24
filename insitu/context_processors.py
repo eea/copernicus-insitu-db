@@ -29,5 +29,5 @@ def sentry(request):
         sentry_id = request.sentry['id']
     return {
         'sentry_id': sentry_id,
-        'sentry_public_id': env('SENTRY_PUBLIC_DSN', ''),
+        'sentry_dsn': env('SENTRY_DSN', ''),
     }
