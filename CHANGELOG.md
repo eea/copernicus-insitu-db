@@ -3,6 +3,11 @@ Changelog
 
 * In case of major changes, an email should be sent to all users with the modifications.
 
+2.1.4 (2019-10-24)
+-----------------
+* Upgrade raven package for Sentry support
+  [dianaboiangiu]
+
 2.1.3 (2019-10-24)
 -----------------
 * Move CIS2 to new Sentry
