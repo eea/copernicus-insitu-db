@@ -22,7 +22,15 @@
     {% if sentry_dsn %}
     <script src="https://cdn.ravenjs.com/3.17.0/raven.min.js" crossorigin="anonymous"></script>
     <script>
-      Raven.config('{{ sentry_dsn }}').install()
+      Raven.config('{{ sentry_dsn }}', {
+        tags: {
+          site: '{{ sentry_tag_site }}',
+          server_name: '{{ sentry_tag_server_name }}',
+          environment: '{{ sentry_tag_environment }}',
+          logger: 'javascript',
+        },
+        release: '{{ sentry_tag_release }}'
+      }).install()
       Raven.setUserContext({
         email: '{{ user.email }}',
         username: '{{ user.username }}',

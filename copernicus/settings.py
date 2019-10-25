@@ -34,17 +34,21 @@ CSRF_TRUSTED_ORIGINS = env('ALLOWED_HOSTS')
 
 # Sentry
 SENTRY_DSN = env('SENTRY_DSN', '')
+SENTRY_TAG_RELEASE=env('SENTRY_TAG_RELEASE', '')
+SENTRY_TAG_ENVIRONMENT=env('SENTRY_TAG_ENVIRONMENT', '')
+SENTRY_TAG_SITE=env('SENTRY_TAG_SITE', '')
 
 if SENTRY_DSN:
+
     sentry_sdk.init(
         dsn=SENTRY_DSN,
+        release=SENTRY_TAG_RELEASE,
         integrations=[DjangoIntegration()]
     )
 
-    SENTRY_ORG_SLUG = env('SENTRY_ORG_SLUG', '')
-    SENTRY_PROJ_SLUG = env('SENTRY_PROJ_SLUG', '')
     SENTRY_AUTH_TOKEN = env('SENTRY_AUTH_TOKEN', '')
-    SENTRY_BASE_URL = f"https://sentry.edw.ro/api/0/projects/{SENTRY_ORG_SLUG}/{SENTRY_PROJ_SLUG}/"
+    SENTRY_API_URL = env("SENTRY_API_URL", '')
+
 # Application definition
 
 INSTALLED_APPS = [
@@ -88,6 +92,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'insitu.middleware.sentry_middleware',
 ]
 
 if DEBUG_TOOLBAR:

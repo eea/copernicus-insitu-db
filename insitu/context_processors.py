@@ -30,4 +30,8 @@ def sentry(request):
     return {
         'sentry_id': sentry_id,
         'sentry_dsn': env('SENTRY_DSN', ''),
+        'sentry_tag_server_name': request.get_host(),
+        'sentry_tag_environment': settings.SENTRY_TAG_ENVIRONMENT,
+        'sentry_tag_release': settings.SENTRY_TAG_RELEASE,
+        'sentry_tag_site': settings.SENTRY_TAG_SITE,
     }

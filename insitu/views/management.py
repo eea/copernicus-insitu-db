@@ -67,8 +67,8 @@ class AboutView(ProtectedTemplateView):
 
     @staticmethod
     def get_issues():
-        base_url = settings.SENTRY_BASE_URL
-        endpoint = 'issues/?query=&sort=date&statsPeriod=14d'
+        base_url = settings.SENTRY_API_URL
+        endpoint = '/issues/?query=&sort=date&statsPeriod=14d'
 
         url = ''.join((base_url, endpoint))
         r = requests.get(
@@ -111,7 +111,7 @@ class AboutView(ProtectedTemplateView):
         context = super().get_context_data(**kwargs)
         context.update(**self.statistics())
 
-        if settings.SENTRY_PROJ_SLUG and settings.SENTRY_ORG_SLUG:
+        if settings.SENTRY_API_URL and settings.SENTRY_ORG_SLUG:
             context['issues'] = AboutView.get_issues()
 
         return context
