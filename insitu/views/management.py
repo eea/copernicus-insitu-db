@@ -111,7 +111,7 @@ class AboutView(ProtectedTemplateView):
         context = super().get_context_data(**kwargs)
         context.update(**self.statistics())
 
-        if settings.SENTRY_API_URL and settings.SENTRY_ORG_SLUG:
+        if settings.SENTRY_API_URL:
             context['issues'] = AboutView.get_issues()
 
         return context
