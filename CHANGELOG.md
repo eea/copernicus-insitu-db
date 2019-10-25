@@ -3,6 +3,11 @@ Changelog
 
 * In case of major changes, an email should be sent to all users with the modifications.
 
+2.1.5 (2019-10-25)
+-----------------
+* Finalize setup for EEA Sentry
+  [dianaboiangiu]
+
 2.1.4 (2019-10-24)
 -----------------
 * Upgrade raven package for Sentry support
