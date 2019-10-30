@@ -6,8 +6,6 @@
 Welcome to CIS2's documentation!
 ================================
 
-Contents:
-
 .. toctree::
    :maxdepth: 2
 

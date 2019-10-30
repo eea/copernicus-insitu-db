@@ -9,7 +9,7 @@ within the application.
     :align: center
     :target: _images/home.png
 
-    *Figure 1. Main application page*
+    *Main application page*
 
 The first page, available at https://cis2.eea.europa.eu/, is the HomePage presented in *Figure 1*. The navigation menu is
 available on the top of the page and it can be used to navigate to the listing pages of Products, Requirements, Data,
@@ -30,7 +30,7 @@ to be used when defining an object.
     :align: center
     :target: _images/products.png
 
-    *Figure 2. Products listing page*
+    *Products listing page*
 
 Listing products
 ----------------
@@ -48,7 +48,7 @@ A product can be added only by an **user with administration rights**.
     :align: center
     :target: _images/product_details.png
 
-    *Figure 3. A product’s detail page*
+    *A product’s detail page*
 
 Detail page of a product
 ------------------------
@@ -77,7 +77,7 @@ Requirement
     :align: center
     :target: _images/requirements.png
 
-    *Figure 4. Requirements listing page*
+    *Requirements listing page*
 
 Listing requirements
 --------------------
@@ -116,7 +116,7 @@ listed in this table.
     :align: center
     :target: _images/product_requirements.png
 
-    *Figure 5. Requirement Products relation table*
+    *Requirement Products relation table*
 
 Those relations must be unique, so between Product A and Requirement B there can be only a relation. There is an exception
 to this rule in case the Relevance parameter is different.
@@ -136,7 +136,7 @@ this table.
     :align: center
     :target: _images/data_requirement.png
 
-    *Figure 6. Requirement Data relation table*
+    *Requirement Data relation table*
 
 Similar to the products, new relations between the requirement and data can be created. There must be a unique relation
 between a requirement and a data. The relation can be edited or deleted using the buttons from the table.
@@ -162,7 +162,7 @@ Data
     :align: center
     :target: _images/data.png
 
-    *Figure 7. Data Provider listing page*
+    *Data Provider listing page*
 
 Listing data
 ------------
@@ -174,14 +174,14 @@ options or by searching data by its name. The filtered table can be exported the
     :align: center
     :target: _images/add_data.png
 
-    *Figure 8. Datalisting page*
+    *Datalisting page*
 
 Creating new data
 -----------------
 A new data can be created by clicking the button “New data” from the listing page.
 The form which is initially accessed has no validation. This was decided in order to allow partial data to be created in
 the application. However, if the user is sure about the data that he wants to introduce, he should use the form provided
-in Figure 7.
+in *Figure 8*.
 There is a special validation rule for this form: at least an inspire theme or an essential variable.
 
 Cloning a data
@@ -195,20 +195,20 @@ with data from the similar data.
     :align: center
     :target: _images/data_details.png
 
-    *Figure 9. Data detail page*
+    *Data detail page*
 
 Detail page of data
 A data’ s detail page can be accessed by clicking on the data’s name in the listing table.
 All information concerning the data is displayed on this page.
 If that data is just partially completed, a warning message will be displayed on the top of the page with a link to the
-editing page with full validation(Figure 9).
+editing page with full validation(*Figure 9*).
 
 ..  figure:: screenshots/data_dataprovider.png
     :width: 600px
     :align: center
     :target: _images/data_dataprovider.png
 
-    *Figure 10. Data detail page relations*
+    *Data detail page relations*
 
 There are two tables at the bottom of the page. Both tables can be filtered by name and then exported as PDF or as Excel.
 
@@ -240,7 +240,7 @@ Data provider
     :align: center
     :target: _images/data_providers.png
 
-    *Figure 11. Data provider listing*
+    *Data provider listing*
 
 **There are two types of data providers: data provider network and data provider. The data provider network can have other**
 **data providers or data provider networks as its members. This structure is defined as so to maintain a hierarchy between**
@@ -299,7 +299,7 @@ and download reports, but they cannot add, edit or delete any information in the
     :align: center
     :target: _images/teammates.png
 
-    *Figure 12. Teammates editing form*
+    *Teammates editing form*
 
 ----------
 User Teams
@@ -322,7 +322,7 @@ Requirement, Data and Data Provider are all passing through a validation workflo
     :align: center
     :target: _images/workflow.png
 
-    *Figure 13. Workflow for Requirement, Data, Data Provider*
+    *Workflow for Requirement, Data, Data Provider*
 
 ------
 States
@@ -387,7 +387,7 @@ is available in *Figure 14* .
     :align: center
     :target: _images/report_list.png
 
-    *Figure 14. Reports list page*
+    *Reports list page*
 
 -----------------
 Database download
@@ -418,34 +418,34 @@ Those columns can then be dragged under the "Count" dropdown. The columns will a
 in the order they were introduced. They can be rearanged to fit the user's need.
 The data displayed in each column is arranged in alphabetical order.
 The preview shows the user how the exported PDF/Excel file will look like.
-The pivot table can be exported in HTML, PDF or Excel format. (*Figure 16* and
-*Figure 17*) .
+The pivot table can be exported in HTML, PDF or Excel format. (*Figure 15* and
+*Figure 16*) .
 
 ..  figure:: screenshots/report_pivot1.png
     :width: 600px
     :align: center
     :target: _images/report_pivot1.png
 
-    *Figure 16. Report pivot - before dragging columns*
+    *Report pivot - before dragging columns*
 
 ..  figure:: screenshots/report_pivot2.png
     :width: 600px
     :align: center
     :target: _images/report_detail2.png
 
-    *Figure 17. Report pivot - after dragging columns*
+    *Report pivot - after dragging columns*
 
 -----
 Filtering data in Pivot
 -----
-The data in the table can also filtered by clicking on the arrow next to the column name (*Figure 18*).
+The data in the table can also filtered by clicking on the arrow next to the column name (*Figure 17*).
 
 ..  figure:: screenshots/report_pivot3.png
     :width: 600px
     :align: center
     :target: _images/report_detail3.png
 
-    *Figure 18. Report pivot - filter the data in the table*
+    *Report pivot - filter the data in the table*
 
 
 The aggregator functions available in the application are:
@@ -458,21 +458,21 @@ The aggregator functions available in the application are:
 
  In the preview section we see the Entrusted Entity column with its values and in the "Totals" section we see a count per each
  entrusted entity of the unique components (if there would be 2 components with the same name, they would be counted as one).
- ( *Figure 19*)
+ ( *Figure 18*)
 
 ..  figure:: screenshots/report_pivot_filtering1.png
     :width: 600px
     :align: center
     :target: _images/report_pivot_filtering1.png
 
-    *Figure 19. Report pivot - filter the data in the table with count unique values*
+    *Report pivot - filter the data in the table with count unique values*
 
 2. List Unique Values
  This function can be applied on a column of your choice. In the totals section the unique values will be displayed relative to the
  column on the left.
 
  Using the same example as before, now instead of having a count, we will have the values listed. If there is more than one value,
- the values will be separated with a comma. At the end of the table all the values will be listed in the "Totals" section. (*Figure 20*)
+ the values will be separated with a comma. At the end of the table all the values will be listed in the "Totals" section. (*Figure 19*)
 
 
 ..  figure:: screenshots/report_pivot_filtering2.png
@@ -480,7 +480,7 @@ The aggregator functions available in the application are:
     :align: center
     :target: _images/report_pivot_filtering2.png
 
-    *Figure 20. Report pivot - filter the data in the table with list unique values*
+    *Report pivot - filter the data in the table with list unique values*
 
 3. First
  This function can be applied on a column of your choice. In the totals section the first value relative to the
@@ -504,7 +504,7 @@ what type of data each report contains.
     :align: center
     :target: _images/report_special.png
 
-    *Figure 21. Special reports*
+    *Special reports*
 
 
 Administration
@@ -517,7 +517,7 @@ Requirement, Data and Data Provider are all passing through a validation workflo
     :align: center
     :target: _images/admin.png
 
-    *Figure 22. Administrator panel*
+    *Administrator panel*
 
 The administration panel can be accessed only by a user who has administration rights. Here, all objects, relations and
 picklists values can be modified without countraints.
@@ -535,9 +535,9 @@ attached a question mark. By clicking on that question mark you will access the 
     :align: center
     :target: _images/barrier.png
 
-    *Figure 23. An example table from help page*
+    *An example table from help page*
 
-For Example, in *Figure 23* is one of the tables available on the Help page. Under the table title there is a small
+For Example, in *Figure 22* is one of the tables available on the Help page. Under the table title there is a small
 description of that field’ s purpose. In the table there is the name of each value and the description of what that value
 represents.
 
@@ -550,7 +550,7 @@ Management
     :align: center
     :target: _images/manage.png
 
-    *Figure 24.  Management section*
+    *Management section*
 
 The management section is accessible only to an user with administration rights. This section can be used to export all
 picklists or all products as an excel document. In order to import picklists or products, the user must first export

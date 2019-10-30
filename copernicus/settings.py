@@ -235,6 +235,8 @@ EXPLORER_SCHEMA_EXCLUDE_TABLE_PREFIXES = [
 ]
 
 DOCS_ROOT = os.path.join(BASE_DIR, 'docs/_build/html')
+DOCS_PDF_ROOT = os.path.join(BASE_DIR, 'docs/_build/latex')
+
 DOCS_ACCESS = 'login_required'
 
 EMAIL_BACKEND = env('EMAIL_BACKEND',
