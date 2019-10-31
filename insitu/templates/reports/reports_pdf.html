@@ -4,36 +4,55 @@
     <meta charset="utf-8">
     <title>Title</title>
     <style type="text/css">
+      @media print {
+          tbody {
+              page-break-inside: auto;
+          }
+      }
+
+      .pagebreak { page-break-after: always; }
+
       .pvtUi {color:#9e4242}
 
-      .pvtTable {
-        font-size:10pt;
-        text-align:left;
-        border-collapse:collapse;
+      tr {
+        page-break-inside: avoid;
+      }
+
+      th {
+        page-break-inside: avoid;
       }
 
       .pvtTable {
-        border:1px solid #CDCDCD;
+        font-size:9pt;
         font-size:12pt;
         padding:3px;
       }
 
-      .pvtRowTotalLabel {
-        display: none;
+      th.pvtAxisLabel {
+        border-spacing: 0 !important;
+        text-align: center;
+        border: 1px solid black !important;
       }
 
-      .pvtAxisLabel{
-        border:1px solid #CDCDCD;
-        font-size:12pt;
-        padding:3px;
+      th.pvtRowLabel {
+        border-spacing: 0 !important;
+        border-collapse: collapse !important;
+        border: 1px solid black !important;
+        text-align: center;
+        page-break-inside: avoid !important;
       }
 
       .pvtTotal {
         display: none;
       }
 
-      .pvtRowLabel {
-        border:1px solid #CDCDCD;
+      .pvtRowTotalLabel {
+        display: none;
+      }
+
+      .pvtGrandTotal {
+        border: none;
+        display: none;
       }
 
       p.date {
@@ -47,6 +66,8 @@
     <p class="date">Date: {{ date }}</p>
     </br>
     <h1 >{{ title }}</h1>
-    {{ data | safe }}
+    <div>
+      {{ data | safe }}
+    </div>
   </body>
 </html>
