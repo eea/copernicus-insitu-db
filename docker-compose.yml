@@ -19,6 +19,20 @@ services:
       - static:/var/local/static
       - logging:/var/local/copernicus/logging
 
+  cron:
+    image: eeacms/copernicus-insitu-db:latest
+    container_name: insitu.cron
+    environment:
+      - TZ=Europe/Bucharest
+    env_file:
+      - docker/app.env
+      - docker/db.env
+    depends_on:
+      - db
+    volumes:
+      - static:/var/local/static
+    entrypoint: ["./docker-entrypoint.cron.sh"]
+
   db:
     image: postgres:10-alpine
     container_name: insitu.db

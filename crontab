@@ -1,0 +1,1 @@
+0 * * * * * python /var/local/copernicus/manage.py generate_special_reports;
