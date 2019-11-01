@@ -3,6 +3,13 @@ Changelog
 
 * In case of major changes, an email should be sent to all users with the modifications.
 
+2.1.6 (2019-11-01)
+-----------------
+* Add PDF Download for User Manual
+* Fix borders in PDF Reports
+* Fix Special reports download
+  [dianaboiangiu]
+
 2.1.5 (2019-10-25)
 -----------------
 * Finalize setup for EEA Sentry
