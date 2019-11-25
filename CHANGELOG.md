@@ -3,6 +3,11 @@ Changelog
 
 * In case of major changes, an email should be sent to all users with the modifications.
 
+2.1.7 (2019-11-25)
+-----------------
+* Add PDF download for Online Help section
+  [dianaboiangiu]
+
 2.1.6 (2019-11-01)
 -----------------
 * Add PDF Download for User Manual
