@@ -18,9 +18,6 @@ from picklists import models
 from insitu.models import Product, Requirement, Data, DataProvider
 
 
-
-
-
 class Manager(ProtectedTemplateView):
     template_name = 'manage.html'
     permission_classes = (IsSuperuser,)

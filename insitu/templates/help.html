@@ -2,15 +2,14 @@
 {% load utils %}
 {% load static %}
 
-<head>
-  <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}"/>
-</head>
+{% block head %}
+  <script src="{% static 'js/html2pdf.bundle.min.js' %}"></script>
+{% endblock %}
 
-{% block title %}Help{% endblock %}
+{% block title %} Help {% endblock %}
 
 {% block content %}
-
-  <div class="row">
+  <div class="row" >
     <h4>
       Still need help? Send me an email at
       <a href="mailto:{{ email }}">{{ email }}</a>
@@ -21,6 +20,9 @@
         Download User Manual as PDF
         </a>)
     </h4>
+    <button type="button" class="btn btn-primary btn-md pivot-button" id="download-help-online">
+      Download Help Online
+    </button>
     <h1>Summary</h1>
     <ul class="list-unstyled">
       <li><a href="#metrics">Metrics</a></li>
@@ -29,50 +31,52 @@
       {% endfor %}
     </ul>
   </div>
-<div class="row" id="metrics">
-  <h1>Metrics</h1>
-  <table class="table table-bordered">
-    <thead>
-      <tr>
-        <td><strong>name</strong></td>
-        <td><strong>description</strong></td>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td class="orange"><strong>Threshold</strong></td>
-        <td>
-          The “threshold” or “minimum requirement“ is the value that has to be
-          met to ensure that data are useful. Below this minimum, the benefit
-          derived does not compensate for the additional cost involved in
-          using the observation. Threshold requirements for any given observing
-          system cannot be stated in an absolute sense; assumptions have to be
-          made concerning which other observing systems are likely to be available.
-        </td>
-      <tr>
-        <td class="blue"><strong>Breakthrough</strong></td>
-        <td>
-          Within the range between threshold and goal requirements, the
-          observations become progressively more useful. The “breakthrough” is
-          an intermediate level between “threshold” and “goal“ which, if
-          achieved, would result in a significant improvement for the targeted
-          application.
-        </td>
-      </tr>
-      <tr>
-        <td class="green"><strong>Goal</strong></td>
-        <td>
-          The “goal” or “maximum requirement“ is the value above which further
-          improvement of the observation would not cause any significant
-          improvement in performance for the application in question. The cost
-          of improving the observations beyond the goal would not be matched by
-          a corresponding benefit. The goals are likely to evolve as applications
-          progress and develop a capacity to make use of better observations.
-        </td>
-      </tr>
-    </tbody>
-  </table>
-</div>
+
+  <div class="row" id="metrics">
+    <h1>Metrics</h1>
+    <table class="table table-bordered">
+      <thead>
+        <tr>
+          <td><strong>name</strong></td>
+          <td><strong>description</strong></td>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="orange"><strong>Threshold</strong></td>
+          <td>
+            The “threshold” or “minimum requirement“ is the value that has to be
+            met to ensure that data are useful. Below this minimum, the benefit
+            derived does not compensate for the additional cost involved in
+            using the observation. Threshold requirements for any given observing
+            system cannot be stated in an absolute sense; assumptions have to be
+            made concerning which other observing systems are likely to be available.
+          </td>
+        <tr>
+          <td class="blue"><strong>Breakthrough</strong></td>
+          <td>
+            Within the range between threshold and goal requirements, the
+            observations become progressively more useful. The “breakthrough” is
+            an intermediate level between “threshold” and “goal“ which, if
+            achieved, would result in a significant improvement for the targeted
+            application.
+          </td>
+        </tr>
+        <tr>
+          <td class="green"><strong>Goal</strong></td>
+          <td>
+            The “goal” or “maximum requirement“ is the value above which further
+            improvement of the observation would not cause any significant
+            improvement in performance for the application in question. The cost
+            of improving the observations beyond the goal would not be matched by
+            a corresponding benefit. The goals are likely to evolve as applications
+            progress and develop a capacity to make use of better observations.
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
   {% for model, data in models.items %}
     <div class="row" id="{{ model }}">
       <h1>{{ data.nice_name|capfirst }}</h1>
@@ -133,6 +137,17 @@
             scrollTop: 0
         }, 800);
         return false;
+      });
+      $('#download-help-online').click(function (){
+        var element = document.getElementById('to-print');
+        var opt = {
+          margin: 1,
+          filename: 'HelpOnline.pdf',
+          html2canvas: { scale: 1 },
+          pagebreak: { mode: ['avoid-all', 'css', 'legacy']},
+          jsPDF: { unit: 'in', format: 'a3', orientation: 'landscape' }
+        };
+        html2pdf().set(opt).from(element).save();
       });
     });
   </script>
