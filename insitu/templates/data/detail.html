@@ -135,6 +135,16 @@
           </td>
         </tr>
       {% endif %}
+
+      <tr class="row">
+        <th class="col-md-4 col-sm-6">Geographical Coverage</th>
+        <td class="col-md-4 col-sm-6">
+          {% for coverage in data.geographical_coverage.all %}
+            <p>{{ coverage }}</p>
+          {% endfor %}
+        </td>
+      </tr>
+
       <tr class="row">
         <th class="col-md-4 col-sm-6">State</th>
         <td class="col-md-8 col-sm-6">{{ data.state.title }}

@@ -117,6 +117,7 @@ class DataAdd(CreatedByMixin, LoggingProtectedCreateView):
             initial_data[field] = getattr(data, field)
         initial_data['inspire_themes'] = getattr(data, 'inspire_themes').all()
         initial_data['essential_variables'] = getattr(data, 'essential_variables').all()
+        initial_data['geographical_coverage'] = getattr(data, 'geographical_coverage').all()
         return initial_data.copy()
 
     def get_form_class(self):
@@ -212,6 +213,8 @@ class DataDetail(ProtectedDetailView):
                                self.object.inspire_themes.all()],
             'essential_variables': [essential_variable for essential_variable in
                                     self.object.essential_variables.all()],
+            'geographical_coverage': [geographical_coverage for geographical_coverage in
+                                      self.object.geographical_coverage.all()],
         }
         form = forms.DataReadyForm(data)
         if not form.is_valid():

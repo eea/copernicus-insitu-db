@@ -283,7 +283,7 @@ class DataForm(CreatedByFormMixin, forms.ModelForm):
                   'start_time_coverage', 'end_time_coverage', 'timeliness',
                   'data_policy', 'data_type', 'data_format',
                   'quality_control_procedure', 'dissemination',
-                  'inspire_themes', 'essential_variables']
+                  'inspire_themes', 'essential_variables', 'geographical_coverage']
 
     def save(self, created_by='', commit=True):
         if created_by:
@@ -292,6 +292,7 @@ class DataForm(CreatedByFormMixin, forms.ModelForm):
             created_by = self.instance.created_by
         inspire_themes = self.cleaned_data.pop('inspire_themes')
         essential_variables = self.cleaned_data.pop('essential_variables')
+        geographical_coverages = self.cleaned_data.pop('geographical_coverage')
         if not self.initial:
             data = models.Data.objects.create(created_by=created_by,
                                               **self.cleaned_data)
@@ -304,11 +305,15 @@ class DataForm(CreatedByFormMixin, forms.ModelForm):
                 data.inspire_themes.remove(inspire_theme)
             for essential_variable in data.essential_variables.all():
                 data.essential_variables.remove(essential_variable)
+            for geographical_coverage in data.geographical_coverage.all():
+                data.geographical_coverage.remove(geographical_coverage)
 
         for inspire_theme in inspire_themes:
             data.inspire_themes.add(inspire_theme.id)
         for essential_variable in essential_variables:
             data.essential_variables.add(essential_variable.id)
+        for geographical_coverage in geographical_coverages:
+            data.geographical_coverage.add(geographical_coverage.code)
         return data
 
 class DataCloneForm(DataForm):
@@ -325,10 +330,11 @@ class DataReadyForm(RequiredFieldsMixin, DataForm):
                   'start_time_coverage', 'end_time_coverage', 'timeliness',
                   'data_policy', 'data_type', 'data_format',
                   'quality_control_procedure', 'dissemination',
-                  'inspire_themes', 'essential_variables']
+                  'inspire_themes', 'essential_variables', 'geographical_coverage']
         fields_required = ['update_frequency', 'area', 'timeliness',
                            'data_policy', 'data_type', 'data_format',
-                           'quality_control_procedure', 'dissemination']
+                           'quality_control_procedure', 'dissemination',
+                           'geographical_coverage']
 
     def clean(self):
         cleaned_data = super(DataReadyForm, self).clean()
