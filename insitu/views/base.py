@@ -69,6 +69,8 @@ class ESDatatableView(BaseDatatableView, ProtectedView):
             value = self.request.GET.get(filter_)
             if not value or value == ALL_OPTIONS_LABEL:
                 continue
+            if filter_ in self.filter_translation.keys():
+                filter_ = self.filter_translation[filter_]
             search = search.query('term', **{filter_: value})
 
         search_text = self.request.GET.get('search[value]', '')

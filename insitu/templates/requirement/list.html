@@ -72,6 +72,15 @@
           </div>
 
           <div class="form-group filters-style">
+            <label for="product">Product:</label>
+            <select id="product" class="form-control">
+              {% for product in products %}
+                <option value="{{ product }}">{{ product }}</option>
+              {% endfor %}
+            </select>
+          </div>
+
+          <div class="form-group filters-style">
             <label for="state">State:</label>
             <select id="state" class="form-control">
               {% for state in states %}

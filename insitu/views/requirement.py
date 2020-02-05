@@ -85,6 +85,7 @@ class RequirementList(ProtectedTemplateView):
     def get_context_data(self):
         context = super(RequirementList, self).get_context_data()
         disseminations = get_choices('name', model_cls=pickmodels.Dissemination)
+        products =  get_choices('name', model_cls=models.Product)
         quality_control_procedures = get_choices(
             'name', model_cls=pickmodels.QualityControlProcedure
         )
@@ -93,6 +94,7 @@ class RequirementList(ProtectedTemplateView):
             state for state in models.ValidationWorkflow.states]
         context.update({
             'disseminations': disseminations,
+            'products': products,
             'quality_control_procedures': quality_control_procedures,
             'groups': groups,
             'states': states,
@@ -105,10 +107,13 @@ class RequirementListJson(ESDatatableView):
                'uncertainty', 'update_frequency', 'timeliness',
                'horizontal_resolution', 'vertical_resolution', 'state']
     order_columns = columns
-    filters = ['dissemination', 'quality_control_procedure', 'group', 'state']
+    filter_translation = {
+        'product': 'products.product'
+    }
+    filters = ['dissemination', 'quality_control_procedure', 'group', 'product', 'state']
     filter_fields = [
-        'dissemination__name', 'quality_control_procedure__name', 'group__name',
-        'state'
+        'dissemination__name', 'quality_control_procedure__name', 'group__name', 'product__name',
+        'state',
     ]  # This must be in the same order as `filters`
     document = documents.RequirementDoc
     permission_classes = (IsAuthenticated, )
