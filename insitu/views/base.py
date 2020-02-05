@@ -10,6 +10,8 @@ from insitu.views.protected.views import ProtectedView
 
 
 class ESDatatableView(BaseDatatableView, ProtectedView):
+    filter_translation = {}
+
     def get_initial_queryset(self):
         return self.document.search()
 
