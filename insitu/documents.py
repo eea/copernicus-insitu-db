@@ -201,7 +201,8 @@ class DataDoc(DocType):
         if isinstance(related_instance, DataRequirement):
             return related_instance.data
         if isinstance(related_instance, Requirement):
-            return related_instance.data.all()
+            return [datarequirement.data for datarequirement
+                    in related_instance.datarequirement_set.all()]
 
 
 @insitu_dataproviders.doc_type
