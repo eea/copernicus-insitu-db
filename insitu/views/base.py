@@ -11,6 +11,7 @@ from insitu.views.protected.views import ProtectedView
 
 class ESDatatableView(BaseDatatableView, ProtectedView):
     filter_translation = {}
+    _should_filter_requirements = False
 
     def get_initial_queryset(self):
         return self.document.search()
@@ -91,8 +92,12 @@ class ESDatatableView(BaseDatatableView, ProtectedView):
             return search
 
         search = search[0:settings.MAX_RESULT_WINDOW]
+
         qs = search.to_queryset()  # If there are ever more than 10,000
         # items in the database, this will have to be reimplemented entirely.
+        if self._should_filter_requirements:
+            qs = qs.filter(requirements___deleted=False, datarequirement___deleted=False)
+
         objects = qs.values_list(*self.filter_fields)
 
         self._filter_options = dict([

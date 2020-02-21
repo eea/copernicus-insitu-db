@@ -567,6 +567,10 @@ class Data(ValidationWorkflowModel, SoftDeleteModel):
     updated_at = models.DateTimeField(auto_now=True,
                                       null=True)
 
+    @property
+    def requirements_get_filtered(self):
+        return self.requirements.filter(datarequirement___deleted=False, datarequirement__requirement___deleted=False)
+
     def __str__(self):
         return self.name
 

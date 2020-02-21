@@ -61,6 +61,7 @@ $(document).ready(function () {
         d.data_format = $('#data_format').val();
         d.quality_control_procedure = $('#quality_control_procedure').val();
         d.dissemination = $('#dissemination').val();
+        d.requirement = $('#requirement').val();
         d.state = $('#state').val();
       },
       "dataSrc": function (json) {
@@ -80,6 +81,7 @@ $(document).ready(function () {
       data.data_format = $('#data_format').val();
       data.quality_control_procedure = $('#quality_control_procedure').val();
       data.dissemination = $('#dissemination').val();
+      data.requirement = $('#requirement').val()
       data.state = $('#state').val();
     },
     "stateLoadParams": function (settings, data) {
@@ -91,6 +93,7 @@ $(document).ready(function () {
       $('#data_format').val(data.data_format);
       $('#quality_control_procedure').val(data.quality_control_procedure);
       $('#dissemination').val(data.dissemination);
+      $('#requirement').val(data.requirement);
       $('#state').val(data.state);
     },
     "drawCallback": function(settings) {
@@ -100,7 +103,7 @@ $(document).ready(function () {
   }).fnFilterOnReturn();
 
   $('#name,#update_frequency,#area,#timeliness,#data_policy,#data_type,\
-      #data_format,#quality_control_procedure,#dissemination,#state').on(
+      #data_format,#quality_control_procedure,#dissemination,#requirement,#state').on(
       'change', function (event) {
     var table = $table.DataTable();
     table.ajax.reload();
@@ -108,7 +111,7 @@ $(document).ready(function () {
 
   $('#reset-btn').on('click', function () {
     $('#name,#update_frequency,#area,#timeliness,#data_policy,#data_type,\
-      #data_format,#quality_control_procedure,#dissemination,#state').val('All');
+      #data_format,#quality_control_procedure,#dissemination,#requirement,#state').val('All');
     var table = $table.DataTable();
     table.state.clear();
     table.ajax.reload();

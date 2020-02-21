@@ -1,12 +1,13 @@
 from django.conf import settings
 from django.core.urlresolvers import reverse
+from django.db.models import Prefetch
 from django_elasticsearch_dsl import DocType, Index, fields
 from elasticsearch_dsl.analysis import analyzer, tokenizer, normalizer
 from elasticsearch_dsl.search import Search
 
 from insitu.models import (
+    Data, DataRequirement, DataProvider,
     Product, ProductRequirement, Requirement,
-    DataProvider, Data
 )
 from insitu import signals
 
@@ -165,6 +166,9 @@ class DataDoc(DocType):
         attr='quality_control_procedure.name'
     )
     dissemination = fields.KeywordField(attr='dissemination.name')
+    requirements = fields.ObjectField(attr='requirements_get_filtered',properties={
+        'requirement': fields.KeywordField(attr='name'),
+    })
     state = fields.KeywordField(attr='state.name')
     note = fields.TextField()
 
@@ -179,9 +183,25 @@ class DataDoc(DocType):
 
     class Meta:
         model = Data
+        related_models = [DataRequirement, Requirement]
         fields = [
             'id',
         ]
+
+    def get_queryset(self):
+        """Not mandatory but to improve performance we can select related in one sql request"""
+        prefetch = Prefetch('datarequirement_set__requirement', queryset=DataRequirement.objects.filter(_deleted=False, requirement___deleted=False))
+        return super(DataDoc, self).get_queryset().prefetch_related(prefetch)
+
+    def get_instances_from_related(self, related_instance):
+        """If related_models is set, define how to retrieve the Data instance(s) from the related model.
+        The related_models option should be used with caution because it can lead in the index
+        to the updating of a lot of items.
+        """
+        if isinstance(related_instance, DataRequirement):
+            return related_instance.data
+        if isinstance(related_instance, Requirement):
+            return related_instance.data.all()
 
 
 @insitu_dataproviders.doc_type

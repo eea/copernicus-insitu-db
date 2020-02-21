@@ -48,6 +48,10 @@ class DataList(ProtectedTemplateView):
             'name',
             model_cls=pickmodels.QualityControlProcedure
         )
+        requirements = get_choices(
+            'name',
+            model_cls=models.Requirement
+        )
         disseminations = get_choices('name', model_cls=pickmodels.Dissemination)
         states = [{'title': 'All', 'name': 'All'}] + [
             state for state in models.ValidationWorkflow.states]
@@ -60,6 +64,7 @@ class DataList(ProtectedTemplateView):
             'data_formats': data_formats,
             'quality_control_procedures': quality_control_procedures,
             'disseminations': disseminations,
+            'requirements': requirements,
             'states': states,
         })
         return context
@@ -72,12 +77,21 @@ class DataListJson(ESDatatableView):
         'dissemination', 'state'
     ]
     order_columns = columns
+    filter_translation = {
+        'requirement': 'requirements.requirement'
+    }
     filters = [
         'update_frequency', 'area', 'timeliness', 'data_policy',
         'data_type', 'data_format', 'quality_control_procedure',
-        'dissemination', 'state'
+        'dissemination', 'requirement', 'state'
     ]
-    filter_fields = [f + '__name' if f != 'state' else 'state' for f in filters]
+    filter_fields = [
+        'update_frequency__name', 'area__name', 'timeliness__name', 'data_policy__name',
+        'data_type__name', 'data_format__name', 'quality_control_procedure__name',
+        'dissemination__name', 'requirements__name', 'state']
+
+    _should_filter_requirements = True
+
     document = documents.DataDoc
     permission_classes = (IsAuthenticated, )
 
