@@ -3,6 +3,13 @@ Changelog
 
 * In case of major changes, an email should be sent to all users with the modifications.
 
+2.2.0 (2020-02-24)
+-----------------
+* Add Filtering based on Products for Requirement's list
+* Add Filtering based on Requirements for Data's list
+* Add user role "ProductEditor" for adding/editing products
+  [dianaboiangiu]
+
 2.1.7 (2019-11-25)
 -----------------
 * Add PDF download for Online Help section
