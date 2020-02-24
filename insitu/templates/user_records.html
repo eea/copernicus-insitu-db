@@ -1,5 +1,6 @@
 {% extends '_layout.html' %}
 {% load static %}
+{% load utils %}
 
 {% block style %}
 
@@ -15,6 +16,18 @@
 {% endblock %}
 
 {% block content %}
+
+  {% if user|has_group:PRODUCT_EDITOR_GROUP %}
+    <h3>Your user has permission for adding/editing products.</h3>
+  {% endif %}
+
+  {% if user|has_group:READ_ONLY_GROUP %}
+    <h3>Your user has read-only permissions.</h3>
+  {% endif %}
+
+  {% if user.is_superuser %}
+    <h3>Your user has administrative rights.</h3>
+  {% endif %}
 
   <div class="row">
     <h1 class="col-sm-12">

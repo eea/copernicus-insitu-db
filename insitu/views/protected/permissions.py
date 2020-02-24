@@ -1,6 +1,6 @@
 from django.shortcuts import get_object_or_404
 from insitu.models import User
-from copernicus.settings import READ_ONLY_GROUP
+from copernicus.settings import PRODUCT_EDITOR_GROUP, READ_ONLY_GROUP
 
 
 class BasePermission(object):
@@ -34,6 +34,18 @@ class IsSuperuser(IsAuthenticated):
     def has_permission(self, request, view):
         return (super().has_permission(request, view)
                 and request.user.is_superuser)
+
+
+class IsProductEditorUser(IsAuthenticated):
+    def has_permission(self, request, view):
+        return (super().has_permission(request, view)
+                and request.user.groups.filter(name=PRODUCT_EDITOR_GROUP).exists())
+
+
+class IsProductEditorUserOrIsSuperUser(IsAuthenticated):
+    def has_permission(self, request, view):
+        return (super().has_permission(request, view)
+                and request.user.groups.filter(name=PRODUCT_EDITOR_GROUP).exists() or request.user.is_superuser)
 
 
 class IsOwnerUser(IsAuthenticated):

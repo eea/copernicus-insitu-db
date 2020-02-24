@@ -4,7 +4,8 @@ from django.conf import settings
 def base(request):
     return {
         'DEBUG': settings.DEBUG,
-        'READ_ONLY_GROUP': settings.READ_ONLY_GROUP
+        'READ_ONLY_GROUP': settings.READ_ONLY_GROUP,
+        'PRODUCT_EDITOR_GROUP': settings.PRODUCT_EDITOR_GROUP
     }
 
 def matomo(request):

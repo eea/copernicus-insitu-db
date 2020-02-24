@@ -1,9 +1,10 @@
+from factory import Sequence
 from picklists import models
 from factory.django import DjangoModelFactory
 
 
 class CountryFactory(DjangoModelFactory):
-    code = 'RO'
+    code = Sequence(lambda n: "%s" % n)
     name = 'Romania'
 
     class Meta:

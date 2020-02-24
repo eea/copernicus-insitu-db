@@ -88,6 +88,7 @@ $(document).ready(function () {
         d.dissemination = $('#dissemination').val();
         d.quality_control_procedure = $('#quality_control_procedure').val();
         d.group = $('#group').val();
+        d.product = $('#product').val();
         d.state = $('#state').val()
       },
       "dataSrc": function (json) {
@@ -102,12 +103,14 @@ $(document).ready(function () {
       data.dissemination = $('#dissemination').val();
       data.quality_control_procedure = $('#quality_control_procedure').val();
       data.group = $('#group').val();
+      data.product = $('#product').val();
       data.state = $('#state').val();
     },
     "stateLoadParams": function (settings, data) {
       $('#dissemination').val(data.dissemination);
       $('#quality_control_procedure').val(data.quality_control_procedure);
       $('#group').val(data.group);
+      $('#product').val(data.product);
       $('#state').val(data.state);
     },
     "drawCallback": function(settings) {
@@ -136,13 +139,13 @@ $(document).ready(function () {
     ]
   }).fnFilterOnReturn();
 
-  $('#dissemination,#quality_control_procedure,#group,#state').on('change', function (event) {
+  $('#dissemination,#quality_control_procedure,#group,#product,#state').on('change', function (event) {
     var table = $table.DataTable();
     table.ajax.reload();
   });
 
   $('#reset-btn').on('click', function () {
-    $('#dissemination,#quality_control_procedure,#group,#state').val('All');
+    $('#dissemination,#quality_control_procedure,#group,#product,#state').val('All');
     var table = $table.DataTable();
     table.state.clear();
     table.ajax.reload();

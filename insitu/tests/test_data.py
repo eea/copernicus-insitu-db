@@ -12,10 +12,10 @@ class DataTests(base.FormCheckTestCase):
     related_fields = ['update_frequency', 'area', 'timeliness',
                       'data_policy', 'data_type', 'data_format',
                       'quality_control_procedure', 'dissemination']
-    many_to_many_fields = ['inspire_themes', 'essential_variables']
+    many_to_many_fields = ['inspire_themes', 'essential_variables', 'geographical_coverage']
     required_fields = ['name', 'update_frequency', 'area', 'timeliness',
                        'data_policy', 'data_type', 'data_format',
-                       'quality_control_procedure', 'dissemination']
+                       'quality_control_procedure', 'dissemination', 'geographical_coverage']
     target_type = 'data'
     custom_errors = {
         'inspire_themes': [''],
@@ -37,6 +37,7 @@ class DataTests(base.FormCheckTestCase):
         essential_variables = [base.EssentialVariableFactory(),
                                base.EssentialVariableFactory(),
                                base.EssentialVariableFactory()]
+        geographical_coverages = [base.CountryFactory(code='T3')]
         dissemination = base.DisseminationFactory()
 
         self._DATA = {
@@ -56,6 +57,9 @@ class DataTests(base.FormCheckTestCase):
             'essential_variables': [essential_variable.pk for
                                     essential_variable in
                                     essential_variables],
+            'geographical_coverage': [geographical_coverage.code for
+                                      geographical_coverage in
+                                      geographical_coverages],
             'dissemination': dissemination.pk
         }
 
@@ -65,6 +69,7 @@ class DataTests(base.FormCheckTestCase):
     def _create_clone_data(self, data):
         inspire_themes = [base.InspireThemeFactory(),
                           base.InspireThemeFactory()]
+        geographical_coverages = [base.CountryFactory(code='T4')]
         DATA_FOR_CLONE = {
             'name': data.name,
             'note': 'TEST note',
@@ -80,6 +85,9 @@ class DataTests(base.FormCheckTestCase):
             'quality_control_procedure': data.quality_control_procedure.pk,
             'inspire_themes': [inspire_theme.pk for inspire_theme
                                in inspire_themes],
+            'geographical_coverage': [geographical_coverage.code for
+                                      geographical_coverage in
+                                      geographical_coverages],
             'essential_variables': [],
         }
         return DATA_FOR_CLONE

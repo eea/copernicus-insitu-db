@@ -143,6 +143,7 @@ class DataFactory(DjangoModelFactory):
     )
     inspire_themes = RelatedFactory(factories.InspireThemeFactory)
     dissemination = SubFactory(factories.DisseminationFactory)
+    geographical_coverage = RelatedFactory(factories.CountryFactory)
 
     class Meta:
         model = models.Data
