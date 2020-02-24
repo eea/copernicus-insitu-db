@@ -1,5 +1,6 @@
 {% extends '_layout.html' %}
 {% load static %}
+{% load utils %}
 
 {% block style %}
   <link rel="stylesheet" type="text/css"
@@ -28,7 +29,7 @@
   <div class="row">
     <h1 class="col-sm-12">
       <span>Products</span>
-      {% if user.is_superuser %}
+      {% if user.is_superuser or user|has_group:PRODUCT_EDITOR_GROUP %}
         <span class="pull-right">
         <a class="btn btn-primary pull-right"
            href="{% url 'product:add' %}">New product</a>

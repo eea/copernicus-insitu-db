@@ -26,6 +26,8 @@ from insitu.views.protected import (
     )
 from insitu.views.protected.permissions import (
     IsAuthenticated,
+    IsProductEditorUser,
+    IsProductEditorUserOrIsSuperUser,
     IsSuperuser,
 )
 from picklists import models as pickmodels
@@ -78,7 +80,7 @@ class ProductListJson(ESDatatableView):
 class ProductAdd(LoggingProtectedCreateView):
     template_name = 'product/add.html'
     form_class = forms.ProductForm
-    permission_classes = (IsSuperuser, )
+    permission_classes = (IsProductEditorUserOrIsSuperUser, )
     target_type = 'product'
 
     def form_valid(self, form):
@@ -99,7 +101,7 @@ class ProductEdit(LoggingProtectedUpdateView):
     form_class = forms.ProductForm
     model = models.Product
     context_object_name = 'product'
-    permission_classes = (IsSuperuser, )
+    permission_classes = (IsProductEditorUserOrIsSuperUser, )
     target_type = 'product'
 
     def form_valid(self, form):
