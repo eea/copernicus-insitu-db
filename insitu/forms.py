@@ -283,7 +283,7 @@ class DataForm(CreatedByFormMixin, forms.ModelForm):
                   'start_time_coverage', 'end_time_coverage', 'timeliness',
                   'data_policy', 'data_type', 'data_format',
                   'quality_control_procedure', 'dissemination',
-                  'inspire_themes', 'essential_variables', 'geographical_coverage']
+                  'inspire_themes', 'essential_variables', 'geographical_coverage', 'status']
 
     def save(self, created_by='', commit=True):
         if created_by:

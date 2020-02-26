@@ -554,9 +554,12 @@ class Data(ValidationWorkflowModel, SoftDeleteModel):
         pickmodels.EssentialVariable,
         blank=True,
     )
+    status = models.ForeignKey(pickmodels.ProductStatus,
+                               null=True, blank=True,
+                               on_delete=models.CASCADE,
+                               related_name='+')
     geographical_coverage = models.ManyToManyField(pickmodels.Country,
                                                    blank=True)
-
     requirements = models.ManyToManyField(Requirement,
                                           through='DataRequirement')
     providers = models.ManyToManyField(DataProvider,
