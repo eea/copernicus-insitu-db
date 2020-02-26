@@ -51,7 +51,10 @@
       </tr>
 
       <tr class="row">
-        <th class="col-md-4 col-sm-6">Countries</th>
+        <th class="col-md-4 col-sm-6">
+          Countries
+          <a target="_blank" href="help#countries"><span class="glyphicon glyphicon-question-sign"></span></a>
+        </th>
         <td class="col-md-8 col-sm-6">
           {% for country in provider.countries.all %}
             <span class="col-sm-12 no-padding-left">{{ country }}</span>
@@ -110,7 +113,10 @@
           {{ provider.details.first.contact_person }}</td>
       </tr>
       <tr class="row">
-        <th class="col-md-4 col-sm-6">Provider type</th>
+        <th class="col-md-4 col-sm-6">
+          Provider type
+          <a target="_blank" href="help#providertype"><span class="glyphicon glyphicon-question-sign"></span></a>
+        </th>
         <td class="col-md-8 col-sm-6">
           {{ provider.details.first.provider_type }}</td>
       </tr>

@@ -65,12 +65,18 @@
       </tr>
 
       <tr class="row">
-        <th class="col-md-4 col-sm-6">Update Frequency</th>
+        <th class="col-md-4 col-sm-6">
+          Update Frequency
+          <a target="_blank" href="help#updatefrequency"><span class="glyphicon glyphicon-question-sign"></span></a>
+        </th>
         <td class="col-md-8 col-sm-6">{{ data.update_frequency|default_if_none:"-" }}</td>
       </tr>
 
       <tr class="row">
-        <th class="col-md-4 col-sm-6">Area</th>
+        <th class="col-md-4 col-sm-6">
+          Area
+          <a target="_blank" href="help#area"><span class="glyphicon glyphicon-question-sign"></span></a>
+        </th>
         <td class="col-md-8 col-sm-6">
           {{ data.area|default_if_none:"-" }}
         </td>
@@ -85,38 +91,59 @@
       </tr>
 
       <tr class="row">
-        <th class="col-md-4 col-sm-6">Timeliness</th>
+        <th class="col-md-4 col-sm-6">
+          Timeliness
+          <a target="_blank" href="help#timeliness"><span class="glyphicon glyphicon-question-sign"></span></a>
+        </th>
         <td class="col-md-8 col-sm-6">{{ data.timeliness|default_if_none:"-" }}</td>
       </tr>
 
       <tr class="row">
-        <th class="col-md-4 col-sm-6">Data Policy</th>
+        <th class="col-md-4 col-sm-6">
+          Data Policy
+          <a target="_blank" href="help#datapolicy"><span class="glyphicon glyphicon-question-sign"></span></a>
+        </th>
         <td class="col-md-8 col-sm-6">{{ data.data_policy|default_if_none:"-" }}</td>
       </tr>
 
       <tr class="row">
-        <th class="col-md-4 col-sm-6">Data type</th>
+        <th class="col-md-4 col-sm-6">
+          Data type
+          <a target="_blank" href="help#datatype"><span class="glyphicon glyphicon-question-sign"></span></a>
+        </th>
         <td class="col-md-8 col-sm-6">{{ data.data_type|default_if_none:"-" }}</td>
       </tr>
 
       <tr class="row">
-        <th class="col-md-4 col-sm-6">Data format</th>
+        <th class="col-md-4 col-sm-6">
+          Data format
+          <a target="_blank" href="help#dataformat"><span class="glyphicon glyphicon-question-sign"></span></a>
+        </th>
         <td class="col-md-8 col-sm-6">{{ data.data_format|default_if_none:"-" }}</td>
       </tr>
 
       <tr class="row">
-        <th class="col-md-4 col-sm-6">Quality Control Procedure</th>
+        <th class="col-md-4 col-sm-6">
+          Quality Control Procedure
+          <a target="_blank" href="help#qualitycontrolprocedure"><span class="glyphicon glyphicon-question-sign"></span></a>
+        </th>
         <td class="col-md-8 col-sm-6">{{ data.quality_control_procedure|default_if_none:"-" }}</td>
       </tr>
 
       <tr class="row">
-        <th class="col-md-4 col-sm-6">Dissemination</th>
+        <th class="col-md-4 col-sm-6">
+          Dissemination
+          <a target="_blank" href="help#dissemination"><span class="glyphicon glyphicon-question-sign"></span></a>
+        </th>
         <td class="col-md-8 col-sm-6">{{ data.dissemination|default_if_none:"-" }}</td>
       </tr>
 
       {% if data.inspire_themes.all|length %}
         <tr class="row">
-          <th class="col-md-4 col-sm-6">Inspire themes</th>
+          <th class="col-md-4 col-sm-6">
+            Inspire themes
+            <a target="_blank" href="help#inspiretheme"><span class="glyphicon glyphicon-question-sign"></span></a>
+          </th>
           <td class="col-md-8 col-sm-6">
             {% for inspire_theme in data.inspire_themes.all %}
               <p>{{ inspire_theme }}</p>
@@ -127,7 +154,10 @@
 
       {% if data.essential_variables.all|length %}
         <tr class="row">
-          <th class="col-md-4 col-sm-6">Essential variables</th>
+          <th class="col-md-4 col-sm-6">
+            Essential variables
+            <a target="_blank" href="help#essentialvariable"><span class="glyphicon glyphicon-question-sign"></span></a>
+          </th>
           <td class="col-md-8 col-sm-6">
             {% for essential_variable in data.essential_variables.all %}
               <p>{{ essential_variable }}</p>
@@ -137,7 +167,10 @@
       {% endif %}
 
       <tr class="row">
-        <th class="col-md-4 col-sm-6">Geographical Coverage</th>
+        <th class="col-md-4 col-sm-6">
+          Geographical Coverage
+          <a target="_blank" href="help#country"><span class="glyphicon glyphicon-question-sign"></span></a>
+        </th>
         <td class="col-md-4 col-sm-6">
           {% for coverage in data.geographical_coverage.all %}
             <p>{{ coverage }}</p>

@@ -56,42 +56,66 @@
       </tr>
 
       <tr class="row">
-        <th class="col-md-4 col-sm-6">Dissemination</th>
+        <th class="col-md-4 col-sm-6">
+          Dissemination
+          <a target="_blank" href="help#dissemination"><span class="glyphicon glyphicon-question-sign"></span></a>
+        </th>
         <td class="col-md-8 col-sm-6">{{ requirement.dissemination }}</td>
       </tr>
 
       <tr class="row">
-        <th class="col-md-4 col-sm-6">Quality Control Procedure</th>
+        <th class="col-md-4 col-sm-6">
+          Quality Control Procedure
+          <a target="_blank" href="help#qualitycontrolprocedure"><span class="glyphicon glyphicon-question-sign"></span></a>
+        </th>
         <td class="col-md-8 col-sm-6">{{ requirement.quality_control_procedure }}</td>
       </tr>
 
       <tr class="row">
-        <th class="col-md-4 col-sm-6">Group</th>
+        <th class="col-md-4 col-sm-6">
+          Group
+          <a target="_blank" href="help#requirementgroup"><span class="glyphicon glyphicon-question-sign"></span></a>
+        </th>
         <td class="col-md-8 col-sm-6">{{ requirement.group }}</td>
       </tr>
 
       <tr class="row">
-        <th class="col-md-4 col-sm-6">Uncertainty</th>
+        <th class="col-md-4 col-sm-6">
+          Uncertainty
+          <a target="_blank" href="help#metrics"><span class="glyphicon glyphicon-question-sign"></span></a>
+        </th>
         {% include 'bits/metric.html' with metric=requirement.uncertainty %}
       </tr>
 
       <tr class="row">
-        <th class="col-md-4 col-sm-6">Update Frequency</th>
+        <th class="col-md-4 col-sm-6">
+          Update Frequency
+          <a target="_blank" href="help#metrics"><span class="glyphicon glyphicon-question-sign"></span></a>
+        </th>
         {% include 'bits/metric.html' with metric=requirement.update_frequency %}
       </tr>
 
       <tr class="row">
-        <th class="col-md-4 col-sm-6">Timeliness</th>
+        <th class="col-md-4 col-sm-6">
+          Timeliness
+          <a target="_blank" href="help#metrics"><span class="glyphicon glyphicon-question-sign"></span></a>
+        </th>
         {% include 'bits/metric.html' with metric=requirement.timeliness %}
       </tr>
 
       <tr class="row">
-        <th class="col-md-4 col-sm-6">Horizontal resolution</th>
+        <th class="col-md-4 col-sm-6">
+          Horizontal resolution
+          <a target="_blank" href="help#metrics"><span class="glyphicon glyphicon-question-sign"></span></a>
+        </th>
         {% include 'bits/metric.html' with metric=requirement.horizontal_resolution %}
       </tr>
 
       <tr class="row">
-        <th class="col-md-4 col-sm-6">Vertical resolution</th>
+        <th class="col-md-4 col-sm-6">
+          Vertical resolution
+          <a target="_blank" href="help#metrics"><span class="glyphicon glyphicon-question-sign"></span></a>
+        </th>
         {% include 'bits/metric.html' with metric=requirement.vertical_resolution %}
       </tr>
       <tr class="row">
