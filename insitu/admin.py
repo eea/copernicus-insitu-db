@@ -7,15 +7,18 @@ from insitu import models
 
 class CopernicusServiceAdmin(admin.ModelAdmin):
     search_fields = ['name', 'acronym']
+    list_display = ('acronym', 'name', 'website')
 
 
 class EntrustedEntityAdmin(admin.ModelAdmin):
-    search_fields = ['name', 'acronym']
+    search_fields = ['acronym', 'name']
+    list_display = ('acronym', 'name', 'website')
 
 
 class ComponentAdmin(admin.ModelAdmin):
-    search_fields = ['name', 'acronym']
-    list_display = ('name', 'service', 'entrusted_entity')
+    search_fields = ['acronym', 'name']
+    list_display = ('acronym', 'name', 'service', 'entrusted_entity')
+    list_filter = ('service', 'entrusted_entity')
 
 
 class BaseDisplayDeleteAdminMixin:
