@@ -329,7 +329,7 @@ class DataReadyForm(RequiredFieldsMixin, DataForm):
         auto_created = True
         fields = ['name', 'note', 'update_frequency', 'area',
                   'start_time_coverage', 'end_time_coverage', 'timeliness',
-                  'data_policy', 'data_type', 'data_format',
+                  'data_policy', 'data_type', 'data_format', 'status',
                   'quality_control_procedure', 'dissemination',
                   'inspire_themes', 'essential_variables', 'geographical_coverage']
         fields_required = ['update_frequency', 'area', 'timeliness',

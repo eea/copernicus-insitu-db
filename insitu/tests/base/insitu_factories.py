@@ -58,6 +58,7 @@ class ComponentFactory(DjangoModelFactory):
 class RequirementFactory(DjangoModelFactory):
     name = 'Test requirement'
     note = 'Test note'
+    owner = 'Test owner'
     dissemination = SubFactory(factories.DisseminationFactory)
     quality_control_procedure = SubFactory(
         factories.QualityControlProcedureFactory
@@ -138,6 +139,7 @@ class DataFactory(DjangoModelFactory):
     data_policy = SubFactory(factories.DataPolicyFactory)
     data_type = SubFactory(factories.DataTypeFactory)
     data_format = SubFactory(factories.DataFormatFactory)
+    status = SubFactory(factories.ProductStatusFactory)
     quality_control_procedure = SubFactory(
         factories.QualityControlProcedureFactory
     )

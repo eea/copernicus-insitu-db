@@ -25,6 +25,7 @@ class RequirementTests(base.FormCheckTestCase):
         self._DATA = {
             'name': 'TEST requirement',
             'note': 'TEST note',
+            'owner': 'TEST owner',
             'dissemination': dissemination.pk,
             'quality_control_procedure': quality_control_procedure.pk,
             'group': group.pk,
@@ -43,6 +44,7 @@ class RequirementTests(base.FormCheckTestCase):
     def _create_clone_data(self, requirement):
         REQUIREMENT_FOR_CLONE = {
             'name': requirement.name,
+            'owner': requirement.owner,
             'dissemination': requirement.dissemination.pk,
             'note': requirement.note,
             'quality_control_procedure': requirement.quality_control_procedure.pk,

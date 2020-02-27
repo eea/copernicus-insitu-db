@@ -126,7 +126,7 @@ class DataAdd(CreatedByMixin, LoggingProtectedCreateView):
         for field in ['name', 'note', 'update_frequency',
                       'area', 'start_time_coverage', 'end_time_coverage',
                       'timeliness', 'data_policy', 'data_type',
-                      'data_format', 'quality_control_procedure',
+                      'data_format', 'quality_control_procedure', 'status',
                       'dissemination']:
             initial_data[field] = getattr(data, field)
         initial_data['inspire_themes'] = getattr(data, 'inspire_themes').all()

@@ -27,6 +27,7 @@ class DataTests(base.FormCheckTestCase):
         super().setUp()
         update_frequency = base.UpdateFrequencyFactory()
         area = base.AreaFactory()
+        status = base.ProductStatusFactory()
         timeliness = base.TimelinessFactory()
         data_policy = base.DataPolicyFactory()
         data_type = base.DataTypeFactory()
@@ -45,6 +46,7 @@ class DataTests(base.FormCheckTestCase):
             'note': 'TEST note',
             'update_frequency': update_frequency.pk,
             'area': area.pk,
+            'status': status.pk,
             'timeliness': timeliness.pk,
             'data_policy': data_policy.pk,
             'data_type': data_type.pk,
@@ -76,6 +78,7 @@ class DataTests(base.FormCheckTestCase):
             'dissemination': data.dissemination.pk,
             'update_frequency': data.update_frequency.pk,
             'area': data.area.pk,
+            'status': data.status.pk,
             'timeliness': data.timeliness.pk,
             'data_policy': data.data_policy.pk,
             'data_type': data.data_type.pk,
