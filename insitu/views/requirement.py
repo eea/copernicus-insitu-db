@@ -49,7 +49,7 @@ class GetInitialMixin:
             return super().get_initial()
 
         initial_data = super().get_initial()
-        for field in ['name', 'note', 'dissemination',
+        for field in ['name', 'note', 'dissemination', 'owner',
                       'quality_control_procedure', 'group']:
             initial_data[field] = getattr(requirement, field)
         for field in ['uncertainty', 'update_frequency', 'timeliness',

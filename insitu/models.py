@@ -299,6 +299,9 @@ class Requirement(ValidationWorkflowModel, SoftDeleteModel):
                                             on_delete=models.CASCADE,
                                             related_name='+')
     created_by = models.ForeignKey(User)
+
+    owner = models.CharField(max_length=100, blank=True)
+
     created_at = models.DateTimeField(auto_now_add=True,
                                       null=True)
     updated_at = models.DateTimeField(auto_now=True,

@@ -162,7 +162,7 @@ class RequirementForm(forms.ModelForm):
     class Meta:
         model = models.Requirement
         fields = ['name', 'note', 'dissemination',
-                  'quality_control_procedure', 'group']
+                  'quality_control_procedure', 'group', 'owner']
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -235,6 +235,7 @@ class RequirementForm(forms.ModelForm):
         data = {
             'name': self.cleaned_data['name'],
             'note': self.cleaned_data['note'],
+            'owner': self.cleaned_data['owner'],
             'dissemination': self.cleaned_data['dissemination'],
             'quality_control_procedure':
                 self.cleaned_data['quality_control_procedure'],

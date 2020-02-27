@@ -118,6 +118,14 @@
         </th>
         {% include 'bits/metric.html' with metric=requirement.vertical_resolution %}
       </tr>
+
+      <tr class="row">
+        <th class="col-md-4 col-sm-6">
+          Owner
+        </th>
+        <td class="col-md-8 col-sm-6">{{ requirement.owner }}</td>
+      </tr>
+
       <tr class="row">
         <th class="col-md-4 col-sm-6">State</th>
         <td class="col-md-8 col-sm-6">

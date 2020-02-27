@@ -44,6 +44,7 @@ CREATE VIEW insitu_requirement_view as
     SELECT r.id as "requirement_id",
            r.note as "requirement_note",
            r.name as "requirement_name",
+           r.owner as "requirement_owner",
            d.name as "requirement_dissemination",
            uf.threshold as "requirement_update_frequency_threshold",
            uf.breakthrough as "requirement_update_frequency_breakthrough",
@@ -62,7 +63,7 @@ CREATE VIEW insitu_requirement_view as
            vertical_resolution.breakthrough as "requirement_vertical_resolution_breakthrough",
            vertical_resolution.goal as "requirement_vertical_resolution_goal",
            rp.name as "requirement_group",
-           u.first_name || ' ' || u.last_name as "requirement_owner",
+           u.first_name || ' ' || u.last_name as "requirement_author",
            r.state as "requirement_state"
     FROM insitu_requirement r
     INNER JOIN picklists_dissemination d ON d.id = r.dissemination_id
@@ -105,8 +106,9 @@ CREATE VIEW insitu_data_view as
            d.start_time_coverage AS "data_start_time_coverage",
            d.end_time_coverage AS "data_end_time_coverage",
            di.name AS "data_dissemination",
-           u.first_name || ' ' ||  u.last_name AS "data_owner",
+           u.first_name || ' ' ||  u.last_name AS "data_author",
            d.state AS "data_state",
+           ps.name AS "data_status",
            ev.domain || ' - ' ||  ev.component || ' - ' || ev.parameter AS "data_essential_variable",
            it.annex || ' ' || it.name AS "data_inspiretheme",
            d.created_at AS "data_created_at",
@@ -118,6 +120,7 @@ CREATE VIEW insitu_data_view as
     FULL OUTER JOIN picklists_updatefrequency uf ON uf.id = d.update_frequency_id
     FULL OUTER JOIN picklists_datapolicy dp ON dp.id = d.data_policy_id
     FULL OUTER JOIN picklists_qualitycontrolprocedure qcp ON qcp.id = d.quality_control_procedure_id
+    FULL OUTER JOIN picklists_productstatus ps ON ps.id = d.status_id
     FULL OUTER JOIN picklists_timeliness t ON t.id = d.timeliness_id
     FULL OUTER JOIN picklists_dissemination di ON di.id = d.dissemination_id
     FULL OUTER JOIN auth_user u ON u.id = d.created_by_id
