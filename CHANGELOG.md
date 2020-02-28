@@ -3,6 +3,20 @@ Changelog
 
 * In case of major changes, an email should be sent to all users with the modifications.
 
+2.2.1 (2020-02-28)
+------------------
+* Remove None values from Reports
+* Change Report 8 name to "Products - Requirements - Dataset - Data Providers link"
+* Added Data Area to report "Requirement Areas"
+* Removed table barcharts from pivot reports
+* Removed country from pivot reports
+* Fix product count for Report Entrusted Entity component statistics
+* Add links directing to help page on detail's pages for picklist values
+* Add optional status field for Data, with same values as product
+* Add owner field to requirement (used for the entity that created the requirement)/Change all references to the user who created the object to "author"
+* Add PicklistEditor user role (the user who has this role can access a filtered version of the administration panel for adding/editing the picklists)
+  [dianaboiangiu]
+
 2.2.0 (2020-02-24)
 -----------------
 * Add Filtering based on Products for Requirement's list

@@ -37,11 +37,15 @@
         <div class="latest-information">
           <div>
             <p class="latest-changes-text">Latest changes</p>
-            <h4 class="font-weight-bold">2.2.0 (2020-02-24)</h4>
+            <h4 class="font-weight-bold">2.2.1 (2020-02-28)</h4>
             <ul>
-              <li>Add filtering based on Products for Requirement's list</li>
-              <li>Add Filtering based on Requirements for Data's list</li>
+              <li>Remove None values from Reports</li>
+              <li>Change Report 8 name to "Products - Requirements - Dataset - Data Providers link"</li>
               <li>Add user role "ProductEditor" for adding/editing products</li>
+              <li>Removed table barcharts from pivot reports</li>
+              <li>Removed country from pivot reports</li>
+              <li>Fix product count for Report Entrusted Entity component statistics</li>
+              <li><a href="{% url 'about' %}">More...</a></li>
             </ul>
             <p><strong>The UserManual is available <a href="{% url 'user_manual' %}">here.</strong></a></p>
             {% if DEBUG %}
