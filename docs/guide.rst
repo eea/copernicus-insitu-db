@@ -283,13 +283,31 @@ Another button must be clicked then to accept this change.
 
 Users
 =====
-There are three types of users in the application: the administrator, the user and a read-only user.
+There are multiple types of users in the application:
+
+**Administrator**
+
+The administrator can modify everything in the application, without restriction. This type of user also has access to an
+administrative pannel.
+
+**Picklists Editor**
+
+This user role allows a user to access a filtered version of the administrative pannel, for modifying the picklists.
+This user is only allowed to add/edit the picklists.
+
+**Product Editor**
+
+This user role allows a user to add or edit the products, similar to the way requirements, data and data providers are edited.
+
+**Regular Users**
 
 The user is restricted from accessing the administration section, the management section and create, update or delete
 any products.
 
 The users have permission to edit or delete an object if they are the owner of it. Being the owner of an object means that
 the object was created by that specific user.
+
+**Read-Only User**
 
 The read-only user is a user that is included in the Read-only Group. This type of user can only view the objects and create
 and download reports, but they cannot add, edit or delete any information in the application.

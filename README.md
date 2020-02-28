@@ -95,6 +95,15 @@ Customize docker orchestration for local development:
 
 * See it in action: <http://localhost:8000>
 
+## Set User roles
+
+* Read-Only User
+  - create a new regular user and add the user group "ReadOnly"
+* ProductEditor
+  - create a new regular user and add the user group "ProductEditor"
+* PicklistsEditor
+  - create a new staff user and add the user group "PicklistsEditor"
+
 ## Ubuntu elasticsearch container error
 
 * If your host runs ubuntu your elasticsearch container may fail to run with the error "bootstrap checks failed". This happens because max map count is set under the value __262144__
