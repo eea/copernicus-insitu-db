@@ -5,7 +5,8 @@ def base(request):
     return {
         'DEBUG': settings.DEBUG,
         'READ_ONLY_GROUP': settings.READ_ONLY_GROUP,
-        'PRODUCT_EDITOR_GROUP': settings.PRODUCT_EDITOR_GROUP
+        'PRODUCT_EDITOR_GROUP': settings.PRODUCT_EDITOR_GROUP,
+        'PICKLISTS_EDITOR_GROUP': settings.PICKLISTS_EDITOR_GROUP
     }
 
 def matomo(request):

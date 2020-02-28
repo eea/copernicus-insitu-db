@@ -79,7 +79,7 @@
               Change password
             </a>
           </li>
-          {% if user.is_superuser %}
+          {% if user.is_superuser or user|has_group:PICKLISTS_EDITOR_GROUP %}
             {% url 'admin:index' as admin %}
             <li class="{% active admin %}">
               <a href="{{ admin }}">Administration</a>

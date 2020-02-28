@@ -164,6 +164,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 READ_ONLY_GROUP = env('READ_ONLY_GROUP', 'ReadOnly')
 PRODUCT_EDITOR_GROUP = env('PRODUCT_EDITOR_GROUP', 'ProductEditor')
+PICKLISTS_EDITOR_GROUP = env('PICKLISTS_EDITOR_GROUP', 'PicklistsEditor')
 
 # Internationalization
 # https://docs.djangoproject.com/en/1.11/topics/i18n/
