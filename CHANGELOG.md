@@ -9,7 +9,7 @@ Changelog
 * Change Report 8 name to "Products - Requirements - Dataset - Data Providers link"
 * Added Data Area to report "Requirement Areas"
 * Removed table barcharts from pivot reports
-* Removed country from pivot reports
+* Removed counter from pivot reports
 * Fix product count for Report Entrusted Entity component statistics
 * Add links directing to help page on detail's pages for picklist values
 * Add optional status field for Data, with same values as product
