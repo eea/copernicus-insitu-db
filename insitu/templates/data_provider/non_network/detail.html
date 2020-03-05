@@ -16,6 +16,9 @@
 
 {% block content %}
   <div class="row">
+    <span>
+      <a class="btn btn-default btn-sm" href="{% url 'provider:list' %}">Back to data provider listing</a>
+    </span>
     <h1 class="col-sm-12">
       <span>Data provider</span>
       {% if not user|has_group:READ_ONLY_GROUP %}

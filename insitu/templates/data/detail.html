@@ -25,6 +25,9 @@
   {% endif %}
 
   <div class="row">
+    <span>
+      <a class="btn btn-default btn-sm" href="{% url 'data:list' %}">Back to data listing</a>
+    </span>
     <h1 class="col-sm-12">
       <span>Data details</span>
       {% if not user|has_group:READ_ONLY_GROUP %}
