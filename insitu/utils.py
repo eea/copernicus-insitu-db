@@ -13,7 +13,7 @@ PICKLISTS_DESCRIPTION = {
     'InspireTheme': 'The INSPIRE theme register contains all spatial data themes, as defined in the Annexes of theINSPIRE Directive ( Directive 2007/2/EC ).',
     'DataPolicy': 'The policy dictated terms associated with access to required data and any associated costs.',
     'ProductGroup': 'The product group attribute is used to assemble a group (or product family) of individual products under the same heading.This attribute is used in addition to other relevant ways of classifying a given product including coverage and status.',
-    'ProductStatus': 'This attribute is used to classify a given product according to its matureness or operational status.',
+    'Status': 'This attribute is used to classify a given product according to its matureness or operational status.',
     'RequirementGroup': 'A classification of  requirements oriented to group them with respect to the prevalent information contents of the underlying data sets.',
 
     'ResponsibleGroup': 'A classification of  requirements oriented to group them with respect to the prevalent information contents of the underlying data sets.',

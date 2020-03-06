@@ -49,7 +49,7 @@ class ProductList(ProtectedTemplateView):
         context = super(ProductList, self).get_context_data()
         services = get_choices('name', model_cls=models.CopernicusService)
         groups = get_choices('name', model_cls=pickmodels.ProductGroup)
-        statuses = get_choices('name', model_cls=pickmodels.ProductStatus)
+        statuses = get_choices('name', model_cls=pickmodels.Status)
         areas = get_choices('name', model_cls=pickmodels.Area)
         components = get_choices('name', model_cls=models.Component)
         entities = get_choices('acronym', model_cls=models.EntrustedEntity)
@@ -191,7 +191,7 @@ class ExportProductView(ProtectedView):
 RELATED_FIELDS = {
     'group': pickmodels.ProductGroup,
     'component': models.Component,
-    'status': pickmodels.ProductStatus,
+    'status': pickmodels.Status,
     'area': pickmodels.Area,
 }
 

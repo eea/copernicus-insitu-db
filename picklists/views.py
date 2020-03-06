@@ -23,7 +23,7 @@ PICKLISTS = [
     models.Area, models.Criticality, models.Country, models.DataFormat,
     models.DataType, models.DefinitionLevel, models.Dissemination,
     models.EssentialVariable, models.UpdateFrequency, models.InspireTheme,
-    models.ProductGroup, models.ProductStatus, models.Relevance,
+    models.ProductGroup, models.Status, models.Relevance,
     models.RequirementGroup, models.ProviderType,
     models.QualityControlProcedure, models.Timeliness, models.DataPolicy
 ]

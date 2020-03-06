@@ -64,7 +64,7 @@ class EssentialVariable(models.Model):
         )
 
 
-class ProductStatus(models.Model):
+class Status(models.Model):
     name = models.CharField(max_length=100)
     description = models.TextField(blank=True)
     sort_order = models.IntegerField()

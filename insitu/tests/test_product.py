@@ -19,7 +19,7 @@ class ProductTests(base.FormCheckTestCase):
         super().setUp()
         group = base.ProductGroupFactory()
         component = base.ComponentFactory()
-        status = base.ProductStatusFactory()
+        status = base.StatusFactory()
         area = base.AreaFactory()
         self.user = provider_user = base.UserFactory(is_superuser=True,
                                                      username='New user 1')
@@ -124,8 +124,8 @@ class ProductTests(base.FormCheckTestCase):
 
         group_1 = base.ProductGroupFactory(name='Group 1')
         group_2 = base.ProductGroupFactory(name='Group 2')
-        status_1 = base.ProductStatusFactory(name='Status 1')
-        status_2 = base.ProductStatusFactory(name='Status 2')
+        status_1 = base.StatusFactory(name='Status 1')
+        status_2 = base.StatusFactory(name='Status 2')
         area_1 = base.AreaFactory(name='Area 1')
         area_2 = base.AreaFactory(name='Area 2')
 

@@ -31,13 +31,13 @@ class EssentialVariableFactory(DjangoModelFactory):
         model = models.EssentialVariable
 
 
-class ProductStatusFactory(DjangoModelFactory):
+class StatusFactory(DjangoModelFactory):
     name = 'Test product status'
     sort_order = 0
     link = ''
 
     class Meta:
-        model = models.ProductStatus
+        model = models.Status
 
 
 class ProductGroupFactory(DjangoModelFactory):

@@ -69,11 +69,6 @@ class ProductGroupAdmin(admin.ModelAdmin):
     list_display = ['name', 'description', 'sort_order']
 
 
-class ProductStatusAdmin(admin.ModelAdmin):
-    search_fields = ['name']
-    list_display = ['name', 'description', 'sort_order', 'link']
-
-
 class ProviderTypeAdmin(admin.ModelAdmin):
     search_fields = ['name']
     list_display = ['name', 'description', 'sort_order', 'link']
@@ -93,6 +88,9 @@ class RequirementGroupAdmin(admin.ModelAdmin):
     search_fields = ['name']
     list_display = ['name', 'description', 'sort_order']
 
+class StatusAdmin(admin.ModelAdmin):
+    search_fields = ['name']
+    list_display = ['name', 'description', 'sort_order', 'link']
 
 class TimelinessAdmin(admin.ModelAdmin):
     search_fields = ['name']
@@ -117,10 +115,10 @@ admin.site.register(models.Dissemination, DisseminationAdmin)
 admin.site.register(models.EssentialVariable, EssentialVariableAdmin)
 admin.site.register(models.InspireTheme, InspireThemeAdmin)
 admin.site.register(models.ProductGroup, ProductGroupAdmin)
-admin.site.register(models.ProductStatus, ProductStatusAdmin)
 admin.site.register(models.ProviderType, ProviderTypeAdmin)
 admin.site.register(models.QualityControlProcedure, QualityControlProcedureAdmin)
 admin.site.register(models.Relevance, RelevanceAdmin)
 admin.site.register(models.RequirementGroup, RequirementGroupAdmin)
+admin.site.register(models.Status, StatusAdmin)
 admin.site.register(models.Timeliness, TimelinessAdmin)
 admin.site.register(models.UpdateFrequency, UpdateFrequencyAdmin)

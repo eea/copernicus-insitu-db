@@ -38,7 +38,7 @@ class HelpPage(ProtectedTemplateView):
             models.Criticality, models.Country, models.DataFormat,
             models.DataPolicy, models.DataType, models.DefinitionLevel,
             models.Dissemination, models.EssentialVariable, models.InspireTheme,
-            models.ProductGroup, models.ProductStatus, models.ProviderType,
+            models.ProductGroup, models.Status, models.ProviderType,
             models.Relevance, models.RequirementGroup,
             models.QualityControlProcedure, models.Timeliness,
             models.UpdateFrequency,

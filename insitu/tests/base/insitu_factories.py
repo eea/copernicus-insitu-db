@@ -90,7 +90,7 @@ class ProductFactory(DjangoModelFactory):
     acronym = 'TST'
     group = SubFactory(factories.ProductGroupFactory)
     component = SubFactory(ComponentFactory)
-    status = SubFactory(factories.ProductStatusFactory)
+    status = SubFactory(factories.StatusFactory)
     area = SubFactory(factories.AreaFactory)
 
     class Meta:

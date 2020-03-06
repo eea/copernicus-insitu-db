@@ -364,7 +364,7 @@ class Product(SoftDeleteModel):
                               on_delete=models.CASCADE)
     component = models.ForeignKey(Component,
                                   on_delete=models.CASCADE)
-    status = models.ForeignKey(pickmodels.ProductStatus,
+    status = models.ForeignKey(pickmodels.Status,
                                on_delete=models.CASCADE,
                                related_name='+')
     area = models.ForeignKey(pickmodels.Area,
@@ -557,7 +557,7 @@ class Data(ValidationWorkflowModel, SoftDeleteModel):
         pickmodels.EssentialVariable,
         blank=True,
     )
-    status = models.ForeignKey(pickmodels.ProductStatus,
+    status = models.ForeignKey(pickmodels.Status,
                                null=True, blank=True,
                                on_delete=models.CASCADE,
                                related_name='+')
