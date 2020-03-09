@@ -16,6 +16,9 @@
 
 {% block content %}
   <div class="row">
+    <span class="margin-left-btn">
+      <a class="btn btn-default btn-sm" href="{% url 'product:list' %}">Back to product list</a>
+    </span>
     <h1 class="col-sm-12">
       <span>Product details</span>
       {% if user.is_superuser or user|has_group:PRODUCT_EDITOR_GROUP %}
