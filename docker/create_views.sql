@@ -16,7 +16,7 @@ CREATE VIEW insitu_product_view as
     INNER JOIN insitu_component c ON c.id = p.component_id 
     INNER JOIN picklists_area a ON a.id = p.area_id
     INNER JOIN picklists_productgroup pg ON pg.id = p.group_id
-    INNER JOIN picklists_productstatus ps ON ps.id = p.status_id
+    INNER JOIN picklists_status ps ON ps.id = p.status_id
     INNER JOIN insitu_entrustedentity ee ON ee.id = c.entrusted_entity_id
     INNER JOIN insitu_copernicusservice cs ON cs.id = c.service_id
     WHERE p._deleted = FALSE;
@@ -120,7 +120,7 @@ CREATE VIEW insitu_data_view as
     FULL OUTER JOIN picklists_updatefrequency uf ON uf.id = d.update_frequency_id
     FULL OUTER JOIN picklists_datapolicy dp ON dp.id = d.data_policy_id
     FULL OUTER JOIN picklists_qualitycontrolprocedure qcp ON qcp.id = d.quality_control_procedure_id
-    FULL OUTER JOIN picklists_productstatus ps ON ps.id = d.status_id
+    FULL OUTER JOIN picklists_status ps ON ps.id = d.status_id
     FULL OUTER JOIN picklists_timeliness t ON t.id = d.timeliness_id
     FULL OUTER JOIN picklists_dissemination di ON di.id = d.dissemination_id
     FULL OUTER JOIN auth_user u ON u.id = d.created_by_id
