@@ -27,7 +27,7 @@ class DataTests(base.FormCheckTestCase):
         super().setUp()
         update_frequency = base.UpdateFrequencyFactory()
         area = base.AreaFactory()
-        status = base.ProductStatusFactory()
+        status = base.StatusFactory()
         timeliness = base.TimelinessFactory()
         data_policy = base.DataPolicyFactory()
         data_type = base.DataTypeFactory()

@@ -139,7 +139,7 @@ class DataFactory(DjangoModelFactory):
     data_policy = SubFactory(factories.DataPolicyFactory)
     data_type = SubFactory(factories.DataTypeFactory)
     data_format = SubFactory(factories.DataFormatFactory)
-    status = SubFactory(factories.ProductStatusFactory)
+    status = SubFactory(factories.StatusFactory)
     quality_control_procedure = SubFactory(
         factories.QualityControlProcedureFactory
     )
