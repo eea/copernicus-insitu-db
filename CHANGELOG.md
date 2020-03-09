@@ -3,6 +3,14 @@ Changelog
 
 * In case of major changes, an email should be sent to all users with the modifications.
 
+
+2.2.2 (2020-03-09)
+------------------
+* Correct report field names to include [Object] [Name of field]
+* Rename ProductStatus to Status
+* Add back buttons from detail pages to the listing of those objects
+  [dianaboiangiu]
+
 2.2.1 (2020-02-28)
 ------------------
 * Remove None values from Reports
