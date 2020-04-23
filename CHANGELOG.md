@@ -3,6 +3,10 @@ Changelog
 
 * In case of major changes, an email should be sent to all users with the modifications.
 
+2.2.3 (2020-03-09)
+------------------
+* Extend product name length
+  [dianaboiangiu]
 
 2.2.2 (2020-03-09)
 ------------------
