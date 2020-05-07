@@ -3,6 +3,11 @@ Changelog
 
 * In case of major changes, an email should be sent to all users with the modifications.
 
+2.2.5 (2020-05-07)
+-----------------
+* Optimize excel generating commands for special reports
+  [dianaboiangiu]
+
 2.2.4 (2020-05-07)
 ------------------
 * Update report 7 to handle more data extraction between data/data provider/countries/services
