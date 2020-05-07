@@ -9,11 +9,13 @@ from insitu.management.commands.base.base_generate_special_reports import ExcelE
 class Command(BaseCommand):
     help = 'Command to generate the special reports from django queries.'
 
-    def handle(self, *args, **options):
-        query = get_object_or_404(Query, pk=11)
-        exporter = ExcelExporterWriteFile(query)
-        exporter._get_output(query, path='/var/local/static/sheets/Special_report_1.xlsx')
+    def add_arguments(self, parser):
+        parser.add_argument('id', type=int)
+        parser.add_argument('filename', type=str)
 
-        query = get_object_or_404(Query, pk=12)
+    def handle(self, *args, **options):
+        query = get_object_or_404(Query, pk=options['id'])
+        print("Starting generating excel for report {}".format(options['id']))
         exporter = ExcelExporterWriteFile(query)
-        exporter._get_output(query, path='/var/local/static/sheets/Special_report_2.xlsx')
+        exporter._get_output(query, path='/var/local/static/sheets/' + options['filename'])
+        print("Finished generating excel for report {}".format(options['id']))

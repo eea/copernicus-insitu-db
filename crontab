@@ -1,1 +1,1 @@
-0 */6 * * * python /var/local/copernicus/manage.py generate_special_reports;
+30 3 * * * python /var/local/copernicus/manage.py generate_special_reports 11 Special_report_1.xlsx; python /var/local/copernicus/manage.py generate_special_reports 12 Special_report_2.xlsx';
