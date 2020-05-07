@@ -8,7 +8,7 @@
             "description": "Use cases:\r\n 1. List Requirements per given Product, Component, or Service\r\n 2. List Requirements classified according to criticality per given Product, Component, or Service (filter by Criticality)\r\n 3. List barriers per Product, Component, or Service\r\n 4. List requirements with level_of_compliance different from \u201cfully compliant\u201d per given Service\r\n5.  List main outstanding gaps per Service, Product, and Component ( by level of compliance)\r\n6.  List  Requirements per given Product\r\n7.  List Requirements with level_of_compliance \u201cnone\u201d or \u201cpartially fullfilled\u201d per given Service Component\r\n8.  List Essential Requirements per given Product, Component, or Service (filter by Criticality)\r\n9.  List Requirements per given Product, Component, or Service that are essential and not fulfilled (filter by Criticality and Level of Compliance)",
             "created_by_user": 1,
             "created_at": "2018-08-01T08:42:36.799Z",
-            "last_run_date": "2020-03-03T16:05:00.615Z",
+            "last_run_date": "2020-05-06T14:37:31.881Z",
             "snapshot": false,
             "connection": "default"
         }
@@ -88,11 +88,11 @@
         "pk": 7,
         "fields": {
             "title": "Data providers per countries",
-            "sql": "SELECT \r\n\t   d.data_id AS \"Data UID\",\r\n       d.data_name AS \"Data name\",\r\n\t   dp.id AS \"Data provider UID\",\r\n       dp.name AS \"Data provider name\",\r\n       dp_network.name AS \"Data provider network\",\r\n       pt.name AS \"Data provider Provider type\",\r\n       c.name AS \"Data provider Country\"\r\nFROM insitu_dataprovider dp\r\nINNER JOIN insitu_dataprovider_networks dpn ON dp.id = dpn.from_dataprovider_id\r\nINNER JOIN insitu_dataprovider dp_network ON dp_network.id = dpn.to_dataprovider_id\r\nINNER JOIN insitu_dataprovider_countries dpc ON dp.id = dpc.dataprovider_id\r\nINNER JOIN picklists_country c ON c.code = dpc.country_id\r\nINNER JOIN insitu_dataproviderdetails dpd ON dp.id = dpd.data_provider_id\r\nINNER JOIN picklists_providertype pt ON pt.id = dpd.provider_type_id\r\nINNER JOIN insitu_dataproviderrelation_view dpr ON dp.id = dpr.dataproviderrelation_provider_id\r\nINNER JOIN insitu_data_view d ON d.data_id = dpr.dataproviderrelation_data_id\r\nORDER BY UPPER(d.data_name);",
+            "sql": "SELECT \r\n\t   p.product_copernicus_service AS \"Service name\",\r\n       p.product_component AS \"Component name\",\r\n\t   d.data_id AS \"Data UID\",\r\n       d.data_name AS \"Data name\",\r\n\t   dp.id AS \"Data provider UID\",\r\n       dp.name AS \"Data provider name\",\r\n       dp_network.name AS \"Data provider network\",\r\n       pt.name AS \"Data provider Provider type\",\r\n       c.name AS \"Data provider Country\"\r\nFROM insitu_dataprovider dp\r\nINNER JOIN insitu_dataprovider_networks dpn ON dp.id = dpn.from_dataprovider_id\r\nINNER JOIN insitu_dataprovider dp_network ON dp_network.id = dpn.to_dataprovider_id\r\nINNER JOIN insitu_dataprovider_countries dpc ON dp.id = dpc.dataprovider_id\r\nINNER JOIN picklists_country c ON c.code = dpc.country_id\r\nINNER JOIN insitu_dataproviderdetails dpd ON dp.id = dpd.data_provider_id\r\nINNER JOIN picklists_providertype pt ON pt.id = dpd.provider_type_id\r\nINNER JOIN insitu_dataproviderrelation_view dpr ON dp.id = dpr.dataproviderrelation_provider_id\r\nINNER JOIN insitu_data_view d ON d.data_id = dpr.dataproviderrelation_data_id\r\nINNER JOIN insitu_datarequirement_view dr ON d.data_id = dr.datarequirement_data_id\r\nINNER JOIN insitu_requirement_view r ON r.requirement_id = dr.datarequirement_requirement_id\r\nINNER JOIN insitu_productrequirement_view pr ON r.requirement_id = pr.productrequirement_requirement_id\r\nINNER JOIN insitu_product_view p ON p.product_id = pr.productrequirement_product_id\r\nORDER BY UPPER(d.data_name);",
             "description": "Use cases:\r\n1.  List Data Providers for a given Country or Network\r\n2.  List all commercial Data Providers for a given Country or Network (filter by provider type)",
             "created_by_user": 1,
             "created_at": "2018-11-01T13:49:26.768Z",
-            "last_run_date": "2020-03-09T10:00:38.577Z",
+            "last_run_date": "2020-05-06T14:41:49.535Z",
             "snapshot": false,
             "connection": "default"
         }
