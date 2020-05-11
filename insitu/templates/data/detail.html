@@ -192,7 +192,7 @@
       <tr class="row">
         <th class="col-md-4 col-sm-6">State</th>
         <td class="col-md-8 col-sm-6">{{ data.state.title }}
-          {% if READ_ONLY_GROUP not in user.groups %}
+          {% if not user|has_group:READ_ONLY_GROUP %}
             <div class="pull-right">
               {% if data.state.name == 'draft' %}
                 {% if data.created_by == request.user or request.user in data.created_by.team.teammates.all %}
