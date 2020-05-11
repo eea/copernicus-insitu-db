@@ -3,6 +3,11 @@ Changelog
 
 * In case of major changes, an email should be sent to all users with the modifications.
 
+2.2.6 (2020-05-11)
+-----------------
+* Fix state changing buttons on data detail page
+  [dianaboiangiu]
+
 2.2.5 (2020-05-07)
 -----------------
 * Optimize excel generating commands for special reports
