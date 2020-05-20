@@ -174,6 +174,7 @@ CREATE VIEW insitu_dataprovider_view as
            pt.name AS "data_provider_type",
            c.name AS "data_provider_country",
            dpnetwork.name AS "data_provider_network_name",
+           c_network.name AS "data_provider_network_country",
            dp.state AS "data_provider_state"
     FROM insitu_dataprovider dp
     FULL OUTER JOIN insitu_dataproviderdetails dpd ON dp.id = dpd.data_provider_id
@@ -182,4 +183,6 @@ CREATE VIEW insitu_dataprovider_view as
     FULL OUTER JOIN picklists_country c ON c.code = dpc.country_id
     FULL OUTER JOIN insitu_dataprovider_networks dpn ON dp.id = dpn.from_dataprovider_id
     LEFT OUTER JOIN insitu_dataprovider dpnetwork ON dpnetwork.id = dpn.to_dataprovider_id and dpnetwork._deleted = FALSE
+    FULL OUTER JOIN insitu_dataprovider_countries dpcnetwork ON dpnetwork.id = dpcnetwork.dataprovider_id
+    FULL OUTER JOIN picklists_country c_network ON c_network.code = dpcnetwork.country_id
     WHERE dp._deleted = FALSE;
