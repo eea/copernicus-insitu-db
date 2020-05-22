@@ -186,3 +186,39 @@ CREATE VIEW insitu_dataprovider_view as
     FULL OUTER JOIN insitu_dataprovider_countries dpcnetwork ON dpnetwork.id = dpcnetwork.dataprovider_id
     FULL OUTER JOIN picklists_country c_network ON c_network.code = dpcnetwork.country_id
     WHERE dp._deleted = FALSE;
+
+-- insitu_dataprovider
+CREATE VIEW insitu_dataprovider_special_view as
+    SELECT dp.id AS "data_provider_id",
+           dp.name AS "data_provider_name",
+           pt.name AS "data_provider_type",
+           c.name AS "data_provider_country",
+           dpnetwork.name AS "data_provider_network_name",
+           c_network.name AS "data_provider_network_country"
+    FROM insitu_dataprovider dp
+    LEFT OUTER JOIN insitu_dataproviderdetails dpd ON dp.id = dpd.data_provider_id
+    LEFT OUTER JOIN picklists_providertype pt ON pt.id = dpd.provider_type_id
+    LEFT OUTER JOIN insitu_dataprovider_countries dpc ON dp.id = dpc.dataprovider_id
+    LEFT OUTER JOIN picklists_country c ON c.code = dpc.country_id
+    LEFT OUTER JOIN insitu_dataprovider_networks dpn ON dp.id = dpn.from_dataprovider_id
+    LEFT OUTER JOIN insitu_dataprovider dpnetwork ON dpnetwork.id = dpn.to_dataprovider_id and dpnetwork._deleted = FALSE
+    LEFT OUTER JOIN insitu_dataprovider_countries dpcnetwork ON dpnetwork.id = dpcnetwork.dataprovider_id
+    LEFT OUTER JOIN picklists_country c_network ON c_network.code = dpcnetwork.country_id
+    WHERE dp._deleted = FALSE;
+
+-- insitu link_between_products_dataprovider_no_extrafields
+CREATE VIEW insitu_dataprovider_product_direct_view as
+    SELECT c.name as "product_component",
+           cs.name as "product_copernicus_service",
+           d.id as "data_id",
+           d.name as "data_name",
+           dpr.provider_id as "dataproviderrelation_provider_id"
+    FROM insitu_product p
+    INNER JOIN insitu_component c ON c.id = p.component_id
+    INNER JOIN insitu_copernicusservice cs ON cs.id = c.service_id
+    INNER JOIN insitu_productrequirement pr ON p.id = pr.product_id
+    INNER JOIN insitu_requirement r ON r.id = pr.requirement_id
+    INNER JOIN insitu_datarequirement dr ON r.id = dr.requirement_id
+    INNER JOIN insitu_data d ON d.id = dr.data_id
+    INNER JOIN insitu_dataproviderrelation dpr ON d.id = dpr.data_id
+    WHERE p._deleted = FALSE and pr._deleted = FALSE and r._deleted = FALSE and dr._deleted = FALSE and d._deleted = FALSE and dpr._deleted = FALSE;
