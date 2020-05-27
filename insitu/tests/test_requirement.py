@@ -360,36 +360,35 @@ class RequirementTests(base.FormCheckTestCase):
             getattr(item, 'refresh_from_db')()
             self.assertEqual((getattr(item, 'state')).name, 'draft')
 
-    def test_transition_existent_state_no_transition(self):
+    def test_transition_changes_requested_feedback(self):
+        self.erase_logging_file()
         self.login_creator()
-        metrics = base.RequirementFactory.create_metrics(self.creator)
+        metrics = base.RequirementFactory.create_metrics(self.creator, state='ready')
         requirement = base.RequirementFactory(name='Test requirement',
+                                              state='ready',
                                               created_by=self.creator,
                                               **metrics)
         data = base.DataFactory(name='Test data',
                                 created_by=self.creator)
         data_requirement = base.DataRequirementFactory(data=data,
+                                                       state='ready',
                                                        created_by=self.creator,
                                                        requirement=requirement)
-        provider = base.DataProviderFactory(name='Test provider',
-                                            created_by=self.creator)
-        data_provider = base.DataProviderRelationFactory(data=data,
-                                                         created_by=self.creator,
-                                                         provider=provider)
 
         items = ([requirement, data_requirement]
                  + list(metrics.values()))
+        for item in items:
+            self.assertEqual((getattr(item, 'state')).name, 'ready')
 
+        self.client.force_login(self.other_user)
         response = self.client.post(
             reverse('requirement:transition',
-                    kwargs={'source': 'draft',
-                            'target': 'valid',
-                            'pk': requirement.pk}))
-        self.assertEqual(response.status_code, 404)
-
-        for item in items:
-            getattr(item, 'refresh_from_db')()
-            self.assertEqual((getattr(item, 'state')).name, 'draft')
+                    kwargs={'source': 'ready',
+                            'target': 'changes',
+                            'pk': requirement.pk}), {"feedback": "this is a feedback test"})
+        getattr(requirement, 'refresh_from_db')()
+        self.assertEqual(requirement.state, 'changes')
+        self.assertEqual(requirement.feedback, 'this is a feedback test')
 
 
 class RequirementPermissionTests(base.PermissionsCheckTestCase):

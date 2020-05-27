@@ -220,6 +220,7 @@ class DataDetail(ProtectedDetailView):
             'data_policy': self.object.data_policy_id,
             'data_type': self.object.data_type_id,
             'data_format': self.object.data_format_id,
+            'feedback': self.object.feedback,
             'quality_control_procedure':
                 self.object.quality_control_procedure_id,
             'dissemination': self.object.dissemination_id,
@@ -298,8 +299,14 @@ class DataTransition(ChangesRequestedMailMixin, LoggingTransitionProtectedDetail
             data.requesting_user = self.request.user
             if transition.is_available():
                 transition()
+                feedback = ''
+                if transition_name == 'request_changes':
+                    data.feedback = ''
+                    data.feedback = request.POST.get('feedback', '')
+                    data.save()
+                    feedback = request.POST.get('feedback', '')
                 if self.transition_name == transition_name:
-                    self.send_mail(data)
+                    self.send_mail(data, feedback)
                 return HttpResponseRedirect(reverse('data:detail',
                                                     kwargs={'pk': data.pk}))
         except ForbiddenTransition:

@@ -399,6 +399,32 @@ class DataTests(base.FormCheckTestCase):
             getattr(item, 'refresh_from_db')()
             self.assertEqual((getattr(item, 'state')).name, 'draft')
 
+    def test_transition_changes_requested_feedback(self):
+        self.erase_logging_file()
+        self.login_creator()
+        data = base.DataFactory(name='Test data',
+                                state='ready',
+                                created_by=self.creator)
+        provider = base.DataProviderFactory(name='Test provider',
+                                            created_by=self.creator)
+        data_provider = base.DataProviderRelationFactory(data=data,
+                                                         state='ready',
+                                                         created_by=self.creator,
+                                                         provider=provider)
+        items = ([data, data_provider])
+        for item in items:
+            self.assertEqual((getattr(item, 'state')).name, 'ready')
+
+        self.client.force_login(self.other_user)
+        response = self.client.post(
+            reverse('data:transition',
+                    kwargs={'source': 'ready',
+                            'target': 'changes',
+                            'pk': data.pk}), {"feedback": "this is a feedback test"})
+        getattr(data, 'refresh_from_db')()
+        self.assertEqual(data.state, 'changes')
+        self.assertEqual(data.feedback, 'this is a feedback test')
+
 
 class DataPermissionsTests(base.PermissionsCheckTestCase):
     def setUp(self):

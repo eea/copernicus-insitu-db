@@ -160,6 +160,14 @@
                 {% endif %}
               {% endif %}
             </div>
+            {% if provider.state.name != 'ready' and provider.state.name != 'valid' %}
+              {% if provider.feedback %}
+                <div class="alert alert-danger" style="margin-top: 5%;" role="alert">
+                  <h5>Feedback:</h5>
+                  {{ provider.feedback|linebreaksbr }}
+                </div>
+              {% endif %}
+            {% endif %}
           {% endif %}
         </td>
       </tr>

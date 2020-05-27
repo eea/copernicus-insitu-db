@@ -225,6 +225,14 @@
                 {% endif %}
               {% endif %}
             </div>
+            {% if data.state.name != 'ready' and data.state.name != 'valid' %}
+              {% if data.feedback %}
+                <div class="alert alert-danger" style="margin-top: 5%;" role="alert">
+                  <h5>Feedback:</h5>
+                  {{ data.feedback|linebreaksbr }}
+                </div>
+              {% endif %}
+            {% endif %}
           {% endif %}
         </td>
       </tr>

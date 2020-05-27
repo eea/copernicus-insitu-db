@@ -281,8 +281,14 @@ class DataProviderTransition(ChangesRequestedMailMixin, LoggingTransitionProtect
             data_provider.requesting_user = self.request.user
             if transition.is_available():
                 transition()
+                feedback = ''
+                if transition_name == 'request_changes':
+                    data_provider.feedback = ''
+                    data_provider.feedback = request.POST.get('feedback', '')
+                    data_provider.save()
+                    feedback = request.POST.get('feedback', '')
                 if self.transition_name == transition_name:
-                    self.send_mail(data_provider)
+                    self.send_mail(data_provider, feedback)
                 return HttpResponseRedirect(reverse('provider:detail',
                                                     kwargs={'pk': data_provider.pk}))
         except ForbiddenTransition:

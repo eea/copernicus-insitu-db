@@ -335,6 +335,31 @@ class DataProviderTests(base.FormCheckTestCase):
             getattr(item, 'refresh_from_db')()
             self.assertEqual((getattr(item, 'state')).name, 'draft')
 
+    def test_transition_changes_requested_feedback(self):
+        self.erase_logging_file()
+        self.login_creator()
+        provider = base.DataProviderFactory(is_network=True,
+                                            state='ready',
+                                            name='Test provider',
+                                            created_by=self.creator)
+        provider_details = base.DataProviderDetailsFactory(
+            data_provider=provider,
+            state='ready',
+            created_by=self.creator)
+        items = ([provider, provider_details])
+        for item in items:
+            self.assertEqual((getattr(item, 'state')).name, 'ready')
+
+        self.client.force_login(self.other_user)
+        response = self.client.post(
+            reverse('provider:transition',
+                    kwargs={'source': 'ready',
+                            'target': 'changes',
+                            'pk': provider.pk}), {"feedback": "this is a feedback test"})
+        getattr(provider, 'refresh_from_db')()
+        self.assertEqual(provider.state, 'changes')
+        self.assertEqual(provider.feedback, 'this is a feedback test')
+
     def test_get_add_non_network_provider_required_fields(self):
         resp = self.client.get(reverse('provider:add_non_network'))
         self.assertEqual(resp.status_code, 200)

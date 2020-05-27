@@ -171,6 +171,14 @@
                 {% endif %}
               {% endif %}
             </div>
+            {% if requirement.state.name != 'ready' and requirement.state.name != 'valid' %}
+              {% if requirement.feedback %}
+                <div class="alert alert-danger" style="margin-top: 5%;" role="alert">
+                  <h5>Feedback:</h5>
+                    {{ requirement.feedback|linebreaksbr }}
+                </div>
+              {% endif %}
+            {% endif %}
           {% endif %}
         </td>
       </tr>

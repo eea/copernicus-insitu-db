@@ -242,8 +242,14 @@ class RequirementTransition(ChangesRequestedMailMixin, LoggingTransitionProtecte
             requirement.requesting_user = self.request.user
             if transition.is_available():
                 transition()
+                feedback = ''
+                if transition_name == 'request_changes':
+                    requirement.feedback = ''
+                    requirement.feedback = request.POST.get('feedback', '')
+                    requirement.save()
+                    feedback = request.POST.get('feedback', '')
                 if self.transition_name == transition_name:
-                    self.send_mail(requirement)
+                    self.send_mail(requirement, feedback)
                 return HttpResponseRedirect(reverse('requirement:detail',
                                                     kwargs={'pk': requirement.pk}))
         except ForbiddenTransition:

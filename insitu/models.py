@@ -300,6 +300,8 @@ class Requirement(ValidationWorkflowModel, SoftDeleteModel):
                                             related_name='+')
     created_by = models.ForeignKey(User)
 
+    feedback = models.TextField(blank=True)
+
     owner = models.CharField(max_length=100, blank=True)
 
     created_at = models.DateTimeField(auto_now_add=True,
@@ -418,6 +420,8 @@ class DataProvider(ValidationWorkflowModel, SoftDeleteModel):
     networks = models.ManyToManyField('self', blank=True,
                                       related_name='members',
                                       symmetrical=False)
+    feedback = models.TextField(blank=True)
+
     countries = models.ManyToManyField(pickmodels.Country)
     created_by = models.ForeignKey(User)
     created_at = models.DateTimeField(auto_now_add=True,
@@ -515,6 +519,7 @@ class Data(ValidationWorkflowModel, SoftDeleteModel):
 
     name = models.CharField(max_length=100)
     note = models.TextField(blank=True)
+    feedback = models.TextField(blank=True)
     update_frequency = models.ForeignKey(pickmodels.UpdateFrequency,
                                          null=True, blank=True,
                                          on_delete=models.CASCADE,

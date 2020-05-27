@@ -138,7 +138,7 @@ class CreatedByMixin:
 class ChangesRequestedMailMixin:
     transition_name = 'request_changes'
 
-    def send_mail(self, target_object):
+    def send_mail(self, target_object, feedback=''):
         sender = self.request.user
         receiver = target_object.created_by
         subject = 'Changes requested for "{}" {}'.format(
@@ -147,6 +147,7 @@ class ChangesRequestedMailMixin:
         )
         context = {
             "target": self.target_type,
+            "feedback": feedback,
             "receiver": receiver,
             "sender": sender,
             "object": target_object,
