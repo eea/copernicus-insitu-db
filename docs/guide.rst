@@ -360,8 +360,25 @@ mark as valid the object and end the workflow or request changes if that user co
 In this state the object and its relations cannot be edited. The owner or one of their teammates can get the object back
 to the draft state.
 
-When an object's state is changed into "changes requested", the owner of the object receives an e-mail
-that their object has requests for changes and the user that made those requests.
+When an object's state is changed into "changes requested", the user requesting the changes can complete a feedback field in which they
+inform the owner of the object about the changes that should be made (*Figure 14*). The owner receives an e-mail
+that their object has requests for changes, the user that made those requests and what changes the user requested (from the feedback field).
+The users in the application can see this feedback when the object is in state "Changes requested" or "Draft" on the detail page of the object
+(*Figure 15*)
+
+..  figure:: screenshots/feedback1.png
+    :width: 600px
+    :align: center
+    :target: _images/feedback1.png
+
+    *Request changes feedback field example*
+
+..  figure:: screenshots/feedback2.png
+    :width: 600px
+    :align: center
+    :target: _images/feedback2.png
+
+    *Example of display of a feedback left by a user*
 
 **Valid**
 
@@ -398,7 +415,7 @@ Reports list
 The reports' list can be accessed by clicking on the "Reports" tab from the navigation menu.
 This page consists from a list with all the reports defined in the application. Each report is defined
 by a name and contains a short description which describes what the report contains. An example of this page
-is available in *Figure 14* .
+is available in *Figure 16* .
 
 ..  figure:: screenshots/report_list.png
     :width: 600px
@@ -432,12 +449,13 @@ Pivot
 A loading animation will be displayed until the pivot table loads. The available columns are displayed
 on the top of this table or on the left side, depending on the report.
 
-Those columns can then be dragged under the "Count" dropdown. The columns will appear in the preview section
-in the order they were introduced. They can be rearanged to fit the user's need.
+Those columns can then be dragged under the area surrounded by a blue border in the Figure below.
+The columns will appear in the preview section in the order they were introduced.
+They can be rearanged to fit the user's need.
 The data displayed in each column is arranged in alphabetical order.
 The preview shows the user how the exported PDF/Excel file will look like.
-The pivot table can be exported in HTML, PDF or Excel format. (*Figure 15* and
-*Figure 16*) .
+The pivot table can be exported in HTML, PDF or Excel format. (*Figure 17* and
+*Figure 18*) .
 
 ..  figure:: screenshots/report_pivot1.png
     :width: 600px
@@ -456,7 +474,7 @@ The pivot table can be exported in HTML, PDF or Excel format. (*Figure 15* and
 -----
 Filtering data in Pivot
 -----
-The data in the table can also filtered by clicking on the arrow next to the column name (*Figure 17*).
+The data in the table can also filtered by clicking on the arrow next to the column name (*Figure 19*).
 
 ..  figure:: screenshots/report_pivot3.png
     :width: 600px
@@ -464,50 +482,6 @@ The data in the table can also filtered by clicking on the arrow next to the col
     :target: _images/report_detail3.png
 
     *Report pivot - filter the data in the table*
-
-
-The aggregator functions available in the application are:
-
-1. Count Unique Values
- This function can be applied on a column of your choice. In the totals section the unique values will be counted relative to the
- column on the left.
-
- For example, we dragged the "Entrusted Entity in the drop area and we select count unique values for the "Component" fields.
-
- In the preview section we see the Entrusted Entity column with its values and in the "Totals" section we see a count per each
- entrusted entity of the unique components (if there would be 2 components with the same name, they would be counted as one).
- ( *Figure 18*)
-
-..  figure:: screenshots/report_pivot_filtering1.png
-    :width: 600px
-    :align: center
-    :target: _images/report_pivot_filtering1.png
-
-    *Report pivot - filter the data in the table with count unique values*
-
-2. List Unique Values
- This function can be applied on a column of your choice. In the totals section the unique values will be displayed relative to the
- column on the left.
-
- Using the same example as before, now instead of having a count, we will have the values listed. If there is more than one value,
- the values will be separated with a comma. At the end of the table all the values will be listed in the "Totals" section. (*Figure 19*)
-
-
-..  figure:: screenshots/report_pivot_filtering2.png
-    :width: 600px
-    :align: center
-    :target: _images/report_pivot_filtering2.png
-
-    *Report pivot - filter the data in the table with list unique values*
-
-3. First
- This function can be applied on a column of your choice. In the totals section the first value relative to the
- column on the left will be displayed. At the end of the table the first value for all the rows will be displayed.
-
-4. Last
- This function can be applied on a column of your choice. In the totals section the last value relative to the
- column on the left will be displayed. At the end of the table the last value for all the rows will be displayed.
-
 
 
 -----
