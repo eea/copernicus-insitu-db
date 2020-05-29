@@ -3,6 +3,11 @@ Changelog
 
 * In case of major changes, an email should be sent to all users with the modifications.
 
+2.2.8 (2020-05-29)
+-----------------
+* Include a feedback field for Changes requested status
+  [dianaboiangiu]
+
 2.2.7 (2020-05-22)
 -----------------
 * Add data provider network name/data provider network countries to report 7
