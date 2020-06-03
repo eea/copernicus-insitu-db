@@ -3,6 +3,11 @@ Changelog
 
 * In case of major changes, an email should be sent to all users with the modifications.
 
+2.2.9 (2020-06-03)
+-----------------
+* Fix database view on data provider
+  [dianaboiangiu]
+
 2.2.8 (2020-05-29)
 -----------------
 * Include a feedback field for Changes requested status
