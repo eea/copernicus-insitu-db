@@ -1,4 +1,5 @@
 from django.conf.urls import url, include
+from django.contrib.auth import views as auth_views
 from django.views.generic.base import RedirectView
 from django.views.static import serve
 
@@ -210,11 +211,9 @@ auth_patterns = [
     url(r'^login/',
         views.LoginView.as_view(),
         name='login'),
-
     url(r'^logout/',
         views.LogoutView.as_view(),
         name='logout'),
-
     url(r'^change-password/',
         views.ChangePasswordView.as_view(),
         name='change_password'),
@@ -265,6 +264,22 @@ urlpatterns = [
     url(r'^$',
         views.HomeView.as_view(),
         name='home'),
+    
+    url(r'^password/reset/$',
+        auth_views.PasswordResetView.as_view(template_name='auth/password_reset_form.html'),
+        name='password_reset'),
+    
+    url(r'^password_reset/done/$',
+        auth_views.PasswordResetDoneView.as_view(template_name='auth/password_reset_done.html'),
+        name='password_reset_done'),
+    
+    url(r'^reset/(?P<uidb64>[0-9A-Za-z_\-]+)/(?P<token>[0-9A-Za-z]{1,13}-[0-9A-Za-z]{1,20})/$',
+        auth_views.PasswordResetConfirmView.as_view(template_name='auth/password_reset_confirm.html'),
+        name='password_reset_confirm'),
+    
+    url(r'^reset/done/$',
+        auth_views.PasswordResetCompleteView.as_view(template_name='auth/password_reset_complete.html'),
+        name='password_reset_complete'),
 
     url(r'^product/',
         include(product_patterns,

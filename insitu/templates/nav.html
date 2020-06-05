@@ -90,6 +90,10 @@
             <a href="{{ logout }}">Logout</a>
           </li>
         {% else %}
+          <li ckass="{% active password_reset %}">
+            <a href="{% url 'password_reset' %}"><small>Forgot your password?</small></a>
+          </li>
+
           {% url 'auth:login' as login %}
           <li class="{% active login %}">
             <a href="{{ login }}">Login</a>
