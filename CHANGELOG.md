@@ -3,6 +3,11 @@ Changelog
 
 * In case of major changes, an email should be sent to all users with the modifications.
 
+2.2.10 (2020-06-05)
+-------------------
+* Implement Forgot your password functionality
+  [dianaboiangiu]
+
 2.2.9 (2020-06-03)
 -----------------
 * Fix database view on data provider
