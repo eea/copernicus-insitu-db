@@ -3,6 +3,11 @@ Changelog
 
 * In case of major changes, an email should be sent to all users with the modifications.
 
+2.2.11 (2020-06-26)
+-------------------
+* Fix Entrusted Entity per Component statistics Report - The requirements were counted multiple times if they appeared in 2 or more products - this is now fixed
+* Fix product-requirement link Report - include requirements which do not have a link to data
+
 2.2.10 (2020-06-05)
 -------------------
 * Implement Forgot your password functionality
