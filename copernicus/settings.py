@@ -245,7 +245,7 @@ EMAIL_BACKEND = env('EMAIL_BACKEND',
                     'django.core.mail.backends.smtp.EmailBackend')
 EMAIL_HOST = env('EMAIL_HOST', 'localhost')
 EMAIL_PORT = env('EMAIL_PORT', 25)
-EMAIL_SENDER = env('EMAIL_SENDER', '')
+DEFAULT_FROM_EMAIL = env('DEFAULT_FROM_EMAIL', '')
 
 SITE_URL = env('SITE_URL', '')
 

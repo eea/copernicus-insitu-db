@@ -4,7 +4,7 @@ from django.views.generic.edit import ModelFormMixin
 from django_datatables_view.base_datatable_view import BaseDatatableView
 from django.template.loader import render_to_string
 
-from copernicus.settings import EMAIL_SENDER, SITE_URL
+from copernicus.settings import DEFAULT_FROM_EMAIL, SITE_URL
 from insitu.utils import ALL_OPTIONS_LABEL
 from insitu.views.protected.views import ProtectedView
 
@@ -159,7 +159,7 @@ class ChangesRequestedMailMixin:
                                    context=context)
         send_mail(subject=subject,
                   message=message,
-                  from_email=EMAIL_SENDER,
+                  from_email=DEFAULT_FROM_EMAIL,
                   recipient_list=[receiver.email],
                   html_message=html_message
         )
