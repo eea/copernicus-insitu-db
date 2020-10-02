@@ -56,6 +56,9 @@ CREATE VIEW insitu_requirement_view as
            timeliness.threshold as "requirement_timeliness_threshold",
            timeliness.breakthrough as "requirement_timeliness_breakthrough",
            timeliness.goal as "requirement_timeliness_goal",
+           scale.threshold as "requirement_scale_threshold",
+           scale.breakthrough as "requirement_scale_breakthrough",
+           scale.goal as "requirement_scale_goal",
            uncertainty.threshold as "requirement_uncertainty_threshold",
            uncertainty.breakthrough as "requirement_uncertainty_breakthrough",
            uncertainty.goal as "requirement_uncertainty_goal",
@@ -71,6 +74,7 @@ CREATE VIEW insitu_requirement_view as
     INNER JOIN insitu_metric horizontal_resolution ON horizontal_resolution.id =  r.horizontal_resolution_id
     INNER JOIN picklists_qualitycontrolprocedure qcp ON qcp.id = r.quality_control_procedure_id
     INNER JOIN insitu_metric timeliness ON timeliness.id = r.timeliness_id
+    INNER JOIN insitu_metric scale ON scale.id = r.scale_id
     INNER JOIN insitu_metric uncertainty ON uncertainty.id = r.uncertainty_id
     INNER JOIN insitu_metric vertical_resolution ON vertical_resolution.id = r.vertical_resolution_id
     INNER JOIN picklists_requirementgroup rp ON rp.id = r.group_id
