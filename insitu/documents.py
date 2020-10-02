@@ -99,6 +99,8 @@ class RequirementDoc(DocType):
     update_frequency = fields.KeywordField(
         attr='update_frequency.to_elastic_search_format')
     timeliness = fields.KeywordField(attr='timeliness.to_elastic_search_format')
+    scale = fields.KeywordField(
+        attr='scale.to_elastic_search_format')
     horizontal_resolution = fields.KeywordField(
         attr='horizontal_resolution.to_elastic_search_format')
     vertical_resolution = fields.KeywordField(

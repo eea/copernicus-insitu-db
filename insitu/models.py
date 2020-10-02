@@ -292,6 +292,9 @@ class Requirement(ValidationWorkflowModel, SoftDeleteModel):
     timeliness = models.ForeignKey(Metric,
                                    on_delete=models.CASCADE,
                                    related_name='+')
+    scale = models.ForeignKey(Metric,
+                              on_delete=models.CASCADE,
+                              related_name='+')
     horizontal_resolution = models.ForeignKey(Metric,
                                               on_delete=models.CASCADE,
                                               related_name='+')

@@ -146,6 +146,12 @@ class RequirementForm(forms.ModelForm):
                                                required=False)
     timeliness__goal = forms.CharField(max_length=100,
                                        required=False)
+    scale__threshold = forms.CharField(max_length=100,
+                                       required=False)
+    scale__breakthrough = forms.CharField(max_length=100,
+                                          required=False)
+    scale__goal = forms.CharField(max_length=100,
+                                  required=False)
     horizontal_resolution__threshold = forms.CharField(max_length=100,
                                                        required=False)
     horizontal_resolution__breakthrough = forms.CharField(max_length=100,
@@ -200,7 +206,7 @@ class RequirementForm(forms.ModelForm):
     def clean(self):
         super(RequirementForm, self).clean()
         metric_fields = ['uncertainty', 'update_frequency', 'timeliness',
-                         'horizontal_resolution', 'vertical_resolution']
+                         'scale', 'horizontal_resolution', 'vertical_resolution']
         self._clean_metric(metric_fields)
         fields = {field: v for field, v in self.cleaned_data.items()
                   if field != 'name' and field != 'note'}
@@ -226,6 +232,10 @@ class RequirementForm(forms.ModelForm):
             self.cleaned_data
         )
         timeliness_data = self._get_metric_data('timeliness', self.cleaned_data)
+        scale_data = self._get_metric_data(
+            'scale',
+            self.cleaned_data
+        )
         horizontal_resolution_data = self._get_metric_data(
             'horizontal_resolution',
             self.cleaned_data
@@ -247,6 +257,7 @@ class RequirementForm(forms.ModelForm):
             data['update_frequency'] = self._create_metric(
                 **update_frequency_data)
             data['timeliness'] = self._create_metric(**timeliness_data)
+            data['scale'] = self._create_metric(**scale_data)
             data['horizontal_resolution'] = self._create_metric(
                 **horizontal_resolution_data)
             data['vertical_resolution'] = self._create_metric(
@@ -258,6 +269,7 @@ class RequirementForm(forms.ModelForm):
             self._update_metric(self.instance.update_frequency,
                                 **update_frequency_data)
             self._update_metric(self.instance.timeliness, **timeliness_data)
+            self._update_metric(self.instance.scale, **scale_data)
             self._update_metric(self.instance.horizontal_resolution,
                                 **horizontal_resolution_data)
             self._update_metric(self.instance.vertical_resolution,

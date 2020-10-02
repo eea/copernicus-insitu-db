@@ -53,7 +53,7 @@ class GetInitialMixin:
                       'quality_control_procedure', 'group']:
             initial_data[field] = getattr(requirement, field)
         for field in ['uncertainty', 'update_frequency', 'timeliness',
-                      'horizontal_resolution', 'vertical_resolution']:
+                      'scale', 'horizontal_resolution', 'vertical_resolution']:
             for attr in ['threshold', 'breakthrough', 'goal']:
                 initial_data["__".join([field, attr])] = getattr(
                     getattr(requirement, field), attr
@@ -104,7 +104,7 @@ class RequirementList(ProtectedTemplateView):
 
 class RequirementListJson(ESDatatableView):
     columns = ['name', 'dissemination', 'quality_control_procedure', 'group',
-               'uncertainty', 'update_frequency', 'timeliness',
+               'uncertainty', 'update_frequency', 'timeliness', 'scale',
                'horizontal_resolution', 'vertical_resolution', 'state']
     order_columns = columns
     filter_translation = {
