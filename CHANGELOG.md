@@ -4,6 +4,11 @@ Changelog
 * In case of major changes, an email should be sent to all users with the modifications.
 
 
+2.3.0 (2020-10-02)
+-------------------
+* Add scale field to Requirement
+  [dianaboiangiu]
+
 2.2.12 (2020-07-29)
 -------------------
 * Fix email sender in password reset

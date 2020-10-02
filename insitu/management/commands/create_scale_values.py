@@ -12,9 +12,7 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         requirements = Requirement.objects.really_all()
-        import pdb;pdb.set_trace();
         for requirement in requirements:
-            metric.scale.is_
             metric = Metric.objects.create(
                 threshold='',
                 breakthrough='',
