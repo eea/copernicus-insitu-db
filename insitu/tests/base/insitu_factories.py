@@ -66,6 +66,7 @@ class RequirementFactory(DjangoModelFactory):
     group = SubFactory(factories.RequirementGroupFactory)
     uncertainty = SubFactory(MetricFactory)
     update_frequency = SubFactory(MetricFactory)
+    scale = SubFactory(MetricFactory)
     timeliness = SubFactory(MetricFactory)
     horizontal_resolution = SubFactory(MetricFactory)
     vertical_resolution = SubFactory(MetricFactory)
@@ -76,6 +77,7 @@ class RequirementFactory(DjangoModelFactory):
             'uncertainty': MetricFactory(created_by=creator, state=state),
             'update_frequency': MetricFactory(created_by=creator, state=state),
             'timeliness': MetricFactory(created_by=creator, state=state),
+            'scale': MetricFactory(created_by=creator, state=state, threshold=40, breakthrough=20, goal=10,),
             'horizontal_resolution': MetricFactory(created_by=creator, state=state),
             'vertical_resolution': MetricFactory(created_by=creator, state=state)
         }

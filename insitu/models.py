@@ -317,7 +317,7 @@ class Requirement(ValidationWorkflowModel, SoftDeleteModel):
 
     def get_related_objects(self):
         metrics = ['uncertainty', 'update_frequency', 'timeliness',
-                   'horizontal_resolution', 'vertical_resolution']
+                    'scale', 'horizontal_resolution', 'vertical_resolution']
         objects = [getattr(self, metric) for metric in metrics]
 
         objects += [obj for obj in self.productrequirement_set.all()]

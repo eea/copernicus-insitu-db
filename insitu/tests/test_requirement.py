@@ -12,6 +12,7 @@ class RequirementTests(base.FormCheckTestCase):
                        'group']
     related_entities_updated = ['uncertainty', 'update_frequency', 'timeliness',
                                 'horizontal_resolution', 'vertical_resolution']
+    related_entities_updated_int = ['scale']
     related_entities_fields = ['threshold', 'breakthrough', 'goal']
     target_type = 'requirement'
 
@@ -34,6 +35,9 @@ class RequirementTests(base.FormCheckTestCase):
         for entity in self.related_entities_updated:
             for field in self.related_entities_fields:
                 self._DATA['__'.join([entity, field])] = ''
+        for entity in self.related_entities_updated_int:
+            for field in self.related_entities_fields:
+                self._DATA['__'.join([entity, field])] = ''
         self._DATA['uncertainty__goal'] = '1'
 
         self.cloned_errors = {}
@@ -51,6 +55,11 @@ class RequirementTests(base.FormCheckTestCase):
             'group': requirement.group.pk,
         }
         for entity in self.related_entities_updated:
+            for field in self.related_entities_fields:
+                REQUIREMENT_FOR_CLONE['__'.join([entity, field])] = (
+                    getattr(getattr(requirement, entity), field)
+                )
+        for entity in self.related_entities_updated_int:
             for field in self.related_entities_fields:
                 REQUIREMENT_FOR_CLONE['__'.join([entity, field])] = (
                     getattr(getattr(requirement, entity), field)

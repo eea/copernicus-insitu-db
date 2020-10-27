@@ -13,6 +13,7 @@ class FormCheckTestCase(TestCase):
     many_to_many_fields = []
     required_fields = []
     related_entities_updated = []
+    related_entities_updated_int = []
     related_entities_fields = []
     custom_errors = {}
     REQUIRED_ERROR = ['This field is required.']
@@ -61,6 +62,12 @@ class FormCheckTestCase(TestCase):
                 self.assertEqual(
                     getattr(getattr(object, entity), field),
                     data["__".join([entity, field])],
+                    entity + "-" + field)
+        for entity in self.related_entities_updated_int:
+            for field in self.related_entities_fields:
+                self.assertEqual(
+                    getattr(getattr(object, entity), field),
+                    str(data["__".join([entity, field])]),
                     entity + "-" + field)
 
     def check_single_object(self, model_cls, data):
