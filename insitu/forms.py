@@ -146,12 +146,12 @@ class RequirementForm(forms.ModelForm):
                                                required=False)
     timeliness__goal = forms.CharField(max_length=100,
                                        required=False)
-    scale__threshold = forms.CharField(max_length=100,
-                                       required=False)
-    scale__breakthrough = forms.CharField(max_length=100,
-                                          required=False)
-    scale__goal = forms.CharField(max_length=100,
-                                  required=False)
+    scale__threshold = forms.IntegerField(required=False,
+                                          error_messages={'invalid': 'Scale threshold field must be a number.'})
+    scale__breakthrough = forms.IntegerField(required=False,
+                                             error_messages={'invalid': 'Scale breakthrough field must be a number.'})
+    scale__goal = forms.IntegerField(required=False,
+                                     error_messages={'invalid': 'Scale goal field must be a number.'})
     horizontal_resolution__threshold = forms.CharField(max_length=100,
                                                        required=False)
     horizontal_resolution__breakthrough = forms.CharField(max_length=100,
@@ -193,7 +193,11 @@ class RequirementForm(forms.ModelForm):
     def _get_metric_data(self, metric, data):
         result = dict()
         for attr in ['threshold', 'breakthrough', 'goal']:
-            result[attr] = data["__".join([metric, attr])]
+            result[attr] = data.get("__".join([metric, attr]), '')
+            if result[attr] == None:
+                result[attr] = ''
+            if type(result[attr]) == int:
+                result[attr] = str(result[attr])
         return result
 
     def _clean_metric(self, metrics):
