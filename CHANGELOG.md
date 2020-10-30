@@ -3,6 +3,11 @@ Changelog
 
 * In case of major changes, an email should be sent to all users with the modifications.
 
+2.3.1 (2020-10-30)
+-------------------
+* Add restriction on new field Scale
+* Add product group on Report 8
+  [dianaboiangiu]
 
 2.3.0 (2020-10-02)
 -------------------
