@@ -1,3 +1,5 @@
+import re
+
 from django import forms
 from django.core.mail import send_mail
 from django.core.urlresolvers import reverse
@@ -146,12 +148,15 @@ class RequirementForm(forms.ModelForm):
                                                required=False)
     timeliness__goal = forms.CharField(max_length=100,
                                        required=False)
-    scale__threshold = forms.IntegerField(required=False,
-                                          error_messages={'invalid': 'Scale threshold field must be a number.'})
-    scale__breakthrough = forms.IntegerField(required=False,
-                                             error_messages={'invalid': 'Scale breakthrough field must be a number.'})
-    scale__goal = forms.IntegerField(required=False,
-                                     error_messages={'invalid': 'Scale goal field must be a number.'})
+    scale__threshold = forms.CharField(max_length=100,
+                                       required=False,
+                                       error_messages={'invalid': 'Scale threshold field must be a number.'})
+    scale__breakthrough = forms.CharField(max_length=100,
+                                          required=False,
+                                          error_messages={'invalid': 'Scale breakthrough field must be a number.'})
+    scale__goal = forms.CharField(max_length=100,
+                                  required=False,
+                                  error_messages={'invalid': 'Scale goal field must be a number.'})
     horizontal_resolution__threshold = forms.CharField(max_length=100,
                                                        required=False)
     horizontal_resolution__breakthrough = forms.CharField(max_length=100,
@@ -174,6 +179,18 @@ class RequirementForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
         self.fields['name'].help_text = (
             'Please avoid separating words with the character "_"')
+
+    def _clean_scale(self):
+        check_fields = [
+            ('scale__breakthrough', 'Scale breakthrough'),
+            ('scale__threshold', 'Scale threshold'),
+            ('scale__goal', 'Scale goal')
+        ]
+
+        for field, text in check_fields:
+            pattern = re.compile("[0-9><.:]*$")
+            if not pattern.match(self.cleaned_data.get(field)):
+                self.add_error(None, "{} must contain only numbers, >, < , . or :".format(text))
 
     def _create_metric(self, threshold, breakthrough, goal):
         return models.Metric.objects.create(
@@ -212,6 +229,7 @@ class RequirementForm(forms.ModelForm):
         metric_fields = ['uncertainty', 'update_frequency', 'timeliness',
                          'scale', 'horizontal_resolution', 'vertical_resolution']
         self._clean_metric(metric_fields)
+        self._clean_scale()
         fields = {field: v for field, v in self.cleaned_data.items()
                   if field != 'name' and field != 'note'}
         if self.instance.id:
