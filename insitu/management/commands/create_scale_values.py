@@ -13,11 +13,17 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         requirements = Requirement.objects.really_all()
         for requirement in requirements:
-            metric = Metric.objects.create(
-                threshold='',
-                breakthrough='',
-                goal='',
-                created_by=requirement.created_by
-            )
-            requirement.scale = metric
-            requirement.save()
+            if requirement.scale != None:
+                scale = requirement.scale
+                scale.state = requirement.state
+                scale.save()
+            else:
+                metric = Metric.objects.create(
+                    threshold='',
+                    breakthrough='',
+                    goal='',
+                    created_by=requirement.created_by,
+                    state=requirement.state
+                )
+                requirement.scale = metric
+                requirement.save()
