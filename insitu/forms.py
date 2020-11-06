@@ -188,9 +188,9 @@ class RequirementForm(forms.ModelForm):
         ]
 
         for field, text in check_fields:
-            pattern = re.compile("[0-9><.:]*$")
+            pattern = re.compile("[0-9><:]*$")
             if not pattern.match(self.cleaned_data.get(field)):
-                self.add_error(None, "{} must contain only numbers, >, < , . or :".format(text))
+                self.add_error(None, "{} must contain only numbers, >, < or :".format(text))
 
     def _create_metric(self, threshold, breakthrough, goal):
         return models.Metric.objects.create(

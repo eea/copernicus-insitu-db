@@ -3,6 +3,11 @@ Changelog
 
 * In case of major changes, an email should be sent to all users with the modifications.
 
+2.3.2 (20202-11-06)
+-------------------
+* Fix 500 Error on Requirement change state
+* Add scale restrictions
+
 2.3.1 (2020-10-30)
 -------------------
 * Add restriction on new field Scale
