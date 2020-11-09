@@ -3,6 +3,11 @@ Changelog
 
 * In case of major changes, an email should be sent to all users with the modifications.
 
+2.3.4 (2020-11-09)
+------------------
+* Allow N/A and TBD values in Scale field
+  [dianaboiangiu]
+
 2.3.3 (2020-11-09)
 ------------------
 * Fix 500 Error on Requirement change state
