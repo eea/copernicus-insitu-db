@@ -3,10 +3,16 @@ Changelog
 
 * In case of major changes, an email should be sent to all users with the modifications.
 
-2.3.2 (20202-11-06)
+2.3.3 (2020-11-09)
+------------------
+* Fix 500 Error on Requirement change state
+  [dianaboiangiu]
+
+2.3.2 (2020-11-06)
 -------------------
 * Fix 500 Error on Requirement change state
 * Add scale restrictions
+  [dianaboiangiu]
 
 2.3.1 (2020-10-30)
 -------------------
