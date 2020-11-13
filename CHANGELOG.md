@@ -3,6 +3,12 @@ Changelog
 
 * In case of major changes, an email should be sent to all users with the modifications.
 
+2.3.5 (2020-11-10)
+------------------
+* Add account ownership transfer command
+* Fix report 2 missing Product
+  [dianaboiangiu]
+
 2.3.4 (2020-11-09)
 ------------------
 * Allow N/A and TBD values in Scale field
