@@ -316,13 +316,21 @@ class Requirement(ValidationWorkflowModel, SoftDeleteModel):
         return self.name
 
     def get_related_objects(self):
-        metrics = ['uncertainty', 'update_frequency', 'timeliness',
-                    'scale', 'horizontal_resolution', 'vertical_resolution']
+        metrics = [
+            'uncertainty', 'update_frequency', 'timeliness', 'scale',
+            'horizontal_resolution', 'vertical_resolution'
+        ]
         objects = [getattr(self, metric) for metric in metrics]
 
-        objects += [obj for obj in self.productrequirement_set.all()]
+        objects += [obj for obj in self.product_requirements.all()]
         objects += [obj for obj in self.datarequirement_set.all()]
         return objects
+
+    @property
+    def components(self):
+        return Component.objects.filter(
+            products__requirements=self
+        )
 
     @transition()
     def mark_as_ready(self):
@@ -367,16 +375,20 @@ class Product(SoftDeleteModel):
     note = models.TextField(blank=True)
     group = models.ForeignKey(pickmodels.ProductGroup,
                               on_delete=models.CASCADE)
-    component = models.ForeignKey(Component,
-                                  on_delete=models.CASCADE)
+    component = models.ForeignKey(
+        Component, on_delete=models.CASCADE, related_name='products'
+    )
     status = models.ForeignKey(pickmodels.Status,
                                on_delete=models.CASCADE,
                                related_name='+')
     area = models.ForeignKey(pickmodels.Area,
                              on_delete=models.CASCADE,
                              related_name='+')
-    requirements = models.ManyToManyField(Requirement,
-                                          through='ProductRequirement')
+    requirements = models.ManyToManyField(
+        Requirement,
+        through='ProductRequirement',
+        related_name='products',
+    )
     created_at = models.DateTimeField(auto_now_add=True,
                                       null=True)
     updated_at = models.DateTimeField(auto_now=True,
@@ -387,8 +399,14 @@ class Product(SoftDeleteModel):
 
 
 class ProductRequirement(ValidationWorkflowModel, SoftDeleteModel):
-    product = models.ForeignKey(Product, on_delete=models.CASCADE)
-    requirement = models.ForeignKey(Requirement, on_delete=models.CASCADE)
+    product = models.ForeignKey(
+        Product, on_delete=models.CASCADE, related_name='product_requirements'
+    )
+    requirement = models.ForeignKey(
+        Requirement,
+        on_delete=models.CASCADE,
+        related_name='product_requirements'
+    )
     note = models.TextField(blank=True)
     level_of_definition = models.ForeignKey(pickmodels.DefinitionLevel,
                                             on_delete=models.CASCADE,
@@ -622,7 +640,6 @@ class Data(ValidationWorkflowModel, SoftDeleteModel):
         for obj in self.get_related_objects():
             obj.requesting_user = self.requesting_user
             obj.make_changes()
-
 
 
 class DataRequirement(ValidationWorkflowModel, SoftDeleteModel):

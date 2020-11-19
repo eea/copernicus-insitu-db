@@ -85,36 +85,46 @@ class RequirementList(ProtectedTemplateView):
     def get_context_data(self):
         context = super(RequirementList, self).get_context_data()
         disseminations = get_choices('name', model_cls=pickmodels.Dissemination)
-        products =  get_choices('name', model_cls=models.Product)
+        products = get_choices('name', model_cls=models.Product)
         quality_control_procedures = get_choices(
             'name', model_cls=pickmodels.QualityControlProcedure
         )
         groups = get_choices('name', model_cls=pickmodels.RequirementGroup)
         states = [{'title': 'All', 'name': 'All'}] + [
             state for state in models.ValidationWorkflow.states]
+        components = get_choices('name', model_cls=models.Component)
         context.update({
             'disseminations': disseminations,
             'products': products,
             'quality_control_procedures': quality_control_procedures,
             'groups': groups,
             'states': states,
+            'components': components,
         })
         return context
 
 
 class RequirementListJson(ESDatatableView):
-    columns = ['name', 'dissemination', 'quality_control_procedure', 'group',
-               'uncertainty', 'update_frequency', 'timeliness', 'scale',
-               'horizontal_resolution', 'vertical_resolution', 'state']
+    columns = [
+        'name', 'dissemination', 'quality_control_procedure', 'group',
+        'uncertainty', 'update_frequency', 'timeliness', 'scale',
+        'horizontal_resolution', 'vertical_resolution', 'state',
+    ]
     order_columns = columns
     filter_translation = {
-        'product': 'products.product'
+        'product': 'products.product',
+        'component': 'components.component',
     }
-    filters = ['dissemination', 'quality_control_procedure', 'group', 'product', 'state']
+    #  Translates a querystring parameter to an ES Document field with a
+    #  different name.
+    filters = [
+        'dissemination', 'quality_control_procedure', 'group', 'product',
+        'state', 'component'
+    ]  # These are the querystring parameters we expect.
     filter_fields = [
-        'dissemination__name', 'quality_control_procedure__name', 'group__name', 'product__name',
-        'state',
-    ]  # This must be in the same order as `filters`
+        'dissemination__name', 'quality_control_procedure__name',
+        'group__name', 'products__name', 'state', 'products__component__name'
+    ]  # These are the corresponding model fields, in the same order.
     document = documents.RequirementDoc
     permission_classes = (IsAuthenticated, )
 

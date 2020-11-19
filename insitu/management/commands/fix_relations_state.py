@@ -22,7 +22,7 @@ class Command(BaseCommand):
                 metric_object = getattr(requirement, metric)
                 metric_object.state = requirement.state
                 metric_object.save()
-            for product_req in requirement.productrequirement_set.all():
+            for product_req in requirement.product_requirements.all():
                 product_req.state = requirement.state
                 product_req.save()
             for data_req in requirement.datarequirement_set.all():

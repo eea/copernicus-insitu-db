@@ -107,8 +107,11 @@ class RequirementDoc(DocType):
         attr='vertical_resolution.to_elastic_search_format')
     state = fields.KeywordField(attr='state.name')
 
-    products = fields.ObjectField(attr='productrequirement_set',properties={
+    products = fields.ObjectField(attr='product_requirements', properties={
         'product': fields.KeywordField(attr='product.name'),
+    })
+    components = fields.ObjectField(attr='product_requirements', properties={
+        'component': fields.KeywordField(attr='product.component.name'),
     })
 
     note = fields.TextField()
@@ -137,7 +140,7 @@ class RequirementDoc(DocType):
 
     def get_queryset(self):
         """Not mandatory but to improve performance we can select related in one sql request"""
-        return super(RequirementDoc, self).get_queryset().prefetch_related('productrequirement_set__product')
+        return super(RequirementDoc, self).get_queryset().prefetch_related('product_requirements__product')
 
     def get_instances_from_related(self, related_instance):
         """If related_models is set, define how to retrieve the Requirement instance(s) from the related model.

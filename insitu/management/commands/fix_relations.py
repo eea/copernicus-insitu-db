@@ -9,7 +9,7 @@ class Command(BaseCommand):
         requirements = Requirement.objects.all()
         faulty_requirements = [
             requirement for requirement in requirements if [
-                rel for rel in requirement.productrequirement_set.all()
+                rel for rel in requirement.product_requirements.all()
                 if rel.state != requirement.state
             ] or [
                 rel for rel in requirement.datarequirement_set.all()
@@ -25,7 +25,7 @@ class Command(BaseCommand):
         print('Relations will be fixed for requirements:..')
         for requirement in faulty_requirements:
             print(requirement.name)
-            for rel in requirement.productrequirement_set.all():
+            for rel in requirement.product_requirements.all():
                 if rel.state != requirement.state:
                     rel.state = requirement.state
                     rel.save()
