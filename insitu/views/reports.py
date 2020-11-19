@@ -1,5 +1,8 @@
 import datetime
+import json
+
 import string
+import xlsxwriter
 from io import BytesIO
 
 from django.template.loader import get_template
@@ -20,6 +23,9 @@ from explorer.utils import url_get_rows
 
 from wkhtmltopdf.views import PDFTemplateResponse
 
+from insitu.models import Component, CopernicusService
+from insitu.forms import StandardReportForm
+from insitu.views.reportsmixins import ReportExcelMixin
 from insitu.views import protected
 from insitu.views.protected.views import ProtectedTemplateView, ProtectedView
 
@@ -182,3 +188,31 @@ class Pdf(View):
             "date": datetime.datetime.now().strftime("%Y %m %d"),
         }
         return self.render(context, request)
+
+
+class ReportsStandardReportView(ProtectedTemplateView, ReportExcelMixin):
+    template_name = 'reports/standard_report.html'
+    permission_classes = (protected.IsAuthenticated,)
+    permission_denied_redirect = reverse_lazy('auth:login')
+
+    def get_context_data(self, **kwargs):
+        context = super(ReportsStandardReportView, self).get_context_data(**kwargs)
+        context['services'] = CopernicusService.objects.all()
+        context['form'] = StandardReportForm()
+        return context
+
+    def generate_excel(self):
+        output = BytesIO()
+        workbook = xlsxwriter.Workbook(output)
+        self.generate_excel_file(workbook)
+        workbook.close()
+        output.seek(0)
+        filename = 'StandardReport{}.xlsx'.format(datetime.date.today())
+        response = HttpResponse(
+            output,
+            content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+        )
+        response['Content-Disposition'] = 'attachment; filename=%s' % filename
+        return response 
+    def post(self, request, *args, **kwargs):
+        return self.generate_excel()

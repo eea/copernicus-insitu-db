@@ -147,6 +147,7 @@ auth_patterns = [
 
 reports_patterns = [
     url(r"^list/$", views.ReportsListView.as_view(), name="list"),
+    url(r'^standard_report/$', views.ReportsStandardReportView.as_view(), name='standard_report'),
     url(r"^(?P<query_id>\d+)/$", views.ReportsDetailView.as_view(), name="detail"),
     url(r"^(?P<query_id>\d+)/json/$", views.ReportDataJsonView.as_view(), name="json"),
     url(r"^snapshot/$", views.SnapshotView.as_view(), name="snapshot"),

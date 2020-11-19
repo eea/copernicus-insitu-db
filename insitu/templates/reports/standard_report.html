@@ -1,0 +1,26 @@
+{% extends '_layout.html' %}
+{% load bootstrap3 %}
+{% load static %}
+{% load utils %}
+
+{% block title %}Reports{% endblock %}
+
+{% block content %}
+  <div class="row">
+    <h1 class="col-sm-12">
+      <span>Standard Report</span>
+    </h1>
+  </div>
+
+  <div class="container" style="margin-bottom:20px;">
+  </div>
+
+  <form action="" method="POST" style="width: 50%">
+    {% csrf_token %}
+    {% bootstrap_form form %}
+    <input class="btn btn-primary" type="submit" value="Generate Excel"/>
+    <a href="{% url 'home' %}"
+       class="btn btn-default">Cancel</a>
+  </form>
+
+{% endblock %}

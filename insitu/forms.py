@@ -649,3 +649,14 @@ class TeamForm(forms.ModelForm):
                         instance.requests.add(request)
                         self.send_mail_accept_request(instance.user, request)
         return instance
+
+
+class StandardReportForm(forms.Form):
+    service = forms.ModelMultipleChoiceField(
+        required=False,
+        queryset=models.CopernicusService.objects.all(),
+        label='Service')
+    component = forms.ModelMultipleChoiceField(
+        required=False,
+        queryset=models.Component.objects.all(),
+        label='Component')
