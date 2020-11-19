@@ -2,9 +2,9 @@ function updateFilterOptions(filter, option_data) {
   var select = $('#' + filter);
   select.find('option').remove();
   select.append('<option value="All">All</option>')
-  $.each(option_data.options, function(i, option){
+  $.each(option_data.options, function (i, option) {
     var selected = '';
-    if(option_data.selected == option){
+    if (option_data.selected == option) {
       selected = ' selected';
     }
     select.append(
@@ -15,30 +15,30 @@ $(document).ready(function () {
   var buttonCommon = {
     exportOptions: {
       format: {
-        header: function ( data, columnIdx ){
+        header: function (data, columnIdx) {
           return data.split('<span')[0].replace(/^\s+|\s+$/g, '');
         },
-        body: function ( data, row, column, node ){
-          if (row === 0 ){
+        body: function (data, row, column, node) {
+          if (row === 0) {
             return $.parseHTML(data)[0].innerHTML.replace(/^\s+|\s+$/g, '')
           }
-          if (row <= 8 && row >= 4){
+          if (row <= 8 && row >= 4) {
             goal = $.parseHTML(data)[0].innerHTML;
             breakthrough = $.parseHTML(data)[1].innerHTML;
             threshold = $.parseHTML(data)[2].innerHTML;
             metrics = ''
-            if (goal){
+            if (goal) {
               metrics += 'Threshold: ' + '\n' + $.parseHTML(data)[0].innerHTML + '\n'
             }
-            if(breakthrough){
+            if (breakthrough) {
               metrics += 'Breakthrough: ' + '\n' + $.parseHTML(data)[1].innerHTML + '\n'
             }
-            if(threshold){
-              metrics +=  'Goal: ' + '\n' + $.parseHTML(data)[2].innerHTML + '\n'
+            if (threshold) {
+              metrics += 'Goal: ' + '\n' + $.parseHTML(data)[2].innerHTML + '\n'
             }
             return metrics.replace(/^\s+|\s+$/g, '')
           }
-        return data
+          return data
         }
       }
     }
@@ -47,37 +47,37 @@ $(document).ready(function () {
     "processing": true,
     "serverSide": true,
     "dom": "<'row'<'col-sm-12'B>>" +
-           "<'row'<'col-sm-5'i><'col-sm-12'f><'col-sm-4 display-margin'l><'col-sm-8'p>>" +
-           "<'row'<'col-sm-12'tr>>" +
-           "<'row'<'col-sm-12'p>>",
+      "<'row'<'col-sm-5'i><'col-sm-12'f><'col-sm-4 display-margin'l><'col-sm-8'p>>" +
+      "<'row'<'col-sm-12'tr>>" +
+      "<'row'<'col-sm-12'p>>",
     "lengthMenu": [
-      [ 10, 25, 50, -1 ],
-      [ '10 rows', '25 rows', '50 rows', 'Show all' ]
+      [10, 25, 50, -1],
+      ['10 rows', '25 rows', '50 rows', 'Show all']
     ],
     "buttons": [
-      $.extend( true, {}, buttonCommon,{
+      $.extend(true, {}, buttonCommon, {
         extend: 'pdf',
         exportOptions: { orthogonal: 'export' },
         text: 'Save as PDF',
         filename: 'CIS2_Requirements',
         title: 'CIS2 Requirements',
         orientation: 'landscape',
-        customize: function ( doc ) {
+        customize: function (doc) {
           var cols = [];
           var created = new Date().toDateString();
-          cols[0] = {text: 'https://cis2.eea.europa.eu , ' + created, alignment: 'right', margin:[50, 10], };
+          cols[0] = { text: 'https://cis2.eea.europa.eu , ' + created, alignment: 'right', margin: [50, 10], };
           var objFooter = {};
           objFooter['columns'] = cols;
-          doc['footer']=objFooter;
+          doc['footer'] = objFooter;
         }
       }),
-      $.extend( true, {}, buttonCommon,
-      {
-        extend: 'excel',
-        filename: 'CIS2_Requirements.',
-        title: 'CIS2 Requirements',
-        text: 'Save as Excel',
-      }),
+      $.extend(true, {}, buttonCommon,
+        {
+          extend: 'excel',
+          filename: 'CIS2_Requirements.',
+          title: 'CIS2 Requirements',
+          text: 'Save as Excel',
+        }),
     ],
     "language": {
       "infoFiltered": "<span class='green-text'>(filtered from _MAX_ total records)<span>",
@@ -89,22 +89,24 @@ $(document).ready(function () {
         d.quality_control_procedure = $('#quality_control_procedure').val();
         d.group = $('#group').val();
         d.product = $('#product').val();
-        d.state = $('#state').val()
+        d.state = $('#state').val();
+        d.component = $('#component').val();
       },
       "dataSrc": function (json) {
-        $.each(json.filters, function(key, value){
+        $.each(json.filters, function (key, value) {
           updateFilterOptions(key, value)
         });
         return json.data;
       }
     },
     "stateSave": true,
-    "stateSaveParams": function(settings, data){
+    "stateSaveParams": function (settings, data) {
       data.dissemination = $('#dissemination').val();
       data.quality_control_procedure = $('#quality_control_procedure').val();
       data.group = $('#group').val();
       data.product = $('#product').val();
       data.state = $('#state').val();
+      data.component = $('#component').val();
     },
     "stateLoadParams": function (settings, data) {
       $('#dissemination').val(data.dissemination);
@@ -112,8 +114,9 @@ $(document).ready(function () {
       $('#group').val(data.group);
       $('#product').val(data.product);
       $('#state').val(data.state);
+      $('#component').val();
     },
-    "drawCallback": function(settings) {
+    "drawCallback": function (settings) {
       var info = $(this).closest('.dataTables_wrapper').find('.dataTables_info');
       info.toggle(this.api().page.info().recordsDisplay > 9);
     },
@@ -139,13 +142,15 @@ $(document).ready(function () {
     ]
   }).fnFilterOnReturn();
 
-  $('#dissemination,#quality_control_procedure,#group,#product,#state').on('change', function (event) {
-    var table = $table.DataTable();
-    table.ajax.reload();
-  });
+  $('#dissemination,#quality_control_procedure,#group,#product,#state,#component').on(
+    'change', function (event) {
+      var table = $table.DataTable();
+      table.ajax.reload();
+    }
+  );
 
   $('#reset-btn').on('click', function () {
-    $('#dissemination,#quality_control_procedure,#group,#product,#state').val('All');
+    $('#dissemination,#quality_control_procedure,#group,#product,#state,#component').val('All');
     var table = $table.DataTable();
     table.state.clear();
     table.ajax.reload();

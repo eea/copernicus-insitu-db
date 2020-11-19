@@ -1,3 +1,6 @@
+import os
+
+from django.core.management import call_command
 from django.core.urlresolvers import reverse
 
 from insitu import models
@@ -45,6 +48,9 @@ class RequirementTests(base.FormCheckTestCase):
             'This requirement is a duplicate. Please use the existing requirement.']
         self.errors['__all__'] = ['At least one metric is required.']
 
+        with open(os.devnull, 'w') as f:
+            call_command('search_index', '--rebuild', '-f', stdout=f)
+
     def _create_clone_data(self, requirement):
         REQUIREMENT_FOR_CLONE = {
             'name': requirement.name,
@@ -68,8 +74,7 @@ class RequirementTests(base.FormCheckTestCase):
 
     def test_list_requirement_json(self):
         metrics = base.RequirementFactory.create_metrics(self.creator)
-        requirement = base.RequirementFactory(created_by=self.creator,
-                                              **metrics)
+        base.RequirementFactory(created_by=self.creator, **metrics)
         resp = self.client.get(reverse('requirement:json'))
         self.assertEqual(resp.status_code, 200)
 
@@ -95,6 +100,42 @@ class RequirementTests(base.FormCheckTestCase):
         data = resp.json()
         self.assertIsNot(data['recordsTotal'], 0)
         self.assertFalse(data['recordsTotal'] < 2)
+        self.assertIs(data['recordsFiltered'], 1)
+
+    def test_list_requirement_json_filter_component(self):
+
+        metrics = base.RequirementFactory.create_metrics(self.creator)
+        req1 = base.RequirementFactory(
+            name='First requirement',
+            created_by=self.creator,
+            **metrics
+        )
+        base.ProductRequirementFactory(
+            requirement=req1,
+            created_by=self.creator,
+            product__name="Product 1",
+            product__component__name="Component 1"
+        )
+
+        metrics = base.RequirementFactory.create_metrics(self.creator)
+        req2 = base.RequirementFactory(
+            name='Second requirement',
+            created_by=self.creator,
+            **metrics
+        )
+        base.ProductRequirementFactory(
+            requirement=req2,
+            product__name="Product 2",
+            product__component__name="Component 2",
+            created_by=self.creator,
+        )
+        resp = self.client.get(
+            reverse('requirement:json'), {'component': 'Component 1'}
+        )
+        self.assertEqual(resp.status_code, 200)
+
+        data = resp.json()
+        self.assertIs(data['recordsTotal'], 2)
         self.assertIs(data['recordsFiltered'], 1)
 
     def test_list_requirements(self):

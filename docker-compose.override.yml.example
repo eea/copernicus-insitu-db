@@ -43,6 +43,12 @@ services:
       io.rancher.container.pull_image: always
       io.rancher.scheduler.affinity:host_label_ne: reserved=yes
 
+  kibana:
+    image: docker.elastic.co/kibana/kibana:6.6.1
+    container_name: insitu.kibana
+    ports:
+      - 5601:5601
+
 volumes:
   esdata_test:
     driver: local
