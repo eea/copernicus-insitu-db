@@ -1,5 +1,4 @@
 docker/
 .gitignore
-.travis.yml
 docker-compose*
 .cache/
