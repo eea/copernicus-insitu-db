@@ -139,7 +139,7 @@
         </tr>
         </thead>
         <tbody>
-        {% for rel in product.productrequirement_set.all %}
+        {% for rel in product.product_requirements.all %}
           <tr>
             <td>{{ rel.requirement.pk }}</td>
             <td>
