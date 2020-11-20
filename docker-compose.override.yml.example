@@ -1,21 +1,32 @@
-version: '2'
-
 services:
   web:
     build:
-      context: .
       args:
-        REQFILE: requirements-dev.txt
+        REQFILE: ariel-requirements.txt
+    depends_on:
+      - elasticsearch
     ports:
       - 8000:8000
     volumes:
       - .:/var/local/copernicus
-    entrypoint: ["/usr/bin/tail", "-f", "/dev/null"]
-    #command: ["runserver", "0.0.0.0:8000"]
 
-  elasticsearch_test:
+  cron:
+    build:
+      context: .
+      args:
+        REQFILE: requirements-dev.txt
+    container_name: insitu.cron
+    environment:
+      - TZ=Europe/Bucharest
+    depends_on:
+      - db
+    volumes:
+      - static:/var/local/static
+    entrypoint: ["./docker-entrypoint.cron.sh"]
+
+  elasticsearch:
     image: docker.elastic.co/elasticsearch/elasticsearch:6.6.1
-    container_name: insitu.elasticsearch_test
+    container_name: insitu.elasticsearch
     environment:
       - cluster.name=docker-cluster
       - bootstrap.memory_lock=true
@@ -26,9 +37,20 @@ services:
         hard: -1
     mem_limit: 1g
     volumes:
-      - esdata_test:/usr/share/elasticsearch/data
+      - esdata:/usr/share/elasticsearch/data
     ports:
-      - 9201:9201
+      - 9200:9200
+
+  elasticsearch_test:
+    environment:
+      - cluster.name=docker-cluster
+      - bootstrap.memory_lock=true
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    mem_limit: 1g
 
   postfix:
     image: eaudeweb/mailtrap:2.0
@@ -38,7 +60,7 @@ services:
     stdin_open: true
     tty: true
     ports:
-    - 80:80
+    - 81:80
     labels:
       io.rancher.container.pull_image: always
       io.rancher.scheduler.affinity:host_label_ne: reserved=yes
@@ -49,6 +71,10 @@ services:
     ports:
       - 5601:5601
 
+  db:
+    ports:
+      - "2345:5432"
+
 volumes:
-  esdata_test:
+  esdata:
     driver: local

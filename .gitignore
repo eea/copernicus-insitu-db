@@ -23,7 +23,6 @@ local_settings.py
 .vscode
 
 # Docker conf
-docker/*.env
 docker-compose.override.yml
 
 # Database dumps

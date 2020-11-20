@@ -34,9 +34,9 @@ CSRF_TRUSTED_ORIGINS = env('ALLOWED_HOSTS')
 
 # Sentry
 SENTRY_DSN = env('SENTRY_DSN', '')
-SENTRY_TAG_RELEASE=env('SENTRY_TAG_RELEASE', '')
-SENTRY_TAG_ENVIRONMENT=env('SENTRY_TAG_ENVIRONMENT', '')
-SENTRY_TAG_SITE=env('SENTRY_TAG_SITE', '')
+SENTRY_TAG_RELEASE = env('SENTRY_TAG_RELEASE', '')
+SENTRY_TAG_ENVIRONMENT = env('SENTRY_TAG_ENVIRONMENT', '')
+SENTRY_TAG_SITE = env('SENTRY_TAG_SITE', '')
 
 if SENTRY_DSN:
 
@@ -139,8 +139,8 @@ DATABASES = {
         'HOST': 'db',
         'PORT': 5432,
         'NAME': env('POSTGRES_DB', 'insitu'),
-        'USER': env('POSTGRES_USER', 'insitu'),
-        'PASSWORD': env('POSTGRES_PASSWORD', 'insitu'),
+        'USER': env('POSTGRES_USER', 'demo'),
+        'PASSWORD': env('POSTGRES_PASSWORD', 'demo'),
     }
 }
 
@@ -188,8 +188,8 @@ STATIC_ROOT = os.path.join(BASE_DIR, '..', 'static/')
 
 ELASTICSEARCH_DSL = {
     'default': {
-        'hosts': env('ELASTICSEARCH_HOST'),
-        'http_auth': env('ELASTICSEARCH_AUTH'),
+        'hosts': env('ELASTICSEARCH_HOST', 'elasticsearch'),
+        'http_auth': env('ELASTICSEARCH_AUTH', 'user:password'),
         'timeout': env('ELASTICSEARCH_TIMEOUT', 120),
     },
 }
@@ -241,9 +241,10 @@ DOCS_PDF_ROOT = os.path.join(BASE_DIR, 'docs/_build/latex')
 
 DOCS_ACCESS = 'login_required'
 
-EMAIL_BACKEND = env('EMAIL_BACKEND',
-                    'django.core.mail.backends.smtp.EmailBackend')
-EMAIL_HOST = env('EMAIL_HOST', 'localhost')
+EMAIL_BACKEND = env(
+    'EMAIL_BACKEND', 'django.core.mail.backends.smtp.EmailBackend'
+)
+EMAIL_HOST = env('EMAIL_HOST', 'postfix')
 EMAIL_PORT = env('EMAIL_PORT', 25)
 DEFAULT_FROM_EMAIL = env('DEFAULT_FROM_EMAIL', '')
 

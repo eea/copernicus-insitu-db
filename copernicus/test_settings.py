@@ -1,5 +1,5 @@
 # Settings module for running tests
-# Use:  ./manage.py test --settings=copernicus.testsettings
+# Use:  ./manage.py test --settings=copernicus.test_settings
 
 from .settings import *
 
@@ -12,8 +12,8 @@ DATABASES = {
 
 ELASTICSEARCH_DSL = {
     'default': {
-        'hosts': env('ELASTICSEARCH_TEST_HOST'),
-        'http_auth': env('ELASTICSEARCH_TEST_AUTH'),
+        'hosts': env('ELASTICSEARCH_TEST_HOST', 'elasticsearch_test'),
+        'http_auth': env('ELASTICSEARCH_TEST_AUTH', 'user:password'),
     },
 }
 
