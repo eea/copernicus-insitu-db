@@ -3,6 +3,11 @@ Changelog
 
 * In case of major changes, an email should be sent to all users with the modifications.
 
+2.3.7 (2020-11-20)
+------------------
+* Fix display of Product - Requirement relations
+  [dianaboiangiu]
+
 2.3.6 (2020-11-20)
 ------------------
 * Add Component filter on requirements
