@@ -198,6 +198,7 @@ class ReportsStandardReportView(ProtectedTemplateView, ReportExcelMixin):
     def get_context_data(self, **kwargs):
         context = super(ReportsStandardReportView, self).get_context_data(**kwargs)
         context['services'] = CopernicusService.objects.all()
+        context['components'] = Component.objects.all()
         context['form'] = StandardReportForm()
         return context
 
