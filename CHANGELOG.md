@@ -3,6 +3,11 @@ Changelog
 
 * In case of major changes, an email should be sent to all users with the modifications.
 
+2.3.9 (2020-11-26)
+------------------
+* Transfer objects by file command
+  [dianaboiangiu]
+
 2.3.8 (2020-11-20)
 ------------------
 * Fix typo
