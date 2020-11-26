@@ -214,6 +214,7 @@ class ReportsStandardReportView(ProtectedTemplateView, ReportExcelMixin):
             content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
         )
         response['Content-Disposition'] = 'attachment; filename=%s' % filename
-        return response 
+        return response
+
     def post(self, request, *args, **kwargs):
         return self.generate_excel()

@@ -43,22 +43,22 @@
 {% endblock %}
 
 {% block scripts %}
-<script>
-  $(document).ready(function () {
-    var allOptions = $('#id_component option')
-    $('#id_service').change(function () {
-      $('#id_component option').remove()
-      var classes = [];
-      $('#id_service option:selected').each(function( index ) {
-        classes.push($(this).prop('class'));
-      });
-      var opts = allOptions.filter( function(index) {
-        return $.inArray($(this).prop('class'), classes) > -1;
-      });
-      $.each(opts, function (i, j) {
+  <script>
+    $(document).ready(function () {
+      var allOptions = $('#id_component option')
+      $('#id_service').change(function () {
+        $('#id_component option').remove();
+        var classes = [];
+        $('#id_service option:selected').each(function( index ) {
+          classes.push($(this).prop('class'));
+        });
+        var opts = allOptions.filter( function(index) {
+          return $.inArray($(this).prop('class'), classes) > -1;
+        });
+        $.each(opts, function (i, j) {
           $(j).appendTo('#id_component');
+        });
       });
     });
-  });
-</script>
+  </script>
 {% endblock %}
