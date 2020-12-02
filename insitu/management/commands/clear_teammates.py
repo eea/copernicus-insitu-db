@@ -4,7 +4,7 @@ from insitu.models import User, Team
 
 
 class Command(BaseCommand):
-    help = 'Remove all relations between users.'
+    help = "Remove all relations between users."
 
     def handle(self, *args, **options):
         users = User.objects.all()

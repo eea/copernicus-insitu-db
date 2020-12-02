@@ -8,18 +8,18 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('picklists', '0005_rename_responsible_to_provider'),
+        ("picklists", "0005_rename_responsible_to_provider"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='essentialvariable',
-            name='component',
+            model_name="essentialvariable",
+            name="component",
             field=models.CharField(max_length=100),
         ),
         migrations.AlterField(
-            model_name='essentialvariable',
-            name='domain',
+            model_name="essentialvariable",
+            name="domain",
             field=models.CharField(max_length=100),
         ),
     ]

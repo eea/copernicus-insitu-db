@@ -9,48 +9,104 @@ import django_xworkflows.models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('insitu', '0010_rename_responsible_to_provider'),
+        ("insitu", "0010_rename_responsible_to_provider"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='data',
-            name='state',
-            field=django_xworkflows.models.StateField(max_length=16, workflow=django_xworkflows.models._SerializedWorkflow(initial_state='draft', name='ValidationWorkflow', states=['draft', 'ready', 'valid', 'changes'])),
+            model_name="data",
+            name="state",
+            field=django_xworkflows.models.StateField(
+                max_length=16,
+                workflow=django_xworkflows.models._SerializedWorkflow(
+                    initial_state="draft",
+                    name="ValidationWorkflow",
+                    states=["draft", "ready", "valid", "changes"],
+                ),
+            ),
         ),
         migrations.AddField(
-            model_name='dataprovider',
-            name='state',
-            field=django_xworkflows.models.StateField(max_length=16, workflow=django_xworkflows.models._SerializedWorkflow(initial_state='draft', name='ValidationWorkflow', states=['draft', 'ready', 'valid', 'changes'])),
+            model_name="dataprovider",
+            name="state",
+            field=django_xworkflows.models.StateField(
+                max_length=16,
+                workflow=django_xworkflows.models._SerializedWorkflow(
+                    initial_state="draft",
+                    name="ValidationWorkflow",
+                    states=["draft", "ready", "valid", "changes"],
+                ),
+            ),
         ),
         migrations.AddField(
-            model_name='dataproviderdetails',
-            name='state',
-            field=django_xworkflows.models.StateField(max_length=16, workflow=django_xworkflows.models._SerializedWorkflow(initial_state='draft', name='ValidationWorkflow', states=['draft', 'ready', 'valid', 'changes'])),
+            model_name="dataproviderdetails",
+            name="state",
+            field=django_xworkflows.models.StateField(
+                max_length=16,
+                workflow=django_xworkflows.models._SerializedWorkflow(
+                    initial_state="draft",
+                    name="ValidationWorkflow",
+                    states=["draft", "ready", "valid", "changes"],
+                ),
+            ),
         ),
         migrations.AddField(
-            model_name='dataproviderrelation',
-            name='state',
-            field=django_xworkflows.models.StateField(max_length=16, workflow=django_xworkflows.models._SerializedWorkflow(initial_state='draft', name='ValidationWorkflow', states=['draft', 'ready', 'valid', 'changes'])),
+            model_name="dataproviderrelation",
+            name="state",
+            field=django_xworkflows.models.StateField(
+                max_length=16,
+                workflow=django_xworkflows.models._SerializedWorkflow(
+                    initial_state="draft",
+                    name="ValidationWorkflow",
+                    states=["draft", "ready", "valid", "changes"],
+                ),
+            ),
         ),
         migrations.AddField(
-            model_name='datarequirement',
-            name='state',
-            field=django_xworkflows.models.StateField(max_length=16, workflow=django_xworkflows.models._SerializedWorkflow(initial_state='draft', name='ValidationWorkflow', states=['draft', 'ready', 'valid', 'changes'])),
+            model_name="datarequirement",
+            name="state",
+            field=django_xworkflows.models.StateField(
+                max_length=16,
+                workflow=django_xworkflows.models._SerializedWorkflow(
+                    initial_state="draft",
+                    name="ValidationWorkflow",
+                    states=["draft", "ready", "valid", "changes"],
+                ),
+            ),
         ),
         migrations.AddField(
-            model_name='metric',
-            name='state',
-            field=django_xworkflows.models.StateField(max_length=16, workflow=django_xworkflows.models._SerializedWorkflow(initial_state='draft', name='ValidationWorkflow', states=['draft', 'ready', 'valid', 'changes'])),
+            model_name="metric",
+            name="state",
+            field=django_xworkflows.models.StateField(
+                max_length=16,
+                workflow=django_xworkflows.models._SerializedWorkflow(
+                    initial_state="draft",
+                    name="ValidationWorkflow",
+                    states=["draft", "ready", "valid", "changes"],
+                ),
+            ),
         ),
         migrations.AddField(
-            model_name='productrequirement',
-            name='state',
-            field=django_xworkflows.models.StateField(max_length=16, workflow=django_xworkflows.models._SerializedWorkflow(initial_state='draft', name='ValidationWorkflow', states=['draft', 'ready', 'valid', 'changes'])),
+            model_name="productrequirement",
+            name="state",
+            field=django_xworkflows.models.StateField(
+                max_length=16,
+                workflow=django_xworkflows.models._SerializedWorkflow(
+                    initial_state="draft",
+                    name="ValidationWorkflow",
+                    states=["draft", "ready", "valid", "changes"],
+                ),
+            ),
         ),
         migrations.AddField(
-            model_name='requirement',
-            name='state',
-            field=django_xworkflows.models.StateField(max_length=16, workflow=django_xworkflows.models._SerializedWorkflow(initial_state='draft', name='ValidationWorkflow', states=['draft', 'ready', 'valid', 'changes'])),
+            model_name="requirement",
+            name="state",
+            field=django_xworkflows.models.StateField(
+                max_length=16,
+                workflow=django_xworkflows.models._SerializedWorkflow(
+                    initial_state="draft",
+                    name="ValidationWorkflow",
+                    states=["draft", "ready", "valid", "changes"],
+                ),
+            ),
         ),
     ]

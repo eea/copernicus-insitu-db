@@ -9,42 +9,46 @@ from insitu import models
 
 @admin.register(models.CopernicusService)
 class CopernicusServiceAdmin(admin.ModelAdmin):
-    search_fields = ['name', 'acronym']
-    list_display = ('acronym', 'name', 'website')
+    search_fields = ["name", "acronym"]
+    list_display = ("acronym", "name", "website")
 
 
 @admin.register(models.EntrustedEntity)
 class EntrustedEntityAdmin(admin.ModelAdmin):
-    search_fields = ['acronym', 'name']
-    list_display = ('acronym', 'name', 'website')
+    search_fields = ["acronym", "name"]
+    list_display = ("acronym", "name", "website")
 
 
 @admin.register(models.Component)
 class ComponentAdmin(admin.ModelAdmin):
-    search_fields = ['acronym', 'name']
-    list_display = ('acronym', 'name', 'service', 'entrusted_entity')
-    list_filter = ('service', 'entrusted_entity')
+    search_fields = ["acronym", "name"]
+    list_display = ("acronym", "name", "service", "entrusted_entity")
+    list_filter = ("service", "entrusted_entity")
 
 
 @admin.register(models.Requirement)
 class RequirementAdmin(admin.ModelAdmin):
-    readonly_fields = ('components',)
+    readonly_fields = ("components",)
 
     def components(self, obj):
         links = [
             '<a href="{}">{}</a>'.format(
                 reverse("admin:insitu_component_change", args=(component.pk,)),
-                component.name
-            ) for component in obj.components
+                component.name,
+            )
+            for component in obj.components
         ]
-        return mark_safe(', '.join(links))
+        return mark_safe(", ".join(links))
 
-    components.short_description = 'components'
+    components.short_description = "components"
 
 
 class BaseDisplayDeleteAdminMixin:
-    list_display = ('__str__', '_deleted',)
-    list_filter = ('_deleted',)
+    list_display = (
+        "__str__",
+        "_deleted",
+    )
+    list_filter = ("_deleted",)
     filter_model = None
 
     def get_queryset(self, request):

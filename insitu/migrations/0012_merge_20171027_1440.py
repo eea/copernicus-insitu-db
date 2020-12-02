@@ -8,9 +8,8 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('insitu', '0011_add_created_by'),
-        ('insitu', '0011_add_state_fields'),
+        ("insitu", "0011_add_created_by"),
+        ("insitu", "0011_add_state_fields"),
     ]
 
-    operations = [
-    ]
+    operations = []

@@ -9,15 +9,19 @@ import django.db.models.deletion
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('picklists', '0002_requirementgroup'),
-        ('insitu', '0002_rename_data_group'),
+        ("picklists", "0002_requirementgroup"),
+        ("insitu", "0002_rename_data_group"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='requirement',
-            name='group',
-            field=models.ForeignKey(default=1, on_delete=django.db.models.deletion.CASCADE, to='picklists.RequirementGroup'),
+            model_name="requirement",
+            name="group",
+            field=models.ForeignKey(
+                default=1,
+                on_delete=django.db.models.deletion.CASCADE,
+                to="picklists.RequirementGroup",
+            ),
             preserve_default=False,
         ),
     ]

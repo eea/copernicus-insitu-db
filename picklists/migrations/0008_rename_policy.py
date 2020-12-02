@@ -8,16 +8,19 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('picklists', '0007_increse_product_status_link_size'),
+        ("picklists", "0007_increse_product_status_link_size"),
     ]
 
     operations = [
         migrations.RenameModel(
-            old_name='Policy',
-            new_name='DataPolicy',
+            old_name="Policy",
+            new_name="DataPolicy",
         ),
         migrations.AlterModelOptions(
-            name='datapolicy',
-            options={'ordering': ['sort_order'], 'verbose_name_plural': 'Data policies'},
+            name="datapolicy",
+            options={
+                "ordering": ["sort_order"],
+                "verbose_name_plural": "Data policies",
+            },
         ),
     ]

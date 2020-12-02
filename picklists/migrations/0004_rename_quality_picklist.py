@@ -8,19 +8,20 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('picklists', '0003_responsibletype'),
-        ('insitu', '0008_set_optional_fields'),
+        ("picklists", "0003_responsibletype"),
+        ("insitu", "0008_set_optional_fields"),
     ]
 
     operations = [
         migrations.RenameModel(
-            old_name='Quality',
-            new_name='QualityControlProcedure',
+            old_name="Quality",
+            new_name="QualityControlProcedure",
         ),
         migrations.AlterModelOptions(
-            name='qualitycontrolprocedure',
-            options={'ordering': ['sort_order'],
-                     'verbose_name_plural': 'quality_control_procedure'
+            name="qualitycontrolprocedure",
+            options={
+                "ordering": ["sort_order"],
+                "verbose_name_plural": "quality_control_procedure",
             },
         ),
     ]

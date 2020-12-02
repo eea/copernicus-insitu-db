@@ -1,49 +1,41 @@
 import csv
 import json
-import sys
 from datetime import datetime
+
+from django.conf import settings
+
 from insitu.models import UserLog
 
 
 class BaseLoggingView:
 
-    target_type = ''
-    extra = ''
+    target_type = ""
+    extra = ""
 
     def get_object_id(self):
-        return ''
+        return ""
 
-    def log_action(self, request, action, id=''):
-        if 'test' in sys.argv:
-            from copernicus.test_settings import LOGGING_CSV_FILENAME, LOGGING_CSV_PATH
-        else:
-            from copernicus.settings import LOGGING_CSV_FILENAME, LOGGING_CSV_PATH
-        with open(LOGGING_CSV_PATH, 'a+') as csvfile:
-            spamwriter = csv.writer(csvfile, delimiter=',')
-            row = ",".join([
-                datetime.now().strftime('%d %B %Y %H:%M'),
-                request.user.username,
-                action,
-                self.target_type,
-                str(id),
-                self.extra
-            ]).strip(",")
-            spamwriter.writerow(row.split(','))
+    def log_action(self, request, action, id=""):
+        with open(settings.LOGGING_CSV_PATH, "a+") as csvfile:
+            spamwriter = csv.writer(csvfile, delimiter=",")
+            row = ",".join(
+                [
+                    datetime.now().strftime("%d %B %Y %H:%M"),
+                    request.user.username,
+                    action,
+                    self.target_type,
+                    str(id),
+                    self.extra,
+                ]
+            ).strip(",")
+            spamwriter.writerow(row.split(","))
 
         BaseLoggingView.add_user_log(request.user, action, id, self.target_type)
 
     @staticmethod
     def add_user_log(user, action, id, target_type):
-        text = " ".join([
-                action,
-                target_type,
-                str(id)
-            ]).strip(" ")
-        log = {
-            'text': text,
-            'date': datetime.now(),
-            'user': user
-        }
+        text = " ".join([action, target_type, str(id)]).strip(" ")
+        log = {"text": text, "date": datetime.now(), "user": user}
         UserLog.objects.create(**log)
 
 
@@ -80,7 +72,7 @@ class PutMethodLoggingView(BaseLoggingView):
             self.instance = self.get_object()
             form.instance = self.instance
             errors = form.errors
-        except:
+        except Exception:
             errors = form.errors
         response = super().post(request, *args, **kwargs)
         action = self.post_action
@@ -104,43 +96,43 @@ class DeleteMethodLoggingView(BaseLoggingView):
 
 
 class CreateLoggingView(PostMethodLoggingView):
-    post_action = 'created'
-    post_action_failed = 'tried to create'
+    post_action = "created"
+    post_action_failed = "tried to create"
 
     def get_object_id(self):
-        if hasattr(self, 'object') and self.object:
+        if hasattr(self, "object") and self.object:
             return self.object.id
-        return ''
+        return ""
 
 
 class UpdateLoggingView(PutMethodLoggingView):
-    post_action = 'updated'
-    post_action_failed = 'tried to update'
+    post_action = "updated"
+    post_action_failed = "tried to update"
 
     def get_object_id(self):
         return self.get_object().id
 
 
 class DeleteLoggingView(DeleteMethodLoggingView):
-    post_action = 'deleted'
+    post_action = "deleted"
 
     def get_object_id(self):
         return self.get_object().id
 
 
 class ListLoggingView(GetMethodLoggingView):
-    get_action = 'visited list page of'
+    get_action = "visited list page of"
 
 
 class DetailLoggingView(GetMethodLoggingView):
-    get_action = 'visited detail page of'
+    get_action = "visited detail page of"
 
     def get_object_id(self):
         return self.get_object().id
 
 
 class TrasitionLoggingView(PostMethodLoggingView):
-    get_action = 'visited transition page of '
+    get_action = "visited transition page of "
 
     def get_object_id(self):
         return self.get_object().id

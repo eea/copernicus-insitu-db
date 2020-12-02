@@ -17,18 +17,19 @@ from django.conf.urls import url, include
 from django.contrib import admin
 from .settings import DEBUG_TOOLBAR
 
-handler500 = 'insitu.views.errors.handler500'
+handler500 = "insitu.views.errors.handler500"
 
 urlpatterns = [
-    url(r'^admin/', admin.site.urls),
-    url(r'^hijack/', include('hijack.urls')),
-    url(r'^', include('insitu.urls')),
-    url(r'^picklists/', include('picklists.urls', namespace='pick')),
-    url(r'^explorer/', include('explorer.urls')),
+    url(r"^admin/", admin.site.urls),
+    url(r"^hijack/", include("hijack.urls")),
+    url(r"^", include("insitu.urls")),
+    url(r"^picklists/", include("picklists.urls", namespace="pick")),
+    url(r"^explorer/", include("explorer.urls")),
 ]
 
 if DEBUG_TOOLBAR:
     import debug_toolbar
+
     urlpatterns = [
-        url(r'^__debug__/', include(debug_toolbar.urls)),
+        url(r"^__debug__/", include(debug_toolbar.urls)),
     ] + urlpatterns

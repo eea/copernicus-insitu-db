@@ -27,5 +27,11 @@ jobs:
       - name: Spin up docker containers
         run: docker-compose up -d
 
+      - name: Run flake8
+        run: docker exec insitu.app flake8
+
+      - name: Run black
+        run: docker exec insitu.app black . --check
+
       - name: Test Django app
         run: docker exec insitu.app python manage.py test --settings=copernicus.test_settings

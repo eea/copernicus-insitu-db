@@ -9,14 +9,18 @@ import django.db.models.deletion
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('insitu', '0005_link_dissemination_data'),
-        ('picklists', '0003_responsibletype'),
+        ("insitu", "0005_link_dissemination_data"),
+        ("picklists", "0003_responsibletype"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='dataresponsibledetails',
-            name='responsible_type',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='+', to='picklists.ResponsibleType'),
+            model_name="dataresponsibledetails",
+            name="responsible_type",
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name="+",
+                to="picklists.ResponsibleType",
+            ),
         ),
     ]

@@ -10,14 +10,15 @@ class Migration(migrations.Migration):
 
     dependencies = [
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
-        ('insitu', '0020_merge_20180316_1017'),
+        ("insitu", "0020_merge_20180316_1017"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='team',
-            name='requests',
-            field=models.ManyToManyField(related_name='requests',
-                                         to=settings.AUTH_USER_MODEL),
+            model_name="team",
+            name="requests",
+            field=models.ManyToManyField(
+                related_name="requests", to=settings.AUTH_USER_MODEL
+            ),
         ),
     ]

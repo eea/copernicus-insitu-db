@@ -8,9 +8,8 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('insitu', '0019_add_team_to_user'),
-        ('insitu', '0019_update_data_provider_name'),
+        ("insitu", "0019_add_team_to_user"),
+        ("insitu", "0019_update_data_provider_name"),
     ]
 
-    operations = [
-    ]
+    operations = []

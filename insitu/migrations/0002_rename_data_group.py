@@ -8,22 +8,22 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('insitu', '0001_initial'),
+        ("insitu", "0001_initial"),
     ]
 
     operations = [
         migrations.RenameModel(
-            old_name='DataGroup',
-            new_name='Data',
+            old_name="DataGroup",
+            new_name="Data",
         ),
         migrations.RenameField(
-            model_name='datarequirement',
-            old_name='data_group',
-            new_name='data',
+            model_name="datarequirement",
+            old_name="data_group",
+            new_name="data",
         ),
         migrations.RenameField(
-            model_name='dataresponsiblerelation',
-            old_name='data_group',
-            new_name='data',
+            model_name="dataresponsiblerelation",
+            old_name="data_group",
+            new_name="data",
         ),
     ]

@@ -11,33 +11,46 @@ class Migration(migrations.Migration):
 
     dependencies = [
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
-        ('insitu', '0018_remove_mandatory_data'),
+        ("insitu", "0018_remove_mandatory_data"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='Team',
+            name="Team",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True,
-                                        serialize=False, verbose_name='ID')),
-                ('teammates', models.ManyToManyField(
-                    related_name='teams',
-                    to=settings.AUTH_USER_MODEL)),
-                ('user', models.OneToOneField(
-                    on_delete=django.db.models.deletion.CASCADE,
-                    related_name='team', to=settings.AUTH_USER_MODEL)),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "teammates",
+                    models.ManyToManyField(
+                        related_name="teams", to=settings.AUTH_USER_MODEL
+                    ),
+                ),
+                (
+                    "user",
+                    models.OneToOneField(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="team",
+                        to=settings.AUTH_USER_MODEL,
+                    ),
+                ),
             ],
         ),
         migrations.AlterField(
-            model_name='data',
-            name='essential_variables',
-            field=models.ManyToManyField(blank=True,
-                                         to='picklists.EssentialVariable'),
+            model_name="data",
+            name="essential_variables",
+            field=models.ManyToManyField(blank=True, to="picklists.EssentialVariable"),
         ),
         migrations.AlterField(
-            model_name='data',
-            name='inspire_themes',
-            field=models.ManyToManyField(blank=True,
-                                         to='picklists.InspireTheme'),
+            model_name="data",
+            name="inspire_themes",
+            field=models.ManyToManyField(blank=True, to="picklists.InspireTheme"),
         ),
     ]

@@ -20,7 +20,7 @@ from insitu.views.protected import (
     LoggingProtectedUpdateView,
     LoggingProtectedCreateView,
     LoggingProtectedDeleteView,
-    LoggingTransitionProtectedDetailView
+    LoggingTransitionProtectedDetailView,
 )
 from insitu.views.protected.permissions import (
     IsAuthenticated,
@@ -32,12 +32,11 @@ from picklists import models as pickmodels
 
 
 class GetInitialMixin:
-
     def get_requirement(self):
         try:
             return self.get_object()
         except AttributeError:
-            pk = self.request.GET.get('pk', None)
+            pk = self.request.GET.get("pk", None)
             try:
                 return models.Requirement.objects.get(pk=pk)
             except ObjectDoesNotExist:
@@ -49,12 +48,24 @@ class GetInitialMixin:
             return super().get_initial()
 
         initial_data = super().get_initial()
-        for field in ['name', 'note', 'dissemination', 'owner',
-                      'quality_control_procedure', 'group']:
+        for field in [
+            "name",
+            "note",
+            "dissemination",
+            "owner",
+            "quality_control_procedure",
+            "group",
+        ]:
             initial_data[field] = getattr(requirement, field)
-        for field in ['uncertainty', 'update_frequency', 'timeliness',
-                      'scale', 'horizontal_resolution', 'vertical_resolution']:
-            for attr in ['threshold', 'breakthrough', 'goal']:
+        for field in [
+            "uncertainty",
+            "update_frequency",
+            "timeliness",
+            "scale",
+            "horizontal_resolution",
+            "vertical_resolution",
+        ]:
+            for attr in ["threshold", "breakthrough", "goal"]:
                 initial_data["__".join([field, attr])] = getattr(
                     getattr(requirement, field), attr
                 )
@@ -62,187 +73,201 @@ class GetInitialMixin:
 
 
 class RequirementDetail(ProtectedDetailView):
-    template_name = 'requirement/detail.html'
+    template_name = "requirement/detail.html"
     model = models.Requirement
-    context_object_name = 'requirement'
+    context_object_name = "requirement"
     permission_classes = (IsAuthenticated,)
-    target_type = 'requirement'
+    target_type = "requirement"
 
     def permission_denied(self, request):
-        self.permission_denied_redirect = reverse('auth:login')
+        self.permission_denied_redirect = reverse("auth:login")
         return super().permission_denied(request)
 
 
 class RequirementList(ProtectedTemplateView):
-    template_name = 'requirement/list.html'
-    permission_classes = (IsAuthenticated, )
-    target_type = 'requirements'
+    template_name = "requirement/list.html"
+    permission_classes = (IsAuthenticated,)
+    target_type = "requirements"
 
     def permission_denied(self, request):
-        self.permission_denied_redirect = reverse('auth:login')
+        self.permission_denied_redirect = reverse("auth:login")
         return super().permission_denied(request)
 
     def get_context_data(self):
         context = super(RequirementList, self).get_context_data()
-        disseminations = get_choices('name', model_cls=pickmodels.Dissemination)
-        products = get_choices('name', model_cls=models.Product)
+        disseminations = get_choices("name", model_cls=pickmodels.Dissemination)
+        products = get_choices("name", model_cls=models.Product)
         quality_control_procedures = get_choices(
-            'name', model_cls=pickmodels.QualityControlProcedure
+            "name", model_cls=pickmodels.QualityControlProcedure
         )
-        groups = get_choices('name', model_cls=pickmodels.RequirementGroup)
-        states = [{'title': 'All', 'name': 'All'}] + [
-            state for state in models.ValidationWorkflow.states]
-        components = get_choices('name', model_cls=models.Component)
-        context.update({
-            'disseminations': disseminations,
-            'products': products,
-            'quality_control_procedures': quality_control_procedures,
-            'groups': groups,
-            'states': states,
-            'components': components,
-        })
+        groups = get_choices("name", model_cls=pickmodels.RequirementGroup)
+        states = [{"title": "All", "name": "All"}] + [
+            state for state in models.ValidationWorkflow.states
+        ]
+        components = get_choices("name", model_cls=models.Component)
+        context.update(
+            {
+                "disseminations": disseminations,
+                "products": products,
+                "quality_control_procedures": quality_control_procedures,
+                "groups": groups,
+                "states": states,
+                "components": components,
+            }
+        )
         return context
 
 
 class RequirementListJson(ESDatatableView):
     columns = [
-        'name', 'dissemination', 'quality_control_procedure', 'group',
-        'uncertainty', 'update_frequency', 'timeliness', 'scale',
-        'horizontal_resolution', 'vertical_resolution', 'state',
+        "name",
+        "dissemination",
+        "quality_control_procedure",
+        "group",
+        "uncertainty",
+        "update_frequency",
+        "timeliness",
+        "scale",
+        "horizontal_resolution",
+        "vertical_resolution",
+        "state",
     ]
     order_columns = columns
     filter_translation = {
-        'product': 'products.product',
-        'component': 'components.component',
+        "product": "products.product",
+        "component": "components.component",
     }
     #  Translates a querystring parameter to an ES Document field with a
     #  different name.
     filters = [
-        'dissemination', 'quality_control_procedure', 'group', 'product',
-        'state', 'component'
+        "dissemination",
+        "quality_control_procedure",
+        "group",
+        "product",
+        "state",
+        "component",
     ]  # These are the querystring parameters we expect.
     filter_fields = [
-        'dissemination__name', 'quality_control_procedure__name',
-        'group__name', 'products__name', 'state', 'products__component__name'
+        "dissemination__name",
+        "quality_control_procedure__name",
+        "group__name",
+        "products__name",
+        "state",
+        "products__component__name",
     ]  # These are the corresponding model fields, in the same order.
     document = documents.RequirementDoc
-    permission_classes = (IsAuthenticated, )
+    permission_classes = (IsAuthenticated,)
 
 
-class RequirementAdd(GetInitialMixin, CreatedByMixin,
-                     LoggingProtectedCreateView):
-    template_name = 'requirement/add.html'
+class RequirementAdd(GetInitialMixin, CreatedByMixin, LoggingProtectedCreateView):
+    template_name = "requirement/add.html"
     model = models.Requirement
     permission_classes = (IsAuthenticated, IsNotReadOnlyUser)
-    target_type = 'requirement'
+    target_type = "requirement"
 
     def form_valid(self, form):
         response = super().form_valid(form)
-        messages.success(self.request,
-                         'The requirement was created successfully!')
+        messages.success(self.request, "The requirement was created successfully!")
         return response
 
     def get_form_class(self):
         requirement = self.get_requirement()
         if requirement:
-            self.post_action = 'cloned requirement {pk} to'.format(
-                pk=requirement.pk)
-            self.post_action_failed = 'tried to clone object {pk} of'.format(
+            self.post_action = "cloned requirement {pk} to".format(pk=requirement.pk)
+            self.post_action_failed = "tried to clone object {pk} of".format(
                 pk=requirement.pk
             )
             return forms.RequirementCloneForm
         return forms.RequirementForm
 
     def permission_denied(self, request):
-        self.permission_denied_redirect = reverse('requirement:list')
+        self.permission_denied_redirect = reverse("requirement:list")
         return super().permission_denied(request)
 
     def get_success_url(self):
         instance = self.object
-        return reverse('requirement:detail', kwargs={'pk': instance.pk})
+        return reverse("requirement:detail", kwargs={"pk": instance.pk})
 
 
 class RequirementEdit(GetInitialMixin, LoggingProtectedUpdateView):
-    template_name = 'requirement/edit.html'
+    template_name = "requirement/edit.html"
     form_class = forms.RequirementForm
     model = models.Requirement
-    context_object_name = 'requirement'
+    context_object_name = "requirement"
     permission_classes = (IsOwnerUser, IsDraftObject, IsNotReadOnlyUser)
-    target_type = 'requirement'
+    target_type = "requirement"
 
     def form_valid(self, form):
         response = super().form_valid(form)
-        messages.success(self.request,
-                         'The requirement was updated successfully!')
+        messages.success(self.request, "The requirement was updated successfully!")
         return response
 
     def permission_denied(self, request):
-        self.permission_denied_redirect = reverse('requirement:list')
+        self.permission_denied_redirect = reverse("requirement:list")
         return super().permission_denied(request)
 
     def get_success_url(self):
         instance = self.get_object()
-        return reverse('requirement:detail',
-                       kwargs={'pk': instance.pk})
+        return reverse("requirement:detail", kwargs={"pk": instance.pk})
 
 
 class RequirementDelete(LoggingProtectedDeleteView):
 
-    template_name = 'requirement/delete.html'
+    template_name = "requirement/delete.html"
     form_class = forms.RequirementForm
     model = models.Requirement
-    context_object_name = 'requirement'
+    context_object_name = "requirement"
     permission_classes = (IsOwnerUser, IsDraftObject, IsNotReadOnlyUser)
-    target_type = 'requirement'
+    target_type = "requirement"
 
     def permission_denied(self, request):
-        self.permission_denied_redirect = reverse('requirement:list')
+        self.permission_denied_redirect = reverse("requirement:list")
         return super().permission_denied(request)
 
     def get_success_url(self):
-        messages.success(self.request, 'The requirement was deleted successfully!')
-        return reverse('requirement:list')
+        messages.success(self.request, "The requirement was deleted successfully!")
+        return reverse("requirement:list")
 
 
-class RequirementTransition(ChangesRequestedMailMixin, LoggingTransitionProtectedDetailView):
+class RequirementTransition(
+    ChangesRequestedMailMixin, LoggingTransitionProtectedDetailView
+):
     model = models.Requirement
-    template_name = 'requirement/transition.html'
+    template_name = "requirement/transition.html"
     permission_classes = (IsAuthenticated, IsNotReadOnlyUser)
-    context_object_name = 'requirement'
-    target_type = 'requirement'
+    context_object_name = "requirement"
+    target_type = "requirement"
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        source = self.kwargs.get('source')
-        target = self.kwargs.get('target')
+        source = self.kwargs.get("source")
+        target = self.kwargs.get("target")
         transition = models.ValidationWorkflow.get_transition(source, target)
         if not transition:
             raise Http404()
         objects = [
-            {
-                'obj': item,
-                'type': item.__class__.__name__
-            }
+            {"obj": item, "type": item.__class__.__name__}
             for item in self.object.get_related_objects()
         ]
-        context.update({
-            'target': target,
-            'source': source,
-            'objects': objects,
-        })
+        context.update(
+            {
+                "target": target,
+                "source": source,
+                "objects": objects,
+            }
+        )
         return context
 
     def get_success_url(self, **kwargs):
-        requirement =  self.get_object(self.get_queryset())
-        return reverse('requirement:detail', kwargs={'pk': requirement.pk})
+        requirement = self.get_object(self.get_queryset())
+        return reverse("requirement:detail", kwargs={"pk": requirement.pk})
 
     def post(self, request, *args, **kwargs):
         requirement = self.get_object(self.get_queryset())
-        source = self.kwargs.get('source')
-        target = self.kwargs.get('target')
-        self.post_action = 'changed state from {source} to {target} for'.format(
-            source=source,
-            target=target
+        source = self.kwargs.get("source")
+        target = self.kwargs.get("target")
+        self.post_action = "changed state from {source} to {target} for".format(
+            source=source, target=target
         )
         id = self.get_object_id()
         self.log_action(request, self.post_action, id)
@@ -252,16 +277,17 @@ class RequirementTransition(ChangesRequestedMailMixin, LoggingTransitionProtecte
             requirement.requesting_user = self.request.user
             if transition.is_available():
                 transition()
-                feedback = ''
-                if transition_name == 'request_changes':
-                    requirement.feedback = ''
-                    requirement.feedback = request.POST.get('feedback', '')
+                feedback = ""
+                if transition_name == "request_changes":
+                    requirement.feedback = ""
+                    requirement.feedback = request.POST.get("feedback", "")
                     requirement.save()
-                    feedback = request.POST.get('feedback', '')
+                    feedback = request.POST.get("feedback", "")
                 if self.transition_name == transition_name:
                     self.send_mail(requirement, feedback)
-                return HttpResponseRedirect(reverse('requirement:detail',
-                                                    kwargs={'pk': requirement.pk}))
+                return HttpResponseRedirect(
+                    reverse("requirement:detail", kwargs={"pk": requirement.pk})
+                )
         except ForbiddenTransition:
             pass
         raise Http404()

@@ -9,11 +9,10 @@ from insitu.tests import base
 
 
 class ProductTests(base.FormCheckTestCase):
-    fields = ['acronym', 'name', 'note', 'description']
-    related_fields = ['group', 'component', 'status', 'area']
-    required_fields = ['name', 'group', 'component',
-                       'status', 'area']
-    target_type = 'product'
+    fields = ["acronym", "name", "note", "description"]
+    related_fields = ["group", "component", "status", "area"]
+    required_fields = ["name", "group", "component", "status", "area"]
+    target_type = "product"
 
     def setUp(self):
         super().setUp()
@@ -21,83 +20,81 @@ class ProductTests(base.FormCheckTestCase):
         component = base.ComponentFactory()
         status = base.StatusFactory()
         area = base.AreaFactory()
-        self.user = provider_user = base.UserFactory(is_superuser=True,
-                                                     username='New user 1')
+        self.user = provider_user = base.UserFactory(
+            is_superuser=True, username="New user 1"
+        )
         self.client.force_login(provider_user)
         self._DATA = {
-            'acronym': 'TST',
-            'name': 'TEST product',
-            'note': 'TEST note',
-            'description': 'TEST description',
-            'group': group.pk,
-            'component': component.pk,
-            'status': status.pk,
-            'area': area.pk
+            "acronym": "TST",
+            "name": "TEST product",
+            "note": "TEST note",
+            "description": "TEST description",
+            "group": group.pk,
+            "component": component.pk,
+            "status": status.pk,
+            "area": area.pk,
         }
 
-        with open(os.devnull, 'w') as f:
-            call_command('search_index', '--rebuild', '-f', stdout=f)
+        with open(os.devnull, "w") as f:
+            call_command("search_index", "--rebuild", "-f", stdout=f)
 
     def test_create_product_fields_required(self):
         data = {}
-        resp = self.client.post(reverse('product:add'), data, follow=True)
+        resp = self.client.post(reverse("product:add"), data, follow=True)
         self.check_required_errors(resp, self.errors)
 
     def test_get_create_product(self):
-        resp = self.client.get(reverse('product:add'))
+        resp = self.client.get(reverse("product:add"))
         self.assertEqual(resp.status_code, 200)
 
     def test_create_product(self):
         data = self._DATA
-        resp = self.client.post(reverse('product:add'), data)
+        resp = self.client.post(reverse("product:add"), data)
         self.assertEqual(resp.status_code, 302)
 
         self.check_single_object(models.Product, data)
 
     def test_list_product_json(self):
         base.ProductFactory()
-        resp = self.client.get(reverse('product:json'))
+        resp = self.client.get(reverse("product:json"))
         self.assertEqual(resp.status_code, 200)
 
         data = resp.json()
-        self.assertIsNot(data['recordsTotal'], 0)
-        self.assertEqual(data['recordsTotal'], data['recordsFiltered'])
+        self.assertIsNot(data["recordsTotal"], 0)
+        self.assertEqual(data["recordsTotal"], data["recordsFiltered"])
 
     def test_list_product_json_filter(self):
         base.ProductFactory(name="Test product")
         base.ProductFactory(name="Other product")
-        resp = self.client.get(reverse('product:json'),
-                               {'search[value]': 'Other'})
+        resp = self.client.get(reverse("product:json"), {"search[value]": "Other"})
         self.assertEqual(resp.status_code, 200)
 
         data = resp.json()
-        self.assertIsNot(data['recordsTotal'], 0)
-        self.assertFalse(data['recordsTotal'] < 2)
-        self.assertIs(data['recordsFiltered'], 1)
+        self.assertIsNot(data["recordsTotal"], 0)
+        self.assertFalse(data["recordsTotal"] < 2)
+        self.assertIs(data["recordsFiltered"], 1)
 
     def test_list_products(self):
         base.ProductFactory()
-        resp = self.client.get(reverse('product:list'))
-        self.assertTemplateUsed(resp, 'product/list.html')
+        resp = self.client.get(reverse("product:list"))
+        self.assertTemplateUsed(resp, "product/list.html")
 
     def test_detail_product(self):
         product = base.ProductFactory()
-        resp = self.client.get(reverse('product:detail',
-                                       kwargs={'pk': product.pk}))
-        self.assertEqual(resp.context['product'], product)
+        resp = self.client.get(reverse("product:detail", kwargs={"pk": product.pk}))
+        self.assertEqual(resp.context["product"], product)
 
     def test_get_edit_product(self):
         product = base.ProductFactory()
-        resp = self.client.get(reverse('product:edit',
-                                       kwargs={'pk': product.pk}))
+        resp = self.client.get(reverse("product:edit", kwargs={"pk": product.pk}))
         self.assertEqual(resp.status_code, 200)
 
     def test_edit_product(self):
         product = base.ProductFactory()
         data = self._DATA
         resp = self.client.post(
-            reverse('product:edit', kwargs={'pk': product.pk}),
-            data)
+            reverse("product:edit", kwargs={"pk": product.pk}), data
+        )
         self.assertEqual(resp.status_code, 302)
         self.check_single_object(models.Product, data)
 
@@ -116,77 +113,61 @@ class ProductTests(base.FormCheckTestCase):
         entity_2 = base.EntrustedEntityFactory(acronym="Entity 2")
 
         component_1 = base.ComponentFactory(
-            name='Component 1', service=service_1, entrusted_entity=entity_1)
+            name="Component 1", service=service_1, entrusted_entity=entity_1
+        )
         component_2 = base.ComponentFactory(
-            name='Component 2', service=service_1, entrusted_entity=entity_2)
+            name="Component 2", service=service_1, entrusted_entity=entity_2
+        )
         component_3 = base.ComponentFactory(
-            name='Component 3', service=service_2, entrusted_entity=entity_1)
+            name="Component 3", service=service_2, entrusted_entity=entity_1
+        )
 
-        group_1 = base.ProductGroupFactory(name='Group 1')
-        group_2 = base.ProductGroupFactory(name='Group 2')
-        status_1 = base.StatusFactory(name='Status 1')
-        status_2 = base.StatusFactory(name='Status 2')
-        area_1 = base.AreaFactory(name='Area 1')
-        area_2 = base.AreaFactory(name='Area 2')
+        group_1 = base.ProductGroupFactory(name="Group 1")
+        group_2 = base.ProductGroupFactory(name="Group 2")
+        status_1 = base.StatusFactory(name="Status 1")
+        status_2 = base.StatusFactory(name="Status 2")
+        area_1 = base.AreaFactory(name="Area 1")
+        area_2 = base.AreaFactory(name="Area 2")
 
         base.ProductFactory(
-            component=component_1, group=group_1, status=status_1,
-            area=area_1
+            component=component_1, group=group_1, status=status_1, area=area_1
         )
         base.ProductFactory(
-            component=component_2, group=group_1, status=status_1,
-            area=area_1
+            component=component_2, group=group_1, status=status_1, area=area_1
         )
         base.ProductFactory(
-            component=component_1, group=group_2, status=status_2,
-            area=area_1
+            component=component_1, group=group_2, status=status_2, area=area_1
         )
         base.ProductFactory(
-            component=component_3, group=group_1, status=status_1,
-            area=area_2
+            component=component_3, group=group_1, status=status_1, area=area_2
         )
 
         resp = self.client.get(
-            reverse('product:json'),
-            {'entity': entity_1.acronym, 'group': group_1.name}
+            reverse("product:json"), {"entity": entity_1.acronym, "group": group_1.name}
         )
         self.assertEqual(resp.status_code, 200)
 
         data = resp.json()
 
         filters = {
-            'component': {
-                'options': ['Component 1', 'Component 3'], 'selected': None
-            },
-            'area': {
-                'options': ['Area 1', 'Area 2'], 'selected': None
-            },
-            'entity': {
-                'options': ['Entity 1'], 'selected': 'Entity 1'
-            },
-            'group': {
-                'options': ['Group 1'], 'selected': 'Group 1'
-            },
-            'service': {
-                'options': ['Service 1', 'Service 2'], 'selected': None
-            },
-            'status': {
-                'options': ['Status 1'], 'selected': None
-            }
+            "component": {"options": ["Component 1", "Component 3"], "selected": None},
+            "area": {"options": ["Area 1", "Area 2"], "selected": None},
+            "entity": {"options": ["Entity 1"], "selected": "Entity 1"},
+            "group": {"options": ["Group 1"], "selected": "Group 1"},
+            "service": {"options": ["Service 1", "Service 2"], "selected": None},
+            "status": {"options": ["Status 1"], "selected": None},
         }
 
-        self.assertEqual(data['filters'], filters)
+        self.assertEqual(data["filters"], filters)
 
     def test_get_delete_product(self):
         product = base.ProductFactory()
-        resp = self.client.get(reverse('product:delete',
-                                       kwargs={'pk': product.pk}))
+        resp = self.client.get(reverse("product:delete", kwargs={"pk": product.pk}))
         self.assertEqual(resp.status_code, 200)
 
     def test_delete_product(self):
         product = base.ProductFactory()
-        resp = self.client.post(
-            reverse('product:delete', kwargs={'pk': product.pk}))
+        resp = self.client.post(reverse("product:delete", kwargs={"pk": product.pk}))
         self.assertEqual(resp.status_code, 302)
         self.check_single_object_deleted(models.Product)
         self.check_objects_are_soft_deleted(models.Product, ProductDoc)
@@ -194,69 +175,69 @@ class ProductTests(base.FormCheckTestCase):
     def test_delete_product_related_objects(self):
         product = base.ProductFactory()
         metrics = base.RequirementFactory.create_metrics(self.creator)
-        requirement = base.RequirementFactory(created_by=self.creator,
-                                              **metrics)
-        base.ProductRequirementFactory(product=product,
-                                       requirement=requirement,
-                                       created_by=self.creator)
-        self.client.post(
-            reverse('product:delete', kwargs={'pk': product.pk})
+        requirement = base.RequirementFactory(created_by=self.creator, **metrics)
+        base.ProductRequirementFactory(
+            product=product, requirement=requirement, created_by=self.creator
         )
+        self.client.post(reverse("product:delete", kwargs={"pk": product.pk}))
         self.check_objects_are_soft_deleted(models.ProductRequirement)
 
 
 class ProductPermissionTests(base.PermissionsCheckTestCase):
-
     def setUp(self):
-        self.redirect_product_url_non_auth = reverse('auth:login')
-        self.redirect_product_url_auth = reverse('product:list')
-        self.methods = ['GET', 'POST']
+        self.redirect_product_url_non_auth = reverse("auth:login")
+        self.redirect_product_url_auth = reverse("product:list")
+        self.methods = ["GET", "POST"]
 
     def test_list_product_json_non_auth(self):
-        self.check_permission_denied(method='GET',
-                                     url=reverse('product:json'))
+        self.check_permission_denied(method="GET", url=reverse("product:json"))
 
     def test_product_list_not_auth(self):
         self.check_user_redirect_all_methods(
-            redirect_url=self.redirect_product_url_non_auth,
-            url=reverse('product:list'))
+            redirect_url=self.redirect_product_url_non_auth, url=reverse("product:list")
+        )
 
     def test_product_detail_not_auth(self):
         product = base.ProductFactory()
         self.check_user_redirect_all_methods(
             redirect_url=self.redirect_product_url_non_auth,
-            url=reverse('product:detail', kwargs={'pk': product.pk}))
+            url=reverse("product:detail", kwargs={"pk": product.pk}),
+        )
 
     def test_product_add_not_auth(self):
         self.check_user_redirect_all_methods(
-            redirect_url=self.redirect_product_url_non_auth,
-            url=reverse('product:add'))
+            redirect_url=self.redirect_product_url_non_auth, url=reverse("product:add")
+        )
 
     def test_product_edit_not_auth(self):
         product = base.ProductFactory()
         self.check_user_redirect_all_methods(
             redirect_url=self.redirect_product_url_non_auth,
-            url=reverse('product:edit', kwargs={'pk': product.pk}))
+            url=reverse("product:edit", kwargs={"pk": product.pk}),
+        )
 
     def test_product_delete_not_auth(self):
         product = base.ProductFactory()
         self.check_user_redirect_all_methods(
             redirect_url=self.redirect_product_url_non_auth,
-            url=reverse('product:delete', kwargs={'pk': product.pk}))
+            url=reverse("product:delete", kwargs={"pk": product.pk}),
+        )
 
     def test_product_relation_add_auth(self):
         self.check_authenticated_user_redirect_all_methods(
-            redirect_url=self.redirect_product_url_auth,
-            url=reverse('product:add'))
+            redirect_url=self.redirect_product_url_auth, url=reverse("product:add")
+        )
 
     def test_product_relation_edit_auth(self):
         product = base.ProductFactory()
         self.check_authenticated_user_redirect_all_methods(
             redirect_url=self.redirect_product_url_auth,
-            url=reverse('product:edit', kwargs={'pk': product.pk}))
+            url=reverse("product:edit", kwargs={"pk": product.pk}),
+        )
 
     def test_product_relation_delete_auth(self):
         product = base.ProductFactory()
         self.check_authenticated_user_redirect_all_methods(
             redirect_url=self.redirect_product_url_auth,
-            url=reverse('product:delete', kwargs={'pk': product.pk}))
+            url=reverse("product:delete", kwargs={"pk": product.pk}),
+        )

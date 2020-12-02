@@ -13,350 +13,720 @@ class Migration(migrations.Migration):
 
     dependencies = [
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
-        ('picklists', '0001_initial'),
+        ("picklists", "0001_initial"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='Component',
+            name="Component",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('acronym', models.CharField(max_length=10)),
-                ('name', models.CharField(max_length=100)),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("acronym", models.CharField(max_length=10)),
+                ("name", models.CharField(max_length=100)),
             ],
         ),
         migrations.CreateModel(
-            name='CopernicusService',
+            name="CopernicusService",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('acronym', models.CharField(max_length=10)),
-                ('name', models.CharField(max_length=100)),
-                ('description', models.TextField()),
-                ('website', models.CharField(max_length=255)),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("acronym", models.CharField(max_length=10)),
+                ("name", models.CharField(max_length=100)),
+                ("description", models.TextField()),
+                ("website", models.CharField(max_length=255)),
             ],
         ),
         migrations.CreateModel(
-            name='DataGroup',
+            name="DataGroup",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(max_length=100)),
-                ('note', models.TextField(blank=True)),
-                ('coverage', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='+', to='picklists.Coverage')),
-                ('data_format', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='+', to='picklists.DataFormat')),
-                ('data_type', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='+', to='picklists.DataType')),
-                ('update_frequency', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='+', to='picklists.UpdateFrequency')),
-                ('inspire_themes', models.ManyToManyField(to='picklists.InspireTheme')),
-                ('policy', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='+', to='picklists.Policy')),
-                ('quality', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='+', to='picklists.Quality')),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("name", models.CharField(max_length=100)),
+                ("note", models.TextField(blank=True)),
+                (
+                    "coverage",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="+",
+                        to="picklists.Coverage",
+                    ),
+                ),
+                (
+                    "data_format",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="+",
+                        to="picklists.DataFormat",
+                    ),
+                ),
+                (
+                    "data_type",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="+",
+                        to="picklists.DataType",
+                    ),
+                ),
+                (
+                    "update_frequency",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="+",
+                        to="picklists.UpdateFrequency",
+                    ),
+                ),
+                ("inspire_themes", models.ManyToManyField(to="picklists.InspireTheme")),
+                (
+                    "policy",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="+",
+                        to="picklists.Policy",
+                    ),
+                ),
+                (
+                    "quality",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="+",
+                        to="picklists.Quality",
+                    ),
+                ),
             ],
         ),
         migrations.CreateModel(
-            name='DataRequirement',
+            name="DataRequirement",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('information_costs', models.BooleanField(default=False)),
-                ('handling_costs', models.BooleanField(default=False)),
-                ('note', models.TextField(blank=True)),
-                ('data_group', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='insitu.DataGroup')),
-                ('level_of_compliance', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='+', to='picklists.ComplianceLevel')),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("information_costs", models.BooleanField(default=False)),
+                ("handling_costs", models.BooleanField(default=False)),
+                ("note", models.TextField(blank=True)),
+                (
+                    "data_group",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="insitu.DataGroup",
+                    ),
+                ),
+                (
+                    "level_of_compliance",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="+",
+                        to="picklists.ComplianceLevel",
+                    ),
+                ),
             ],
         ),
         migrations.CreateModel(
-            name='DataResponsible',
+            name="DataResponsible",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(max_length=100)),
-                ('description', models.TextField(blank=True)),
-                ('is_network', models.BooleanField(default=False)),
-                ('countries', models.ManyToManyField(to='picklists.Country')),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("name", models.CharField(max_length=100)),
+                ("description", models.TextField(blank=True)),
+                ("is_network", models.BooleanField(default=False)),
+                ("countries", models.ManyToManyField(to="picklists.Country")),
             ],
         ),
         migrations.CreateModel(
-            name='DataResponsibleDetails',
+            name="DataResponsibleDetails",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('acronym', models.CharField(max_length=10)),
-                ('website', models.CharField(max_length=255)),
-                ('address', models.TextField()),
-                ('phone', models.CharField(max_length=20)),
-                ('email', models.CharField(max_length=100)),
-                ('contact_person', models.CharField(max_length=100)),
-                ('responsible_type', models.IntegerField(choices=[(1, 'Commercial'), (2, 'Public'), (3, 'Institutional')], db_index=True)),
-                ('data_responsible', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='details', to='insitu.DataResponsible')),
-                ('_deleted', models.BooleanField(default=False)),
-                ('created_at', models.DateTimeField(auto_now_add=True, null=True)),
-                ('updated_at', models.DateTimeField(auto_now=True, null=True)),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("acronym", models.CharField(max_length=10)),
+                ("website", models.CharField(max_length=255)),
+                ("address", models.TextField()),
+                ("phone", models.CharField(max_length=20)),
+                ("email", models.CharField(max_length=100)),
+                ("contact_person", models.CharField(max_length=100)),
+                (
+                    "responsible_type",
+                    models.IntegerField(
+                        choices=[
+                            (1, "Commercial"),
+                            (2, "Public"),
+                            (3, "Institutional"),
+                        ],
+                        db_index=True,
+                    ),
+                ),
+                (
+                    "data_responsible",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="details",
+                        to="insitu.DataResponsible",
+                    ),
+                ),
+                ("_deleted", models.BooleanField(default=False)),
+                ("created_at", models.DateTimeField(auto_now_add=True, null=True)),
+                ("updated_at", models.DateTimeField(auto_now=True, null=True)),
             ],
             options={
-                'verbose_name_plural': 'data responsible details',
+                "verbose_name_plural": "data responsible details",
             },
         ),
         migrations.CreateModel(
-            name='DataResponsibleRelation',
+            name="DataResponsibleRelation",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('role', models.IntegerField(choices=[(1, 'Originator'), (2, 'Distributor')], db_index=True)),
-                ('data_group', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='insitu.DataGroup')),
-                ('responsible', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='insitu.DataResponsible')),
-                ('_deleted', models.BooleanField(default=False)),
-                ('created_at', models.DateTimeField(auto_now_add=True, null=True)),
-                ('updated_at', models.DateTimeField(auto_now=True, null=True)),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "role",
+                    models.IntegerField(
+                        choices=[(1, "Originator"), (2, "Distributor")], db_index=True
+                    ),
+                ),
+                (
+                    "data_group",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="insitu.DataGroup",
+                    ),
+                ),
+                (
+                    "responsible",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="insitu.DataResponsible",
+                    ),
+                ),
+                ("_deleted", models.BooleanField(default=False)),
+                ("created_at", models.DateTimeField(auto_now_add=True, null=True)),
+                ("updated_at", models.DateTimeField(auto_now=True, null=True)),
             ],
         ),
         migrations.CreateModel(
-            name='EntrustedEntity',
+            name="EntrustedEntity",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('acronym', models.CharField(max_length=10)),
-                ('name', models.CharField(max_length=100)),
-                ('website', models.CharField(max_length=255)),
-                ('created_at', models.DateTimeField(auto_now_add=True, null=True)),
-                ('updated_at', models.DateTimeField(auto_now=True, null=True)),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("acronym", models.CharField(max_length=10)),
+                ("name", models.CharField(max_length=100)),
+                ("website", models.CharField(max_length=255)),
+                ("created_at", models.DateTimeField(auto_now_add=True, null=True)),
+                ("updated_at", models.DateTimeField(auto_now=True, null=True)),
             ],
             options={
-                'verbose_name_plural': 'entrusted entities',
+                "verbose_name_plural": "entrusted entities",
             },
         ),
         migrations.CreateModel(
-            name='Metric',
+            name="Metric",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('threshold', models.CharField(max_length=100)),
-                ('breakthrough', models.CharField(max_length=100)),
-                ('goal', models.CharField(max_length=100)),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("threshold", models.CharField(max_length=100)),
+                ("breakthrough", models.CharField(max_length=100)),
+                ("goal", models.CharField(max_length=100)),
             ],
         ),
         migrations.CreateModel(
-            name='Product',
+            name="Product",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('acronym', models.CharField(max_length=10)),
-                ('name', models.CharField(max_length=100)),
-                ('description', models.TextField(blank=True)),
-                ('note', models.TextField(blank=True)),
-                ('component', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='insitu.Component')),
-                ('coverage', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='+', to='picklists.Coverage')),
-                ('group', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='picklists.ProductGroup')),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("acronym", models.CharField(max_length=10)),
+                ("name", models.CharField(max_length=100)),
+                ("description", models.TextField(blank=True)),
+                ("note", models.TextField(blank=True)),
+                (
+                    "component",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="insitu.Component",
+                    ),
+                ),
+                (
+                    "coverage",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="+",
+                        to="picklists.Coverage",
+                    ),
+                ),
+                (
+                    "group",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="picklists.ProductGroup",
+                    ),
+                ),
             ],
         ),
         migrations.CreateModel(
-            name='ProductRequirement',
+            name="ProductRequirement",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('note', models.TextField(blank=True)),
-                ('barriers', models.ManyToManyField(to='picklists.Barrier')),
-                ('criticality', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='+', to='picklists.Criticality')),
-                ('level_of_definition', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='+', to='picklists.DefinitionLevel')),
-                ('product', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='insitu.Product')),
-                ('relevance', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='+', to='picklists.Relevance')),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("note", models.TextField(blank=True)),
+                ("barriers", models.ManyToManyField(to="picklists.Barrier")),
+                (
+                    "criticality",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="+",
+                        to="picklists.Criticality",
+                    ),
+                ),
+                (
+                    "level_of_definition",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="+",
+                        to="picklists.DefinitionLevel",
+                    ),
+                ),
+                (
+                    "product",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE, to="insitu.Product"
+                    ),
+                ),
+                (
+                    "relevance",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="+",
+                        to="picklists.Relevance",
+                    ),
+                ),
             ],
         ),
         migrations.CreateModel(
-            name='Requirement',
+            name="Requirement",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(max_length=100)),
-                ('note', models.TextField(blank=True)),
-                ('dissemination', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='+', to='picklists.Dissemination')),
-                ('update_frequency', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='+', to='insitu.Metric')),
-                ('horizontal_resolution', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='+', to='insitu.Metric')),
-                ('quality', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='+', to='picklists.Quality')),
-                ('timeliness', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='+', to='insitu.Metric')),
-                ('uncertainty', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='+', to='insitu.Metric')),
-                ('vertical_resolution', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='+', to='insitu.Metric')),
-                ('_deleted', models.BooleanField(default=False)),
-                ('created_at', models.DateTimeField(auto_now_add=True, null=True)),
-                ('updated_at', models.DateTimeField(auto_now=True, null=True)),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("name", models.CharField(max_length=100)),
+                ("note", models.TextField(blank=True)),
+                (
+                    "dissemination",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="+",
+                        to="picklists.Dissemination",
+                    ),
+                ),
+                (
+                    "update_frequency",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="+",
+                        to="insitu.Metric",
+                    ),
+                ),
+                (
+                    "horizontal_resolution",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="+",
+                        to="insitu.Metric",
+                    ),
+                ),
+                (
+                    "quality",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="+",
+                        to="picklists.Quality",
+                    ),
+                ),
+                (
+                    "timeliness",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="+",
+                        to="insitu.Metric",
+                    ),
+                ),
+                (
+                    "uncertainty",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="+",
+                        to="insitu.Metric",
+                    ),
+                ),
+                (
+                    "vertical_resolution",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="+",
+                        to="insitu.Metric",
+                    ),
+                ),
+                ("_deleted", models.BooleanField(default=False)),
+                ("created_at", models.DateTimeField(auto_now_add=True, null=True)),
+                ("updated_at", models.DateTimeField(auto_now=True, null=True)),
             ],
         ),
         migrations.AddField(
-            model_name='productrequirement',
-            name='requirement',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='insitu.Requirement'),
+            model_name="productrequirement",
+            name="requirement",
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE, to="insitu.Requirement"
+            ),
         ),
         migrations.AddField(
-            model_name='product',
-            name='requirements',
-            field=models.ManyToManyField(through='insitu.ProductRequirement', to='insitu.Requirement'),
+            model_name="product",
+            name="requirements",
+            field=models.ManyToManyField(
+                through="insitu.ProductRequirement", to="insitu.Requirement"
+            ),
         ),
         migrations.AddField(
-            model_name='product',
-            name='status',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='+', to='picklists.ProductStatus'),
+            model_name="product",
+            name="status",
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name="+",
+                to="picklists.ProductStatus",
+            ),
         ),
         migrations.AddField(
-            model_name='datarequirement',
-            name='requirement',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='insitu.Requirement'),
+            model_name="datarequirement",
+            name="requirement",
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE, to="insitu.Requirement"
+            ),
         ),
         migrations.AddField(
-            model_name='datagroup',
-            name='requirements',
-            field=models.ManyToManyField(through='insitu.DataRequirement', to='insitu.Requirement'),
+            model_name="datagroup",
+            name="requirements",
+            field=models.ManyToManyField(
+                through="insitu.DataRequirement", to="insitu.Requirement"
+            ),
         ),
         migrations.AddField(
-            model_name='datagroup',
-            name='responsibles',
-            field=models.ManyToManyField(through='insitu.DataResponsibleRelation', to='insitu.DataResponsible'),
+            model_name="datagroup",
+            name="responsibles",
+            field=models.ManyToManyField(
+                through="insitu.DataResponsibleRelation", to="insitu.DataResponsible"
+            ),
         ),
         migrations.AddField(
-            model_name='datagroup',
-            name='timeliness',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='+', to='picklists.Timeliness'),
+            model_name="datagroup",
+            name="timeliness",
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name="+",
+                to="picklists.Timeliness",
+            ),
         ),
         migrations.AddField(
-            model_name='component',
-            name='entrusted_entity',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='insitu.EntrustedEntity'),
+            model_name="component",
+            name="entrusted_entity",
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE, to="insitu.EntrustedEntity"
+            ),
         ),
         migrations.AddField(
-            model_name='component',
-            name='service',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='insitu.CopernicusService'),
+            model_name="component",
+            name="service",
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE,
+                to="insitu.CopernicusService",
+            ),
         ),
         migrations.AddField(
-            model_name='datagroup',
-            name='essential_variables',
-            field=models.ManyToManyField(to='picklists.EssentialVariable'),
+            model_name="datagroup",
+            name="essential_variables",
+            field=models.ManyToManyField(to="picklists.EssentialVariable"),
         ),
         migrations.AddField(
-            model_name='dataresponsible',
-            name='networks',
-            field=models.ManyToManyField(blank=True, related_name='members', to='insitu.DataResponsible'),
+            model_name="dataresponsible",
+            name="networks",
+            field=models.ManyToManyField(
+                blank=True, related_name="members", to="insitu.DataResponsible"
+            ),
         ),
         migrations.AddField(
-            model_name='datagroup',
-            name='_deleted',
+            model_name="datagroup",
+            name="_deleted",
             field=models.BooleanField(default=False),
         ),
         migrations.AddField(
-            model_name='datarequirement',
-            name='_deleted',
+            model_name="datarequirement",
+            name="_deleted",
             field=models.BooleanField(default=False),
         ),
         migrations.AddField(
-            model_name='dataresponsible',
-            name='_deleted',
+            model_name="dataresponsible",
+            name="_deleted",
             field=models.BooleanField(default=False),
         ),
         migrations.AddField(
-            model_name='product',
-            name='_deleted',
+            model_name="product",
+            name="_deleted",
             field=models.BooleanField(default=False),
         ),
         migrations.AddField(
-            model_name='productrequirement',
-            name='_deleted',
+            model_name="productrequirement",
+            name="_deleted",
             field=models.BooleanField(default=False),
         ),
         migrations.CreateModel(
-            name='CopernicusResponsible',
+            name="CopernicusResponsible",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('service', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='responsible', to='insitu.CopernicusService')),
-                ('user', models.OneToOneField(on_delete=django.db.models.deletion.CASCADE, related_name='service_resp', to=settings.AUTH_USER_MODEL)),
-                ('created_at', models.DateTimeField(auto_now_add=True, null=True)),
-                ('updated_at', models.DateTimeField(auto_now=True, null=True)),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "service",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="responsible",
+                        to="insitu.CopernicusService",
+                    ),
+                ),
+                (
+                    "user",
+                    models.OneToOneField(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="service_resp",
+                        to=settings.AUTH_USER_MODEL,
+                    ),
+                ),
+                ("created_at", models.DateTimeField(auto_now_add=True, null=True)),
+                ("updated_at", models.DateTimeField(auto_now=True, null=True)),
             ],
         ),
         migrations.CreateModel(
-            name='CountryResponsible',
+            name="CountryResponsible",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('country', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='responsible', to='picklists.Country')),
-                ('user', models.OneToOneField(on_delete=django.db.models.deletion.CASCADE, related_name='country_resp', to=settings.AUTH_USER_MODEL)),
-                ('created_at', models.DateTimeField(auto_now_add=True, null=True)),
-                ('updated_at', models.DateTimeField(auto_now=True, null=True)),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "country",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="responsible",
+                        to="picklists.Country",
+                    ),
+                ),
+                (
+                    "user",
+                    models.OneToOneField(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="country_resp",
+                        to=settings.AUTH_USER_MODEL,
+                    ),
+                ),
+                ("created_at", models.DateTimeField(auto_now_add=True, null=True)),
+                ("updated_at", models.DateTimeField(auto_now=True, null=True)),
             ],
         ),
         migrations.CreateModel(
-            name='DataProvider',
+            name="DataProvider",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('responsible', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='responsible', to='insitu.DataResponsible')),
-                ('user', models.OneToOneField(on_delete=django.db.models.deletion.CASCADE, related_name='data_resp', to=settings.AUTH_USER_MODEL)),
-                ('created_at', models.DateTimeField(auto_now_add=True, null=True)),
-                ('updated_at', models.DateTimeField(auto_now=True, null=True)),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "responsible",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="responsible",
+                        to="insitu.DataResponsible",
+                    ),
+                ),
+                (
+                    "user",
+                    models.OneToOneField(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="data_resp",
+                        to=settings.AUTH_USER_MODEL,
+                    ),
+                ),
+                ("created_at", models.DateTimeField(auto_now_add=True, null=True)),
+                ("updated_at", models.DateTimeField(auto_now=True, null=True)),
             ],
         ),
         migrations.AddField(
-            model_name='component',
-            name='created_at',
+            model_name="component",
+            name="created_at",
             field=models.DateTimeField(auto_now_add=True, null=True),
         ),
         migrations.AddField(
-            model_name='component',
-            name='updated_at',
+            model_name="component",
+            name="updated_at",
             field=models.DateTimeField(auto_now=True, null=True),
         ),
         migrations.AddField(
-            model_name='copernicusservice',
-            name='created_at',
+            model_name="copernicusservice",
+            name="created_at",
             field=models.DateTimeField(auto_now_add=True, null=True),
         ),
         migrations.AddField(
-            model_name='copernicusservice',
-            name='updated_at',
+            model_name="copernicusservice",
+            name="updated_at",
             field=models.DateTimeField(auto_now=True, null=True),
         ),
         migrations.AddField(
-            model_name='datagroup',
-            name='created_at',
+            model_name="datagroup",
+            name="created_at",
             field=models.DateTimeField(auto_now_add=True, null=True),
         ),
         migrations.AddField(
-            model_name='datagroup',
-            name='updated_at',
+            model_name="datagroup",
+            name="updated_at",
             field=models.DateTimeField(auto_now=True, null=True),
         ),
         migrations.AddField(
-            model_name='datarequirement',
-            name='created_at',
+            model_name="datarequirement",
+            name="created_at",
             field=models.DateTimeField(auto_now_add=True, null=True),
         ),
         migrations.AddField(
-            model_name='datarequirement',
-            name='updated_at',
+            model_name="datarequirement",
+            name="updated_at",
             field=models.DateTimeField(auto_now=True, null=True),
         ),
         migrations.AddField(
-            model_name='dataresponsible',
-            name='created_at',
+            model_name="dataresponsible",
+            name="created_at",
             field=models.DateTimeField(auto_now_add=True, null=True),
         ),
         migrations.AddField(
-            model_name='dataresponsible',
-            name='updated_at',
+            model_name="dataresponsible",
+            name="updated_at",
             field=models.DateTimeField(auto_now=True, null=True),
         ),
         migrations.AddField(
-            model_name='metric',
-            name='created_at',
+            model_name="metric",
+            name="created_at",
             field=models.DateTimeField(auto_now_add=True, null=True),
         ),
         migrations.AddField(
-            model_name='metric',
-            name='updated_at',
+            model_name="metric",
+            name="updated_at",
             field=models.DateTimeField(auto_now=True, null=True),
         ),
         migrations.AddField(
-            model_name='product',
-            name='created_at',
+            model_name="product",
+            name="created_at",
             field=models.DateTimeField(auto_now_add=True, null=True),
         ),
         migrations.AddField(
-            model_name='product',
-            name='updated_at',
+            model_name="product",
+            name="updated_at",
             field=models.DateTimeField(auto_now=True, null=True),
         ),
         migrations.AddField(
-            model_name='productrequirement',
-            name='created_at',
+            model_name="productrequirement",
+            name="created_at",
             field=models.DateTimeField(auto_now_add=True, null=True),
         ),
         migrations.AddField(
-            model_name='productrequirement',
-            name='updated_at',
+            model_name="productrequirement",
+            name="updated_at",
             field=models.DateTimeField(auto_now=True, null=True),
         ),
     ]

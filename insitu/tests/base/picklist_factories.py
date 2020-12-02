@@ -5,43 +5,43 @@ from factory.django import DjangoModelFactory
 
 class CountryFactory(DjangoModelFactory):
     code = Sequence(lambda n: "%s" % n)
-    name = 'Romania'
+    name = "Romania"
 
     class Meta:
         model = models.Country
 
 
 class InspireThemeFactory(DjangoModelFactory):
-    name = 'Test Theme'
+    name = "Test Theme"
     sort_order = 0
-    link = ''
+    link = ""
 
     class Meta:
         model = models.InspireTheme
 
 
 class EssentialVariableFactory(DjangoModelFactory):
-    domain = 'Test domain'
-    component = 'Test component'
-    parameter = 'Test parameter'
+    domain = "Test domain"
+    component = "Test component"
+    parameter = "Test parameter"
     sort_order = 0
-    link = ''
+    link = ""
 
     class Meta:
         model = models.EssentialVariable
 
 
 class StatusFactory(DjangoModelFactory):
-    name = 'Test product status'
+    name = "Test product status"
     sort_order = 0
-    link = ''
+    link = ""
 
     class Meta:
         model = models.Status
 
 
 class ProductGroupFactory(DjangoModelFactory):
-    name = 'Test product group'
+    name = "Test product group"
     sort_order = 0
 
     class Meta:
@@ -49,7 +49,7 @@ class ProductGroupFactory(DjangoModelFactory):
 
 
 class RequirementGroupFactory(DjangoModelFactory):
-    name = 'Test requirement group'
+    name = "Test requirement group"
     sort_order = 0
 
     class Meta:
@@ -57,34 +57,34 @@ class RequirementGroupFactory(DjangoModelFactory):
 
 
 class DefinitionLevelFactory(DjangoModelFactory):
-    name = 'Test DefinitionLevel'
+    name = "Test DefinitionLevel"
     sort_order = 0
-    link = ''
+    link = ""
 
     class Meta:
         model = models.DefinitionLevel
 
 
 class RelevanceFactory(DjangoModelFactory):
-    name = 'Test Relevance'
+    name = "Test Relevance"
     sort_order = 0
-    link = ''
+    link = ""
 
     class Meta:
         model = models.Relevance
 
 
 class CriticalityFactory(DjangoModelFactory):
-    name = 'Test Criticality'
+    name = "Test Criticality"
     sort_order = 0
-    link = ''
+    link = ""
 
     class Meta:
         model = models.Criticality
 
 
 class BarrierFactory(DjangoModelFactory):
-    name = 'Test Barrier'
+    name = "Test Barrier"
     sort_order = 0
 
     class Meta:
@@ -92,90 +92,90 @@ class BarrierFactory(DjangoModelFactory):
 
 
 class DisseminationFactory(DjangoModelFactory):
-    name = 'Test Dissemination'
+    name = "Test Dissemination"
     sort_order = 0
-    link = ''
+    link = ""
 
     class Meta:
         model = models.Dissemination
 
 
 class AreaFactory(DjangoModelFactory):
-    name = 'Test area'
+    name = "Test area"
     sort_order = 0
-    link = ''
+    link = ""
 
     class Meta:
         model = models.Area
 
 
 class QualityControlProcedureFactory(DjangoModelFactory):
-    name = 'Test Quality'
+    name = "Test Quality"
     sort_order = 0
-    link = ''
+    link = ""
 
     class Meta:
         model = models.QualityControlProcedure
 
 
 class ComplianceLevelFactory(DjangoModelFactory):
-    name = 'Test ComplianceLevel'
+    name = "Test ComplianceLevel"
     sort_order = 0
-    link = ''
+    link = ""
 
     class Meta:
         model = models.ComplianceLevel
 
 
 class UpdateFrequencyFactory(DjangoModelFactory):
-    name = 'Test UpdateFrequency'
+    name = "Test UpdateFrequency"
     sort_order = 0
-    link = ''
+    link = ""
 
     class Meta:
         model = models.UpdateFrequency
 
 
 class TimelinessFactory(DjangoModelFactory):
-    name = 'Test Timeliness'
+    name = "Test Timeliness"
     sort_order = 0
-    link = ''
+    link = ""
 
     class Meta:
         model = models.Timeliness
 
 
 class DataPolicyFactory(DjangoModelFactory):
-    name = 'Test Data Policy'
+    name = "Test Data Policy"
     sort_order = 0
-    link = ''
+    link = ""
 
     class Meta:
         model = models.DataPolicy
 
 
 class DataTypeFactory(DjangoModelFactory):
-    name = 'Test DataType'
+    name = "Test DataType"
     sort_order = 0
-    link = ''
+    link = ""
 
     class Meta:
         model = models.DataType
 
 
 class DataFormatFactory(DjangoModelFactory):
-    name = 'Test DataFormat'
+    name = "Test DataFormat"
     sort_order = 0
-    link = ''
+    link = ""
 
     class Meta:
         model = models.DataFormat
 
 
 class ProviderTypeFactory(DjangoModelFactory):
-    name = 'Test DataProvider'
+    name = "Test DataProvider"
     sort_order = 0
-    link = ''
+    link = ""
 
     class Meta:
         model = models.ProviderType

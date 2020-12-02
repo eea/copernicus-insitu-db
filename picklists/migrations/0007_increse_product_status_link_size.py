@@ -8,13 +8,13 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('picklists', '0006_change_esential_variable_choices_to_char'),
+        ("picklists", "0006_change_esential_variable_choices_to_char"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='productstatus',
-            name='link',
+            model_name="productstatus",
+            name="link",
             field=models.CharField(blank=True, max_length=300),
         ),
     ]

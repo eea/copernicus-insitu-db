@@ -8,7 +8,8 @@ from django.db.models.signals import post_save, post_delete
 from django.db.models.query import QuerySet
 from django_xworkflows.models import Workflow, WorkflowEnabled, StateField
 from xworkflows import (
-    transition_check, transition,
+    transition_check,
+    transition,
     ForbiddenTransition,
 )
 
@@ -17,10 +18,13 @@ from picklists import models as pickmodels
 
 User = get_user_model()
 
+
 def user_model_str(self):
     return "{} {}".format(self.first_name, self.last_name)
 
+
 User.add_to_class("__str__", user_model_str)
+
 
 def create_team_for_user(sender, instance, created, **kwargs):
     if not created:
@@ -30,6 +34,7 @@ def create_team_for_user(sender, instance, created, **kwargs):
     except ObjectDoesNotExist:
         Team.objects.create(user=instance)
 
+
 def delete_team_for_user(sender, instance, **kwargs):
     try:
         team = Team.objects.get(user=instance)
@@ -37,28 +42,31 @@ def delete_team_for_user(sender, instance, **kwargs):
     except ObjectDoesNotExist:
         pass
 
+
 post_save.connect(create_team_for_user, sender=User)
 post_delete.connect(delete_team_for_user, sender=User)
+
+
 class ValidationWorkflow(Workflow):
-    name = 'validation'
+    name = "validation"
 
     states = (
         # name, title
-        ('draft', 'Draft'),
-        ('ready', 'Ready for validation'),
-        ('valid', 'Valid'),
-        ('changes', 'Changes requested')
+        ("draft", "Draft"),
+        ("ready", "Ready for validation"),
+        ("valid", "Valid"),
+        ("changes", "Changes requested"),
     )
 
-    initial_state = 'draft'
+    initial_state = "draft"
 
     transitions = (
         # name, source state, target state
-        ('mark_as_ready', 'draft', 'ready'),
-        ('validate', 'ready', 'valid'),
-        ('cancel', 'ready', 'draft'),
-        ('request_changes', 'ready', 'changes'),
-        ('make_changes', 'changes', 'draft')
+        ("mark_as_ready", "draft", "ready"),
+        ("validate", "ready", "valid"),
+        ("cancel", "ready", "draft"),
+        ("request_changes", "ready", "changes"),
+        ("make_changes", "changes", "draft"),
     )
 
     @classmethod
@@ -70,8 +78,7 @@ class ValidationWorkflow(Workflow):
     def __check_transition_between_states_exist(cls, source_state, target_state):
         for trans in cls.transitions:
             for source in trans.source:
-                if (source.name == source_state and
-                        trans.target.name == target_state):
+                if source.name == source_state and trans.target.name == target_state:
                     return
         raise ForbiddenTransition()
 
@@ -86,8 +93,7 @@ class ValidationWorkflow(Workflow):
         cls.check_transition(source_state, target_state)
         for trans in cls.transitions:
             for source in trans.source:
-                if (source.name == source_state and
-                        trans.target.name == target_state):
+                if source.name == source_state and trans.target.name == target_state:
                     return trans.name
         raise ForbiddenTransition()
 
@@ -121,15 +127,14 @@ class SoftDeleteModel(models.Model):
 
     def delete_related(self):
         for class_name, field in self.related_objects:
-            objects = globals()[class_name].objects.filter(
-                **{field: self})
+            objects = globals()[class_name].objects.filter(**{field: self})
             objects.delete()
 
     def delete(self, using=None):
         self._deleted = True
         self.save(using=using)
         self.delete_related()
-        if hasattr(self, 'elastic_delete_signal'):
+        if hasattr(self, "elastic_delete_signal"):
             self.elastic_delete_signal.send(sender=self)
 
     class Meta:
@@ -162,43 +167,47 @@ class ValidationWorkflowModel(WorkflowEnabled, models.Model):
     def make_changes(self):
         pass
 
-    @transition_check('mark_as_ready', 'cancel', 'make_changes')
+    @transition_check("mark_as_ready", "cancel", "make_changes")
     def check_owner_user(self, *args, **kwargs):
         """
         Check if the user is the creator or if the is user is in the creator's
         team
         """
         return (
-            self.requesting_user == self.created_by or
-            self.requesting_user in self.created_by.team.teammates.all()
+            self.requesting_user == self.created_by
+            or self.requesting_user in self.created_by.team.teammates.all()
         )
 
-    @transition_check('request_changes',)
+    @transition_check(
+        "request_changes",
+    )
     def check_other_user(self, *args, **kwargs):
         """
         Check if the user is different from the  creator or if the is user is
         not in the creator's team
         """
         return (
-            self.requesting_user != self.created_by and
-            self.requesting_user not in self.created_by.team.teammates.all()
+            self.requesting_user != self.created_by
+            and self.requesting_user not in self.created_by.team.teammates.all()
         )
 
-    @transition_check('validate',)
+    @transition_check(
+        "validate",
+    )
     def check_validator_user(self, *args, **kwargs):
         """
         Check if the user is the creator
         """
         return (
-            self.requesting_user == self.created_by or
-            self.requesting_user not in self.created_by.team.teammates.all()
+            self.requesting_user == self.created_by
+            or self.requesting_user not in self.created_by.team.teammates.all()
         )
 
+
 class Team(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE,
-                                related_name='team')
-    teammates = models.ManyToManyField(User, related_name='teams')
-    requests = models.ManyToManyField(User, related_name='requests', blank=True)
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="team")
+    teammates = models.ManyToManyField(User, related_name="teams")
+    requests = models.ManyToManyField(User, related_name="requests", blank=True)
 
 
 class Metric(ValidationWorkflowModel):
@@ -206,14 +215,13 @@ class Metric(ValidationWorkflowModel):
     breakthrough = models.CharField(max_length=100)
     goal = models.CharField(max_length=100)
     created_by = models.ForeignKey(User)
-    created_at = models.DateTimeField(auto_now_add=True,
-                                      null=True)
-    updated_at = models.DateTimeField(auto_now=True,
-                                      null=True)
+    created_at = models.DateTimeField(auto_now_add=True, null=True)
+    updated_at = models.DateTimeField(auto_now=True, null=True)
 
     def __str__(self):
-        return 'T: {} - B: {} - G: {}'.format(
-            self.threshold, self.breakthrough, self.goal)
+        return "T: {} - B: {} - G: {}".format(
+            self.threshold, self.breakthrough, self.goal
+        )
 
     def to_elastic_search_format(self):
         return str(self)
@@ -224,10 +232,8 @@ class CopernicusService(models.Model):
     name = models.CharField(max_length=100)
     description = models.TextField(null=True)
     website = models.CharField(max_length=255, null=True)
-    created_at = models.DateTimeField(auto_now_add=True,
-                                      null=True)
-    updated_at = models.DateTimeField(auto_now=True,
-                                      null=True)
+    created_at = models.DateTimeField(auto_now_add=True, null=True)
+    updated_at = models.DateTimeField(auto_now=True, null=True)
 
     def __str__(self):
         return self.name
@@ -237,13 +243,11 @@ class EntrustedEntity(models.Model):
     acronym = models.CharField(max_length=10, blank=True)
     name = models.CharField(max_length=100)
     website = models.CharField(max_length=255, blank=True)
-    created_at = models.DateTimeField(auto_now_add=True,
-                                      null=True)
-    updated_at = models.DateTimeField(auto_now=True,
-                                      null=True)
+    created_at = models.DateTimeField(auto_now_add=True, null=True)
+    updated_at = models.DateTimeField(auto_now=True, null=True)
 
     class Meta:
-        verbose_name_plural = 'entrusted entities'
+        verbose_name_plural = "entrusted entities"
 
     def __str__(self):
         return self.name
@@ -253,12 +257,9 @@ class Component(models.Model):
     acronym = models.CharField(max_length=10, blank=True)
     name = models.CharField(max_length=100)
     service = models.ForeignKey(CopernicusService, on_delete=models.CASCADE)
-    entrusted_entity = models.ForeignKey(EntrustedEntity,
-                                         on_delete=models.CASCADE)
-    created_at = models.DateTimeField(auto_now_add=True,
-                                      null=True)
-    updated_at = models.DateTimeField(auto_now=True,
-                                      null=True)
+    entrusted_entity = models.ForeignKey(EntrustedEntity, on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True, null=True)
+    updated_at = models.DateTimeField(auto_now=True, null=True)
 
     def __str__(self):
         return self.name
@@ -266,59 +267,52 @@ class Component(models.Model):
 
 class Requirement(ValidationWorkflowModel, SoftDeleteModel):
     related_objects = [
-        ('ProductRequirement', 'requirement'),
-        ('DataRequirement', 'requirement')
+        ("ProductRequirement", "requirement"),
+        ("DataRequirement", "requirement"),
     ]
     elastic_delete_signal = signals.requirement_deleted
 
     name = models.CharField(max_length=100)
     note = models.TextField(blank=True)
-    dissemination = models.ForeignKey(pickmodels.Dissemination,
-                                      on_delete=models.CASCADE,
-                                      related_name='+')
-    quality_control_procedure = models.ForeignKey(
-        pickmodels.QualityControlProcedure,
-        on_delete=models.CASCADE,
-        related_name='+'
+    dissemination = models.ForeignKey(
+        pickmodels.Dissemination, on_delete=models.CASCADE, related_name="+"
     )
-    group = models.ForeignKey(pickmodels.RequirementGroup,
-                              on_delete=models.CASCADE)
-    uncertainty = models.ForeignKey(Metric,
-                                    on_delete=models.CASCADE,
-                                    related_name='+')
-    update_frequency = models.ForeignKey(Metric,
-                                         on_delete=models.CASCADE,
-                                         related_name='+')
-    timeliness = models.ForeignKey(Metric,
-                                   on_delete=models.CASCADE,
-                                   related_name='+')
-    scale = models.ForeignKey(Metric,
-                              on_delete=models.CASCADE,
-                              related_name='+')
-    horizontal_resolution = models.ForeignKey(Metric,
-                                              on_delete=models.CASCADE,
-                                              related_name='+')
-    vertical_resolution = models.ForeignKey(Metric,
-                                            on_delete=models.CASCADE,
-                                            related_name='+')
+    quality_control_procedure = models.ForeignKey(
+        pickmodels.QualityControlProcedure, on_delete=models.CASCADE, related_name="+"
+    )
+    group = models.ForeignKey(pickmodels.RequirementGroup, on_delete=models.CASCADE)
+    uncertainty = models.ForeignKey(Metric, on_delete=models.CASCADE, related_name="+")
+    update_frequency = models.ForeignKey(
+        Metric, on_delete=models.CASCADE, related_name="+"
+    )
+    timeliness = models.ForeignKey(Metric, on_delete=models.CASCADE, related_name="+")
+    scale = models.ForeignKey(Metric, on_delete=models.CASCADE, related_name="+")
+    horizontal_resolution = models.ForeignKey(
+        Metric, on_delete=models.CASCADE, related_name="+"
+    )
+    vertical_resolution = models.ForeignKey(
+        Metric, on_delete=models.CASCADE, related_name="+"
+    )
     created_by = models.ForeignKey(User)
 
     feedback = models.TextField(blank=True)
 
     owner = models.CharField(max_length=100, blank=True)
 
-    created_at = models.DateTimeField(auto_now_add=True,
-                                      null=True)
-    updated_at = models.DateTimeField(auto_now=True,
-                                      null=True)
+    created_at = models.DateTimeField(auto_now_add=True, null=True)
+    updated_at = models.DateTimeField(auto_now=True, null=True)
 
     def __str__(self):
         return self.name
 
     def get_related_objects(self):
         metrics = [
-            'uncertainty', 'update_frequency', 'timeliness', 'scale',
-            'horizontal_resolution', 'vertical_resolution'
+            "uncertainty",
+            "update_frequency",
+            "timeliness",
+            "scale",
+            "horizontal_resolution",
+            "vertical_resolution",
         ]
         objects = [getattr(self, metric) for metric in metrics]
 
@@ -328,9 +322,7 @@ class Requirement(ValidationWorkflowModel, SoftDeleteModel):
 
     @property
     def components(self):
-        return Component.objects.filter(
-            products__requirements=self
-        )
+        return Component.objects.filter(products__requirements=self)
 
     @transition()
     def mark_as_ready(self):
@@ -365,7 +357,7 @@ class Requirement(ValidationWorkflowModel, SoftDeleteModel):
 
 class Product(SoftDeleteModel):
     related_objects = [
-        ('ProductRequirement', 'product'),
+        ("ProductRequirement", "product"),
     ]
     elastic_delete_signal = signals.product_deleted
 
@@ -373,26 +365,23 @@ class Product(SoftDeleteModel):
     name = models.CharField(max_length=200)
     description = models.TextField(blank=True)
     note = models.TextField(blank=True)
-    group = models.ForeignKey(pickmodels.ProductGroup,
-                              on_delete=models.CASCADE)
+    group = models.ForeignKey(pickmodels.ProductGroup, on_delete=models.CASCADE)
     component = models.ForeignKey(
-        Component, on_delete=models.CASCADE, related_name='products'
+        Component, on_delete=models.CASCADE, related_name="products"
     )
-    status = models.ForeignKey(pickmodels.Status,
-                               on_delete=models.CASCADE,
-                               related_name='+')
-    area = models.ForeignKey(pickmodels.Area,
-                             on_delete=models.CASCADE,
-                             related_name='+')
+    status = models.ForeignKey(
+        pickmodels.Status, on_delete=models.CASCADE, related_name="+"
+    )
+    area = models.ForeignKey(
+        pickmodels.Area, on_delete=models.CASCADE, related_name="+"
+    )
     requirements = models.ManyToManyField(
         Requirement,
-        through='ProductRequirement',
-        related_name='products',
+        through="ProductRequirement",
+        related_name="products",
     )
-    created_at = models.DateTimeField(auto_now_add=True,
-                                      null=True)
-    updated_at = models.DateTimeField(auto_now=True,
-                                      null=True)
+    created_at = models.DateTimeField(auto_now_add=True, null=True)
+    updated_at = models.DateTimeField(auto_now=True, null=True)
 
     def __str__(self):
         return self.name
@@ -400,55 +389,49 @@ class Product(SoftDeleteModel):
 
 class ProductRequirement(ValidationWorkflowModel, SoftDeleteModel):
     product = models.ForeignKey(
-        Product, on_delete=models.CASCADE, related_name='product_requirements'
+        Product, on_delete=models.CASCADE, related_name="product_requirements"
     )
     requirement = models.ForeignKey(
-        Requirement,
-        on_delete=models.CASCADE,
-        related_name='product_requirements'
+        Requirement, on_delete=models.CASCADE, related_name="product_requirements"
     )
     note = models.TextField(blank=True)
-    level_of_definition = models.ForeignKey(pickmodels.DefinitionLevel,
-                                            on_delete=models.CASCADE,
-                                            related_name='+')
-    relevance = models.ForeignKey(pickmodels.Relevance,
-                                  on_delete=models.CASCADE,
-                                  related_name='+')
-    criticality = models.ForeignKey(pickmodels.Criticality,
-                                    on_delete=models.CASCADE,
-                                    related_name='+')
+    level_of_definition = models.ForeignKey(
+        pickmodels.DefinitionLevel, on_delete=models.CASCADE, related_name="+"
+    )
+    relevance = models.ForeignKey(
+        pickmodels.Relevance, on_delete=models.CASCADE, related_name="+"
+    )
+    criticality = models.ForeignKey(
+        pickmodels.Criticality, on_delete=models.CASCADE, related_name="+"
+    )
     barriers = models.ManyToManyField(pickmodels.Barrier)
     created_by = models.ForeignKey(User)
-    created_at = models.DateTimeField(auto_now_add=True,
-                                      null=True)
-    updated_at = models.DateTimeField(auto_now=True,
-                                      null=True)
+    created_at = models.DateTimeField(auto_now_add=True, null=True)
+    updated_at = models.DateTimeField(auto_now=True, null=True)
 
     def __str__(self):
-        return '{} - {}'.format(self.product.name, self.requirement.name)
+        return "{} - {}".format(self.product.name, self.requirement.name)
 
 
 class DataProvider(ValidationWorkflowModel, SoftDeleteModel):
     related_objects = [
-        ('DataProviderDetails', 'data_provider'),
-        ('DataProviderRelation', 'provider'),
+        ("DataProviderDetails", "data_provider"),
+        ("DataProviderRelation", "provider"),
     ]
     elastic_delete_signal = signals.data_provider_deleted
 
     name = models.CharField(max_length=255)
     description = models.TextField(blank=True)
     is_network = models.BooleanField(default=False)
-    networks = models.ManyToManyField('self', blank=True,
-                                      related_name='members',
-                                      symmetrical=False)
+    networks = models.ManyToManyField(
+        "self", blank=True, related_name="members", symmetrical=False
+    )
     feedback = models.TextField(blank=True)
 
     countries = models.ManyToManyField(pickmodels.Country)
     created_by = models.ForeignKey(User)
-    created_at = models.DateTimeField(auto_now_add=True,
-                                      null=True)
-    updated_at = models.DateTimeField(auto_now=True,
-                                      null=True)
+    created_at = models.DateTimeField(auto_now_add=True, null=True)
+    updated_at = models.DateTimeField(auto_now=True, null=True)
 
     def __str__(self):
         return self.name
@@ -456,10 +439,10 @@ class DataProvider(ValidationWorkflowModel, SoftDeleteModel):
     def get_elastic_search_data(self):
         data = dict()
         details = self.details.first()
-        for field in ['acronym', 'address', 'phone', 'email', 'contact_person']:
-            data[field] = getattr(details, field) if details else '-'
-        data['provider_type'] = (
-            getattr(details, 'provider_type').name if details else '-'
+        for field in ["acronym", "address", "phone", "email", "contact_person"]:
+            data[field] = getattr(details, field) if details else "-"
+        data["provider_type"] = (
+            getattr(details, "provider_type").name if details else "-"
         )
         return data
 
@@ -507,101 +490,122 @@ class DataProviderDetails(ValidationWorkflowModel, SoftDeleteModel):
     phone = models.CharField(max_length=20, blank=True)
     email = models.CharField(max_length=100, blank=True)
     contact_person = models.CharField(max_length=100, blank=True)
-    provider_type = models.ForeignKey(pickmodels.ProviderType,
-                                      on_delete=models.CASCADE,
-                                      related_name='+')
-    data_provider = models.ForeignKey(DataProvider,
-                                      on_delete=models.CASCADE,
-                                      related_name='details')
+    provider_type = models.ForeignKey(
+        pickmodels.ProviderType, on_delete=models.CASCADE, related_name="+"
+    )
+    data_provider = models.ForeignKey(
+        DataProvider, on_delete=models.CASCADE, related_name="details"
+    )
     created_by = models.ForeignKey(User)
-    created_at = models.DateTimeField(auto_now_add=True,
-                                      null=True)
-    updated_at = models.DateTimeField(auto_now=True,
-                                      null=True)
+    created_at = models.DateTimeField(auto_now_add=True, null=True)
+    updated_at = models.DateTimeField(auto_now=True, null=True)
 
     class Meta:
-        verbose_name_plural = 'data provider details'
+        verbose_name_plural = "data provider details"
 
     def __str__(self):
-        return 'Details for {}'.format(self.data_provider.name)
+        return "Details for {}".format(self.data_provider.name)
 
-    def save(self, force_insert=False, force_update=False, using=None,
-             update_fields=None):
+    def save(
+        self, force_insert=False, force_update=False, using=None, update_fields=None
+    ):
         super().save(force_insert, force_update, using, update_fields)
         signals.data_provider_updated.send(sender=self)
 
 
 class Data(ValidationWorkflowModel, SoftDeleteModel):
     related_objects = [
-        ('DataRequirement', 'data'),
-        ('DataProviderRelation', 'data'),
+        ("DataRequirement", "data"),
+        ("DataProviderRelation", "data"),
     ]
     elastic_delete_signal = signals.data_deleted
 
     name = models.CharField(max_length=100)
     note = models.TextField(blank=True)
     feedback = models.TextField(blank=True)
-    update_frequency = models.ForeignKey(pickmodels.UpdateFrequency,
-                                         null=True, blank=True,
-                                         on_delete=models.CASCADE,
-                                         related_name='+')
-    area = models.ForeignKey(pickmodels.Area,
-                             null=True, blank=True,
-                             on_delete=models.CASCADE,
-                             related_name='+')
+    update_frequency = models.ForeignKey(
+        pickmodels.UpdateFrequency,
+        null=True,
+        blank=True,
+        on_delete=models.CASCADE,
+        related_name="+",
+    )
+    area = models.ForeignKey(
+        pickmodels.Area,
+        null=True,
+        blank=True,
+        on_delete=models.CASCADE,
+        related_name="+",
+    )
     start_time_coverage = models.DateField(null=True, blank=True)
     end_time_coverage = models.DateField(null=True, blank=True)
-    timeliness = models.ForeignKey(pickmodels.Timeliness,
-                                   null=True, blank=True,
-                                   on_delete=models.CASCADE,
-                                   related_name='+')
-    data_policy = models.ForeignKey(pickmodels.DataPolicy,
-                                    null=True, blank=True,
-                                    on_delete=models.CASCADE,
-                                    related_name='+')
-    data_type = models.ForeignKey(pickmodels.DataType,
-                                  null=True, blank=True,
-                                  on_delete=models.CASCADE,
-                                  related_name='+')
-    data_format = models.ForeignKey(pickmodels.DataFormat,
-                                    null=True, blank=True,
-                                    on_delete=models.CASCADE,
-                                    related_name='+')
+    timeliness = models.ForeignKey(
+        pickmodels.Timeliness,
+        null=True,
+        blank=True,
+        on_delete=models.CASCADE,
+        related_name="+",
+    )
+    data_policy = models.ForeignKey(
+        pickmodels.DataPolicy,
+        null=True,
+        blank=True,
+        on_delete=models.CASCADE,
+        related_name="+",
+    )
+    data_type = models.ForeignKey(
+        pickmodels.DataType,
+        null=True,
+        blank=True,
+        on_delete=models.CASCADE,
+        related_name="+",
+    )
+    data_format = models.ForeignKey(
+        pickmodels.DataFormat,
+        null=True,
+        blank=True,
+        on_delete=models.CASCADE,
+        related_name="+",
+    )
     quality_control_procedure = models.ForeignKey(
         pickmodels.QualityControlProcedure,
-        null=True, blank=True,
+        null=True,
+        blank=True,
         on_delete=models.CASCADE,
-        related_name='+'
+        related_name="+",
     )
-    dissemination = models.ForeignKey(pickmodels.Dissemination,
-                                      null=True, blank=True,
-                                      on_delete=models.CASCADE,
-                                      related_name='+')
-    inspire_themes = models.ManyToManyField(pickmodels.InspireTheme,
-                                            blank=True)
+    dissemination = models.ForeignKey(
+        pickmodels.Dissemination,
+        null=True,
+        blank=True,
+        on_delete=models.CASCADE,
+        related_name="+",
+    )
+    inspire_themes = models.ManyToManyField(pickmodels.InspireTheme, blank=True)
     essential_variables = models.ManyToManyField(
         pickmodels.EssentialVariable,
         blank=True,
     )
-    status = models.ForeignKey(pickmodels.Status,
-                               null=True, blank=True,
-                               on_delete=models.CASCADE,
-                               related_name='+')
-    geographical_coverage = models.ManyToManyField(pickmodels.Country,
-                                                   blank=True)
-    requirements = models.ManyToManyField(Requirement,
-                                          through='DataRequirement')
-    providers = models.ManyToManyField(DataProvider,
-                                       through='DataProviderRelation')
+    status = models.ForeignKey(
+        pickmodels.Status,
+        null=True,
+        blank=True,
+        on_delete=models.CASCADE,
+        related_name="+",
+    )
+    geographical_coverage = models.ManyToManyField(pickmodels.Country, blank=True)
+    requirements = models.ManyToManyField(Requirement, through="DataRequirement")
+    providers = models.ManyToManyField(DataProvider, through="DataProviderRelation")
     created_by = models.ForeignKey(User)
-    created_at = models.DateTimeField(auto_now_add=True,
-                                      null=True)
-    updated_at = models.DateTimeField(auto_now=True,
-                                      null=True)
+    created_at = models.DateTimeField(auto_now_add=True, null=True)
+    updated_at = models.DateTimeField(auto_now=True, null=True)
 
     @property
     def requirements_get_filtered(self):
-        return self.requirements.filter(datarequirement___deleted=False, datarequirement__requirement___deleted=False)
+        return self.requirements.filter(
+            datarequirement___deleted=False,
+            datarequirement__requirement___deleted=False,
+        )
 
     def __str__(self):
         return self.name
@@ -648,37 +652,33 @@ class DataRequirement(ValidationWorkflowModel, SoftDeleteModel):
     information_costs = models.BooleanField(default=False)
     handling_costs = models.BooleanField(default=False)
     note = models.TextField(blank=True)
-    level_of_compliance = models.ForeignKey(pickmodels.ComplianceLevel,
-                                            on_delete=models.CASCADE,
-                                            related_name='+')
+    level_of_compliance = models.ForeignKey(
+        pickmodels.ComplianceLevel, on_delete=models.CASCADE, related_name="+"
+    )
     created_by = models.ForeignKey(User)
-    created_at = models.DateTimeField(auto_now_add=True,
-                                      null=True)
-    updated_at = models.DateTimeField(auto_now=True,
-                                      null=True)
+    created_at = models.DateTimeField(auto_now_add=True, null=True)
+    updated_at = models.DateTimeField(auto_now=True, null=True)
 
     def __str__(self):
-        return '{} - {}'.format(self.data.name, self.requirement.name)
+        return "{} - {}".format(self.data.name, self.requirement.name)
 
 
 class DataProviderRelation(ValidationWorkflowModel, SoftDeleteModel):
     ORIGINATOR = 1
     DISTRIBUTOR = 2
     ROLE_CHOICES = (
-        (ORIGINATOR, 'Originator'),
-        (DISTRIBUTOR, 'Distributor'),
+        (ORIGINATOR, "Originator"),
+        (DISTRIBUTOR, "Distributor"),
     )
     data = models.ForeignKey(Data, on_delete=models.CASCADE)
     provider = models.ForeignKey(DataProvider, on_delete=models.CASCADE)
     role = models.IntegerField(choices=ROLE_CHOICES, db_index=True)
     created_by = models.ForeignKey(User)
-    created_at = models.DateTimeField(auto_now_add=True,
-                                      null=True)
-    updated_at = models.DateTimeField(auto_now=True,
-                                      null=True)
+    created_at = models.DateTimeField(auto_now_add=True, null=True)
+    updated_at = models.DateTimeField(auto_now=True, null=True)
 
     def __str__(self):
-        return '{} - {}'.format(self.data.name, self.provider.name)
+        return "{} - {}".format(self.data.name, self.provider.name)
 
 
 class UserLog(models.Model):

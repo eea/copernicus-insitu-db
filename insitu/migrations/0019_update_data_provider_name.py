@@ -8,13 +8,13 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('insitu', '0018_remove_mandatory_data'),
+        ("insitu", "0018_remove_mandatory_data"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='dataprovider',
-            name='name',
+            model_name="dataprovider",
+            name="name",
             field=models.CharField(max_length=255),
         ),
     ]

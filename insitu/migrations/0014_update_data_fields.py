@@ -8,28 +8,28 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('insitu', '0013_auto_20171101_1401'),
+        ("insitu", "0013_auto_20171101_1401"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='data',
-            name='essential_variables',
-            field=models.ManyToManyField(blank=True, to='picklists.EssentialVariable'),
+            model_name="data",
+            name="essential_variables",
+            field=models.ManyToManyField(blank=True, to="picklists.EssentialVariable"),
         ),
         migrations.AlterField(
-            model_name='data',
-            name='inspire_themes',
-            field=models.ManyToManyField(blank=True, to='picklists.InspireTheme'),
+            model_name="data",
+            name="inspire_themes",
+            field=models.ManyToManyField(blank=True, to="picklists.InspireTheme"),
         ),
         migrations.AlterField(
-            model_name='data',
-            name='end_time_coverage',
+            model_name="data",
+            name="end_time_coverage",
             field=models.DateField(blank=True, null=True),
         ),
         migrations.AlterField(
-            model_name='data',
-            name='start_time_coverage',
+            model_name="data",
+            name="start_time_coverage",
             field=models.DateField(blank=True, null=True),
         ),
     ]

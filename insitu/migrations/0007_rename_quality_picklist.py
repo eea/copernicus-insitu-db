@@ -8,18 +8,18 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('insitu', '0006_add_responsible_type'),
+        ("insitu", "0006_add_responsible_type"),
     ]
 
     operations = [
         migrations.RenameField(
-            model_name='data',
-            old_name='quality',
-            new_name='quality_control_procedure',
+            model_name="data",
+            old_name="quality",
+            new_name="quality_control_procedure",
         ),
         migrations.RenameField(
-            model_name='requirement',
-            old_name='quality',
-            new_name='quality_control_procedure',
+            model_name="requirement",
+            old_name="quality",
+            new_name="quality_control_procedure",
         ),
     ]

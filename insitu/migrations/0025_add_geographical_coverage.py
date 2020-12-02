@@ -6,25 +6,26 @@ from django.db import migrations, models
 
 
 def set_defaults(apps, schema_editor):
-    Data = apps.get_model('insitu', 'Data')
-    Country = apps.get_model('picklists', 'Country')
-    country = Country.objects.filter(code='XX').first()
+    Data = apps.get_model("insitu", "Data")
+    Country = apps.get_model("picklists", "Country")
+    country = Country.objects.filter(code="XX").first()
     for data in Data.objects.all():
         data.geographical_coverage.add(country)
         data.save()
 
+
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('picklists', '0009_rename_coverage'),
-        ('insitu', '0024_add_user_log'),
+        ("picklists", "0009_rename_coverage"),
+        ("insitu", "0024_add_user_log"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='data',
-            name='geographical_coverage',
-            field=models.ManyToManyField(blank=True, to='picklists.Country'),
+            model_name="data",
+            name="geographical_coverage",
+            field=models.ManyToManyField(blank=True, to="picklists.Country"),
         ),
         migrations.RunPython(set_defaults),
     ]

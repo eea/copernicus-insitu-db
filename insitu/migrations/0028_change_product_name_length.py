@@ -8,13 +8,13 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('insitu', '0027_add_owner_to_requirement'),
+        ("insitu", "0027_add_owner_to_requirement"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='product',
-            name='name',
+            model_name="product",
+            name="name",
             field=models.CharField(max_length=200),
         ),
     ]

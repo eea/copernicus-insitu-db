@@ -8,14 +8,14 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('insitu', '0015_remove_duplicated_associative_relations'),
-        ('picklists', '0008_rename_policy'),
+        ("insitu", "0015_remove_duplicated_associative_relations"),
+        ("picklists", "0008_rename_policy"),
     ]
 
     operations = [
         migrations.RenameField(
-            model_name='data',
-            old_name='policy',
-            new_name='data_policy',
+            model_name="data",
+            old_name="policy",
+            new_name="data_policy",
         ),
     ]

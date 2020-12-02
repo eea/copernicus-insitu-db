@@ -9,15 +9,20 @@ import django.db.models.deletion
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('picklists', '0002_requirementgroup'),
-        ('insitu', '0004_auto_20170720_1126'),
+        ("picklists", "0002_requirementgroup"),
+        ("insitu", "0004_auto_20170720_1126"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='data',
-            name='dissemination',
-            field=models.ForeignKey(default=1, on_delete=django.db.models.deletion.CASCADE, related_name='+', to='picklists.Dissemination'),
+            model_name="data",
+            name="dissemination",
+            field=models.ForeignKey(
+                default=1,
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name="+",
+                to="picklists.Dissemination",
+            ),
             preserve_default=False,
         ),
     ]
