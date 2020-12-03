@@ -653,10 +653,8 @@ class TeamForm(forms.ModelForm):
 
 class StandardReportForm(forms.Form):
     service = forms.ModelMultipleChoiceField(
-        required=False,
-        queryset=models.CopernicusService.objects.all(),
-        label='Service')
+        required=False, queryset=models.CopernicusService.objects.all(), label="Service"
+    )
     component = forms.ModelMultipleChoiceField(
-        required=False,
-        queryset=models.Component.objects.all(),
-        label='Component')
+        required=False, queryset=models.Component.objects.all(), label="Component"
+    )
