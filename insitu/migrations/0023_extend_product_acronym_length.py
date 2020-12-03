@@ -8,13 +8,13 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('insitu', '0022_team_requests_field_blank'),
+        ("insitu", "0022_team_requests_field_blank"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='product',
-            name='acronym',
+            model_name="product",
+            name="acronym",
             field=models.CharField(blank=True, max_length=25),
         ),
     ]

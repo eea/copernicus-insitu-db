@@ -1,5 +1,4 @@
 from django import template
-from django.contrib.auth.models import Group
 
 
 register = template.Library()
@@ -13,7 +12,7 @@ def get_metric_value(form, field, attribute):
         return form.initial["__".join([field, attribute])]
 
 
-@register.filter(name='get_field_nice_value')
+@register.filter(name="get_field_nice_value")
 def get_model_attribute(object, attribute):
     field = object._meta.get_field(attribute)
     if field.choices:
@@ -23,6 +22,6 @@ def get_model_attribute(object, attribute):
     return getattr(object, attribute)
 
 
-@register.filter(name='has_group')
+@register.filter(name="has_group")
 def has_group(user, group_name):
     return user.groups.filter(name=group_name).exists()

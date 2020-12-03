@@ -1,5 +1,5 @@
 from collections import defaultdict
-from django.db.models.signals import *
+from django.db.models.signals import post_save
 import django.dispatch
 
 data_provider_updated = django.dispatch.Signal()

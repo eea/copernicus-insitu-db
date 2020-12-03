@@ -8,41 +8,41 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('insitu', '0012_merge_20171027_1440'),
+        ("insitu", "0012_merge_20171027_1440"),
     ]
 
     operations = [
         migrations.RemoveField(
-            model_name='copernicusprovider',
-            name='service',
+            model_name="copernicusprovider",
+            name="service",
         ),
         migrations.RemoveField(
-            model_name='copernicusprovider',
-            name='user',
+            model_name="copernicusprovider",
+            name="user",
         ),
         migrations.RemoveField(
-            model_name='countryprovider',
-            name='country',
+            model_name="countryprovider",
+            name="country",
         ),
         migrations.RemoveField(
-            model_name='countryprovider',
-            name='user',
+            model_name="countryprovider",
+            name="user",
         ),
         migrations.RemoveField(
-            model_name='dataprovideruser',
-            name='provider',
+            model_name="dataprovideruser",
+            name="provider",
         ),
         migrations.RemoveField(
-            model_name='dataprovideruser',
-            name='user',
+            model_name="dataprovideruser",
+            name="user",
         ),
         migrations.DeleteModel(
-            name='CopernicusProvider',
+            name="CopernicusProvider",
         ),
         migrations.DeleteModel(
-            name='CountryProvider',
+            name="CountryProvider",
         ),
         migrations.DeleteModel(
-            name='DataProviderUser',
+            name="DataProviderUser",
         ),
     ]

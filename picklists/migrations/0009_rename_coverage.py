@@ -8,16 +8,16 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('picklists', '0008_rename_policy'),
+        ("picklists", "0008_rename_policy"),
     ]
 
     operations = [
         migrations.RenameModel(
-            old_name='Coverage',
-            new_name='Area',
+            old_name="Coverage",
+            new_name="Area",
         ),
         migrations.AlterModelOptions(
-            name='area',
-            options={'ordering': ['sort_order'], 'verbose_name_plural': 'areas'},
+            name="area",
+            options={"ordering": ["sort_order"], "verbose_name_plural": "areas"},
         ),
     ]

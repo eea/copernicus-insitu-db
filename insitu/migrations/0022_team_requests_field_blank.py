@@ -9,14 +9,15 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('insitu', '0021_team_requests'),
+        ("insitu", "0021_team_requests"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='team',
-            name='requests',
-            field=models.ManyToManyField(blank=True, related_name='requests',
-                                         to=settings.AUTH_USER_MODEL),
+            model_name="team",
+            name="requests",
+            field=models.ManyToManyField(
+                blank=True, related_name="requests", to=settings.AUTH_USER_MODEL
+            ),
         ),
     ]

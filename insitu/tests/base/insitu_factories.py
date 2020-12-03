@@ -8,7 +8,6 @@ from insitu.tests.base import picklist_factories as factories
 
 
 class UserFactory(DjangoModelFactory):
-
     class Meta:
         model = User
 
@@ -24,30 +23,30 @@ class TeamFactory(DjangoModelFactory):
 
 
 class MetricFactory(DjangoModelFactory):
-    threshold = 'test threshold'
-    breakthrough = 'test breakthrough'
-    goal = 'test goal'
+    threshold = "test threshold"
+    breakthrough = "test breakthrough"
+    goal = "test goal"
 
     class Meta:
         model = models.Metric
 
 
 class CopernicusServiceFactory(DjangoModelFactory):
-    name = 'Test service'
+    name = "Test service"
 
     class Meta:
         model = models.CopernicusService
 
 
 class EntrustedEntityFactory(DjangoModelFactory):
-    name = 'Test entity'
+    name = "Test entity"
 
     class Meta:
         model = models.EntrustedEntity
 
 
 class ComponentFactory(DjangoModelFactory):
-    name = 'Test component'
+    name = "Test component"
     service = SubFactory(CopernicusServiceFactory)
     entrusted_entity = SubFactory(EntrustedEntityFactory)
 
@@ -56,13 +55,11 @@ class ComponentFactory(DjangoModelFactory):
 
 
 class RequirementFactory(DjangoModelFactory):
-    name = 'Test requirement'
-    note = 'Test note'
-    owner = 'Test owner'
+    name = "Test requirement"
+    note = "Test note"
+    owner = "Test owner"
     dissemination = SubFactory(factories.DisseminationFactory)
-    quality_control_procedure = SubFactory(
-        factories.QualityControlProcedureFactory
-    )
+    quality_control_procedure = SubFactory(factories.QualityControlProcedureFactory)
     group = SubFactory(factories.RequirementGroupFactory)
     uncertainty = SubFactory(MetricFactory)
     update_frequency = SubFactory(MetricFactory)
@@ -72,14 +69,20 @@ class RequirementFactory(DjangoModelFactory):
     vertical_resolution = SubFactory(MetricFactory)
 
     @staticmethod
-    def create_metrics(creator, state='draft'):
+    def create_metrics(creator, state="draft"):
         data = {
-            'uncertainty': MetricFactory(created_by=creator, state=state),
-            'update_frequency': MetricFactory(created_by=creator, state=state),
-            'timeliness': MetricFactory(created_by=creator, state=state),
-            'scale': MetricFactory(created_by=creator, state=state, threshold=40, breakthrough=20, goal=10,),
-            'horizontal_resolution': MetricFactory(created_by=creator, state=state),
-            'vertical_resolution': MetricFactory(created_by=creator, state=state)
+            "uncertainty": MetricFactory(created_by=creator, state=state),
+            "update_frequency": MetricFactory(created_by=creator, state=state),
+            "timeliness": MetricFactory(created_by=creator, state=state),
+            "scale": MetricFactory(
+                created_by=creator,
+                state=state,
+                threshold=40,
+                breakthrough=20,
+                goal=10,
+            ),
+            "horizontal_resolution": MetricFactory(created_by=creator, state=state),
+            "vertical_resolution": MetricFactory(created_by=creator, state=state),
         }
         return data
 
@@ -88,8 +91,8 @@ class RequirementFactory(DjangoModelFactory):
 
 
 class ProductFactory(DjangoModelFactory):
-    name = 'Test product'
-    acronym = 'TST'
+    name = "Test product"
+    acronym = "TST"
     group = SubFactory(factories.ProductGroupFactory)
     component = SubFactory(ComponentFactory)
     status = SubFactory(factories.StatusFactory)
@@ -112,7 +115,7 @@ class ProductRequirementFactory(DjangoModelFactory):
 
 
 class DataProviderFactory(DjangoModelFactory):
-    name = 'test data provider'
+    name = "test data provider"
     countries = RelatedFactory(factories.CountryFactory)
 
     class Meta:
@@ -120,12 +123,12 @@ class DataProviderFactory(DjangoModelFactory):
 
 
 class DataProviderDetailsFactory(DjangoModelFactory):
-    acronym = 'TST'
-    website = 'test website'
-    address = 'test address'
-    phone = 'test phone'
-    email = 'test email'
-    contact_person = 'test contact'
+    acronym = "TST"
+    website = "test website"
+    address = "test address"
+    phone = "test phone"
+    email = "test email"
+    contact_person = "test contact"
     provider_type = SubFactory(factories.ProviderTypeFactory)
     data_provider = SubFactory(DataProviderFactory)
 
@@ -134,7 +137,7 @@ class DataProviderDetailsFactory(DjangoModelFactory):
 
 
 class DataFactory(DjangoModelFactory):
-    name = 'test Data'
+    name = "test Data"
     update_frequency = SubFactory(factories.UpdateFrequencyFactory)
     area = SubFactory(factories.AreaFactory)
     timeliness = SubFactory(factories.TimelinessFactory)
@@ -142,9 +145,7 @@ class DataFactory(DjangoModelFactory):
     data_type = SubFactory(factories.DataTypeFactory)
     data_format = SubFactory(factories.DataFormatFactory)
     status = SubFactory(factories.StatusFactory)
-    quality_control_procedure = SubFactory(
-        factories.QualityControlProcedureFactory
-    )
+    quality_control_procedure = SubFactory(factories.QualityControlProcedureFactory)
     inspire_themes = RelatedFactory(factories.InspireThemeFactory)
     dissemination = SubFactory(factories.DisseminationFactory)
     geographical_coverage = RelatedFactory(factories.CountryFactory)

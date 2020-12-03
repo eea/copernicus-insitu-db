@@ -22,7 +22,7 @@ def remove_data_requirement_duplicates(*args):
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('insitu', '0014_update_data_fields'),
+        ("insitu", "0014_update_data_fields"),
     ]
 
     operations = [

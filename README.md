@@ -5,7 +5,7 @@ The Copernicus In-Situ Coordination (GISC) project aimed at linking in-situ data
 The application provides up-to-date information across the
 Copernicus services on in situ data requirements (current and expected), data used, gaps, data providers, access arrangements, and partnerships.
 
-[![Travis](https://travis-ci.org/eea/copernicus-insitu-db.svg?branch=master)](https://travis-ci.org/eea/copernicus-insitu-db)
+![Build](https://github.com/eea/copernicus-insitu-db/workflows/CI/badge.svg)
 [![Coverage](https://coveralls.io/repos/github/eea/copernicus-insitu-db/badge.svg?branch=master)](https://coveralls.io/github/eea/copernicus-insitu-db?branch=master)
 [![Docker Build Status](https://img.shields.io/docker/build/eeacms/copernicus-insitu-db)](https://hub.docker.com/r/eeacms/copernicus-insitu-db/builds)
 
@@ -20,13 +20,6 @@ Copernicus services on in situ data requirements (current and expected), data us
 
         git clone https://github.com/eea/copernicus-insitu-db.git
         cd copernicus-insitu-db
-
-1. Customize env files and `docker-compose.yml`:
-
-        cp docker/app.env.example docker/app.env
-        vim docker/app.env
-        cp docker/db.env.example docker/db.env
-        vim docker/db.env
 
 1. Start application stack:
 
@@ -51,12 +44,12 @@ Copernicus services on in situ data requirements (current and expected), data us
 1. Run tests:
 
         docker exec -it insitu.app sh
-        python manage.py test --settings=copernicus.testsettings
+        python manage.py test --settings=copernicus.test_settings
 
 1. Check coverage:
 
         docker exec -it insitu.app sh
-        coverage run --source='.' ./manage.py test --settings=copernicus.testsettings
+        coverage run --source='.' ./manage.py test --settings=copernicus.test_settings
         python coverage html
 
 1. See it in action: <http://localhost:8000>
@@ -82,7 +75,7 @@ Customize docker orchestration for local development:
 
         cp docker-compose.override.yml.example docker-compose.override.yml
 
-* Please make sure that `DEBUG=True` in `app.env` file.
+* Please make sure that `DEBUG = True` in the settings.
 
 * Update docker-compose.override.yml file `app` section with the following so that `docker-entrypoint.sh` is not executed:
 

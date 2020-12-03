@@ -8,73 +8,73 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('insitu', '0007_rename_quality_picklist'),
+        ("insitu", "0007_rename_quality_picklist"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='component',
-            name='acronym',
+            model_name="component",
+            name="acronym",
             field=models.CharField(blank=True, max_length=10),
         ),
         migrations.AlterField(
-            model_name='copernicusservice',
-            name='acronym',
+            model_name="copernicusservice",
+            name="acronym",
             field=models.CharField(max_length=10, null=True),
         ),
         migrations.AlterField(
-            model_name='copernicusservice',
-            name='description',
+            model_name="copernicusservice",
+            name="description",
             field=models.TextField(null=True),
         ),
         migrations.AlterField(
-            model_name='copernicusservice',
-            name='website',
+            model_name="copernicusservice",
+            name="website",
             field=models.CharField(max_length=255, null=True),
         ),
         migrations.AlterField(
-            model_name='dataresponsibledetails',
-            name='acronym',
+            model_name="dataresponsibledetails",
+            name="acronym",
             field=models.CharField(blank=True, max_length=10),
         ),
         migrations.AlterField(
-            model_name='dataresponsibledetails',
-            name='address',
+            model_name="dataresponsibledetails",
+            name="address",
             field=models.TextField(blank=True),
         ),
         migrations.AlterField(
-            model_name='dataresponsibledetails',
-            name='contact_person',
+            model_name="dataresponsibledetails",
+            name="contact_person",
             field=models.CharField(blank=True, max_length=100),
         ),
         migrations.AlterField(
-            model_name='dataresponsibledetails',
-            name='email',
+            model_name="dataresponsibledetails",
+            name="email",
             field=models.CharField(blank=True, max_length=100),
         ),
         migrations.AlterField(
-            model_name='dataresponsibledetails',
-            name='phone',
+            model_name="dataresponsibledetails",
+            name="phone",
             field=models.CharField(blank=True, max_length=20),
         ),
         migrations.AlterField(
-            model_name='dataresponsibledetails',
-            name='website',
+            model_name="dataresponsibledetails",
+            name="website",
             field=models.CharField(blank=True, max_length=255),
         ),
         migrations.AlterField(
-            model_name='entrustedentity',
-            name='acronym',
+            model_name="entrustedentity",
+            name="acronym",
             field=models.CharField(blank=True, max_length=10),
         ),
         migrations.AlterField(
-            model_name='entrustedentity',
-            name='website',
+            model_name="entrustedentity",
+            name="website",
             field=models.CharField(blank=True, max_length=255),
         ),
         migrations.AlterField(
-            model_name='product',
-            name='acronym',
+            model_name="product",
+            name="acronym",
             field=models.CharField(blank=True, max_length=10),
         ),
     ]

@@ -4,102 +4,112 @@ from django.contrib import admin
 
 from picklists import models
 
+
 class AreaAdmin(admin.ModelAdmin):
-    search_fields = ['name']
-    list_display = ('name', 'description', 'sort_order', 'link')
+    search_fields = ["name"]
+    list_display = ("name", "description", "sort_order", "link")
 
 
 class BarriersAdmin(admin.ModelAdmin):
-    search_fields = ['name']
-    list_display = ('name', 'description', 'sort_order')
+    search_fields = ["name"]
+    list_display = ("name", "description", "sort_order")
 
 
 class ComplianceLevelAdmin(admin.ModelAdmin):
-    search_fields = ['name']
-    list_display = ('name', 'description', 'sort_order', 'link')
+    search_fields = ["name"]
+    list_display = ("name", "description", "sort_order", "link")
 
 
 class CountryAdmin(admin.ModelAdmin):
-    search_fields = ['code', 'name']
-    list_display = ('code', 'name')
+    search_fields = ["code", "name"]
+    list_display = ("code", "name")
 
 
 class CriticalityAdmin(admin.ModelAdmin):
-    search_fields = ['name']
-    list_display = ('name', 'description', 'sort_order', 'link')
+    search_fields = ["name"]
+    list_display = ("name", "description", "sort_order", "link")
 
 
 class DataFormatAdmin(admin.ModelAdmin):
-    search_fields = ['name']
-    list_display = ('name', 'description', 'sort_order', 'link')
+    search_fields = ["name"]
+    list_display = ("name", "description", "sort_order", "link")
 
 
 class DataPolicyAdmin(admin.ModelAdmin):
-    search_fields = ['name']
-    list_display = ('name', 'description', 'sort_order', 'link')
+    search_fields = ["name"]
+    list_display = ("name", "description", "sort_order", "link")
 
 
 class DataTypeAdmin(admin.ModelAdmin):
-    search_fields = ['name']
-    list_display = ('name', 'description', 'sort_order', 'link')
+    search_fields = ["name"]
+    list_display = ("name", "description", "sort_order", "link")
 
 
 class DefinitionLevelAdmin(admin.ModelAdmin):
-    search_fields = ['name']
-    list_display = ('name', 'description', 'sort_order', 'link')
+    search_fields = ["name"]
+    list_display = ("name", "description", "sort_order", "link")
 
 
 class DisseminationAdmin(admin.ModelAdmin):
-    search_fields = ['name']
-    list_display = ('name', 'description', 'sort_order', 'link')
+    search_fields = ["name"]
+    list_display = ("name", "description", "sort_order", "link")
 
 
 class EssentialVariableAdmin(admin.ModelAdmin):
-    search_fields = ['domain','component', 'parameter']
-    list_display = ['domain', 'component', 'parameter', 'description', 'sort_order', 'link']
+    search_fields = ["domain", "component", "parameter"]
+    list_display = [
+        "domain",
+        "component",
+        "parameter",
+        "description",
+        "sort_order",
+        "link",
+    ]
 
 
 class InspireThemeAdmin(admin.ModelAdmin):
-    search_fields = ['name', 'annex']
-    list_display = ['name', 'annex', 'description', 'sort_order', 'link']
+    search_fields = ["name", "annex"]
+    list_display = ["name", "annex", "description", "sort_order", "link"]
 
 
 class ProductGroupAdmin(admin.ModelAdmin):
-    search_fields = ['name']
-    list_display = ['name', 'description', 'sort_order']
+    search_fields = ["name"]
+    list_display = ["name", "description", "sort_order"]
 
 
 class ProviderTypeAdmin(admin.ModelAdmin):
-    search_fields = ['name']
-    list_display = ['name', 'description', 'sort_order', 'link']
+    search_fields = ["name"]
+    list_display = ["name", "description", "sort_order", "link"]
 
 
 class QualityControlProcedureAdmin(admin.ModelAdmin):
-    search_fields = ['name']
-    list_display = ['name', 'description', 'sort_order', 'link']
+    search_fields = ["name"]
+    list_display = ["name", "description", "sort_order", "link"]
 
 
 class RelevanceAdmin(admin.ModelAdmin):
-    search_fields = ['name']
-    list_display = ['name', 'description', 'sort_order', 'link']
+    search_fields = ["name"]
+    list_display = ["name", "description", "sort_order", "link"]
 
 
 class RequirementGroupAdmin(admin.ModelAdmin):
-    search_fields = ['name']
-    list_display = ['name', 'description', 'sort_order']
+    search_fields = ["name"]
+    list_display = ["name", "description", "sort_order"]
+
 
 class StatusAdmin(admin.ModelAdmin):
-    search_fields = ['name']
-    list_display = ['name', 'description', 'sort_order', 'link']
+    search_fields = ["name"]
+    list_display = ["name", "description", "sort_order", "link"]
+
 
 class TimelinessAdmin(admin.ModelAdmin):
-    search_fields = ['name']
-    list_display = ['name', 'description', 'sort_order', 'link']
+    search_fields = ["name"]
+    list_display = ["name", "description", "sort_order", "link"]
 
 
 class UpdateFrequencyAdmin(admin.ModelAdmin):
-    search_fields = ['name']
-    list_display = ['name', 'description', 'sort_order', 'link']
+    search_fields = ["name"]
+    list_display = ["name", "description", "sort_order", "link"]
 
 
 admin.site.register(models.Area, AreaAdmin)

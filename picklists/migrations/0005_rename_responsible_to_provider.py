@@ -8,12 +8,12 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('picklists', '0004_rename_quality_picklist'),
+        ("picklists", "0004_rename_quality_picklist"),
     ]
 
     operations = [
         migrations.RenameModel(
-            old_name='ResponsibleType',
-            new_name='ProviderType',
+            old_name="ResponsibleType",
+            new_name="ProviderType",
         ),
     ]

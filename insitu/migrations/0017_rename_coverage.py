@@ -8,19 +8,19 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('insitu', '0016_rename_policy'),
-        ('picklists', '0009_rename_coverage'),
+        ("insitu", "0016_rename_policy"),
+        ("picklists", "0009_rename_coverage"),
     ]
 
     operations = [
         migrations.RenameField(
-            model_name='data',
-            old_name='coverage',
-            new_name='area',
+            model_name="data",
+            old_name="coverage",
+            new_name="area",
         ),
         migrations.RenameField(
-            model_name='product',
-            old_name='coverage',
-            new_name='area',
+            model_name="product",
+            old_name="coverage",
+            new_name="area",
         ),
     ]

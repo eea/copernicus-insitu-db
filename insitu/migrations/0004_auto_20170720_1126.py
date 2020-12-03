@@ -8,18 +8,18 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('insitu', '0003_requirement_group'),
+        ("insitu", "0003_requirement_group"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='data',
-            name='end_time_coverage',
+            model_name="data",
+            name="end_time_coverage",
             field=models.DateField(null=True),
         ),
         migrations.AddField(
-            model_name='data',
-            name='start_time_coverage',
+            model_name="data",
+            name="start_time_coverage",
             field=models.DateField(null=True),
         ),
     ]

@@ -2,83 +2,46 @@ version: '2'
 
 services:
   web:
-    image: eeacms/copernicus-insitu-db:latest
+    build:
+      context: .
+      args:
+        REQFILE: requirements-dev.txt
     container_name: insitu.app
+    entrypoint: ["/usr/bin/tail", "-f", "/dev/null"]
     environment:
       - DJANGO_MIGRATE=yes
       - DJANGO_COLLECT_STATIC=yes
       - DJANGO_INDEX_CONTENT=no
       - UWSGI_PORT=8000
-    env_file:
-      - ./docker/db.env
-      - docker/app.env
+      - TIMEOUT=60
     depends_on:
       - db
-      - elasticsearch
     volumes:
       - static:/var/local/static
       - logging:/var/local/copernicus/logging
 
-  cron:
-    image: eeacms/copernicus-insitu-db:latest
-    container_name: insitu.cron
-    environment:
-      - TZ=Europe/Bucharest
-    env_file:
-      - docker/app.env
-      - docker/db.env
-    depends_on:
-      - db
-    volumes:
-      - static:/var/local/static
-    entrypoint: ["./docker-entrypoint.cron.sh"]
-
   db:
     image: postgres:10-alpine
     container_name: insitu.db
-    environment:
-      - TZ=Europe/Copenhagen
     env_file:
-      - ./docker/db.env
+      - docker/db.env
     volumes:
       - data:/var/lib/postgresql/data
 
-  backupdb:
-    image: postgres:10-alpine
-    container_name: insitu.backupdb
-    environment:
-      - TZ=Europe/Copenhagen
-    env_file:
-      - ./docker/db.env
-    depends_on:
-      - db
-    volumes:
-      - static:/var/local/static
-    command: /bin/sh -c 'pg_dump --exclude-table=public.auth_* --exclude-table=public.django_*  --exclude-table=public.explorer_* --inserts -h db -U $$POSTGRES_USER $$POSTGRES_DB | gzip > /var/local/static/protected/database.sql.gz'
-
-  elasticsearch:
+  elasticsearch_test:
     image: docker.elastic.co/elasticsearch/elasticsearch:6.6.1
-    container_name: insitu.elasticsearch
-    environment:
-      - cluster.name=docker-cluster
-      - bootstrap.memory_lock=true
-      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
-    ulimits:
-      memlock:
-        soft: -1
-        hard: -1
-    mem_limit: 1g
+    container_name: insitu.elasticsearch_test
     volumes:
-      - esdata:/usr/share/elasticsearch/data
+      - esdata_test:/usr/share/elasticsearch/data
     ports:
-      - 9200:9200
+      - 9201:9201
 
 volumes:
   static:
     driver: local
   data:
     driver: local
-  esdata:
+  esdata_test:
     driver: local
   logging:
     driver: local

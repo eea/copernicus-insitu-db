@@ -8,13 +8,13 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('insitu', '0026_add_status_for_data'),
+        ("insitu", "0026_add_status_for_data"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='requirement',
-            name='owner',
+            model_name="requirement",
+            name="owner",
             field=models.CharField(max_length=100, blank=True),
         ),
     ]

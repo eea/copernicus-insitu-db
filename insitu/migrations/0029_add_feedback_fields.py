@@ -8,23 +8,23 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('insitu', '0028_change_product_name_length'),
+        ("insitu", "0028_change_product_name_length"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='data',
-            name='feedback',
+            model_name="data",
+            name="feedback",
             field=models.TextField(blank=True),
         ),
         migrations.AddField(
-            model_name='dataprovider',
-            name='feedback',
+            model_name="dataprovider",
+            name="feedback",
             field=models.TextField(blank=True),
         ),
         migrations.AddField(
-            model_name='requirement',
-            name='feedback',
+            model_name="requirement",
+            name="feedback",
             field=models.TextField(blank=True),
         ),
     ]

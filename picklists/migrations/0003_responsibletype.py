@@ -8,18 +8,26 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('picklists', '0002_requirementgroup'),
+        ("picklists", "0002_requirementgroup"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='ResponsibleType',
+            name="ResponsibleType",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(max_length=100)),
-                ('description', models.TextField(blank=True)),
-                ('sort_order', models.IntegerField()),
-                ('link', models.CharField(blank=True, max_length=100)),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("name", models.CharField(max_length=100)),
+                ("description", models.TextField(blank=True)),
+                ("sort_order", models.IntegerField()),
+                ("link", models.CharField(blank=True, max_length=100)),
             ],
         ),
     ]

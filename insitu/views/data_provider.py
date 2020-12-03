@@ -19,137 +19,154 @@ from insitu.views.protected import (
     LoggingProtectedUpdateView,
     LoggingProtectedCreateView,
     LoggingProtectedDeleteView,
-    LoggingTransitionProtectedDetailView
+    LoggingTransitionProtectedDetailView,
 )
 from insitu.views.protected import IsAuthenticated, IsNotReadOnlyUser
-from insitu.views.protected.permissions import (
-    IsOwnerUser,
-    IsDraftObject
-)
+from insitu.views.protected.permissions import IsOwnerUser, IsDraftObject
 from insitu.utils import get_choices
 
 from picklists import models as pickmodels
 
 
 class DataProviderList(ProtectedTemplateView):
-    template_name = 'data_provider/list.html'
+    template_name = "data_provider/list.html"
     permission_classes = (IsAuthenticated,)
-    permission_denied_redirect = reverse_lazy('auth:login')
-    target_type = 'data providers'
+    permission_denied_redirect = reverse_lazy("auth:login")
+    target_type = "data providers"
 
     def get_context_data(self):
         context = super().get_context_data()
-        provider_types = get_choices(
-            'name', model_cls=pickmodels.ProviderType)
-        states = [{'title': 'All', 'name': 'All'}] + [
-            state for state in models.ValidationWorkflow.states]
-        context.update({
-            'provider_types': provider_types,
-            'states': states,
-        })
+        provider_types = get_choices("name", model_cls=pickmodels.ProviderType)
+        states = [{"title": "All", "name": "All"}] + [
+            state for state in models.ValidationWorkflow.states
+        ]
+        context.update(
+            {
+                "provider_types": provider_types,
+                "states": states,
+            }
+        )
         return context
 
 
 class DataProviderListJson(ESDatatableView):
-    columns = ['name', 'acronym', 'address', 'phone', 'email', 'contact_person',
-               'provider_type', 'is_network', 'state']
+    columns = [
+        "name",
+        "acronym",
+        "address",
+        "phone",
+        "email",
+        "contact_person",
+        "provider_type",
+        "is_network",
+        "state",
+    ]
     order_columns = columns
-    filters = ['is_network', 'provider_type', 'state']
-    filter_fields = ['is_network', 'details__provider_type__name', 'state']
+    filters = ["is_network", "provider_type", "state"]
+    filter_fields = ["is_network", "details__provider_type__name", "state"]
     document = documents.DataProviderDoc
     permission_classes = (IsAuthenticated,)
 
 
 class DataProviderDetail(ProtectedDetailView):
     model = models.DataProvider
-    context_object_name = 'provider'
+    context_object_name = "provider"
     permission_classes = (IsAuthenticated,)
-    permission_denied_redirect = reverse_lazy('provider:list')
-    target_type = 'data provider'
+    permission_denied_redirect = reverse_lazy("provider:list")
+    target_type = "data provider"
 
     def get_template_names(self):
         provider = self.object
         if provider.is_network:
-            return ['data_provider/network/detail.html']
-        return ['data_provider/non_network/detail.html']
+            return ["data_provider/network/detail.html"]
+        return ["data_provider/non_network/detail.html"]
 
 
 class DataProviderAddNetwork(CreatedByMixin, LoggingProtectedCreateView):
-    template_name = 'data_provider/network/add.html'
+    template_name = "data_provider/network/add.html"
     form_class = forms.DataProviderNetworkForm
     permission_classes = (IsAuthenticated, IsNotReadOnlyUser)
-    permission_denied_redirect = reverse_lazy('provider:list')
-    target_type = 'data provider network'
+    permission_denied_redirect = reverse_lazy("provider:list")
+    target_type = "data provider network"
 
     def form_valid(self, form):
         response = super().form_valid(form)
-        messages.success(self.request, 'The data provider network was created successfully!')
+        messages.success(
+            self.request, "The data provider network was created successfully!"
+        )
         return response
 
     def get_success_url(self):
-        return reverse('provider:detail', kwargs={'pk': self.object.pk})
+        return reverse("provider:detail", kwargs={"pk": self.object.pk})
 
 
 class DataProviderEditNetwork(LoggingProtectedUpdateView):
-    template_name = 'data_provider/network/edit.html'
+    template_name = "data_provider/network/edit.html"
     form_class = forms.DataProviderNetworkForm
-    context_object_name = 'provider'
+    context_object_name = "provider"
     model = models.DataProvider
     permission_classes = (IsOwnerUser, IsDraftObject, IsNotReadOnlyUser)
-    permission_denied_redirect = reverse_lazy('provider:list')
-    target_type = 'data provider network'
+    permission_denied_redirect = reverse_lazy("provider:list")
+    target_type = "data provider network"
 
     def form_valid(self, form):
         response = super().form_valid(form)
-        messages.success(self.request, 'The data provider network was updated successfully!')
+        messages.success(
+            self.request, "The data provider network was updated successfully!"
+        )
         return response
 
     def get_success_url(self):
-        return reverse('provider:detail', kwargs={'pk': self.object.pk})
+        return reverse("provider:detail", kwargs={"pk": self.object.pk})
 
 
 class DataProviderEditNetworkMembers(ProtectedUpdateView):
-    template_name = 'data_provider/network/edit_members.html'
+    template_name = "data_provider/network/edit_members.html"
     form_class = forms.DataProviderNetworkMembersForm
-    context_object_name = 'provider'
+    context_object_name = "provider"
     model = models.DataProvider
     permission_classes = (IsOwnerUser, IsDraftObject, IsNotReadOnlyUser)
-    permission_denied_redirect = reverse_lazy('provider:list')
+    permission_denied_redirect = reverse_lazy("provider:list")
 
     def form_valid(self, form):
         response = super().form_valid(form)
-        messages.success(self.request, 'The members for this data provider network were updated successfully!')
+        messages.success(
+            self.request,
+            "The members for this data provider network were updated successfully!",
+        )
         return response
 
     def get_success_url(self):
-        return reverse('provider:detail', kwargs={'pk': self.object.pk})
+        return reverse("provider:detail", kwargs={"pk": self.object.pk})
 
 
 class DataProviderDeleteNetwork(LoggingProtectedDeleteView):
-    template_name = 'data_provider/network/delete.html'
+    template_name = "data_provider/network/delete.html"
     form_class = forms.DataProviderNetworkForm
-    context_object_name = 'provider'
+    context_object_name = "provider"
     model = models.DataProvider
     permission_classes = (IsOwnerUser, IsDraftObject, IsNotReadOnlyUser)
-    permission_denied_redirect = reverse_lazy('provider:list')
-    target_type = 'data provider network'
+    permission_denied_redirect = reverse_lazy("provider:list")
+    target_type = "data provider network"
 
     def get_success_url(self):
-        messages.success(self.request, 'The data provider network was deleted successfully!')
-        return reverse('provider:list')
+        messages.success(
+            self.request, "The data provider network was deleted successfully!"
+        )
+        return reverse("provider:list")
 
 
 class DataProviderAddNonNetwork(CreatedByMixin, LoggingProtectedCreateView):
-    template_name = 'data_provider/non_network/add.html'
+    template_name = "data_provider/non_network/add.html"
     form_class = forms.DataProviderNonNetworkForm
     permission_classes = (IsAuthenticated, IsNotReadOnlyUser)
-    permission_denied_redirect = reverse_lazy('provider:list')
-    target_type = 'data provider'
+    permission_denied_redirect = reverse_lazy("provider:list")
+    target_type = "data provider"
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        if 'details' not in context:
-            context['details'] = forms.DataProviderDetailsForm()
+        if "details" not in context:
+            context["details"] = forms.DataProviderDetailsForm()
         return context
 
     def form_valid(self, form):
@@ -158,46 +175,45 @@ class DataProviderAddNonNetwork(CreatedByMixin, LoggingProtectedCreateView):
             return self.form_invalid(form)
         super().form_valid(form)
         data = form.data.copy()
-        data['data_provider'] = self.object.pk
+        data["data_provider"] = self.object.pk
         details_form = forms.DataProviderDetailsForm(data=data)
         details_form.save(created_by=self.object.created_by)
-        messages.success(self.request, 'The data provider was created successfully!')
+        messages.success(self.request, "The data provider was created successfully!")
         return HttpResponseRedirect(self.get_success_url())
 
     def form_invalid(self, form):
         details_form = forms.DataProviderDetailsForm(form.data)
         details_form.is_valid()
-        return self.render_to_response(self.get_context_data(
-            form=form,
-            details=details_form))
+        return self.render_to_response(
+            self.get_context_data(form=form, details=details_form)
+        )
 
     def get_success_url(self):
-        return reverse('provider:detail', kwargs={'pk': self.object.pk})
+        return reverse("provider:detail", kwargs={"pk": self.object.pk})
 
 
 class DataProviderEditNonNetwork(LoggingProtectedUpdateView):
-    template_name = 'data_provider/non_network/edit.html'
+    template_name = "data_provider/non_network/edit.html"
     form_class = forms.DataProviderNonNetworkForm
-    context_object_name = 'provider'
+    context_object_name = "provider"
     model = models.DataProvider
     permission_classes = (IsOwnerUser, IsDraftObject, IsNotReadOnlyUser)
-    permission_denied_redirect = reverse_lazy('provider:list')
-    target_type = 'data provider'
+    permission_denied_redirect = reverse_lazy("provider:list")
+    target_type = "data provider"
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        if 'details' not in context:
+        if "details" not in context:
             details = self.object.details.first()
-            context['details'] = forms.DataProviderDetailsForm(instance=details)
+            context["details"] = forms.DataProviderDetailsForm(instance=details)
         return context
 
     def _update_objects(self, form):
         self.object = form.save()
         details = self.object.details.first()
         data = form.data.copy()
-        data['data_provider'] = self.object.pk
-        details_form = forms.DataProviderDetailsForm(instance=details,
-                                                     data=data)
+        data["data_provider"] = self.object.pk
+        details_form = forms.DataProviderDetailsForm(instance=details, data=data)
         details_form.save()
 
     def form_valid(self, form):
@@ -205,73 +221,73 @@ class DataProviderEditNonNetwork(LoggingProtectedUpdateView):
         if not details_form.is_valid():
             return self.form_invalid(form)
         self._update_objects(form)
-        messages.success(self.request, 'The data provider was updated successfully!')
+        messages.success(self.request, "The data provider was updated successfully!")
         return HttpResponseRedirect(self.get_success_url())
 
     def form_invalid(self, form):
         details_form = forms.DataProviderDetailsForm(form.data)
         details_form.is_valid()
-        return self.render_to_response(self.get_context_data(
-            form=form,
-            details=details_form))
+        return self.render_to_response(
+            self.get_context_data(form=form, details=details_form)
+        )
 
     def get_success_url(self):
-        return reverse('provider:detail', kwargs={'pk': self.object.pk})
+        return reverse("provider:detail", kwargs={"pk": self.object.pk})
 
 
 class DataProviderDeleteNonNetwork(LoggingProtectedDeleteView):
-    template_name = 'data_provider/non_network/delete.html'
+    template_name = "data_provider/non_network/delete.html"
     form_class = forms.DataProviderNonNetworkForm
-    context_object_name = 'provider'
+    context_object_name = "provider"
     model = models.DataProvider
     permission_classes = (IsOwnerUser, IsDraftObject, IsNotReadOnlyUser)
-    permission_denied_redirect = reverse_lazy('provider:list')
-    target_type = 'data provider'
+    permission_denied_redirect = reverse_lazy("provider:list")
+    target_type = "data provider"
 
     def get_success_url(self):
-        messages.success(self.request, 'The data provider was deleted successfully!')
-        return reverse('provider:list')
+        messages.success(self.request, "The data provider was deleted successfully!")
+        return reverse("provider:list")
 
 
-class DataProviderTransition(ChangesRequestedMailMixin, LoggingTransitionProtectedDetailView):
+class DataProviderTransition(
+    ChangesRequestedMailMixin, LoggingTransitionProtectedDetailView
+):
     model = models.DataProvider
-    template_name = 'data_provider/transition.html'
+    template_name = "data_provider/transition.html"
     permission_classes = (IsAuthenticated, IsNotReadOnlyUser)
-    context_object_name = 'provider'
-    target_type = 'data provider'
+    context_object_name = "provider"
+    target_type = "data provider"
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        source = self.kwargs.get('source')
-        target = self.kwargs.get('target')
+        source = self.kwargs.get("source")
+        target = self.kwargs.get("target")
         transition = models.ValidationWorkflow.get_transition(source, target)
         if not transition:
             raise Http404()
         objects = [
-            {
-                'obj': item,
-                'type': item.__class__.__name__
-            }
+            {"obj": item, "type": item.__class__.__name__}
             for item in self.object.get_related_objects()
         ]
-        context.update({
-            'target': target,
-            'source': source,
-            'objects': objects,
-        })
+        context.update(
+            {
+                "target": target,
+                "source": source,
+                "objects": objects,
+            }
+        )
         return context
 
     def get_success_url(self, **kwargs):
-        data_provider =  self.get_object(self.get_queryset())
-        return reverse('provider:detail', kwargs={'pk': data_provider.pk})
+        data_provider = self.get_object(self.get_queryset())
+        return reverse("provider:detail", kwargs={"pk": data_provider.pk})
 
     def post(self, request, *args, **kwargs):
         data_provider = self.get_object(self.get_queryset())
-        source = self.kwargs.get('source')
-        target = self.kwargs.get('target')
-        self.post_action = 'changed state from {source} to {target} for'.format(
-            source=source,
-            target=target
+        source = self.kwargs.get("source")
+        target = self.kwargs.get("target")
+        self.post_action = "changed state from {source} to {target} for".format(
+            source=source, target=target
         )
         id = self.get_object_id()
         self.log_action(request, self.post_action, id)
@@ -281,16 +297,17 @@ class DataProviderTransition(ChangesRequestedMailMixin, LoggingTransitionProtect
             data_provider.requesting_user = self.request.user
             if transition.is_available():
                 transition()
-                feedback = ''
-                if transition_name == 'request_changes':
-                    data_provider.feedback = ''
-                    data_provider.feedback = request.POST.get('feedback', '')
+                feedback = ""
+                if transition_name == "request_changes":
+                    data_provider.feedback = ""
+                    data_provider.feedback = request.POST.get("feedback", "")
                     data_provider.save()
-                    feedback = request.POST.get('feedback', '')
+                    feedback = request.POST.get("feedback", "")
                 if self.transition_name == transition_name:
                     self.send_mail(data_provider, feedback)
-                return HttpResponseRedirect(reverse('provider:detail',
-                                                    kwargs={'pk': data_provider.pk}))
+                return HttpResponseRedirect(
+                    reverse("provider:detail", kwargs={"pk": data_provider.pk})
+                )
         except ForbiddenTransition:
             pass
         raise Http404()

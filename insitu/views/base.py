@@ -20,47 +20,47 @@ class ESDatatableView(BaseDatatableView, ProtectedView):
         sorting_cols = 0
         if self.pre_camel_case_notation:
             try:
-                sorting_cols = int(self._querydict.get('iSortingCols', 0))
+                sorting_cols = int(self._querydict.get("iSortingCols", 0))
             except ValueError:
                 sorting_cols = 0
         else:
-            sort_key = 'order[{0}][column]'.format(sorting_cols)
+            sort_key = "order[{0}][column]".format(sorting_cols)
             while sort_key in self._querydict:
                 sorting_cols += 1
-                sort_key = 'order[{0}][column]'.format(sorting_cols)
+                sort_key = "order[{0}][column]".format(sorting_cols)
 
         order = []
         order_columns = self.get_order_columns()
         for i in range(sorting_cols):
             # sorting column
-            sort_dir = 'asc'
+            sort_dir = "asc"
             try:
                 if self.pre_camel_case_notation:
-                    sort_col = int(self._querydict.get('iSortCol_{0}'.format(i)))
+                    sort_col = int(self._querydict.get("iSortCol_{0}".format(i)))
                     # sorting order
-                    sort_dir = self._querydict.get('sSortDir_{0}'.format(i))
+                    sort_dir = self._querydict.get("sSortDir_{0}".format(i))
                 else:
-                    sort_col = int(self._querydict.get('order[{0}][column]'.format(i)))
+                    sort_col = int(self._querydict.get("order[{0}][column]".format(i)))
                     # sorting order
-                    sort_dir = self._querydict.get('order[{0}][dir]'.format(i))
+                    sort_dir = self._querydict.get("order[{0}][dir]".format(i))
             except ValueError:
                 sort_col = 0
 
-            sdir = '-' if sort_dir == 'desc' else ''
+            sdir = "-" if sort_dir == "desc" else ""
             sortcol = order_columns[sort_col]
 
             if isinstance(sortcol, list):
                 for sc in sortcol:
-                    order.append('{0}{1}'.format(sdir, sc.replace('.', '__')))
+                    order.append("{0}{1}".format(sdir, sc.replace(".", "__")))
             else:
-                order.append('{0}{1}'.format(sdir, sortcol.replace('.', '__')))
+                order.append("{0}{1}".format(sdir, sortcol.replace(".", "__")))
 
         if order:
             for i in range(0, len(order)):
-                if order[i] == 'name':
-                    order[i] = 'name.raw'
-                if order[i] == '-name':
-                    order[i] = '-name.raw'
+                if order[i] == "name":
+                    order[i] = "name.raw"
+                if order[i] == "-name":
+                    order[i] = "-name.raw"
             return qs.order_by(*order)
         return qs
 
@@ -74,58 +74,54 @@ class ESDatatableView(BaseDatatableView, ProtectedView):
                 continue
             if filter_ in self.filter_translation.keys():
                 filter_ = self.filter_translation[filter_]
-            search = search.query('term', **{filter_: value})
+            search = search.query("term", **{filter_: value})
 
-        search_text = self.request.GET.get('search[value]', '')
+        search_text = self.request.GET.get("search[value]", "")
         if search_text:
             search = search.query(
-                'query_string', default_field='name',
-                query='"' + search_text + '"'
+                "query_string", default_field="name", query='"' + search_text + '"'
             )
 
-        if (
-                search.count() > settings.MAX_RESULT_WINDOW or not
-                hasattr(self, 'filter_fields')):
+        if search.count() > settings.MAX_RESULT_WINDOW or not hasattr(
+            self, "filter_fields"
+        ):
             # If there are more than MAX_RESULT_WINDOW matching objects in the
             # database, don't bother syncing the filter options. It would be too
             # complicated and costly.
             return search
 
-        search = search[0:settings.MAX_RESULT_WINDOW]
+        search = search[0 : settings.MAX_RESULT_WINDOW]
 
         qs = search.to_queryset()  # If there are ever more than 10,000
         # items in the database, this will have to be reimplemented entirely.
         if self._should_filter_requirements:
-            qs = qs.filter(requirements___deleted=False, datarequirement___deleted=False)
+            qs = qs.filter(
+                requirements___deleted=False, datarequirement___deleted=False
+            )
 
         objects = qs.values_list(*self.filter_fields)
 
-        self._filter_options = dict([
-            (
-                filter_,
-                {
-                    'options': options,
-                    'selected': self.request.GET.get(filter_)
-                }
-            )
-            for filter_, options in
-            zip(
-                self.filters,
-                [
-                    sorted([opt for opt in set(options) if opt
-                            not in ['', None]])
-                    for options in zip(*objects)
-                ]
-            )
-        ])
+        self._filter_options = dict(
+            [
+                (
+                    filter_,
+                    {"options": options, "selected": self.request.GET.get(filter_)},
+                )
+                for filter_, options in zip(
+                    self.filters,
+                    [
+                        sorted([opt for opt in set(options) if opt not in ["", None]])
+                        for options in zip(*objects)
+                    ],
+                )
+            ]
+        )
         return search
 
     def get_context_data(self, *args, **kwargs):
         ret = super().get_context_data(*args, **kwargs)
-        if hasattr(self, '_filter_options'):
-            ret.update({
-                'filters': self._filter_options
-            })
+        if hasattr(self, "_filter_options"):
+            ret.update({"filters": self._filter_options})
         return ret
 
 
@@ -136,9 +132,9 @@ class CreatedByMixin:
 
 
 class ChangesRequestedMailMixin:
-    transition_name = 'request_changes'
+    transition_name = "request_changes"
 
-    def send_mail(self, target_object, feedback=''):
+    def send_mail(self, target_object, feedback=""):
         sender = self.request.user
         receiver = target_object.created_by
         subject = 'Changes requested for "{}" {}'.format(
@@ -153,13 +149,12 @@ class ChangesRequestedMailMixin:
             "object": target_object,
             "url": SITE_URL + self.get_success_url(),
         }
-        html_message = render_to_string('mails/request_changes.html',
-                                        context=context)
-        message = render_to_string('mails/request_changes.txt',
-                                   context=context)
-        send_mail(subject=subject,
-                  message=message,
-                  from_email=DEFAULT_FROM_EMAIL,
-                  recipient_list=[receiver.email],
-                  html_message=html_message
+        html_message = render_to_string("mails/request_changes.html", context=context)
+        message = render_to_string("mails/request_changes.txt", context=context)
+        send_mail(
+            subject=subject,
+            message=message,
+            from_email=DEFAULT_FROM_EMAIL,
+            recipient_list=[receiver.email],
+            html_message=html_message,
         )

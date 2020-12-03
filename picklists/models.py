@@ -5,9 +5,8 @@ from django.db import models
 
 
 class SortedManager(models.Manager):
-
     def get_queryset(self):
-        return super().get_queryset().order_by('sort_order')
+        return super().get_queryset().order_by("sort_order")
 
 
 class Country(models.Model):
@@ -15,8 +14,8 @@ class Country(models.Model):
     name = models.CharField(max_length=100)
 
     class Meta:
-        ordering = ['name']
-        verbose_name_plural = 'countries'
+        ordering = ["name"]
+        verbose_name_plural = "countries"
 
     def __str__(self):
         return self.name
@@ -32,14 +31,10 @@ class InspireTheme(models.Model):
     objects = SortedManager()
 
     class Meta:
-        ordering = ['sort_order']
+        ordering = ["sort_order"]
 
     def __str__(self):
-        return (
-            '{}: {}'.format(self.annex, self.name)
-            if self.annex
-            else self.name
-        )
+        return "{}: {}".format(self.annex, self.name) if self.annex else self.name
 
 
 class EssentialVariable(models.Model):
@@ -53,15 +48,10 @@ class EssentialVariable(models.Model):
     objects = SortedManager()
 
     class Meta:
-        ordering = ['sort_order']
+        ordering = ["sort_order"]
 
     def __str__(self):
-        return (
-            '{} - {} - {}'.format(
-                self.domain,
-                self.component,
-                self.parameter)
-        )
+        return "{} - {} - {}".format(self.domain, self.component, self.parameter)
 
 
 class Status(models.Model):
@@ -73,8 +63,8 @@ class Status(models.Model):
     objects = SortedManager()
 
     class Meta:
-        ordering = ['sort_order']
-        verbose_name_plural = 'product status'
+        ordering = ["sort_order"]
+        verbose_name_plural = "product status"
 
     def __str__(self):
         return self.name
@@ -88,7 +78,7 @@ class ProductGroup(models.Model):
     objects = SortedManager()
 
     class Meta:
-        ordering = ['sort_order']
+        ordering = ["sort_order"]
 
     def __str__(self):
         return self.name
@@ -102,7 +92,7 @@ class RequirementGroup(models.Model):
     objects = SortedManager()
 
     class Meta:
-        ordering = ['sort_order']
+        ordering = ["sort_order"]
 
     def __str__(self):
         return self.name
@@ -117,7 +107,7 @@ class DefinitionLevel(models.Model):
     objects = SortedManager()
 
     class Meta:
-        ordering = ['sort_order']
+        ordering = ["sort_order"]
 
     def __str__(self):
         return self.name
@@ -132,8 +122,8 @@ class Relevance(models.Model):
     objects = SortedManager()
 
     class Meta:
-        ordering = ['sort_order']
-        verbose_name_plural = 'relevance'
+        ordering = ["sort_order"]
+        verbose_name_plural = "relevance"
 
     def __str__(self):
         return self.name
@@ -148,8 +138,8 @@ class Criticality(models.Model):
     objects = SortedManager()
 
     class Meta:
-        ordering = ['sort_order']
-        verbose_name_plural = 'criticality'
+        ordering = ["sort_order"]
+        verbose_name_plural = "criticality"
 
     def __str__(self):
         return self.name
@@ -163,7 +153,7 @@ class Barrier(models.Model):
     objects = SortedManager()
 
     class Meta:
-        ordering = ['sort_order']
+        ordering = ["sort_order"]
 
     def __str__(self):
         return self.name
@@ -178,8 +168,8 @@ class Dissemination(models.Model):
     objects = SortedManager()
 
     class Meta:
-        ordering = ['sort_order']
-        verbose_name_plural = 'dissemination'
+        ordering = ["sort_order"]
+        verbose_name_plural = "dissemination"
 
     def __str__(self):
         return self.name
@@ -194,8 +184,8 @@ class Area(models.Model):
     objects = SortedManager()
 
     class Meta:
-        ordering = ['sort_order']
-        verbose_name_plural = 'areas'
+        ordering = ["sort_order"]
+        verbose_name_plural = "areas"
 
     def __str__(self):
         return self.name
@@ -210,8 +200,8 @@ class QualityControlProcedure(models.Model):
     objects = SortedManager()
 
     class Meta:
-        ordering = ['sort_order']
-        verbose_name_plural = 'quality_control_procedure'
+        ordering = ["sort_order"]
+        verbose_name_plural = "quality_control_procedure"
 
     def __str__(self):
         return self.name
@@ -226,7 +216,7 @@ class ComplianceLevel(models.Model):
     objects = SortedManager()
 
     class Meta:
-        ordering = ['sort_order']
+        ordering = ["sort_order"]
 
     def __str__(self):
         return self.name
@@ -241,8 +231,8 @@ class UpdateFrequency(models.Model):
     objects = SortedManager()
 
     class Meta:
-        ordering = ['sort_order']
-        verbose_name_plural = 'update_frequency'
+        ordering = ["sort_order"]
+        verbose_name_plural = "update_frequency"
 
     def __str__(self):
         return self.name
@@ -257,8 +247,8 @@ class Timeliness(models.Model):
     objects = SortedManager()
 
     class Meta:
-        ordering = ['sort_order']
-        verbose_name_plural = 'timeliness'
+        ordering = ["sort_order"]
+        verbose_name_plural = "timeliness"
 
     def __str__(self):
         return self.name
@@ -273,8 +263,8 @@ class DataPolicy(models.Model):
     objects = SortedManager()
 
     class Meta:
-        ordering = ['sort_order']
-        verbose_name_plural = 'Data policies'
+        ordering = ["sort_order"]
+        verbose_name_plural = "Data policies"
 
     def __str__(self):
         return self.name
@@ -289,7 +279,7 @@ class DataType(models.Model):
     objects = SortedManager()
 
     class Meta:
-        ordering = ['sort_order']
+        ordering = ["sort_order"]
 
     def __str__(self):
         return self.name
@@ -304,7 +294,7 @@ class DataFormat(models.Model):
     objects = SortedManager()
 
     class Meta:
-        ordering = ['sort_order']
+        ordering = ["sort_order"]
 
     def __str__(self):
         return self.name
