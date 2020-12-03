@@ -34,8 +34,8 @@
         {% endfor %}
       </select>
     </div>
-
-    <input class="btn btn-primary" type="submit" value="Generate Excel"/>
+    <input class="btn btn-primary" type="submit" name="action" value="Generate PDF" />
+    <input class="btn btn-primary" type="submit" name="action" value="Generate Excel" />
     <a href="{% url 'home' %}"
        class="btn btn-default">Cancel</a>
   </form>

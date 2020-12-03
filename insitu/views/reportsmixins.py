@@ -2,6 +2,21 @@ from insitu.models import (
     CopernicusService, Component,
     Data, Product, Requirement
 )
+from django.utils.html import strip_tags
+
+import datetime
+import json
+from reportlab.pdfgen import canvas
+from reportlab.lib.pagesizes import A4, landscape
+from reportlab.lib.units import mm, inch
+from reportlab.pdfbase.ttfonts import TTFont
+from reportlab.pdfbase import pdfmetrics
+from reportlab.platypus import SimpleDocTemplate, Paragraph, PageBreak, Table, TableStyle
+
+from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
+from reportlab.lib.colors import Color, red, black
+from reportlab.lib.enums import TA_CENTER, TA_LEFT
+
 
 
 class ReportExcelMixin:
@@ -56,7 +71,7 @@ class ReportExcelMixin:
         worksheet.merge_range(
             'A3:D3', 'Standard Report for Local Land Component', self.merge_format)
         worksheet.merge_range(
-            'A4:D4', 'Produced on 30th October 2020', self.merge_format)
+            'A4:D4', "Produced on {}".format(datetime.datetime.now().strftime('%d %B %Y')), self.merge_format)
         worksheet.merge_range(
             'A6:D6', 'The Standard Report consists of tables that include  all the main  statistical data  . . . . .')
         worksheet.merge_range('A7:D7', 'The objects in this document are filtered using the following services: {} and the following components: {}'.format(
@@ -77,7 +92,7 @@ class ReportExcelMixin:
         ]
         worksheet.write_row('A2', headers, self.format_cols_headers)
         self.requirements = Requirement.objects.filter(
-            products__in=self.products).distinct()
+            products__in=self.products).distinct().order_by('name')
         index = 2
         for requirement in self.requirements:
             worksheet.set_row(index, 50)
@@ -296,10 +311,10 @@ class ReportExcelMixin:
             'DATA', 'DATA TYPE', 'DATA FORMAT', 'DATA UPDATE FREQUENCY', 'DATA AREA', 'DATA POLICY'
         ]
         worksheet.write_row('A2', headers, self.format_cols_headers)
-        data = Data.objects.filter(
-            requirements__in=self.requirements, datarequirement___deleted=False).distinct()
+        self.data = Data.objects.filter(
+            requirements__in=self.requirements, datarequirement___deleted=False).distinct().order_by('name')
         index = 2
-        for data_object in data:
+        for data_object in self.data:
             row_data = [
                 data_object.name,
                 getattr(data_object.data_type, 'name', ''),
@@ -323,10 +338,8 @@ class ReportExcelMixin:
             'DATA', 'DATA PROVIDER', 'DATA PROVIDER TYPE', 'DATA QUALITY CONTROL', 'DATA DISSEMINATION', 'DATA TIMELINESS'
         ]
         worksheet.write_row('A2', headers, self.format_cols_headers)
-        data = Data.objects.filter(
-            requirements__in=self.requirements, datarequirement___deleted=False).distinct()
         index = 2
-        for data_object in data:
+        for data_object in self.data:
             provider_count = data_object.providers.all().count()
             if provider_count >= 2:
                 worksheet.merge_range(
@@ -366,7 +379,7 @@ class ReportExcelMixin:
         components = self.request.POST.getlist('component')
         self.services = CopernicusService.objects.filter(id__in=services)
         self.components = Component.objects.filter(id__in=components)
-        self.products = Product.objects.filter(component_id__in=components)
+        self.products = Product.objects.filter(component_id__in=components).order_by('name')
         self.set_formats(workbook)
         worksheet = workbook.add_worksheet('INTRODUCTION')
         self.generate_header_sheet(workbook, worksheet)
@@ -386,3 +399,449 @@ class ReportExcelMixin:
         self.generate_table_7(workbook, worksheet)
         worksheet = workbook.add_worksheet('TABLE 8')
         self.generate_table_8(workbook, worksheet)
+
+
+class PDFExcelMixin:
+
+    def generate_table_1_pdf(self):
+        self.requirements = Requirement.objects.filter(
+            products__in=self.products,
+            product_requirements___deleted=False).distinct().order_by('name')
+
+        data = [[
+            Paragraph('REQUIREMENT UID', self.headerstyle_table1),
+            Paragraph('REQUIREMENT', self.headerstyle_table1),
+            Paragraph('NOTE', self.headerstyle_table1),
+            Paragraph('DISSEMINATION', self.headerstyle_table1),
+            Paragraph('QUALITY CONTROL', self.headerstyle_table1),
+            Paragraph('GROUP', self.headerstyle_table1),
+            Paragraph('UNCERTAINTY (%)', self.headerstyle_table1),
+            Paragraph('UPDATE FREQUENCY', self.headerstyle_table1),
+            Paragraph('TIMELINESS', self.headerstyle_table1),
+            Paragraph('SCALE', self.headerstyle_table1),
+            Paragraph('HORIZONTAL RESOLUTION', self.headerstyle_table1),
+        ]]
+
+        data.extend([
+            [
+                Paragraph(str(x.id), self.rowstyle_table1),
+                Paragraph(x.name,self.rowstyle_table1),
+                Paragraph(x.note, self.rowstyle_table1),
+                Paragraph(x.dissemination.name, self.rowstyle_table1),
+                Paragraph(x.quality_control_procedure.name, self.rowstyle_table1),
+                Paragraph(x.group.name, self.rowstyle_table1),
+                Paragraph('{}\n{}\n{}\n'.format(x.uncertainty.threshold,
+                                      x.uncertainty.breakthrough, x.uncertainty.goal), self.rowstyle_table1),
+                Paragraph('{}\n{}\n{}\n'.format(x.update_frequency.threshold,
+                                      x.update_frequency.breakthrough, x.update_frequency.goal), self.rowstyle_table1),
+                Paragraph('{}\n{}\n{}\n'.format(x.timeliness.threshold,
+                                      x.timeliness.breakthrough, x.timeliness.goal), self.rowstyle_table1),
+                Paragraph('{}\n{}\n{}\n'.format(
+                    x.scale.threshold, x.scale.breakthrough, x.scale.goal), self.rowstyle_table1),
+                Paragraph('{}\n{}\n{}\n'.format(x.horizontal_resolution.threshold,
+                                      x.horizontal_resolution.breakthrough, x.horizontal_resolution.goal), self.rowstyle_table1)
+            ] for x in self.requirements
+        ])
+
+        t=Table(data,colWidths=[60, 60, 200, 60, 60, 50, 60, 60, 60, 60, 60], repeatRows=1)
+        t.setStyle(self.LIST_STYLE)
+        return t
+
+    def generate_table_2_pdf(self):
+        data = [[
+            Paragraph('PRODUCT', self.table_headerstyle),
+            Paragraph('DESCRIPTION', self.table_headerstyle),
+        ]]
+
+        data.extend([[
+                Paragraph(x.name, self.rowstyle),
+                Paragraph(strip_tags(x.description), self.rowstyle),
+            ] for x in self.products])
+
+        t=Table(data,colWidths=[80, 700], repeatRows=1)
+        t.setStyle(self.LIST_STYLE)
+        return t
+
+    def generate_table_3_pdf(self):
+        data = [[
+            Paragraph('PRODUCT', self.table_headerstyle),
+            Paragraph('REQUIREMENT', self.table_headerstyle),
+            Paragraph('REQUIREMENT UID', self.table_headerstyle),
+        ]]
+
+        table_data = []
+        for product in self.products:
+            product_name = product.name
+            product_requirements = product.product_requirements.all()
+            for productrequirement in product_requirements:
+                table_data.append([
+                    Paragraph(product_name, self.rowstyle),
+                    Paragraph(productrequirement.requirement.name,self.rowstyle),
+                    Paragraph(str(productrequirement.requirement.id), self.rowstyle)
+                ])
+                product_name = ''
+            if not product_requirements:
+                table_data.append([
+                    Paragraph(product_name, self.rowstyle),
+                    Paragraph('',self.rowstyle),
+                    Paragraph('', self.rowstyle)
+                ])
+
+        data.extend(table_data)
+        t=Table(data,colWidths=[200, 400, 100], repeatRows=1)
+        t.setStyle(self.LIST_STYLE)
+        return t
+
+    def generate_table_4_pdf(self):
+        data = [[
+            Paragraph('REQUIREMENT', self.table_headerstyle),
+            Paragraph('REQUIREMENT UID', self.table_headerstyle),
+            Paragraph('DATA', self.table_headerstyle),
+            Paragraph('DATA PROVIDER', self.table_headerstyle),
+            Paragraph('DATA PROVIDER TYPE', self.table_headerstyle)
+        ]]
+
+        table_data = []
+        for requirement in self.requirements:
+            requirement_name = requirement.name
+            requirement_id = requirement.id
+            for datarequirement in requirement.datarequirement_set.all():
+                data_name = datarequirement.data.name
+                for data_provider in datarequirement.data.providers.all():
+                    table_data.append([
+                        Paragraph(requirement_name, self.rowstyle),
+                        Paragraph(str(requirement_id), self.rowstyle),
+                        Paragraph(data_name, self.rowstyle),
+                        Paragraph(data_provider.name, self.rowstyle),
+                        Paragraph(getattr(getattr(
+                        data_provider.details.first(), 'provider_type', ''), 'name', ''), self.rowstyle)])
+                    requirement_name = ''
+                    data_name = ''
+                    requirement_id = ''
+                if not datarequirement.data.providers.all():
+                    table_data.append([
+                        Paragraph(requirement_name, self.rowstyle),
+                        Paragraph(str(requirement_id), self.rowstyle),
+                        Paragraph(data_name, self.rowstyle),
+                        Paragraph('', self.rowstyle),
+                        Paragraph('', self.rowstyle),
+                    ])
+                    data_name = ''
+                    requirement_name = ''
+                    requirement_id = ''
+            if not requirement.datarequirement_set.all():
+                table_data.append([
+                    Paragraph(requirement_name, self.rowstyle),
+                    Paragraph(str(requirement_id), self.rowstyle),
+                    Paragraph('', self.rowstyle),
+                    Paragraph('', self.rowstyle),
+                    Paragraph('', self.rowstyle),
+                ])
+                requirement_name = ''
+                requirement_id = ''
+
+        data.extend(table_data)
+
+        t=Table(data,colWidths=[150, 125, 150, 150, 90], repeatRows=1)
+        t.setStyle(self.LIST_STYLE)
+        return t
+
+    def generate_table_5_pdf(self):
+        data = [[
+            Paragraph('PRODUCT', self.table_headerstyle),
+            Paragraph('REQUIREMENT', self.table_headerstyle),
+            Paragraph('REQUIREEMENT UID', self.table_headerstyle),
+            Paragraph('BARRIER', self.table_headerstyle),
+            Paragraph('RELEVANCE', self.table_headerstyle),
+            Paragraph('CRITICALITY', self.table_headerstyle)
+        ]]
+
+        table_data = []
+        for product in self.products:
+            product_name = product.name
+            product_requirements = product.product_requirements.all()
+            for product_requirement in product_requirements:
+                requirement = product_requirement.requirement
+                table_data.append([
+                    Paragraph(product_name, self.rowstyle),
+                    Paragraph(requirement.name, self.rowstyle),
+                    Paragraph(str(requirement.id), self.rowstyle),
+                    Paragraph("\n".join([x.name for x in product_requirement.barriers.all()]), self.rowstyle),
+                    Paragraph(product_requirement.relevance.name, self.rowstyle),
+                    Paragraph(product_requirement.criticality.name, self.rowstyle),
+                ])
+                product_name = ''
+            if not product_requirements:
+                table_data.append([
+                    Paragraph(product_name, self.rowstyle),
+                    Paragraph('', self.rowstyle),
+                    Paragraph('', self.rowstyle),
+                    Paragraph('', self.rowstyle),
+                    Paragraph('', self.rowstyle)
+                ])
+
+        data.extend(table_data)
+        t=Table(data,colWidths=[150, 150, 100, 100, 100, 100], repeatRows=1)
+        t.setStyle(self.LIST_STYLE)
+        return t
+
+    def generate_table_6_pdf(self):
+        data = [[
+            Paragraph('PRODUCT', self.table_headerstyle),
+            Paragraph('DATA', self.table_headerstyle),
+            Paragraph('REQUIREEMENT', self.table_headerstyle),
+            Paragraph('REQUIREMENT UID', self.table_headerstyle),
+            Paragraph('LEVEL OF COMPLIANCE DATA vs REQUIREMENT', self.table_headerstyle),
+            Paragraph('DATA LINK NOTE', self.table_headerstyle)
+        ]]
+
+        table_data = []
+        for product in self.products:
+            product_name = product.name
+            requirements = [x.requirement for x in product.product_requirements.all()]
+            data_objects = Data.objects.filter(
+                requirements__in=requirements, datarequirement___deleted=False).distinct()
+            for data_object in data_objects:
+                data_name = data_object.name
+                for data_requirement in data_object.datarequirement_set.all():
+                    table_data.append([
+                        Paragraph(product_name, self.rowstyle),
+                        Paragraph(data_name, self.rowstyle),
+                        Paragraph(data_requirement.requirement.name, self.rowstyle),
+                        Paragraph(str(data_requirement.requirement.id), self.rowstyle),
+                        Paragraph(data_requirement.level_of_compliance.name, self.rowstyle),
+                        Paragraph(data_requirement.note, self.rowstyle),
+                    ])
+                    product_name = ''
+                    data_name = ''
+                if not data_object.datarequirement_set.all():
+                    table_data.append([
+                        Paragraph(product_name, self.rowstyle),
+                        Paragraph(data_name, self.rowstyle),
+                        Paragraph('', self.rowstyle),
+                        Paragraph('', self.rowstyle),
+                        Paragraph('', self.rowstyle)
+                    ])
+                    product_name = ''
+                    data_name = ''
+            if not data:
+                table_data.append([
+                    Paragraph(product_name, self.rowstyle),
+                    Paragraph('', self.rowstyle),
+                    Paragraph('', self.rowstyle),
+                    Paragraph('', self.rowstyle),
+                    Paragraph('', self.rowstyle)
+                ])
+                product_name = ''
+                data_name = ''
+
+        data.extend(table_data)
+        t=Table(data,colWidths=[125, 125, 125, 125, 125], repeatRows=1)
+        t.setStyle(self.LIST_STYLE)
+        return t
+
+    def generate_table_7_pdf(self):
+        data = [[
+            Paragraph('DATA', self.table_headerstyle),
+            Paragraph('DATA TYPE', self.table_headerstyle),
+            Paragraph('DATA FORMAT', self.table_headerstyle),
+            Paragraph('DATA UPDATE FREQUENCY', self.table_headerstyle),
+            Paragraph('DATA AREA', self.table_headerstyle),
+            Paragraph('DATA POLICY', self.table_headerstyle)
+        ]]
+
+        self.data_objects = Data.objects.filter(
+            requirements__in=self.requirements, datarequirement___deleted=False).distinct().order_by('name')
+        table_data = []
+        for data_object in self.data_objects:
+            data.append([
+                Paragraph(data_object.name, self.rowstyle),
+                Paragraph(getattr(data_object.data_type, 'name', ''), self.rowstyle),
+                Paragraph(getattr(data_object.data_format, 'name', ''), self.rowstyle),
+                Paragraph(getattr(data_object.update_frequency, 'name', ''), self.rowstyle),
+                Paragraph(getattr(data_object.area, 'name', ''), self.rowstyle),
+                Paragraph(getattr(data_object.data_policy, 'name', ''), self.rowstyle),
+            ])
+
+        data.extend(table_data)
+        t=Table(data,colWidths=[125, 125, 125, 125, 125], repeatRows=1)
+        t.setStyle(self.LIST_STYLE)
+        return t
+
+    def generate_table_8_pdf(self):
+        data = [[
+            Paragraph('DATA', self.table_headerstyle),
+            Paragraph('DATA PROVIDER', self.table_headerstyle),
+            Paragraph('DATA PROVIDER TYPE', self.table_headerstyle),
+            Paragraph('DATA QUALITY CONTROL', self.table_headerstyle),
+            Paragraph('DATA DISSEMINATION', self.table_headerstyle),
+            Paragraph('DATA TIMELINESS', self.table_headerstyle)
+        ]]
+
+        table_data = []
+        for data_object in self.data_objects:
+            data_name = data_object.name
+            data_providers = data_object.providers.all()
+            for dataprovider in data_providers:
+                table_data.append([
+                    Paragraph(data_name, self.rowstyle),
+                    Paragraph(dataprovider.name, self.rowstyle),
+                    Paragraph(getattr(getattr(dataprovider.details.first(), 'provider_type', ''), 'name', ''), self.rowstyle),
+                    Paragraph(getattr(data_object.quality_control_procedure, 'name', ''), self.rowstyle),
+                    Paragraph(getattr(data_object.dissemination, 'name', ''), self.rowstyle),
+                    Paragraph(getattr(data_object.timeliness, 'name', ''), self.rowstyle),
+                ])
+                data_name = ''
+            if not data_providers:
+                table_data.append([
+                    Paragraph(data_name, self.rowstyle),
+                    Paragraph(dataprovider.name, self.rowstyle),
+                    Paragraph(getattr(getattr(dataprovider.details.first(), 'provider_type', ''), 'name', ''), self.rowstyle),
+                    Paragraph(getattr(data_object.quality_control_procedure, 'name', ''), self.rowstyle),
+                    Paragraph(getattr(data_object.dissemination, 'name', ''), self.rowstyle),
+                    Paragraph(getattr(data_object.timeliness, 'name', ''), self.rowstyle),
+                ])
+
+        data.extend(table_data)
+        t=Table(data,colWidths=[150, 150, 90, 90, 90, 90], repeatRows=1)
+        t.setStyle(self.LIST_STYLE)
+        return t
+
+    def set_styles(self):
+        styles = getSampleStyleSheet()
+        self.header_style = ParagraphStyle(
+            name='HeaderStyle',
+            fontName='Calibri-Bold',
+            parent=styles["Normal"],
+            fontSize=16,
+            textColor= Color(0,0.6875,0.3125,1),
+            leading=20,
+            alignment=TA_CENTER,
+        )
+
+        self.sub_header_style = ParagraphStyle(
+            name='SubHeaderStyle',
+            fontName='Calibri-Bold',
+            parent=styles["Normal"],
+            fontSize=12,
+            textColor= Color(0,0.6875,0.3125,1),
+            leading=20,
+            alignment=TA_CENTER,
+            spaceAfter=60,
+        )
+
+        self.normal_style = ParagraphStyle(
+            name='NormalStyle',
+            fontName='Calibri',
+            parent=styles["Normal"],
+            fontSize=12,
+            leftIndent=20,
+            leading=20,
+        )
+
+        self.table_header_style = ParagraphStyle(
+            name='TableHeaderStyle',
+            fontName='Calibri-Bold',
+            parent=styles["Normal"],
+            fontSize=16,
+            alignment=TA_CENTER,
+            spaceAfter=10,
+            textColor= red,
+            leading=20,
+        )
+
+        self.rowstyle_table1 = ParagraphStyle(
+            name='RowStyleTable1',
+            fontName='Calibri',
+            fontSize=6,
+            leading=7,
+            alignment=TA_LEFT,
+        )
+
+        self.headerstyle_table1 = ParagraphStyle(
+            name='HeaderStyleTable1',
+            fontName='Calibri-Bold',
+            fontSize=6.5,
+            leading=7,
+            textColor= Color(0,0.4375,0.75,1),
+            alignment=TA_CENTER,
+        )
+
+        self.rowstyle = ParagraphStyle(
+            name='RowStyle',
+            fontName='Calibri',
+            fontSize=10,
+            leading=10,
+            alignment=TA_LEFT,
+        )
+
+        self.table_headerstyle = ParagraphStyle(
+            name='HeaderStyle',
+            fontName='Calibri-Bold',
+            fontSize=12,
+            leading=14,
+            textColor= Color(0,0.4375,0.75,1),
+            alignment=TA_CENTER,
+        )
+
+        self.LIST_STYLE = TableStyle([
+            ('INNERGRID', (0, 0), (-1, -1), 0.25, black),
+            ('BOX', (0,0), (-1,-1), 0.25, black),
+            ('BACKGROUND', (0, 0), (-1, 0), Color(0.7617,0.8359,0.6054, 1)),
+            ('VALIGN',(0,0),(-1,-1),'MIDDLE'),
+            ]
+        )
+        self.LIST_STYLE.wordWrap = 'CFK'
+
+    def generate_pdf_file(self, menu_pdf):
+        # container for pdf elements
+        styles = getSampleStyleSheet()
+        self.set_styles()
+        services = self.request.POST.getlist('service')
+        components = self.request.POST.getlist('component')
+        self.services = CopernicusService.objects.filter(id__in=services)
+        self.components = Component.objects.filter(id__in=components)
+        self.products = Product.objects.filter(component_id__in=components).order_by('name')
+        elements = [
+            Paragraph('Copernicus In Situ Component Information System - managed by the European Environment Agency', self.header_style),
+            Paragraph('Standard Report for Local Land Component', self.header_style),
+            Paragraph("Produced on {}".format(datetime.datetime.now().strftime('%d %B %Y')), self.sub_header_style),
+            Paragraph('The objects in this document are filtered using the following services: {} and the following components: {}'.format(
+                      ", ".join([elem.name for elem in self.services]),
+                      ", ".join([elem.name for elem in self.components])), self.normal_style),
+            PageBreak(),
+
+        ]
+        elements.append(Paragraph('REQUIREMENTS AND THEIR DETAILS', self.table_header_style))
+        table1 = self.generate_table_1_pdf()
+        elements.append(table1)
+        elements.append(PageBreak())
+        elements.append(Paragraph('PRODUCTS AND THEIR DESCRIPTIONS', self.table_header_style))
+        table2 = self.generate_table_2_pdf()
+        elements.append(table2)
+        elements.append(PageBreak())
+        elements.append(Paragraph('PRODUCTS AND ASSOCIATED REQUIREMENTS', self.table_header_style))
+        table3 = self.generate_table_3_pdf()
+        elements.append(table3)
+        elements.append(PageBreak())
+        elements.append(Paragraph('DATASETS AND RELATED DATA PROVIDERS PER REQUIREMENT', self.table_header_style))
+        table4 = self.generate_table_4_pdf()
+        elements.append(table4)
+        elements.append(PageBreak())
+        elements.append(Paragraph('MAIN DETAILS BETWEEN REQUIREMENTS AND PRODUCTS', self.table_header_style))
+        table5 = self.generate_table_5_pdf()
+        elements.append(table5)
+        elements.append(PageBreak())
+        elements.append(Paragraph('LEVEL OF COMPLIANCE BETWEEN DATASETS AND REQUIREMENTS', self.table_header_style))
+        table6 = self.generate_table_6_pdf()
+        elements.append(table6)
+        elements.append(PageBreak())
+        elements.append(Paragraph('DATASETS MAIN DETAILS', self.table_header_style))
+        table7 = self.generate_table_7_pdf()
+        elements.append(table7)
+        elements.append(PageBreak())
+        elements.append(Paragraph('DATASETS AND RELATED DATA PROVIDERS', self.table_header_style))
+        table8 = self.generate_table_8_pdf()
+        elements.append(table8)
+        styles=getSampleStyleSheet()
+        menu_pdf.build(elements)

@@ -1,5 +1,17 @@
 import datetime
 import json
+from reportlab.pdfgen import canvas
+from reportlab.lib.pagesizes import A4, landscape
+from reportlab.lib.units import mm, inch
+from reportlab.pdfbase.ttfonts import TTFont
+from reportlab.pdfbase import pdfmetrics
+from reportlab.platypus import SimpleDocTemplate, Paragraph, PageBreak, Table, TableStyle
+
+from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
+from reportlab.lib.colors import Color
+from reportlab.lib.enums import TA_CENTER
+
+
 
 import string
 import xlsxwriter
@@ -25,7 +37,7 @@ from wkhtmltopdf.views import PDFTemplateResponse
 
 from insitu.models import Component, CopernicusService
 from insitu.forms import StandardReportForm
-from insitu.views.reportsmixins import ReportExcelMixin
+from insitu.views.reportsmixins import ReportExcelMixin, PDFExcelMixin
 from insitu.views import protected
 from insitu.views.protected.views import ProtectedTemplateView, ProtectedView
 
@@ -190,7 +202,7 @@ class Pdf(View):
         return self.render(context, request)
 
 
-class ReportsStandardReportView(ProtectedTemplateView, ReportExcelMixin):
+class ReportsStandardReportView(ProtectedTemplateView, ReportExcelMixin, PDFExcelMixin):
     template_name = 'reports/standard_report.html'
     permission_classes = (protected.IsAuthenticated,)
     permission_denied_redirect = reverse_lazy('auth:login')
@@ -216,5 +228,26 @@ class ReportsStandardReportView(ProtectedTemplateView, ReportExcelMixin):
         response['Content-Disposition'] = 'attachment; filename=%s' % filename
         return response
 
+    def generate_pdf(self):
+        response = HttpResponse(content_type='application/pdf')
+        pdf_name = "menu-4.pdf"
+        response['Content-Disposition'] = 'attachment; filename=%s' % pdf_name
+
+        buff = BytesIO()
+        pdfmetrics.registerFont(TTFont('Calibri', '/var/local/copernicus/insitu/static/fonts/CalibriRegular.ttf'))
+        pdfmetrics.registerFont(TTFont('Calibri-Bold', '/var/local/copernicus/insitu/static/fonts/CalibriBold.ttf'))
+        menu_pdf = SimpleDocTemplate(buff, rightMargin=10, pagesize =landscape(A4),
+                                    leftMargin=10, topMargin=30, bottomMargin=10)
+
+        self.generate_pdf_file(menu_pdf)
+        response.write(buff.getvalue())
+        buff.close()
+        return response
+
     def post(self, request, *args, **kwargs):
-        return self.generate_excel()
+        if request.POST['action'] == 'Generate PDF':
+            return self.generate_pdf()
+        elif request.POST['action'] == 'Generate Excel':
+            return self.generate_excel()
+        else:
+            return HttpResponse('Inccorect value selected')
