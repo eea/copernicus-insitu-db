@@ -2,14 +2,8 @@ from insitu.models import CopernicusService, Component, Data, Product, Requireme
 from django.utils.html import strip_tags
 
 import datetime
-import json
-from reportlab.pdfgen import canvas
-from reportlab.lib.pagesizes import A4, landscape
-from reportlab.lib.units import mm, inch
-from reportlab.pdfbase.ttfonts import TTFont
-from reportlab.pdfbase import pdfmetrics
+
 from reportlab.platypus import (
-    SimpleDocTemplate,
     Paragraph,
     PageBreak,
     Table,
@@ -77,7 +71,8 @@ class ReportExcelMixin:
         worksheet.set_row(5, 20)
         worksheet.merge_range(
             "A1:D1",
-            "Copernicus In Situ Component Information System - managed by the European Environment Agency",
+            "Copernicus In Situ Component Information System - \
+            managed by the European Environment Agency",
             self.merge_format,
         )
         worksheet.merge_range(
@@ -90,11 +85,13 @@ class ReportExcelMixin:
         )
         worksheet.merge_range(
             "A6:D6",
-            "The Standard Report consists of tables that include  all the main  statistical data  . . . . .",
+            "The Standard Report consists of tables that \
+            include  all the main  statistical data  . . . . .",
         )
         worksheet.merge_range(
             "A7:D7",
-            "The objects in this document are filtered using the following services: {} and the following components: {}".format(
+            "The objects in this document are filtered using the \
+            following services: {} and the following components: {}".format(
                 ", ".join([elem.name for elem in self.services]),
                 ", ".join([elem.name for elem in self.components]),
             ),
@@ -1143,8 +1140,6 @@ class PDFExcelMixin:
         self.LIST_STYLE.wordWrap = "CFK"
 
     def generate_pdf_file(self, menu_pdf):
-        # container for pdf elements
-        styles = getSampleStyleSheet()
         self.set_styles()
         services = self.request.POST.getlist("service")
         components = self.request.POST.getlist("component")
@@ -1155,7 +1150,8 @@ class PDFExcelMixin:
         )
         elements = [
             Paragraph(
-                "Copernicus In Situ Component Information System - managed by the European Environment Agency",
+                "Copernicus In Situ Component Information System \
+                - managed by the European Environment Agency",
                 self.header_style,
             ),
             Paragraph("Standard Report for Local Land Component", self.header_style),
@@ -1164,7 +1160,8 @@ class PDFExcelMixin:
                 self.sub_header_style,
             ),
             Paragraph(
-                "The objects in this document are filtered using the following services: {} and the following components: {}".format(
+                "The objects in this document are filtered using \
+                 the following services: {} and the following components: {}".format(
                     ", ".join([elem.name for elem in self.services]),
                     ", ".join([elem.name for elem in self.components]),
                 ),
@@ -1226,5 +1223,4 @@ class PDFExcelMixin:
         )
         table8 = self.generate_table_8_pdf()
         elements.append(table8)
-        styles = getSampleStyleSheet()
         menu_pdf.build(elements)

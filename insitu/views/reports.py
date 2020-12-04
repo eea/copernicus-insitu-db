@@ -1,22 +1,9 @@
 import datetime
-import json
-from reportlab.pdfgen import canvas
+
 from reportlab.lib.pagesizes import A4, landscape
-from reportlab.lib.units import mm, inch
 from reportlab.pdfbase.ttfonts import TTFont
 from reportlab.pdfbase import pdfmetrics
-from reportlab.platypus import (
-    SimpleDocTemplate,
-    Paragraph,
-    PageBreak,
-    Table,
-    TableStyle,
-)
-
-from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
-from reportlab.lib.colors import Color
-from reportlab.lib.enums import TA_CENTER
-
+from reportlab.platypus import SimpleDocTemplate
 
 import string
 import xlsxwriter
@@ -226,9 +213,10 @@ class ReportsStandardReportView(ProtectedTemplateView, ReportExcelMixin, PDFExce
         workbook.close()
         output.seek(0)
         filename = "StandardReport{}.xlsx".format(datetime.date.today())
+        cont_type = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
         response = HttpResponse(
             output,
-            content_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+            content_type=cont_type,
         )
         response["Content-Disposition"] = "attachment; filename=%s" % filename
         return response
