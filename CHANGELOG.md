@@ -3,6 +3,11 @@ Changelog
 
 * In case of major changes, an email should be sent to all users with the modifications.
 
+2.3.10 (2020-12-04)
+------------------
+* Add Standard Report (Excel and PDF)
+  [dianaboiangiu]
+
 2.3.9 (2020-11-26)
 ------------------
 * Transfer objects by file command

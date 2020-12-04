@@ -71,8 +71,8 @@ class ReportExcelMixin:
         worksheet.set_row(5, 20)
         worksheet.merge_range(
             "A1:D1",
-            "Copernicus In Situ Component Information System - \
-            managed by the European Environment Agency",
+            "Copernicus In Situ Component Information System - "
+            "managed by the European Environment Agency",
             self.merge_format,
         )
         worksheet.merge_range(
@@ -85,13 +85,13 @@ class ReportExcelMixin:
         )
         worksheet.merge_range(
             "A6:D6",
-            "The Standard Report consists of tables that \
-            include  all the main  statistical data  . . . . .",
+            "The Standard Report consists of tables that "
+            "include all the main statistical data",
         )
         worksheet.merge_range(
             "A7:D7",
-            "The objects in this document are filtered using the \
-            following services: {} and the following components: {}".format(
+            "The objects in this document are filtered using the "
+            "following services: {} and the following components: {}".format(
                 ", ".join([elem.name for elem in self.services]),
                 ", ".join([elem.name for elem in self.components]),
             ),
@@ -1150,8 +1150,8 @@ class PDFExcelMixin:
         )
         elements = [
             Paragraph(
-                "Copernicus In Situ Component Information System \
-                - managed by the European Environment Agency",
+                "Copernicus In Situ Component Information System "
+                "- managed by the European Environment Agency",
                 self.header_style,
             ),
             Paragraph("Standard Report for Local Land Component", self.header_style),
@@ -1160,8 +1160,8 @@ class PDFExcelMixin:
                 self.sub_header_style,
             ),
             Paragraph(
-                "The objects in this document are filtered using \
-                 the following services: {} and the following components: {}".format(
+                "The objects in this document are filtered using"
+                "the following services: {} and the following components: {}".format(
                     ", ".join([elem.name for elem in self.services]),
                     ", ".join([elem.name for elem in self.components]),
                 ),
