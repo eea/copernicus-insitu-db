@@ -2,7 +2,9 @@ services:
   web:
     build:
       args:
-        REQFILE: ariel-requirements.txt
+        REQFILE: requirements-dev.txt
+    environment:
+      - DEBUG=1
     depends_on:
       - elasticsearch
     ports:
