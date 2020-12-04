@@ -1,0 +1,64 @@
+{% extends '_layout.html' %}
+{% load bootstrap3 %}
+{% load static %}
+{% load utils %}
+
+{% block title %}Reports{% endblock %}
+
+{% block content %}
+  <div class="row">
+    <h1 class="col-sm-12">
+      <span>Standard Report</span>
+    </h1>
+  </div>
+
+  <div class="container" style="margin-bottom:20px;">
+  </div>
+
+  <form action="" method="POST" style="width: 50%">
+    {% csrf_token %}
+    <div class="form-group">
+      <label class="control-label" for="id_service">Service</label>
+      <select name="service" class="form-control" title="" id="id_service" multiple="multiple">
+        {% for service in services %}
+          <option value="{{ service.id }}" class="{{ service.id }}">{{ service.name }}</option>
+        {% endfor %}
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label class="control-label" for="id_component">Component</label>
+      <select name="component" class="form-control" title="" id="id_component" multiple="multiple">
+        {% for component in components %}
+          <option value="{{ component.id }}" class="{{ component.service.id }}">{{ component.name }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <input class="btn btn-primary" type="submit" name="action" value="Generate PDF" />
+    <input class="btn btn-primary" type="submit" name="action" value="Generate Excel" />
+    <a href="{% url 'home' %}"
+       class="btn btn-default">Cancel</a>
+  </form>
+
+{% endblock %}
+
+{% block scripts %}
+  <script>
+    $(document).ready(function () {
+      var allOptions = $('#id_component option')
+      $('#id_service').change(function () {
+        $('#id_component option').remove();
+        var classes = [];
+        $('#id_service option:selected').each(function( index ) {
+          classes.push($(this).prop('class'));
+        });
+        var opts = allOptions.filter( function(index) {
+          return $.inArray($(this).prop('class'), classes) > -1;
+        });
+        $.each(opts, function (i, j) {
+          $(j).appendTo('#id_component');
+        });
+      });
+    });
+  </script>
+{% endblock %}

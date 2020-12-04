@@ -1,5 +1,12 @@
 import datetime
+
+from reportlab.lib.pagesizes import A4, landscape
+from reportlab.pdfbase.ttfonts import TTFont
+from reportlab.pdfbase import pdfmetrics
+from reportlab.platypus import SimpleDocTemplate
+
 import string
+import xlsxwriter
 from io import BytesIO
 
 from django.template.loader import get_template
@@ -20,6 +27,9 @@ from explorer.utils import url_get_rows
 
 from wkhtmltopdf.views import PDFTemplateResponse
 
+from insitu.models import Component, CopernicusService
+from insitu.forms import StandardReportForm
+from insitu.views.reportsmixins import ReportExcelMixin, PDFExcelMixin
 from insitu.views import protected
 from insitu.views.protected.views import ProtectedTemplateView, ProtectedView
 
@@ -182,3 +192,71 @@ class Pdf(View):
             "date": datetime.datetime.now().strftime("%Y %m %d"),
         }
         return self.render(context, request)
+
+
+class ReportsStandardReportView(ProtectedTemplateView, ReportExcelMixin, PDFExcelMixin):
+    template_name = "reports/standard_report.html"
+    permission_classes = (protected.IsAuthenticated,)
+    permission_denied_redirect = reverse_lazy("auth:login")
+
+    def get_context_data(self, **kwargs):
+        context = super(ReportsStandardReportView, self).get_context_data(**kwargs)
+        context["services"] = CopernicusService.objects.all()
+        context["components"] = Component.objects.all()
+        context["form"] = StandardReportForm()
+        return context
+
+    def generate_excel(self):
+        output = BytesIO()
+        workbook = xlsxwriter.Workbook(output)
+        self.generate_excel_file(workbook)
+        workbook.close()
+        output.seek(0)
+        filename = "StandardReport{}.xlsx".format(datetime.date.today())
+        cont_type = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+        response = HttpResponse(
+            output,
+            content_type=cont_type,
+        )
+        response["Content-Disposition"] = "attachment; filename=%s" % filename
+        return response
+
+    def generate_pdf(self):
+        response = HttpResponse(content_type="application/pdf")
+        pdf_name = "menu-4.pdf"
+        response["Content-Disposition"] = "attachment; filename=%s" % pdf_name
+
+        buff = BytesIO()
+        pdfmetrics.registerFont(
+            TTFont(
+                "Calibri",
+                "/var/local/copernicus/insitu/static/fonts/CalibriRegular.ttf",
+            )
+        )
+        pdfmetrics.registerFont(
+            TTFont(
+                "Calibri-Bold",
+                "/var/local/copernicus/insitu/static/fonts/CalibriBold.ttf",
+            )
+        )
+        menu_pdf = SimpleDocTemplate(
+            buff,
+            rightMargin=10,
+            pagesize=landscape(A4),
+            leftMargin=10,
+            topMargin=30,
+            bottomMargin=10,
+        )
+
+        self.generate_pdf_file(menu_pdf)
+        response.write(buff.getvalue())
+        buff.close()
+        return response
+
+    def post(self, request, *args, **kwargs):
+        if request.POST["action"] == "Generate PDF":
+            return self.generate_pdf()
+        elif request.POST["action"] == "Generate Excel":
+            return self.generate_excel()
+        else:
+            return HttpResponse("Inccorect value selected")
