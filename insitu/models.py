@@ -614,6 +614,10 @@ class Data(ValidationWorkflowModel, SoftDeleteModel):
     updated_at = models.DateTimeField(auto_now=True, null=True)
 
     @property
+    def components(self):
+        return Component.objects.filter(products__requirements__data=self)
+
+    @property
     def requirements_get_filtered(self):
         return self.requirements.filter(
             datarequirement___deleted=False,

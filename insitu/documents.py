@@ -209,6 +209,13 @@ class DataDoc(DocType):
     state = fields.KeywordField(attr="state.name")
     note = fields.TextField()
 
+    components = fields.ObjectField(
+        attr="components",
+        properties={
+            "name": fields.KeywordField(attr="name"),
+        },
+    )
+
     def get_name_display(self):
         url = reverse("data:detail", kwargs={"pk": self.id})
         return '<a href="{url}">{name}</a>'.format(url=url, name=self.name)
@@ -220,7 +227,7 @@ class DataDoc(DocType):
 
     class Meta:
         model = Data
-        related_models = [DataRequirement, Requirement]
+        related_models = [DataRequirement, ProductRequirement, Requirement]
         fields = [
             "id",
         ]
@@ -246,6 +253,10 @@ class DataDoc(DocType):
         """
         if isinstance(related_instance, DataRequirement):
             return related_instance.data
+        if isinstance(related_instance, ProductRequirement):
+            return Data.objects.filter(
+                requirements__product_requirements=related_instance
+            )
         if isinstance(related_instance, Requirement):
             return [
                 datarequirement.data

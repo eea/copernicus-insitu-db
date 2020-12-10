@@ -1,3 +1,6 @@
+import os
+
+from django.core.management import call_command
 from django.core.urlresolvers import reverse
 
 from insitu import models
@@ -90,6 +93,9 @@ class DataTests(base.FormCheckTestCase):
         self.creator = base.UserFactory(username="User Data")
         self.client.force_login(self.creator)
 
+        with open(os.devnull, "w") as f:
+            call_command("search_index", "--rebuild", "-f", stdout=f)
+
     def _create_clone_data(self, data):
         inspire_themes = [base.InspireThemeFactory(), base.InspireThemeFactory()]
         geographical_coverages = [base.CountryFactory(code="T4")]
@@ -135,6 +141,91 @@ class DataTests(base.FormCheckTestCase):
         self.assertIsNot(data["recordsTotal"], 0)
         self.assertFalse(data["recordsTotal"] < 2)
         self.assertIs(data["recordsFiltered"], 1)
+
+    def test_list_data_json_filter_component(self):
+        metrics = base.RequirementFactory.create_metrics(self.creator)
+
+        # Create 4 components
+        first_component = base.ComponentFactory(name="First component")
+        second_component = base.ComponentFactory(name="Second component")
+        common_component = base.ComponentFactory(name="Common component")
+        other_component = base.ComponentFactory(name="Other component")
+
+        # Create first Data and DataRequirement objects
+        data1 = base.DataFactory(created_by=self.creator)
+        requirement = base.RequirementFactory(created_by=self.creator, **metrics)
+        base.DataRequirementFactory(
+            created_by=self.creator,
+            data=data1,
+            requirement=requirement,
+        )
+        # Associate it with first and common components
+        base.ProductRequirementFactory(
+            created_by=self.creator,
+            requirement=requirement,
+            product__component=first_component,
+        )
+        base.ProductRequirementFactory(
+            created_by=self.creator,
+            requirement=requirement,
+            product__component=common_component,
+        )
+
+        # Create second Data and DataRequirement objects
+        data2 = base.DataFactory(created_by=self.creator)
+        requirement = base.RequirementFactory(created_by=self.creator, **metrics)
+        base.DataRequirementFactory(
+            created_by=self.creator,
+            data=data2,
+            requirement=requirement,
+        )
+        # Associate it with second and common components
+        base.ProductRequirementFactory(
+            created_by=self.creator,
+            requirement=requirement,
+            product__component=second_component,
+        )
+        base.ProductRequirementFactory(
+            created_by=self.creator,
+            requirement=requirement,
+            product__component=common_component,
+        )
+
+        # Create third Data and DataRequirement objects
+        data3 = base.DataFactory(created_by=self.creator)
+        requirement = base.RequirementFactory(created_by=self.creator, **metrics)
+        base.DataRequirementFactory(
+            created_by=self.creator,
+            data=data3,
+            requirement=requirement,
+        )
+        # Associate it with other component
+        base.ProductRequirementFactory(
+            created_by=self.creator,
+            requirement=requirement,
+            product__component=other_component,
+        )
+
+        # Filter by component (First component)
+        resp = self.client.get(reverse("data:json"), {"component": "First component"})
+        self.assertEqual(resp.status_code, 200)
+        data = resp.json()
+        self.assertIs(data["recordsTotal"], 3)
+        self.assertIs(data["recordsFiltered"], 1)
+
+        # Filter by component (Second component)
+        resp = self.client.get(reverse("data:json"), {"component": "Second component"})
+        self.assertEqual(resp.status_code, 200)
+        data = resp.json()
+        self.assertIs(data["recordsTotal"], 3)
+        self.assertIs(data["recordsFiltered"], 1)
+
+        # Filter by component (Common component)
+        resp = self.client.get(reverse("data:json"), {"component": "Common component"})
+        self.assertEqual(resp.status_code, 200)
+        data = resp.json()
+        self.assertIs(data["recordsTotal"], 3)
+        self.assertIs(data["recordsFiltered"], 2)
 
     def test_list_data(self):
         self.erase_logging_file()
