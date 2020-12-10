@@ -1,3 +1,6 @@
+import os
+
+from django.core.management import call_command
 from django.core.urlresolvers import reverse
 
 from insitu import models
@@ -48,6 +51,9 @@ class DataProviderTests(base.FormCheckTestCase):
         self.creator = base.UserFactory(username="New user 1")
         self.client.force_login(self.creator)
 
+        with open(os.devnull, "w") as f:
+            call_command("search_index", "--rebuild", "-f", stdout=f)
+
     def test_list_provider_json(self):
         base.DataProviderFactory(created_by=self.creator)
         resp = self.client.get(reverse("provider:json"))
@@ -75,6 +81,116 @@ class DataProviderTests(base.FormCheckTestCase):
         self.assertIsNot(data["recordsTotal"], 0)
         self.assertFalse(data["recordsTotal"] < 2)
         self.assertIs(data["recordsFiltered"], 1)
+
+    def test_list_provider_json_filter_component(self):
+        metrics = base.RequirementFactory.create_metrics(self.creator)
+        romania = base.CountryFactory(code="RO")
+
+        # Create 4 components
+        first_component = base.ComponentFactory(name="First component")
+        second_component = base.ComponentFactory(name="Second component")
+        common_component = base.ComponentFactory(name="Common component")
+        other_component = base.ComponentFactory(name="Other component")
+
+        # Create data provider
+        dpr1 = base.DataProviderRelationFactory(
+            created_by=self.creator,
+            data__created_by=self.creator,
+            provider__name="First provider",
+            provider__created_by=self.creator,
+            provider__countries=[romania],
+        )
+        requirement = base.RequirementFactory(created_by=self.creator, **metrics)
+        base.DataRequirementFactory(
+            created_by=self.creator,
+            data=dpr1.data,
+            requirement=requirement,
+        )
+        # Associate it with first and common components
+        base.ProductRequirementFactory(
+            created_by=self.creator,
+            requirement=requirement,
+            product__component=first_component,
+        )
+        base.ProductRequirementFactory(
+            created_by=self.creator,
+            requirement=requirement,
+            product__component=common_component,
+        )
+
+        # Create a second data provider
+        dpr2 = base.DataProviderRelationFactory(
+            created_by=self.creator,
+            data__created_by=self.creator,
+            provider__name="Second provider",
+            provider__created_by=self.creator,
+            provider__countries=[romania],
+        )
+        requirement = base.RequirementFactory(created_by=self.creator, **metrics)
+        base.DataRequirementFactory(
+            created_by=self.creator,
+            data=dpr2.data,
+            requirement=requirement,
+        )
+        # Associate it with second and common components
+        base.ProductRequirementFactory(
+            created_by=self.creator,
+            requirement=requirement,
+            product__component=second_component,
+        )
+        base.ProductRequirementFactory(
+            created_by=self.creator,
+            requirement=requirement,
+            product__component=common_component,
+        )
+
+        # Create a third data provider
+        dpr3 = base.DataProviderRelationFactory(
+            created_by=self.creator,
+            data__created_by=self.creator,
+            provider__name="Third provider",
+            provider__created_by=self.creator,
+            provider__countries=[romania],
+        )
+        requirement = base.RequirementFactory(created_by=self.creator, **metrics)
+        base.DataRequirementFactory(
+            created_by=self.creator,
+            data=dpr3.data,
+            requirement=requirement,
+        )
+        # Associate it with other component
+        base.ProductRequirementFactory(
+            created_by=self.creator,
+            requirement=requirement,
+            product__component=other_component,
+        )
+
+        # Filter by component (First component)
+        resp = self.client.get(
+            reverse("provider:json"), {"component": "First component"}
+        )
+        self.assertEqual(resp.status_code, 200)
+        data = resp.json()
+        self.assertIs(data["recordsTotal"], 3)
+        self.assertIs(data["recordsFiltered"], 1)
+
+        # Filter by component (Second component)
+        resp = self.client.get(
+            reverse("provider:json"), {"component": "Second component"}
+        )
+        self.assertEqual(resp.status_code, 200)
+        data = resp.json()
+        self.assertIs(data["recordsTotal"], 3)
+        self.assertIs(data["recordsFiltered"], 1)
+
+        # Filter by component (Common component)
+        resp = self.client.get(
+            reverse("provider:json"), {"component": "Common component"}
+        )
+        self.assertEqual(resp.status_code, 200)
+        data = resp.json()
+        self.assertIs(data["recordsTotal"], 3)
+        self.assertIs(data["recordsFiltered"], 2)
 
     def test_list_providers(self):
         self.erase_logging_file()
