@@ -2,9 +2,9 @@ function updateFilterOptions(filter, option_data) {
   var select = $('#' + filter);
   select.find('option').remove();
   select.append('<option value="All">All</option>')
-  $.each(option_data.options, function(i, option){
+  $.each(option_data.options, function (i, option) {
     var selected = '';
-    if(option_data.selected == option){
+    if (option_data.selected == option) {
       selected = ' selected';
     }
     select.append(
@@ -16,27 +16,27 @@ $(document).ready(function () {
     "processing": true,
     "serverSide": true,
     "dom": "<'row'<'col-sm-12'B>>" +
-           "<'row'<'col-sm-5'i><'col-sm-12'f><'col-sm-4 display-margin'l><'col-sm-8'p>>" +
-           "<'row'<'col-sm-12'tr>>" +
-           "<'row'<'col-sm-12'p>>",
+      "<'row'<'col-sm-5'i><'col-sm-12'f><'col-sm-4 display-margin'l><'col-sm-8'p>>" +
+      "<'row'<'col-sm-12'tr>>" +
+      "<'row'<'col-sm-12'p>>",
     "lengthMenu": [
-       [ 10, 25, 50, -1 ],
-       [ '10 rows', '25 rows', '50 rows', 'Show all' ]
+      [10, 25, 50, -1],
+      ['10 rows', '25 rows', '50 rows', 'Show all']
     ],
-    "buttons": [ {
+    "buttons": [{
       extend: 'pdf',
       exportOptions: { orthogonal: 'export' },
       text: 'Save as PDF',
       filename: 'CIS2_Data',
       title: 'CIS2 Data',
       orientation: 'landscape',
-      customize: function ( doc ) {
+      customize: function (doc) {
         var cols = [];
         var created = new Date().toDateString();
-        cols[0] = {text: 'https://cis2.eea.europa.eu , ' + created, alignment: 'right', margin:[50, 10], };
+        cols[0] = { text: 'https://cis2.eea.europa.eu , ' + created, alignment: 'right', margin: [50, 10], };
         var objFooter = {};
         objFooter['columns'] = cols;
-        doc['footer']=objFooter;
+        doc['footer'] = objFooter;
       }
     },
     {
@@ -63,16 +63,17 @@ $(document).ready(function () {
         d.dissemination = $('#dissemination').val();
         d.requirement = $('#requirement').val();
         d.state = $('#state').val();
+        d.component = $('#component').val();
       },
       "dataSrc": function (json) {
-        $.each(json.filters, function(key, value){
+        $.each(json.filters, function (key, value) {
           updateFilterOptions(key, value)
         });
         return json.data;
       }
     },
     "stateSave": true,
-    "stateSaveParams": function(settings, data){
+    "stateSaveParams": function (settings, data) {
       data.update_frequency = $('#update_frequency').val();
       data.area = $('#area').val();
       data.timeliness = $('#timeliness').val();
@@ -83,6 +84,7 @@ $(document).ready(function () {
       data.dissemination = $('#dissemination').val();
       data.requirement = $('#requirement').val()
       data.state = $('#state').val();
+      data.component = $('#component').val();
     },
     "stateLoadParams": function (settings, data) {
       $('#update_frequency').val(data.update_frequency);
@@ -95,23 +97,26 @@ $(document).ready(function () {
       $('#dissemination').val(data.dissemination);
       $('#requirement').val(data.requirement);
       $('#state').val(data.state);
+      $('#component').val();
     },
-    "drawCallback": function(settings) {
+    "drawCallback": function (settings) {
       var info = $(this).closest('.dataTables_wrapper').find('.dataTables_info');
       info.toggle(this.api().page.info().recordsDisplay > 9);
     },
   }).fnFilterOnReturn();
 
   $('#name,#update_frequency,#area,#timeliness,#data_policy,#data_type,\
-      #data_format,#quality_control_procedure,#dissemination,#requirement,#state').on(
-      'change', function (event) {
-    var table = $table.DataTable();
-    table.ajax.reload();
-  });
+      #data_format,#quality_control_procedure,#dissemination,#requirement,\
+      #state,#component').on(
+    'change', function (event) {
+      var table = $table.DataTable();
+      table.ajax.reload();
+    });
 
   $('#reset-btn').on('click', function () {
     $('#name,#update_frequency,#area,#timeliness,#data_policy,#data_type,\
-      #data_format,#quality_control_procedure,#dissemination,#requirement,#state').val('All');
+      #data_format,#quality_control_procedure,#dissemination,#requirement,\
+      #state,#component').val('All');
     var table = $table.DataTable();
     table.state.clear();
     table.ajax.reload();
