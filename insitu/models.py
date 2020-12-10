@@ -452,6 +452,10 @@ class DataProvider(ValidationWorkflowModel, SoftDeleteModel):
             objects = [self.details.all().first()]
         return objects
 
+    @property
+    def components(self):
+        return Component.objects.filter(products__requirements__data__providers=self)
+
     @transition()
     def mark_as_ready(self):
         for obj in self.get_related_objects():

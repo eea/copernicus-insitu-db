@@ -40,10 +40,12 @@ class DataProviderList(ProtectedTemplateView):
         states = [{"title": "All", "name": "All"}] + [
             state for state in models.ValidationWorkflow.states
         ]
+        components = get_choices("name", model_cls=models.Component)
         context.update(
             {
                 "provider_types": provider_types,
                 "states": states,
+                "components": components,
             }
         )
         return context
@@ -62,8 +64,16 @@ class DataProviderListJson(ESDatatableView):
         "state",
     ]
     order_columns = columns
-    filters = ["is_network", "provider_type", "state"]
-    filter_fields = ["is_network", "details__provider_type__name", "state"]
+    filter_translation = {
+        "component": "components.name",
+    }
+    filters = ["is_network", "provider_type", "state", "component"]
+    filter_fields = [
+        "is_network",
+        "details__provider_type__name",
+        "state",
+        "data__requirements__products__component__name",
+    ]
     document = documents.DataProviderDoc
     permission_classes = (IsAuthenticated,)
 

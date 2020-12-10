@@ -12,6 +12,7 @@ from insitu.models import (
     Product,
     ProductRequirement,
     Requirement,
+    Component,
 )
 from insitu import signals
 
@@ -272,9 +273,17 @@ class DataProviderDoc(DocType):
     provider_type = fields.KeywordField(attr="get_elastic_search_data.provider_type")
     state = fields.KeywordField(attr="state.name")
 
+    components = fields.ObjectField(
+        attr="components",
+        properties={
+            "name": fields.KeywordField(attr="name"),
+        },
+    )
+
     class Meta:
         model = DataProvider
         fields = ["id"]
+        related_models = [ProductRequirement, Component]
 
     def get_name_display(self):
         url = reverse("provider:detail", kwargs={"pk": self.id})
@@ -296,6 +305,22 @@ class DataProviderDoc(DocType):
         data_provider = sender.data_provider
         document = DataProviderDoc.get(id=data_provider.id)
         document.update(data_provider)
+
+    def get_instances_from_related(self, related_instance):
+        """
+        If related_models is set, define how to retrieve the Requirement
+        instance(s) from the related model. The related_models option should be
+        used with caution because it can lead in the index to the updating of a
+        lot of items.
+        """
+        if isinstance(related_instance, ProductRequirement):
+            return DataProvider.objects.filter(
+                data__requirements__product_requirements=related_instance
+            )
+        if isinstance(related_instance, Component):
+            return DataProvider.objects.filter(
+                data__requirements__products__component=related_instance
+            )
 
 
 signals.data_provider_updated.connect(DataProviderDoc.update_index)
