@@ -125,6 +125,9 @@ class SoftDeleteModel(models.Model):
 
     related_objects = []
 
+    class Meta:
+        abstract = True
+
     def delete_related(self):
         for class_name, field in self.related_objects:
             objects = globals()[class_name].objects.filter(**{field: self})
@@ -136,9 +139,6 @@ class SoftDeleteModel(models.Model):
         self.delete_related()
         if hasattr(self, "elastic_delete_signal"):
             self.elastic_delete_signal.send(sender=self)
-
-    class Meta:
-        abstract = True
 
 
 class ValidationWorkflowModel(WorkflowEnabled, models.Model):
@@ -454,7 +454,16 @@ class DataProvider(ValidationWorkflowModel, SoftDeleteModel):
 
     @property
     def components(self):
-        return Component.objects.filter(products__requirements__data__providers=self)
+        return Component.objects.filter(
+            products__requirements__data__providers=self,
+            products__requirements__data__providers___deleted=False,
+            products__requirements__data__dataproviderrelation___deleted=False,
+            products__requirements__data___deleted=False,
+            products__requirements__datarequirement___deleted=False,
+            products__requirements___deleted=False,
+            products__product_requirements___deleted=False,
+            products___deleted=False,
+        )
 
     @transition()
     def mark_as_ready(self):

@@ -6,6 +6,7 @@ from django.core.urlresolvers import reverse
 from insitu import models
 from insitu.documents import DataProviderDoc
 from insitu.tests import base
+from insitu.utils import soft_deleted
 
 
 class DataProviderTests(base.FormCheckTestCase):
@@ -100,21 +101,21 @@ class DataProviderTests(base.FormCheckTestCase):
             provider__created_by=self.creator,
             provider__countries=[romania],
         )
-        requirement = base.RequirementFactory(created_by=self.creator, **metrics)
-        base.DataRequirementFactory(
+        requirement1 = base.RequirementFactory(created_by=self.creator, **metrics)
+        data_req1 = base.DataRequirementFactory(
             created_by=self.creator,
             data=dpr1.data,
-            requirement=requirement,
+            requirement=requirement1,
         )
         # Associate it with first and common components
-        base.ProductRequirementFactory(
+        prod_req1 = base.ProductRequirementFactory(
             created_by=self.creator,
-            requirement=requirement,
+            requirement=requirement1,
             product__component=first_component,
         )
         base.ProductRequirementFactory(
             created_by=self.creator,
-            requirement=requirement,
+            requirement=requirement1,
             product__component=common_component,
         )
 
@@ -126,21 +127,21 @@ class DataProviderTests(base.FormCheckTestCase):
             provider__created_by=self.creator,
             provider__countries=[romania],
         )
-        requirement = base.RequirementFactory(created_by=self.creator, **metrics)
+        requirement2 = base.RequirementFactory(created_by=self.creator, **metrics)
         base.DataRequirementFactory(
             created_by=self.creator,
             data=dpr2.data,
-            requirement=requirement,
+            requirement=requirement2,
         )
         # Associate it with second and common components
         base.ProductRequirementFactory(
             created_by=self.creator,
-            requirement=requirement,
+            requirement=requirement2,
             product__component=second_component,
         )
         base.ProductRequirementFactory(
             created_by=self.creator,
-            requirement=requirement,
+            requirement=requirement2,
             product__component=common_component,
         )
 
@@ -152,16 +153,16 @@ class DataProviderTests(base.FormCheckTestCase):
             provider__created_by=self.creator,
             provider__countries=[romania],
         )
-        requirement = base.RequirementFactory(created_by=self.creator, **metrics)
+        requirement3 = base.RequirementFactory(created_by=self.creator, **metrics)
         base.DataRequirementFactory(
             created_by=self.creator,
             data=dpr3.data,
-            requirement=requirement,
+            requirement=requirement3,
         )
         # Associate it with other component
         base.ProductRequirementFactory(
             created_by=self.creator,
-            requirement=requirement,
+            requirement=requirement3,
             product__component=other_component,
         )
 
@@ -191,6 +192,26 @@ class DataProviderTests(base.FormCheckTestCase):
         data = resp.json()
         self.assertIs(data["recordsTotal"], 3)
         self.assertIs(data["recordsFiltered"], 2)
+
+        objs_to_soft_delete = [
+            dpr1.provider,
+            dpr1,
+            dpr1.data,
+            data_req1,
+            requirement1,
+            prod_req1,
+            prod_req1.product,
+        ]
+        # Soft delete intermediate objects
+        for obj in objs_to_soft_delete:
+            with soft_deleted(obj):
+                resp = self.client.get(
+                    reverse("provider:json"), {"component": "First component"}
+                )
+                self.assertEqual(resp.status_code, 200)
+                data = resp.json()
+                # No records are filtered
+                self.assertIs(data["recordsFiltered"], 0)
 
     def test_list_providers(self):
         self.erase_logging_file()

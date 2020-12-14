@@ -1,3 +1,6 @@
+from contextlib import contextmanager
+
+
 ALL_OPTIONS_LABEL = "All"
 
 PICKLISTS_DESCRIPTION = {
@@ -81,3 +84,12 @@ def get_choices(field, model_cls=None, objects=None):
     elif objects:
         model_values = list(objects.values_list(field, flat=True))
     return [ALL_OPTIONS_LABEL] + model_values
+
+
+@contextmanager
+def soft_deleted(obj):
+    obj._deleted = True
+    obj.save()
+    yield obj
+    obj._deleted = False
+    obj.save()

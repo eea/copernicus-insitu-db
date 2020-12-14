@@ -11,7 +11,7 @@ from insitu.views.protected.views import ProtectedView
 
 class ESDatatableView(BaseDatatableView, ProtectedView):
     filter_translation = {}
-    _should_filter_requirements = False
+    extra_filters = {}
 
     def get_initial_queryset(self):
         return self.document.search()
@@ -67,6 +67,9 @@ class ESDatatableView(BaseDatatableView, ProtectedView):
     def filter_queryset(self, search):
         """
         Where `search` is a django_elasticsearch_dsl.search.Search object.
+
+        TODO: Investigate the possibility of only using ElasticSearch for text
+        searches.
         """
         for filter_ in self.filters:
             value = self.request.GET.get(filter_)
@@ -94,10 +97,7 @@ class ESDatatableView(BaseDatatableView, ProtectedView):
 
         qs = search.to_queryset()  # If there are ever more than 10,000
         # items in the database, this will have to be reimplemented entirely.
-        if self._should_filter_requirements:
-            qs = qs.filter(
-                requirements___deleted=False, datarequirement___deleted=False
-            )
+        qs = qs.filter(**self.extra_filters)
 
         objects = qs.values_list(*self.filter_fields)
 
