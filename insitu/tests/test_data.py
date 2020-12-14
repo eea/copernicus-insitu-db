@@ -6,6 +6,7 @@ from django.core.urlresolvers import reverse
 from insitu import models
 from insitu.tests import base
 from insitu.documents import DataDoc
+from insitu.utils import soft_deleted
 
 import datetime
 
@@ -153,21 +154,21 @@ class DataTests(base.FormCheckTestCase):
 
         # Create first Data and DataRequirement objects
         data1 = base.DataFactory(created_by=self.creator)
-        requirement = base.RequirementFactory(created_by=self.creator, **metrics)
-        base.DataRequirementFactory(
+        requirement1 = base.RequirementFactory(created_by=self.creator, **metrics)
+        data_req1 = base.DataRequirementFactory(
             created_by=self.creator,
             data=data1,
-            requirement=requirement,
+            requirement=requirement1,
         )
         # Associate it with first and common components
-        base.ProductRequirementFactory(
+        prod_req1 = base.ProductRequirementFactory(
             created_by=self.creator,
-            requirement=requirement,
+            requirement=requirement1,
             product__component=first_component,
         )
         base.ProductRequirementFactory(
             created_by=self.creator,
-            requirement=requirement,
+            requirement=requirement1,
             product__component=common_component,
         )
 
@@ -226,6 +227,24 @@ class DataTests(base.FormCheckTestCase):
         data = resp.json()
         self.assertIs(data["recordsTotal"], 3)
         self.assertIs(data["recordsFiltered"], 2)
+
+        objs_to_soft_delete = [
+            data1,
+            data_req1,
+            requirement1,
+            prod_req1,
+            prod_req1.product,
+        ]
+        # Soft delete intermediate objects
+        for obj in objs_to_soft_delete:
+            with soft_deleted(obj):
+                resp = self.client.get(
+                    reverse("provider:json"), {"component": "First component"}
+                )
+                self.assertEqual(resp.status_code, 200)
+                data = resp.json()
+                # No records are filtered
+                self.assertIs(data["recordsFiltered"], 0)
 
     def test_list_data(self):
         self.erase_logging_file()

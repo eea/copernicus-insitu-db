@@ -615,7 +615,12 @@ class Data(ValidationWorkflowModel, SoftDeleteModel):
 
     @property
     def components(self):
-        return Component.objects.filter(products__requirements__data=self)
+        return Component.objects.filter(
+            products__requirements__data=self,
+            products__requirements___deleted=False,
+            products__product_requirements___deleted=False,
+            products___deleted=False,
+        )
 
     @property
     def requirements_get_filtered(self):
