@@ -52,6 +52,7 @@ class DataList(ProtectedTemplateView):
         states = [{"title": "All", "name": "All"}] + [
             state for state in models.ValidationWorkflow.states
         ]
+        components = get_choices("name", model_cls=models.Component)
         context.update(
             {
                 "update_frequencies": update_frequencies,
@@ -64,6 +65,7 @@ class DataList(ProtectedTemplateView):
                 "disseminations": disseminations,
                 "requirements": requirements,
                 "states": states,
+                "components": components,
             }
         )
         return context
@@ -83,7 +85,10 @@ class DataListJson(ESDatatableView):
         "state",
     ]
     order_columns = columns
-    filter_translation = {"requirement": "requirements.requirement"}
+    filter_translation = {
+        "requirement": "requirements.requirement",
+        "component": "components.name",
+    }
     filters = [
         "update_frequency",
         "area",
@@ -95,6 +100,7 @@ class DataListJson(ESDatatableView):
         "dissemination",
         "requirement",
         "state",
+        "component",
     ]
     filter_fields = [
         "update_frequency__name",
@@ -107,9 +113,13 @@ class DataListJson(ESDatatableView):
         "dissemination__name",
         "requirements__name",
         "state",
+        "requirements__products__component__name",
     ]
 
-    _should_filter_requirements = True
+    extra_filters = {
+        "requirements___deleted": False,
+        "datarequirement___deleted": False,
+    }
 
     document = documents.DataDoc
     permission_classes = (IsAuthenticated,)

@@ -9,6 +9,7 @@ from insitu.models import (
     Data,
     DataRequirement,
     DataProvider,
+    DataProviderRelation,
     Product,
     ProductRequirement,
     Requirement,
@@ -283,7 +284,15 @@ class DataProviderDoc(DocType):
     class Meta:
         model = DataProvider
         fields = ["id"]
-        related_models = [ProductRequirement, Component]
+        related_models = [
+            DataProviderRelation,
+            Data,
+            DataRequirement,
+            Requirement,
+            ProductRequirement,
+            Product,
+            Component,
+        ]
 
     def get_name_display(self):
         url = reverse("provider:detail", kwargs={"pk": self.id})
@@ -313,9 +322,21 @@ class DataProviderDoc(DocType):
         used with caution because it can lead in the index to the updating of a
         lot of items.
         """
+        if isinstance(related_instance, DataProviderRelation):
+            return DataProvider.objects.filter(dataproviderrelation=related_instance)
+        if isinstance(related_instance, Data):
+            return DataProvider.objects.filter(data=related_instance)
+        if isinstance(related_instance, DataRequirement):
+            return DataProvider.objects.filter(data__datarequirement=related_instance)
+        if isinstance(related_instance, Requirement):
+            return DataProvider.objects.filter(data__requirements=related_instance)
         if isinstance(related_instance, ProductRequirement):
             return DataProvider.objects.filter(
                 data__requirements__product_requirements=related_instance
+            )
+        if isinstance(related_instance, Product):
+            return DataProvider.objects.filter(
+                data__requirements__products=related_instance
             )
         if isinstance(related_instance, Component):
             return DataProvider.objects.filter(
