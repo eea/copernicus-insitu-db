@@ -133,6 +133,13 @@ class RequirementDoc(DocType):
 
     note = fields.TextField()
 
+    class Meta:
+        model = Requirement
+        related_models = [ProductRequirement, Product]
+        fields = [
+            "id",
+        ]
+
     def get_name_display(self):
         url = reverse("requirement:detail", kwargs={"pk": self.id})
         return '<a href="{url}">{name}</a>'.format(url=url, name=self.name)
@@ -147,13 +154,6 @@ class RequirementDoc(DocType):
         requirement = sender
         document = RequirementDoc.get(id=requirement.id)
         document.update(requirement)
-
-    class Meta:
-        model = Requirement
-        related_models = [ProductRequirement, Product]
-        fields = [
-            "id",
-        ]
 
     def get_queryset(self):
         """
@@ -216,6 +216,19 @@ class DataDoc(DocType):
         },
     )
 
+    class Meta:
+        model = Data
+        fields = [
+            "id",
+        ]
+        related_models = [
+            DataRequirement,
+            Requirement,
+            ProductRequirement,
+            Product,
+            Component,
+        ]
+
     def get_name_display(self):
         url = reverse("data:detail", kwargs={"pk": self.id})
         return '<a href="{url}">{name}</a>'.format(url=url, name=self.name)
@@ -224,13 +237,6 @@ class DataDoc(DocType):
     def delete_index(sender, **kwargs):
         document = DataDoc.get(id=sender.id)
         document.delete()
-
-    class Meta:
-        model = Data
-        related_models = [DataRequirement, ProductRequirement, Requirement]
-        fields = [
-            "id",
-        ]
 
     def get_queryset(self):
         """
@@ -253,15 +259,18 @@ class DataDoc(DocType):
         """
         if isinstance(related_instance, DataRequirement):
             return related_instance.data
+        if isinstance(related_instance, Requirement):
+            return Data.objects.filter(requirements=related_instance)
         if isinstance(related_instance, ProductRequirement):
             return Data.objects.filter(
                 requirements__product_requirements=related_instance
             )
-        if isinstance(related_instance, Requirement):
-            return [
-                datarequirement.data
-                for datarequirement in related_instance.datarequirement_set.all()
-            ]
+        if isinstance(related_instance, Product):
+            return Data.objects.filter(requirements__products=related_instance)
+        if isinstance(related_instance, Component):
+            return Data.objects.filter(
+                requirements__products__component=related_instance
+            )
 
 
 @insitu_dataproviders.doc_type
