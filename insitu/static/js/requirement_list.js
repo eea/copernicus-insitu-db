@@ -136,7 +136,7 @@ $(document).ready(function () {
             generate_div('blue', breakthrough) +
             generate_div('green', goal));
         },
-        "targets": [4, 5, 6, 7, 8],
+        "targets": [4, 5, 6, 7, 8, 9],
         "bSortable": false
       }
     ]
