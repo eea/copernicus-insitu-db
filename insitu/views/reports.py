@@ -212,7 +212,7 @@ class ReportsStandardReportView(ProtectedTemplateView, ReportExcelMixin, PDFExce
         self.generate_excel_file(workbook)
         workbook.close()
         output.seek(0)
-        filename = "StandardReport{}.xlsx".format(datetime.date.today())
+        filename = self.generate_filename(".xlsx")
         cont_type = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
         response = HttpResponse(
             output,
@@ -221,9 +221,16 @@ class ReportsStandardReportView(ProtectedTemplateView, ReportExcelMixin, PDFExce
         response["Content-Disposition"] = "attachment; filename=%s" % filename
         return response
 
+    def generate_filename(self, extension):
+        services = "_".join([service.acronym for service in self.services])
+        components = "_".join([component.acronym for component in self.components])
+        date = datetime.datetime.now().strftime("%Y%m%d_%H%M")
+        filename = "_".join(["Standard_Report", services, components, date]) + extension
+        return filename
+
     def generate_pdf(self):
         response = HttpResponse(content_type="application/pdf")
-        pdf_name = "menu-4.pdf"
+        pdf_name = self.generate_filename(".pdf")
         response["Content-Disposition"] = "attachment; filename=%s" % pdf_name
 
         buff = BytesIO()
@@ -254,6 +261,10 @@ class ReportsStandardReportView(ProtectedTemplateView, ReportExcelMixin, PDFExce
         return response
 
     def post(self, request, *args, **kwargs):
+        services = self.request.POST.getlist("service")
+        components = self.request.POST.getlist("component")
+        self.services = CopernicusService.objects.filter(id__in=services)
+        self.components = Component.objects.filter(id__in=components)
         if request.POST["action"] == "Generate PDF":
             return self.generate_pdf()
         elif request.POST["action"] == "Generate Excel":

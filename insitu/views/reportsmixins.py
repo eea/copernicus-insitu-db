@@ -16,6 +16,13 @@ from reportlab.lib.enums import TA_CENTER, TA_LEFT
 
 
 class ReportExcelMixin:
+    def generate_metrics_entry(self, obj):
+        return "{}\n{}\n{}\n".format(
+            obj.threshold,
+            getattr(obj, "breakthrough", "").replace("N/A", ""),
+            getattr(obj, "goal", "").replace("N/A", ""),
+        )
+
     def set_formats(self, workbook):
         self.merge_format = workbook.add_format(
             {
@@ -24,6 +31,7 @@ class ReportExcelMixin:
                 "valign": "vcenter",
                 "font_name": "Calibri",
                 "font_size": 14,
+                "text_wrap": 1,
                 "font_color": "#00B050",
             }
         )
@@ -58,7 +66,7 @@ class ReportExcelMixin:
                 "valign": "vcenter",
                 "font_name": "Calibri",
                 "font_size": 12,
-                "text_wrap": 1,
+                "text_wrap": True,
                 "border": 1,
             }
         )
@@ -76,8 +84,13 @@ class ReportExcelMixin:
             self.merge_format,
         )
         worksheet.merge_range(
-            "A3:D3", "Standard Report for Local Land Component", self.merge_format
+            "A3:D3",
+            "Standard Report for {}".format(
+                ", ".join([elem.name for elem in self.components])
+            ),
+            self.merge_format,
         )
+
         worksheet.merge_range(
             "A4:D4",
             "Produced on {}".format(datetime.datetime.now().strftime("%d %B %Y")),
@@ -86,20 +99,13 @@ class ReportExcelMixin:
         worksheet.merge_range(
             "A6:D6",
             "The Standard Report consists of tables that "
-            "include all the main statistical data",
-        )
-        worksheet.merge_range(
-            "A7:D7",
-            "The objects in this document are filtered using the "
-            "following services: {} and the following components: {}".format(
-                ", ".join([elem.name for elem in self.services]),
-                ", ".join([elem.name for elem in self.components]),
-            ),
+            "include all the main statistical data.",
         )
 
     def generate_table_1(self, workbook, worksheet):
-        worksheet.set_column("A1:B1", 20)
-        worksheet.set_column("B1:C1", 50)
+        worksheet.set_column("A1:A1", 20)
+        worksheet.set_column("B1:B1", 50)
+        worksheet.set_column("C1:C1", 50)
         worksheet.set_column("D1:K1", 25)
         worksheet.set_row(0, 30)
         worksheet.set_row(1, 20)
@@ -121,13 +127,14 @@ class ReportExcelMixin:
         ]
         worksheet.write_row("A2", headers, self.format_cols_headers)
         self.requirements = (
-            Requirement.objects.filter(products__in=self.products)
+            Requirement.objects.filter(
+                products__in=self.products, product_requirements___deleted=False
+            )
             .distinct()
             .order_by("name")
         )
         index = 2
         for requirement in self.requirements:
-            worksheet.set_row(index, 50)
             data = [
                 requirement.id,
                 requirement.name,
@@ -135,31 +142,11 @@ class ReportExcelMixin:
                 requirement.dissemination.name,
                 requirement.quality_control_procedure.name,
                 requirement.group.name,
-                "{}\n{}\n{}\n".format(
-                    requirement.uncertainty.threshold,
-                    requirement.uncertainty.breakthrough,
-                    requirement.uncertainty.goal,
-                ),
-                "{}\n{}\n{}\n".format(
-                    requirement.update_frequency.threshold,
-                    requirement.update_frequency.breakthrough,
-                    requirement.update_frequency.goal,
-                ),
-                "{}\n{}\n{}\n".format(
-                    requirement.timeliness.threshold,
-                    requirement.timeliness.breakthrough,
-                    requirement.timeliness.goal,
-                ),
-                "{}\n{}\n{}\n".format(
-                    requirement.scale.threshold,
-                    requirement.scale.breakthrough,
-                    requirement.scale.goal,
-                ),
-                "{}\n{}\n{}\n".format(
-                    requirement.horizontal_resolution.threshold,
-                    requirement.horizontal_resolution.breakthrough,
-                    requirement.horizontal_resolution.goal,
-                ),
+                self.generate_metrics_entry(requirement.uncertainty),
+                self.generate_metrics_entry(requirement.update_frequency),
+                self.generate_metrics_entry(requirement.timeliness),
+                self.generate_metrics_entry(requirement.scale),
+                self.generate_metrics_entry(requirement.horizontal_resolution),
             ]
             worksheet.write_row(index, 0, data, self.format_rows)
             index += 1
@@ -416,7 +403,9 @@ class ReportExcelMixin:
             data_index = product_index
             for data_object in data:
                 data_requirement_index = data_index
-                for data_requirement in data_object.datarequirement_set.all():
+                for data_requirement in data_object.datarequirement_set.filter(
+                    requirement_id__in=self.requirements
+                ):
                     worksheet.write_row(
                         data_requirement_index,
                         2,
@@ -425,6 +414,7 @@ class ReportExcelMixin:
                             data_requirement.requirement.id,
                             data_requirement.note,
                         ],
+                        self.format_rows,
                     )
                     data_requirement_index += 1
                 if data_index == data_requirement_index:
@@ -592,6 +582,13 @@ class ReportExcelMixin:
 
 
 class PDFExcelMixin:
+    def generate_metrics_entry(self, obj):
+        return "{}<br/>{}<br/>{}<br/>".format(
+            obj.threshold,
+            getattr(obj, "breakthrough", "").replace("N/A", ""),
+            getattr(obj, "goal", "").replace("N/A", ""),
+        )
+
     def generate_table_1_pdf(self):
         self.requirements = (
             Requirement.objects.filter(
@@ -627,41 +624,20 @@ class PDFExcelMixin:
                     Paragraph(x.quality_control_procedure.name, self.rowstyle_table1),
                     Paragraph(x.group.name, self.rowstyle_table1),
                     Paragraph(
-                        "{}\n{}\n{}\n".format(
-                            x.uncertainty.threshold,
-                            x.uncertainty.breakthrough,
-                            x.uncertainty.goal,
-                        ),
+                        self.generate_metrics_entry(x.uncertainty), self.rowstyle_table1
+                    ),
+                    Paragraph(
+                        self.generate_metrics_entry(x.update_frequency),
                         self.rowstyle_table1,
                     ),
                     Paragraph(
-                        "{}\n{}\n{}\n".format(
-                            x.update_frequency.threshold,
-                            x.update_frequency.breakthrough,
-                            x.update_frequency.goal,
-                        ),
-                        self.rowstyle_table1,
+                        self.generate_metrics_entry(x.timeliness), self.rowstyle_table1
                     ),
                     Paragraph(
-                        "{}\n{}\n{}\n".format(
-                            x.timeliness.threshold,
-                            x.timeliness.breakthrough,
-                            x.timeliness.goal,
-                        ),
-                        self.rowstyle_table1,
+                        self.generate_metrics_entry(x.scale), self.rowstyle_table1
                     ),
                     Paragraph(
-                        "{}\n{}\n{}\n".format(
-                            x.scale.threshold, x.scale.breakthrough, x.scale.goal
-                        ),
-                        self.rowstyle_table1,
-                    ),
-                    Paragraph(
-                        "{}\n{}\n{}\n".format(
-                            x.horizontal_resolution.threshold,
-                            x.horizontal_resolution.breakthrough,
-                            x.horizontal_resolution.goal,
-                        ),
+                        self.generate_metrics_entry(x.horizontal_resolution),
                         self.rowstyle_table1,
                     ),
                 ]
@@ -813,7 +789,7 @@ class PDFExcelMixin:
             [
                 Paragraph("PRODUCT", self.table_headerstyle),
                 Paragraph("REQUIREMENT", self.table_headerstyle),
-                Paragraph("REQUIREEMENT UID", self.table_headerstyle),
+                Paragraph("REQUIREMENT UID", self.table_headerstyle),
                 Paragraph("BARRIER", self.table_headerstyle),
                 Paragraph("RELEVANCE", self.table_headerstyle),
                 Paragraph("CRITICALITY", self.table_headerstyle),
@@ -863,7 +839,7 @@ class PDFExcelMixin:
             [
                 Paragraph("PRODUCT", self.table_headerstyle),
                 Paragraph("DATA", self.table_headerstyle),
-                Paragraph("REQUIREEMENT", self.table_headerstyle),
+                Paragraph("REQUIREMENT", self.table_headerstyle),
                 Paragraph("REQUIREMENT UID", self.table_headerstyle),
                 Paragraph(
                     "LEVEL OF COMPLIANCE DATA vs REQUIREMENT", self.table_headerstyle
@@ -881,7 +857,9 @@ class PDFExcelMixin:
             ).distinct()
             for data_object in data_objects:
                 data_name = data_object.name
-                for data_requirement in data_object.datarequirement_set.all():
+                for data_requirement in data_object.datarequirement_set.filter(
+                    requirement_id__in=self.requirements
+                ):
                     table_data.append(
                         [
                             Paragraph(product_name, self.rowstyle),
@@ -1048,7 +1026,7 @@ class PDFExcelMixin:
                 )
 
         data.extend(table_data)
-        t = Table(data, colWidths=[150, 150, 90, 90, 90, 90], repeatRows=1)
+        t = Table(data, colWidths=[150, 150, 90, 90, 120, 90], repeatRows=1)
         t.setStyle(self.LIST_STYLE)
         return t
 
@@ -1154,18 +1132,15 @@ class PDFExcelMixin:
                 "- managed by the European Environment Agency",
                 self.header_style,
             ),
-            Paragraph("Standard Report for Local Land Component", self.header_style),
+            Paragraph(
+                "Standard Report for {}".format(
+                    ", ".join([elem.name for elem in self.components])
+                ),
+                self.header_style,
+            ),
             Paragraph(
                 "Produced on {}".format(datetime.datetime.now().strftime("%d %B %Y")),
                 self.sub_header_style,
-            ),
-            Paragraph(
-                "The objects in this document are filtered using"
-                "the following services: {} and the following components: {}".format(
-                    ", ".join([elem.name for elem in self.services]),
-                    ", ".join([elem.name for elem in self.components]),
-                ),
-                self.normal_style,
             ),
             PageBreak(),
         ]
