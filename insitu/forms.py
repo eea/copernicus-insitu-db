@@ -266,7 +266,7 @@ class RequirementForm(forms.ModelForm):
         fields = {
             field: v
             for field, v in self.cleaned_data.items()
-            if field != "name" and field != "note"
+            if field != "name"
         }
         if self.instance.id:
             exists = (
