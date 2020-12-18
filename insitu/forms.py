@@ -263,11 +263,7 @@ class RequirementForm(forms.ModelForm):
         ]
         self._clean_metric(metric_fields)
         self._clean_scale()
-        fields = {
-            field: v
-            for field, v in self.cleaned_data.items()
-            if field != "name"
-        }
+        fields = {field: v for field, v in self.cleaned_data.items() if field != "name"}
         if self.instance.id:
             exists = (
                 models.Requirement.objects.filter(**fields)
