@@ -215,12 +215,6 @@ class RequirementTests(base.FormCheckTestCase):
         )
         self.assertEqual(resp.status_code, 200)
 
-        cloned_data["note"] = "Updated note"
-        resp = self.client.post(
-            reverse("requirement:add") + "?pk=" + str(requirement.pk), cloned_data
-        )
-        self.assertEqual(resp.status_code, 200)
-
         cloned_data["uncertainty__threshold"] = "test threshold 2"
         resp = self.client.post(
             reverse("requirement:add") + "?pk=" + str(requirement.pk), cloned_data
