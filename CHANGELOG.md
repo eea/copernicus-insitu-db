@@ -3,6 +3,14 @@ Changelog
 
 * In case of major changes, an email should be sent to all users with the modifications.
 
+2.3.11 (2020-12-18)
+-------------------
+* Implement standard report feedback
+* Fix vertical resolution display
+* Add component filter to Data list page
+* Add component filtering to Data Providers list page
+  [dianaboiangiu]
+
 2.3.10 (2020-12-04)
 ------------------
 * Add Standard Report (Excel and PDF)
