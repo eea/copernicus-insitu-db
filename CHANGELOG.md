@@ -3,6 +3,11 @@ Changelog
 
 * In case of major changes, an email should be sent to all users with the modifications.
 
+2.3.12 (2020-12-18)
+-------------------
+* Allow note to differentiate between requirements
+  [dianaboiangiu]
+
 2.3.11 (2020-12-18)
 -------------------
 * Implement standard report feedback
