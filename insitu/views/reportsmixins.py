@@ -16,8 +16,6 @@ from reportlab.lib.enums import TA_CENTER, TA_LEFT
 
 
 class ReportExcelMixin:
-
-
     def set_formats(self, workbook):
         self.merge_format = workbook.add_format(
             {
@@ -570,7 +568,6 @@ class ReportExcelMixin:
 
 
 class PDFExcelMixin:
-
     def generate_table_1_pdf(self):
         self.requirements = (
             Requirement.objects.filter(
@@ -609,7 +606,9 @@ class PDFExcelMixin:
                     Paragraph(x.update_frequency.breakthrough, self.rowstyle_table1),
                     Paragraph(x.timeliness.breakthrough, self.rowstyle_table1),
                     Paragraph(x.scale.breakthrough, self.rowstyle_table1),
-                    Paragraph(x.horizontal_resolution.breakthrough, self.rowstyle_table1),
+                    Paragraph(
+                        x.horizontal_resolution.breakthrough, self.rowstyle_table1
+                    ),
                 ]
                 for x in self.requirements
             ]
