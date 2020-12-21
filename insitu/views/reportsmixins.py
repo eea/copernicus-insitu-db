@@ -16,12 +16,7 @@ from reportlab.lib.enums import TA_CENTER, TA_LEFT
 
 
 class ReportExcelMixin:
-    def generate_metrics_entry(self, obj):
-        return "{}\n{}\n{}\n".format(
-            obj.threshold,
-            getattr(obj, "breakthrough", "").replace("N/A", ""),
-            getattr(obj, "goal", "").replace("N/A", ""),
-        )
+
 
     def set_formats(self, workbook):
         self.merge_format = workbook.add_format(
@@ -142,11 +137,11 @@ class ReportExcelMixin:
                 requirement.dissemination.name,
                 requirement.quality_control_procedure.name,
                 requirement.group.name,
-                self.generate_metrics_entry(requirement.uncertainty),
-                self.generate_metrics_entry(requirement.update_frequency),
-                self.generate_metrics_entry(requirement.timeliness),
-                self.generate_metrics_entry(requirement.scale),
-                self.generate_metrics_entry(requirement.horizontal_resolution),
+                requirement.uncertainty.breakthrough,
+                requirement.update_frequency.breakthrough,
+                requirement.timeliness.breakthrough,
+                requirement.scale.breakthrough,
+                requirement.horizontal_resolution.breakthrough,
             ]
             worksheet.write_row(index, 0, data, self.format_rows)
             index += 1
@@ -553,13 +548,6 @@ class ReportExcelMixin:
                 index += 1
 
     def generate_excel_file(self, workbook):
-        services = self.request.POST.getlist("service")
-        components = self.request.POST.getlist("component")
-        self.services = CopernicusService.objects.filter(id__in=services)
-        self.components = Component.objects.filter(id__in=components)
-        self.products = Product.objects.filter(component_id__in=components).order_by(
-            "name"
-        )
         self.set_formats(workbook)
         worksheet = workbook.add_worksheet("INTRODUCTION")
         self.generate_header_sheet(workbook, worksheet)
@@ -582,12 +570,6 @@ class ReportExcelMixin:
 
 
 class PDFExcelMixin:
-    def generate_metrics_entry(self, obj):
-        return "{}<br/>{}<br/>{}<br/>".format(
-            obj.threshold,
-            getattr(obj, "breakthrough", "").replace("N/A", ""),
-            getattr(obj, "goal", "").replace("N/A", ""),
-        )
 
     def generate_table_1_pdf(self):
         self.requirements = (
@@ -623,23 +605,11 @@ class PDFExcelMixin:
                     Paragraph(x.dissemination.name, self.rowstyle_table1),
                     Paragraph(x.quality_control_procedure.name, self.rowstyle_table1),
                     Paragraph(x.group.name, self.rowstyle_table1),
-                    Paragraph(
-                        self.generate_metrics_entry(x.uncertainty), self.rowstyle_table1
-                    ),
-                    Paragraph(
-                        self.generate_metrics_entry(x.update_frequency),
-                        self.rowstyle_table1,
-                    ),
-                    Paragraph(
-                        self.generate_metrics_entry(x.timeliness), self.rowstyle_table1
-                    ),
-                    Paragraph(
-                        self.generate_metrics_entry(x.scale), self.rowstyle_table1
-                    ),
-                    Paragraph(
-                        self.generate_metrics_entry(x.horizontal_resolution),
-                        self.rowstyle_table1,
-                    ),
+                    Paragraph(x.uncertainty.breakthrough, self.rowstyle_table1),
+                    Paragraph(x.update_frequency.breakthrough, self.rowstyle_table1),
+                    Paragraph(x.timeliness.breakthrough, self.rowstyle_table1),
+                    Paragraph(x.scale.breakthrough, self.rowstyle_table1),
+                    Paragraph(x.horizontal_resolution.breakthrough, self.rowstyle_table1),
                 ]
                 for x in self.requirements
             ]
@@ -1119,13 +1089,6 @@ class PDFExcelMixin:
 
     def generate_pdf_file(self, menu_pdf):
         self.set_styles()
-        services = self.request.POST.getlist("service")
-        components = self.request.POST.getlist("component")
-        self.services = CopernicusService.objects.filter(id__in=services)
-        self.components = Component.objects.filter(id__in=components)
-        self.products = Product.objects.filter(component_id__in=components).order_by(
-            "name"
-        )
         elements = [
             Paragraph(
                 "Copernicus In Situ Component Information System "

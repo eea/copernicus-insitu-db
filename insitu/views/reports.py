@@ -9,6 +9,7 @@ import string
 import xlsxwriter
 from io import BytesIO
 
+from django.db.models import Q
 from django.template.loader import get_template
 from openpyxl import load_workbook
 from openpyxl.writer.excel import save_virtual_workbook
@@ -27,7 +28,7 @@ from explorer.utils import url_get_rows
 
 from wkhtmltopdf.views import PDFTemplateResponse
 
-from insitu.models import Component, CopernicusService
+from insitu.models import Component, CopernicusService, Product
 from insitu.forms import StandardReportForm
 from insitu.views.reportsmixins import ReportExcelMixin, PDFExcelMixin
 from insitu.views import protected
@@ -199,10 +200,15 @@ class ReportsStandardReportView(ProtectedTemplateView, ReportExcelMixin, PDFExce
     permission_classes = (protected.IsAuthenticated,)
     permission_denied_redirect = reverse_lazy("auth:login")
 
+    def get_filtered_services(self):
+        # only take those services into consideration
+        services = CopernicusService.objects.filter(acronym__in=['CEMS', 'CLMS', 'CSS'])
+        return services
+
     def get_context_data(self, **kwargs):
         context = super(ReportsStandardReportView, self).get_context_data(**kwargs)
-        context["services"] = CopernicusService.objects.all()
-        context["components"] = Component.objects.all()
+        context["services"] = self.get_filtered_services()
+        context["components"] = Component.objects.filter(service__in=context['services'])
         context["form"] = StandardReportForm()
         return context
 
@@ -265,6 +271,13 @@ class ReportsStandardReportView(ProtectedTemplateView, ReportExcelMixin, PDFExce
         components = self.request.POST.getlist("component")
         self.services = CopernicusService.objects.filter(id__in=services)
         self.components = Component.objects.filter(id__in=components)
+        if '3' in components:
+            components.remove('3')
+            self.products = Product.objects.filter(Q(component_id__in=components) | Q(id=415) | Q(id=416)).order_by('name')
+        else:
+            self.products = Product.objects.filter(component_id__in=components).order_by(
+                "name"
+            )
         if request.POST["action"] == "Generate PDF":
             return self.generate_pdf()
         elif request.POST["action"] == "Generate Excel":
