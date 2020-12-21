@@ -1,4 +1,4 @@
-from insitu.models import CopernicusService, Component, Data, Product, Requirement
+from insitu.models import Data, Requirement
 from django.utils.html import strip_tags
 
 import datetime
