@@ -3,6 +3,11 @@ Changelog
 
 * In case of major changes, an email should be sent to all users with the modifications.
 
+2.3.14 (2020-12-22)
+-------------------
+* Extend product acronym length
+  [dianaboiangiu]
+
 2.3.13 (2020-12-21)
 -------------------
 * Filter components and services in Standard Report

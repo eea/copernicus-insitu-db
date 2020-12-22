@@ -361,7 +361,7 @@ class Product(SoftDeleteModel):
     ]
     elastic_delete_signal = signals.product_deleted
 
-    acronym = models.CharField(max_length=25, blank=True)
+    acronym = models.CharField(max_length=75, blank=True)
     name = models.CharField(max_length=200)
     description = models.TextField(blank=True)
     note = models.TextField(blank=True)
