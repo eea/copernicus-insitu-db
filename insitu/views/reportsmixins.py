@@ -64,6 +64,17 @@ class ReportExcelMixin:
             }
         )
 
+        self.format_rows_introduction = workbook.add_format(
+            {
+                "align": "justify",
+                "valign": "vcenter",
+                "font_name": "Calibri",
+                "font_size": 12,
+                "text_wrap": True,
+                "border": 1,
+            }
+        )
+
     def generate_header_sheet(self, workbook, worksheet):
         worksheet.set_column("A1:D1", 30)
         worksheet.set_row(0, 30)
@@ -89,10 +100,96 @@ class ReportExcelMixin:
             "Produced on {}".format(datetime.datetime.now().strftime("%d %B %Y")),
             self.merge_format,
         )
-        worksheet.merge_range(
-            "A6:D6",
-            "The Standard Report consists of tables that "
-            "include all the main statistical data.",
+        worksheet.merge_range("A6:D6", "", self.format_rows_introduction)
+        bold = workbook.add_format({"bold": True})
+        superscript = workbook.add_format({"font_script": 1})
+        worksheet.write_rich_string(
+            "A6",
+            "The European Environment Agency (EEA) is entrusted with cross-cutting ",
+            "coordination of the Copernicus In Situ Component in order to provide ",
+            "Entrusted Entities with harmonized and, in particular, cross-cutting ",
+            "information about in situ data requirements and gaps.\n\n",
+            "The Copernicus In Situ Information System (CIS",
+            superscript,
+            "2",
+            ") aims to provide a ",
+            "complete overview of requirements, gaps and data relevant to all ",
+            "Copernicus services.\n\n",
+            "The Standard Report should be used in combination with the State ",
+            "of Play Report that focuses on cross-cutting challenges and gaps ",
+            "and made available simultaneously.\n\n",
+            "CIS",
+            superscript,
+            "2 ",
+            "links the in situ requirements specified by the Entrusted ",
+            "Entities to Copernicus products, in situ datasets, and data ",
+            "providers in order to provide a clear picture of ",
+            bold,
+            "what data is already used ",
+            "and ",
+            bold,
+            "what would be needed to deliver improved and more reliable products ",
+            "and monitoring services.\n\n",
+            "CIS",
+            superscript,
+            "2 ",
+            "shows in situ data requirements and which datasets are used ",
+            "for each Copernicus Service product. For each product, datasets ",
+            "are characterised in terms of:\n",
+            "•",
+            bold,
+            "Criticality: ",
+            "the importance of the requirement for the ",
+            "supply of reliable products (Essential, Desirable, or Useful).\n",
+            "•",
+            bold,
+            "Relevance: ",
+            "the extent to which a dataset corresponds with the intended ",
+            "purpose (product generation, calibration and validation, support of ",
+            "exploitation)\n",
+            "•",
+            bold,
+            "Compliance level: ",
+            " how far the dataset meets the stated requirement ",
+            "(Fully, Partially, None).\n",
+            "•",
+            bold,
+            "Barriers: ",
+            "the main reasons why a given in situ requirement is not ",
+            "satisfied for the product concerned (e.g. accuracy, availability, ",
+            "timeliness, update frequency, coverage).\n\n",
+            "As well as demonstrating in general terms the crucial importance of ",
+            "in situ data for the operation of the Copernicus Services, the ",
+            "information in the database helps to identify, for example:\n",
+            "    • Which datasets are in use and data providers\n",
+            "    • The priority requirements for in situ data\n",
+            "    • Gaps in data provision\n",
+            "    • Barriers to the effective use of the data\n",
+            "    • Requirements and issues which affect more than one ",
+            "service component or dataset\n",
+            "    • Priority areas for action to improve provision\n\n",
+            "The database therefore provides an essential building block for",
+            "the development of new actions to improve and promote sustainable",
+            "data provision and hence effective user-driven services.\n\n",
+            "This Report sets out in a systematic way the information",
+            "contained in the database relating",
+            "to the {} Service component.\n\n".format(
+                ", ".join([elem.name for elem in self.components])
+            ),
+            "The CIS",
+            superscript,
+            "2 ",
+            "database continues to evolve, and updates of this and the other CIS",
+            superscript,
+            "2 ",
+            "Standard ",
+            "Reports will be made available periodically. They will inform discussion",
+            "between the EEA and the Services, and with wider stakeholders such as ",
+            "regulators and data owners, contributing to identifying actions ",
+            "necessary to provide improved user-driven services. It is therefore ",
+            "very important that they be carefully studied so that a ",
+            "shared narrative can be developed.",
+            self.format_rows_introduction,
         )
 
     def generate_table_1(self, workbook, worksheet):
