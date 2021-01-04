@@ -254,6 +254,8 @@ class ReportsStandardReportView(ProtectedTemplateView, ReportExcelMixin, PDFExce
                 "/var/local/copernicus/insitu/static/fonts/CalibriBold.ttf",
             )
         )
+        pdfmetrics.registerFontFamily("Calibri", normal="Calibri", bold="CalibriBold")
+
         menu_pdf = SimpleDocTemplate(
             buff,
             rightMargin=10,

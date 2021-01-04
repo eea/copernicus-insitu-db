@@ -12,7 +12,7 @@ from reportlab.platypus import (
 
 from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 from reportlab.lib.colors import Color, red, black
-from reportlab.lib.enums import TA_CENTER, TA_LEFT
+from reportlab.lib.enums import TA_CENTER, TA_LEFT, TA_JUSTIFY
 
 
 class ReportExcelMixin:
@@ -1067,6 +1067,30 @@ class PDFExcelMixin:
             alignment=TA_LEFT,
         )
 
+        self.rowstyle_introduction = ParagraphStyle(
+            name="RowStyle",
+            fontSize=12,
+            spaceAfter=10,
+            spaceBefore=0,
+            leftIndent=100,
+            rightIndent=100,
+            alignment=TA_JUSTIFY,
+        )
+
+        self.rowstyle_bullet_introduction = ParagraphStyle(
+            name="RowStyle",
+            fontSize=12,
+            spaceAfter=10,
+            spaceBefore=0,
+            bulletAnchor="start",
+            bulletFontName="Symbol",
+            bulletFontSize=10,
+            bulletIndent=120,
+            leftIndent=120,
+            rightIndent=100,
+            alignment=TA_JUSTIFY,
+        )
+
         self.table_headerstyle = ParagraphStyle(
             name="HeaderStyle",
             fontName="Calibri-Bold",
@@ -1086,6 +1110,168 @@ class PDFExcelMixin:
         )
         self.LIST_STYLE.wordWrap = "CFK"
 
+    def generate_introduction_text(self):
+        elements = [
+            Paragraph(
+                "The European Environment Agency (EEA) is entrusted with cross-cutting "
+                "coordination of the Copernicus In Situ Component in order to provide "
+                "Entrusted Entities with harmonized and, in particular, cross-cutting "
+                "information about in situ data requirements and gaps.",
+                self.rowstyle_introduction,
+            ),
+            Paragraph(
+                "The Copernicus In Situ Information System (CIS<sup>2</sup>) "
+                "aims to provide a complete overview of requirements, gaps and data "
+                "relevant to all Copernicus services.",
+                self.rowstyle_introduction,
+            ),
+            Paragraph(
+                "The Standard Report should be used in combination with the "
+                "State of Play Report that focuses on cross-cutting challenges "
+                " and gaps and made available simultaneously.",
+                self.rowstyle_introduction,
+            ),
+            Paragraph(
+                "CIS<sup>2</sup> links the in situ requirements specified by the "
+                "Entrusted Entities to Copernicus products, in situ datasets, and "
+                "data providers in order to provide a clear picture of <b> what "
+                "data is already used </b> and <b>what would be needed to deliver "
+                "improved and more reliable products</b> and monitoring services.",
+                self.rowstyle_introduction,
+            ),
+            Paragraph(
+                "CIS<sup>2</sup> shows in situ data requirements and which datasets "
+                "are used for each Copernicus Service product. For each product, "
+                "datasets are characterised in terms of:",
+                self.rowstyle_introduction,
+            ),
+            Paragraph(
+                "<bullet>&bull;</bullet><b>Criticality:</b> the importance of the "
+                "requirement for the supply of reliable products (Essential, "
+                "Desirable, or Useful).",
+                self.rowstyle_bullet_introduction,
+            ),
+            Paragraph(
+                "<bullet>&bull;</bullet><b>Relevance:</b> the extent to which a "
+                "dataset corresponds with the intended purpose (product generation, "
+                "calibration and validation, support of exploitation).",
+                self.rowstyle_bullet_introduction,
+            ),
+            Paragraph(
+                "<bullet>&bull;</bullet><b>Compliance level:</b> how far the dataset "
+                "meets the stated requirement (Fully, Partially, None).",
+                self.rowstyle_bullet_introduction,
+            ),
+            Paragraph(
+                "<bullet>&bull;</bullet><b>Barriers:</b> the main reasons why a given "
+                "in situ requirement is not satisfied for the product concerned (e.g. "
+                "accuracy, availability, timeliness, update frequency, coverage).",
+                self.rowstyle_bullet_introduction,
+            ),
+            PageBreak(),
+            Paragraph(
+                "As well as demonstrating in general terms the crucial importance "
+                "of in situ data for the operation of the Copernicus Services, the "
+                "information in the database helps to identify, for example:",
+                self.rowstyle_introduction,
+            ),
+            Paragraph(
+                "<bullet>&bull;</bullet>Which datasets are in use and data providers",
+                self.rowstyle_bullet_introduction,
+            ),
+            Paragraph(
+                "<bullet>&bull;</bullet>The priority requirements for in situ data",
+                self.rowstyle_bullet_introduction,
+            ),
+            Paragraph(
+                "<bullet>&bull;</bullet>Gaps in data provision",
+                self.rowstyle_bullet_introduction,
+            ),
+            Paragraph(
+                "<bullet>&bull;</bullet>Barriers to the effective use of the data",
+                self.rowstyle_bullet_introduction,
+            ),
+            Paragraph(
+                "<bullet>&bull;</bullet>Requirements and issues which affect "
+                "more than one service component or dataset",
+                self.rowstyle_bullet_introduction,
+            ),
+            Paragraph(
+                "<bullet>&bull;</bullet>Priority areas for action to improve provision",
+                self.rowstyle_bullet_introduction,
+            ),
+            Paragraph(
+                "The database therefore provides an essential building block for "
+                "the development of new actions to improve and promote sustainable "
+                "data provision and hence effective user-driven services.",
+                self.rowstyle_introduction,
+            ),
+            Paragraph(
+                "This Report sets out in a systematic way the information contained "
+                "in the database relating to the {} Service component."
+                "The tables in the following pages show:".format(
+                    ", ".join([elem.name for elem in self.components])
+                ),
+                self.rowstyle_introduction,
+            ),
+            Paragraph(
+                "<link href='#requirements_detail' color='blue'>1. Requirements and "
+                "the standards that need to be met (scale, timeliness, etc.)</link>",
+                self.rowstyle_bullet_introduction,
+            ),
+            Paragraph(
+                "<link href='#products_descriptions' color='blue'>2. A simple list "
+                "of products, not related to requirements</link>",
+                self.rowstyle_bullet_introduction,
+            ),
+            Paragraph(
+                "<link href='#products_requirements' color='blue'>3. Data "
+                "requirements by product</link>",
+                self.rowstyle_bullet_introduction,
+            ),
+            Paragraph(
+                "<link href='#datasets_requirement_providers' color='blue'>4. "
+                "Datasets and their providers relevant to each requirement</link>",
+                self.rowstyle_bullet_introduction,
+            ),
+            Paragraph(
+                "<link href='#details_requirements_products' color='blue'>5. "
+                "For each product, the attributes of each of these datasets relevant "
+                "to their use (criticality, relevance, and barriers)</link>",
+                self.rowstyle_bullet_introduction,
+            ),
+            Paragraph(
+                "<link href='#compliance_datasets_requirements' color='blue'>6. For "
+                "each product, how far the datasets available comply with the "
+                "requirements identified, and what issues about compliance "
+                "are identified</link>",
+                self.rowstyle_bullet_introduction,
+            ),
+            Paragraph(
+                "<link href='#datasets' color='blue'>7. The key characteristics "
+                "of each dataset identified</link>",
+                self.rowstyle_bullet_introduction,
+            ),
+            Paragraph(
+                "<link href='#datasets_providers' color='blue'>8. The provider "
+                "of each dataset, and arrangements for dissemination, updating "
+                "and quality control.</link>",
+                self.rowstyle_bullet_introduction,
+            ),
+            Paragraph(
+                "The CIS<sup>2</sup> database continues to evolve, and updates "
+                "of this and the other CIS<sup>2</sup> Standard Reports will be "
+                "made available periodically. They will inform discussion between "
+                "the EEA and the Services, and with wider stakeholders such as "
+                "regulators and data owners, contributing to identifying actions "
+                "necessary to provide improved user-driven services. It is therefore "
+                "very important that they be carefully studied so that a shared "
+                "narrative can be developed.",
+                self.rowstyle_introduction,
+            ),
+        ]
+        return elements
+
     def generate_pdf_file(self, menu_pdf):
         self.set_styles()
         elements = [
@@ -1104,28 +1290,42 @@ class PDFExcelMixin:
                 "Produced on {}".format(datetime.datetime.now().strftime("%d %B %Y")),
                 self.sub_header_style,
             ),
-            PageBreak(),
         ]
-        elements.append(
-            Paragraph("REQUIREMENTS AND THEIR DETAILS", self.table_header_style)
+        elements.extend(self.generate_introduction_text())
+
+        elements.extend(
+            [
+                PageBreak(),
+                Paragraph(
+                    "<a name='requirements_detail'/>REQUIREMENTS AND THEIR DETAILS",
+                    self.table_header_style,
+                ),
+            ]
         )
         table1 = self.generate_table_1_pdf()
         elements.append(table1)
         elements.append(PageBreak())
         elements.append(
-            Paragraph("PRODUCTS AND THEIR DESCRIPTIONS", self.table_header_style)
+            Paragraph(
+                "<a name='products_descriptions'/>PRODUCTS AND THEIR DESCRIPTIONS",
+                self.table_header_style,
+            )
         )
         table2 = self.generate_table_2_pdf()
         elements.append(table2)
         elements.append(PageBreak())
         elements.append(
-            Paragraph("PRODUCTS AND ASSOCIATED REQUIREMENTS", self.table_header_style)
+            Paragraph(
+                "<a name='products_requirements'/>PRODUCTS AND ASSOCIATED REQUIREMENTS",
+                self.table_header_style,
+            )
         )
         table3 = self.generate_table_3_pdf()
         elements.append(table3)
         elements.append(PageBreak())
         elements.append(
             Paragraph(
+                "<a name='datasets_requirement_providers'/>"
                 "DATASETS AND RELATED DATA PROVIDERS PER REQUIREMENT",
                 self.table_header_style,
             )
@@ -1135,6 +1335,7 @@ class PDFExcelMixin:
         elements.append(PageBreak())
         elements.append(
             Paragraph(
+                "<a name='details_requirements_products'/>"
                 "MAIN DETAILS BETWEEN REQUIREMENTS AND PRODUCTS",
                 self.table_header_style,
             )
@@ -1144,6 +1345,7 @@ class PDFExcelMixin:
         elements.append(PageBreak())
         elements.append(
             Paragraph(
+                "<a name='compliance_datasets_requirements'/>"
                 "LEVEL OF COMPLIANCE BETWEEN DATASETS AND REQUIREMENTS",
                 self.table_header_style,
             )
@@ -1151,12 +1353,19 @@ class PDFExcelMixin:
         table6 = self.generate_table_6_pdf()
         elements.append(table6)
         elements.append(PageBreak())
-        elements.append(Paragraph("DATASETS MAIN DETAILS", self.table_header_style))
+        elements.append(
+            Paragraph(
+                "<a name='datasets'/>DATASETS MAIN DETAILS", self.table_header_style
+            )
+        )
         table7 = self.generate_table_7_pdf()
         elements.append(table7)
         elements.append(PageBreak())
         elements.append(
-            Paragraph("DATASETS AND RELATED DATA PROVIDERS", self.table_header_style)
+            Paragraph(
+                "<a name='datasets_providers'/>DATASETS AND RELATED DATA PROVIDERS",
+                self.table_header_style,
+            )
         )
         table8 = self.generate_table_8_pdf()
         elements.append(table8)
