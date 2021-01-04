@@ -80,7 +80,6 @@ class ReportExcelMixin:
         worksheet.set_row(0, 30)
         worksheet.set_row(2, 20)
         worksheet.set_row(3, 20)
-        worksheet.set_row(5, 20)
         worksheet.merge_range(
             "A1:D1",
             "Copernicus In Situ Component Information System - "
