@@ -3,6 +3,11 @@ Changelog
 
 * In case of major changes, an email should be sent to all users with the modifications.
 
+2.3.16 (2021-01-13)
+-------------------
+* Update the User Manual with the latest changes
+  [dianaboiangiu]
+
 2.3.15 (2021-01-04)
 -------------------
 * Add introduction text to Standard Report

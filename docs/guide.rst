@@ -329,6 +329,14 @@ A user can edit their teammates by accessing the edit teammates form from the na
 request, the other user will receive an email containing a link. Only after the link is clicked, the two users will become
 teammates. (*Figure 12*)
 
+----------------------
+Change Password Option
+----------------------
+
+In case the account password was forgetten, the user can reset their password. An e-mail will be sent to the user's email account
+with a reset password link. The user will then be able to set their new password.
+
+
 
 Validation workflow
 ===================
@@ -437,9 +445,9 @@ This can be accessed by clicking on the "Playground" button from the Reports' de
 The playground can be used by specialized users to write SQL queries to obtain their own reports.
 A request must be made to the developers to access this part of the application.
 
------------------
+------------------
 Report detail page
------------------
+------------------
 On the report detail page has the name and description on the top part. After those there is a single tab,
 named "Pivot".
 
@@ -471,9 +479,9 @@ The pivot table can be exported in HTML, PDF or Excel format. (*Figure 17* and
 
     *Report pivot - after dragging columns*
 
------
+-----------------------
 Filtering data in Pivot
------
+-----------------------
 The data in the table can also filtered by clicking on the arrow next to the column name (*Figure 19*).
 
 ..  figure:: screenshots/report_pivot3.png
@@ -484,9 +492,9 @@ The data in the table can also filtered by clicking on the arrow next to the col
     *Report pivot - filter the data in the table*
 
 
------
+---------------
 Special reports
------
+---------------
 The special reports are spreadsheet files that have unmerged cells and can be filtered afterwards with specialized tools.
 Those reports can be found on the  Report's list page, on the top of the page. For each report there is a description explaining
 what type of data each report contains.
@@ -498,11 +506,33 @@ what type of data each report contains.
 
     *Special reports*
 
+---------------
+Standard Report
+---------------
+The application also generates Standard Reports. Those reports present data that is filtered against
+the components of the 3 following services: Copernicus Emergency Management Service, Copernicus Land Monitoring Service
+and Copernicus Securiy Service. One exception is available for the For the Global Land Component as only 2 products are
+filtered for it ( the Hot Spot Monitoring - Land Cover and Hot Spot Monitoring - Land Cover Change products) .
+
+The Standard Report is available under the Reports tab from the navigation menu followed by clicking
+on the link "Standard Report".
+
+The user can then select one or more Components from the second dropdown to filter the data against. The first
+dropdown, Service, is used to filter the Components in the second dropdown in order to better identify which component is part of which service.
+(*Figure 21*)
+After setting the filters, the user has the option to either generate the Standard Report as a PDF or as an Excel file.
+The file will contain details regarding the component(s) that the data was filtered against and the date and time at which
+the report was generated.
+
+..  figure:: screenshots/report_standard.png
+    :width: 600px
+    :align: center
+    :target: _images/report_standard.png
+
+    *Standard report*
 
 Administration
 ==============
-
-Requirement, Data and Data Provider are all passing through a validation workflow.
 
 ..  figure:: screenshots/admin.png
     :width: 600px
@@ -529,7 +559,7 @@ attached a question mark. By clicking on that question mark you will access the 
 
     *An example table from help page*
 
-For Example, in *Figure 22* is one of the tables available on the Help page. Under the table title there is a small
+For Example, in *Figure 23* is one of the tables available on the Help page. Under the table title there is a small
 description of that field’ s purpose. In the table there is the name of each value and the description of what that value
 represents.
 
