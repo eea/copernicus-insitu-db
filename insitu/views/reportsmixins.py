@@ -71,7 +71,6 @@ class ReportExcelMixin:
                 "font_name": "Calibri",
                 "font_size": 12,
                 "text_wrap": True,
-                "border": 1,
             }
         )
 
@@ -101,6 +100,7 @@ class ReportExcelMixin:
         )
         worksheet.merge_range("A6:D6", "", self.format_rows_introduction)
         bold = workbook.add_format({"bold": True})
+        worksheet.set_row(5, 540)
         superscript = workbook.add_format({"font_script": 1})
         worksheet.write_rich_string(
             "A6",
