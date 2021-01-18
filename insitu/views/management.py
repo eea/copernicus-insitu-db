@@ -2,12 +2,18 @@ import re
 import json
 import requests
 from datetime import datetime
+
+from django.apps import apps
 from django.urls import reverse_lazy
 from django.conf import settings
 from django.contrib.auth.models import User
 from django.contrib.sessions.models import Session
+from django.shortcuts import render
+from django.db.models import Q
+
 from django.utils import timezone
 
+from insitu.forms import StatisticsDataForm
 from insitu.views.protected import (
     IsAuthenticated,
     IsSuperuser,
@@ -22,6 +28,48 @@ class Manager(ProtectedTemplateView):
     template_name = "manage.html"
     permission_classes = (IsSuperuser,)
     permission_denied_redirect = reverse_lazy("auth:login")
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["form"] = StatisticsDataForm()
+        return context
+
+    def get_statistics(self, model, **kwargs):
+        context = {}
+        context["selected_object"] = dict(self.form.fields["selected_object"].choices)[
+            kwargs["selected_object"]
+        ]
+        context["no_of_objects"] = (
+            model.objects.really_all()
+            .filter(
+                Q(created_at__lte=kwargs["end_date"], _deleted=False)
+                | Q(
+                    created_at__lte=kwargs["end_date"],
+                    updated_at__gte=kwargs["end_date"],
+                    _deleted=True,
+                )
+            )
+            .count()
+        )
+        context["no_of_objects_created"] = model.objects.filter(
+            created_at__lte=kwargs["end_date"], created_at__gte=kwargs["start_date"]
+        ).count()
+        context["no_of_objects_updated"] = model.objects.filter(
+            updated_at__lte=kwargs["end_date"], updated_at__gte=kwargs["start_date"]
+        ).count()
+        return context
+
+    def post(self, request, *args, **kwargs):
+        self.form = StatisticsDataForm(request.POST, initial=request.POST)
+        if self.form.is_valid():
+            model = apps.get_model(
+                app_label="insitu", model_name=self.form.cleaned_data["selected_object"]
+            )
+            data = self.get_statistics(model, **self.form.cleaned_data)
+            data["form"] = StatisticsDataForm(initial=request.POST)
+            return render(request, "manage.html", context=data)
+        else:
+            return render(request, "manage.html", context={"form": self.form})
 
 
 class HelpPage(ProtectedTemplateView):

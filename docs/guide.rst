@@ -578,6 +578,10 @@ The management section is accessible only to an user with administration rights.
 picklists or all products as an excel document. In order to import picklists or products, the user must first export
 them, edit the exported spreadsheet and then import it.
 
+Statistics about the data can also be extracted on this page. The user can check, for a selectable period of time,
+how many objects were active, how many objects were created and how many objects were updated.
+The user has to select a start date for the period, an end date and the objects type they want the data to be
+shown for.
 
 Logging actions
 ===============

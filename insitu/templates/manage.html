@@ -1,7 +1,12 @@
 {% extends '_layout.html' %}
+{% load bootstrap3 %}
 {% load static %}
 
 {% block title %}Manage{% endblock %}
+
+{% block head %}
+  <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+{% endblock %}
 
 {% block content %}
   <h1>Manage picklists and products</h1>
@@ -46,7 +51,7 @@
     </a>
   </div>
 
-  <div class="row">
+  <div class="row" style="margin-bottom:100px;">
     <h3>Import products</h3>
     <form class="form-inline import-form"
           method="post"
@@ -71,32 +76,88 @@
       File upload succesful.
     </p>
 
-  </div>
+    <h1>Extract data statistics</h1>
+
+    <form method="post">
+      {% csrf_token %}
+      <div class="form-group required">
+        <label class="control-label" for="id_start_date">Start date</label>
+        <input type="text" name="start_date" class="form-control datepicker"
+               autocomplete="off" placeholder="Start date" title="" required="" 
+               id="id_start_date" value="{{ form.start_date.value|default_if_none:'' }}">
+      </div>
+
+      <div class="form-group required">
+        <label class="control-label" for="id_end_date">End date</label>
+        <input type="text" name="end_date" class="form-control datepicker"
+               autocomplete="off" placeholder="End date" title="" required="" id="id_end_date"
+               value="{{ form.end_date.value|default_if_none:'' }}">
+      </div>
+
+      {% bootstrap_field form.selected_object required_css_class='required' %}
+
+      <input class="btn btn-primary" type="submit" value="Save" />
+    </form>
+
+    {% if selected_object %}
+      <div class="row">
+        <table id="detail-table" class="table borderless col-sm-12">
+          <tbody>
+            <tr class="row">
+              <th class="col-md-4 col-sm-6">{{ selected_object }} active during the selected period:</th>
+              <td class="col-md-8 col-sm-6">{{ no_of_objects }}</td>
+            </tr>
+
+            <tr class="row">
+              <th class="col-md-4 col-sm-6">{{ selected_object }} created during the selected period:</th>
+              <td class="col-md-8 col-sm-6">{{ no_of_objects_created }}</td>
+            </tr>
+
+            <tr class="row">
+              <th class="col-md-4 col-sm-6">{{ selected_object }} updated during the selected period:</th>
+              <td class="col-md-8 col-sm-6">{{ no_of_objects_updated }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    {% endif %}
+</div>
+
 {% endblock %}
 
 {% block scripts %}
-  <script>
-    $(document).ready(function () {
-      $('.import-form').on('submit', function (e) {
-        e.preventDefault();
-        var type = $(this).data('type');
-        $('#' + type + '-error').hide();
-        $('#' + type + '-success').hide();
-        $.ajax({
-          url: $(this).attr('action'),
-          data: new FormData(this),
-          cache: false,
-          contentType: false,
-          processData: false,
-          type: $(this).attr('method'),
-          error: function (data) {
-            $('#' + type + '-error').show();
-          },
-          success: function (data) {
-            $('#' + type + '-success').show();
-          }
-        });
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+<script>
+  $(document).ready(function(){
+    $('.datepicker').datepicker({
+      maxDate: "+0d",
+      dateFormat: 'dd-mm-yy',
+    });
+  });
+</script>
+
+<script>
+  $(document).ready(function () {
+    $('.import-form').on('submit', function (e) {
+      e.preventDefault();
+      var type = $(this).data('type');
+      $('#' + type + '-error').hide();
+      $('#' + type + '-success').hide();
+      $.ajax({
+        url: $(this).attr('action'),
+        data: new FormData(this),
+        cache: false,
+        contentType: false,
+        processData: false,
+        type: $(this).attr('method'),
+        error: function (data) {
+          $('#' + type + '-error').show();
+        },
+        success: function (data) {
+          $('#' + type + '-success').show();
+        }
       });
     });
-  </script>
+  });
+</script>
 {% endblock %}

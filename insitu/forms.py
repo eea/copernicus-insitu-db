@@ -654,3 +654,17 @@ class StandardReportForm(forms.Form):
     component = forms.ModelMultipleChoiceField(
         required=False, queryset=models.Component.objects.all(), label="Component"
     )
+
+
+DATABASE_OBJECTS = (
+    ("Product", "Products"),
+    ("Requirement", "Requirements"),
+    ("Data", "Data"),
+    ("DataProvider", "Data Providers"),
+)
+
+
+class StatisticsDataForm(forms.Form):
+    start_date = forms.DateField(input_formats=["%d-%m-%Y"])
+    end_date = forms.DateField(input_formats=["%d-%m-%Y"])
+    selected_object = forms.ChoiceField(choices=DATABASE_OBJECTS)
