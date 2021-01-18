@@ -3,6 +3,11 @@ Changelog
 
 * In case of major changes, an email should be sent to all users with the modifications.
 
+2.3.18 (2021-01-18)
+-------------------
+* Add data statistics extraction for manager users
+  [dianaboiangiu]
+
 2.3.17 (2021-01-15)
 -------------------
 * Fix introduction text display in Standard Report
