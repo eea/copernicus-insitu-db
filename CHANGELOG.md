@@ -3,6 +3,11 @@ Changelog
 
 * In case of major changes, an email should be sent to all users with the modifications.
 
+2.3.19 (2021-01-19)
+-------------------
+* Fix data statistics extraction last/first day
+  [dianaboiangiu]
+
 2.3.18 (2021-01-18)
 -------------------
 * Add data statistics extraction for manager users
