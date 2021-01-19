@@ -52,10 +52,12 @@ class Manager(ProtectedTemplateView):
             .count()
         )
         context["no_of_objects_created"] = model.objects.filter(
-            created_at__date__lte=kwargs["end_date"], created_at__date__gte=kwargs["start_date"]
+            created_at__date__lte=kwargs["end_date"],
+            created_at__date__gte=kwargs["start_date"],
         ).count()
         context["no_of_objects_updated"] = model.objects.filter(
-            updated_at__date__lte=kwargs["end_date"], updated_at__date__gte=kwargs["start_date"]
+            updated_at__date__lte=kwargs["end_date"],
+            updated_at__date__gte=kwargs["start_date"],
         ).count()
         return context
 
