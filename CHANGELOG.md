@@ -3,6 +3,11 @@ Changelog
 
 * In case of major changes, an email should be sent to all users with the modifications.
 
+2.3.20 (2021-01-19)
+-------------------
+* Change data statistics button naming to "Generate"
+  [dianaboiangiu]
+
 2.3.19 (2021-01-19)
 -------------------
 * Fix data statistics extraction last/first day
