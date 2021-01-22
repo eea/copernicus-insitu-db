@@ -8,7 +8,6 @@ from reportlab.platypus import (
     PageBreak,
     Table,
     TableStyle,
-    KeepInFrame,
 )
 
 from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
@@ -325,7 +324,10 @@ class ReportExcelMixin:
             data_index = requirement_index
             for datarequirement in requirement.datarequirement_set.all():
                 provider_index = data_index
-                for data_provider in datarequirement.data.providers.all():
+                for (
+                    data_provider_relation
+                ) in datarequirement.data.dataproviderrelation_set.all():
+                    data_provider = data_provider_relation.provider
                     worksheet.write_row(
                         provider_index,
                         3,
@@ -596,7 +598,7 @@ class ReportExcelMixin:
         worksheet.write_row("A2", headers, self.format_cols_headers)
         index = 2
         for data_object in self.data:
-            provider_count = data_object.providers.all().count()
+            provider_count = data_object.dataproviderrelation_set.all().count()
             if provider_count >= 2:
                 worksheet.merge_range(
                     index,
@@ -606,7 +608,8 @@ class ReportExcelMixin:
                     data_object.name,
                     self.format_rows,
                 )
-                for dataprovider in data_object.providers.all():
+                for dataprovider_relation in data_object.dataproviderrelation_set.all():
+                    dataprovider = dataprovider_relation.provider
                     row_data = [
                         dataprovider.name,
                         getattr(
@@ -621,7 +624,9 @@ class ReportExcelMixin:
                     worksheet.write_row(index, 1, row_data, self.format_rows)
                     index += 1
             elif provider_count == 1:
-                dataprovider = data_object.providers.first()
+                dataprovider = (
+                    data_object.dataproviderrelation_set.first().data_provider
+                )
                 row_data = [
                     data_object.name,
                     dataprovider.name,
@@ -755,7 +760,7 @@ class PDFExcelMixin:
         for product in self.products:
             product_name = product.name
             product_requirements = product.product_requirements.all()
-            for idx,productrequirement in enumerate(product_requirements):
+            for idx, productrequirement in enumerate(product_requirements):
                 table_data.append(
                     [
                         Paragraph(product_name, self.rowstyle),
@@ -766,10 +771,8 @@ class PDFExcelMixin:
                     ]
                 )
                 if idx >= 1:
-                    count_after_merge +=1
+                    count_after_merge += 1
                 product_name = ""
-            if len(product_requirements) > 1:
-                span_for_merging.append(('SPAN', (0, count_for_merge), (0, count_after_merge)))
 
             if not product_requirements:
                 table_data.append(
@@ -779,12 +782,25 @@ class PDFExcelMixin:
                         Paragraph("", self.rowstyle),
                     ]
                 )
-            count_after_merge +=1
+            count_after_merge += 1
             count_for_merge = count_after_merge
-
+            span_for_merging.append(
+                ("LINEABOVE", (0, count_for_merge), (0, count_after_merge), 0.25, black)
+            )
         data.extend(table_data)
-        style = self.LIST_STYLE_LIST.copy()
+        style = []
         style.extend(span_for_merging)
+        style.extend(
+            [
+                ("INNERGRID", (1, 0), (-1, -1), 0.25, black),
+                ("LINEBELOW", (0, 0), (1, 0), 0.25, black),
+                ("LINEAFTER", (0, 0), (-1, -1), 0.25, black),
+                ("LINEBEFORE", (0, 0), (-1, -1), 0.25, black),
+                ("BOX", (0, 0), (-1, -1), 0.75, black),
+                ("BACKGROUND", (0, 0), (-1, 0), Color(0.7617, 0.8359, 0.6054, 1)),
+                ("VALIGN", (0, 0), (-1, -1), "MIDDLE"),
+            ]
+        )
         t = Table(data, colWidths=[200, 400, 100], repeatRows=1)
         t.setStyle(TableStyle(style))
         return t
@@ -803,14 +819,18 @@ class PDFExcelMixin:
         table_data = []
         count_for_merge = 1
         count_after_merge = 1
-        count_for_requirement = 1
         span_for_merging = []
         for requirement in self.requirements:
             requirement_name = requirement.name
             requirement_id = requirement.id
-            for idx, datarequirement in enumerate(requirement.datarequirement_set.all()):
+            for idx, datarequirement in enumerate(
+                requirement.datarequirement_set.all()
+            ):
                 data_name = datarequirement.data.name
-                for idx_2, data_provider in enumerate(datarequirement.data.providers.all()):
+                for idx_2, data_provider_relation in enumerate(
+                    datarequirement.data.dataproviderrelation_set.all()
+                ):
+                    data_provider = data_provider_relation.provider
                     table_data.append(
                         [
                             Paragraph(requirement_name, self.rowstyle),
@@ -831,14 +851,11 @@ class PDFExcelMixin:
                             ),
                         ]
                     )
-                    if idx_2 >= 1:
-                        count_after_merge +=1
+                    count_after_merge += 1
                     requirement_name = ""
                     data_name = ""
                     requirement_id = ""
-                if len(datarequirement.data.providers.all()) > 1:
-                    span_for_merging.append(('SPAN', (2, count_for_merge), (2, count_after_merge)))
-                if not datarequirement.data.providers.all():
+                if not datarequirement.data.dataproviderrelation_set.all():
                     table_data.append(
                         [
                             Paragraph(requirement_name, self.rowstyle),
@@ -851,15 +868,17 @@ class PDFExcelMixin:
                     data_name = ""
                     requirement_name = ""
                     requirement_id = ""
-                count_after_merge +=1
+                    count_after_merge += 1
                 count_for_merge = count_after_merge
-            if count_after_merge > count_for_requirement + 1:
-                count_after_merge -= 1
-                span_for_merging.extend([
-                    ('SPAN', (0, count_for_requirement), (0, count_after_merge)),
-                    ('SPAN', (1, count_for_requirement), (1, count_after_merge)),
-                ])
-                count_after_merge += 1
+                span_for_merging.append(
+                    (
+                        "LINEABOVE",
+                        (2, count_for_merge),
+                        (2, count_after_merge),
+                        0.25,
+                        black,
+                    )
+                )
 
             if not requirement.datarequirement_set.all():
                 table_data.append(
@@ -873,10 +892,38 @@ class PDFExcelMixin:
                 )
                 requirement_name = ""
                 requirement_id = ""
-            count_for_requirement = count_after_merge
+                count_after_merge += 1
+                span_for_merging.append(
+                    (
+                        "LINEABOVE",
+                        (2, count_for_merge),
+                        (2, count_after_merge),
+                        0.20,
+                        black,
+                    )
+                )
+
+            span_for_merging.append(
+                ("LINEABOVE", (0, count_for_merge), (0, count_after_merge), 0.20, black)
+            )
+            span_for_merging.append(
+                ("LINEABOVE", (1, count_for_merge), (1, count_after_merge), 0.20, black)
+            )
+
         data.extend(table_data)
-        style = self.LIST_STYLE_LIST.copy()
+        style = []
         style.extend(span_for_merging)
+        style.extend(
+            [
+                ("VALIGN", (0, 0), (-1, -1), "MIDDLE"),
+                ("BACKGROUND", (0, 0), (-1, 0), Color(0.7617, 0.8359, 0.6054, 1)),
+                ("BOX", (0, 0), (-1, -1), 0.75, black),
+                ("INNERGRID", (3, 0), (-1, -1), 0.25, black),
+                ("LINEBELOW", (0, 0), (2, 0), 0.25, black),
+                ("LINEAFTER", (0, 0), (-1, -1), 0.25, black),
+                ("LINEBEFORE", (0, 0), (-1, -1), 0.20, black),
+            ]
+        )
         t = Table(data, colWidths=[150, 125, 150, 150, 90], repeatRows=1)
         t.setStyle(TableStyle(style))
         return t
@@ -918,11 +965,8 @@ class PDFExcelMixin:
                     ]
                 )
                 if idx >= 1:
-                    count_after_merge +=1
+                    count_after_merge += 1
                 product_name = ""
-            if len(product_requirements) > 1:
-                span_for_merging.append(('SPAN', (0, count_for_merge), (0, count_after_merge)))
-
             if not product_requirements:
                 table_data.append(
                     [
@@ -933,12 +977,26 @@ class PDFExcelMixin:
                         Paragraph("", self.rowstyle),
                     ]
                 )
-            count_after_merge +=1
+            count_after_merge += 1
             count_for_merge = count_after_merge
+            span_for_merging.append(
+                ("LINEABOVE", (0, count_for_merge), (0, count_after_merge), 0.25, black)
+            )
 
         data.extend(table_data)
-        style = self.LIST_STYLE_LIST.copy()
+        style = []
         style.extend(span_for_merging)
+        style.extend(
+            [
+                ("VALIGN", (0, 0), (-1, -1), "MIDDLE"),
+                ("BACKGROUND", (0, 0), (-1, 0), Color(0.7617, 0.8359, 0.6054, 1)),
+                ("BOX", (0, 0), (-1, -1), 0.75, black),
+                ("INNERGRID", (1, 0), (-1, -1), 0.25, black),
+                ("LINEBELOW", (0, 0), (1, 0), 0.25, black),
+                ("LINEAFTER", (0, 0), (-1, -1), 0.25, black),
+                ("LINEBEFORE", (0, 0), (-1, -1), 0.25, black),
+            ]
+        )
         t = Table(data, colWidths=[150, 150, 100, 100, 100, 100], repeatRows=1)
         t.setStyle(TableStyle(style))
         return t
@@ -959,7 +1017,6 @@ class PDFExcelMixin:
 
         count_for_merge = 1
         count_after_merge = 1
-        count_for_requirement = 1
         span_for_merging = []
         table_data = []
         for product in self.products:
@@ -989,11 +1046,9 @@ class PDFExcelMixin:
                         ]
                     )
                     if idx_2 >= 1:
-                        count_after_merge +=1
+                        count_after_merge += 1
                     product_name = ""
                     data_name = ""
-                if len(data_requirements) > 1:
-                    span_for_merging.append(('SPAN', (1, count_for_merge), (1, count_after_merge)))
                 if not data_object.datarequirement_set.all():
                     table_data.append(
                         [
@@ -1006,14 +1061,17 @@ class PDFExcelMixin:
                     )
                     product_name = ""
                     data_name = ""
-                count_after_merge +=1
-                count_for_merge = count_after_merge
-            if count_after_merge > count_for_requirement + 1:
-                count_after_merge -= 1
-                span_for_merging.extend([
-                    ('SPAN', (0, count_for_requirement), (0, count_after_merge)),
-                ])
                 count_after_merge += 1
+                count_for_merge = count_after_merge
+                span_for_merging.append(
+                    (
+                        "LINEABOVE",
+                        (1, count_for_merge),
+                        (1, count_after_merge),
+                        0.25,
+                        black,
+                    )
+                )
 
             if not data:
                 table_data.append(
@@ -1028,10 +1086,23 @@ class PDFExcelMixin:
                 product_name = ""
                 data_name = ""
 
-            count_for_requirement = count_after_merge
+            span_for_merging.append(
+                ("LINEABOVE", (0, count_for_merge), (0, count_after_merge), 0.25, black)
+            )
         data.extend(table_data)
-        style = self.LIST_STYLE_LIST.copy()
+        style = []
         style.extend(span_for_merging)
+        style.extend(
+            [
+                ("VALIGN", (0, 0), (-1, -1), "MIDDLE"),
+                ("BACKGROUND", (0, 0), (-1, 0), Color(0.7617, 0.8359, 0.6054, 1)),
+                ("BOX", (0, 0), (-1, -1), 0.75, black),
+                ("INNERGRID", (2, 0), (-1, -1), 0.25, black),
+                ("LINEBELOW", (0, 0), (1, 0), 0.25, black),
+                ("LINEAFTER", (0, 0), (-1, -1), 0.25, black),
+                ("LINEBEFORE", (0, 0), (-1, -1), 0.25, black),
+            ]
+        )
         t = Table(data, colWidths=[125, 125, 125, 125, 125], repeatRows=1)
         t.setStyle(TableStyle(style))
         return t
@@ -1099,8 +1170,9 @@ class PDFExcelMixin:
         table_data = []
         for data_object in self.data_objects:
             data_name = data_object.name
-            data_providers = data_object.providers.all()
-            for idx, dataprovider in enumerate(data_providers):
+            data_providers_relations = data_object.dataproviderrelation_set.all()
+            for idx, dataprovider_relation in enumerate(data_providers_relations):
+                dataprovider = dataprovider_relation.provider
                 table_data.append(
                     [
                         Paragraph(data_name, self.rowstyle),
@@ -1129,12 +1201,10 @@ class PDFExcelMixin:
                     ]
                 )
                 if idx >= 1:
-                    count_after_merge +=1
+                    count_after_merge += 1
                 data_name = ""
-            if len(data_providers) > 1:
-                span_for_merging.append(('SPAN', (0, count_for_merge), (0, count_after_merge)))
 
-            if not data_providers:
+            if not data_providers_relations:
                 table_data.append(
                     [
                         Paragraph(data_name, self.rowstyle),
@@ -1162,11 +1232,25 @@ class PDFExcelMixin:
                         ),
                     ]
                 )
-            count_after_merge +=1
+            count_after_merge += 1
             count_for_merge = count_after_merge
+            span_for_merging.append(
+                ("LINEABOVE", (0, count_for_merge), (0, count_after_merge), 0.25, black)
+            )
         data.extend(table_data)
-        style = self.LIST_STYLE_LIST.copy()
+        style = []
         style.extend(span_for_merging)
+        style.extend(
+            [
+                ("VALIGN", (0, 0), (-1, -1), "MIDDLE"),
+                ("BACKGROUND", (0, 0), (-1, 0), Color(0.7617, 0.8359, 0.6054, 1)),
+                ("BOX", (0, 0), (-1, -1), 0.75, black),
+                ("INNERGRID", (1, 0), (-1, -1), 0.25, black),
+                ("LINEBELOW", (0, 0), (1, 0), 0.25, black),
+                ("LINEAFTER", (0, 0), (-1, -1), 0.25, black),
+                ("LINEBEFORE", (0, 0), (-1, -1), 0.25, black),
+            ]
+        )
         t = Table(data, colWidths=[150, 150, 90, 90, 120, 90], repeatRows=1)
         t.setStyle(TableStyle(style))
         return t
@@ -1273,10 +1357,10 @@ class PDFExcelMixin:
         )
 
         self.LIST_STYLE_LIST = [
-                ("INNERGRID", (0, 0), (-1, -1), 0.25, black),
-                ("BOX", (0, 0), (-1, -1), 0.25, black),
-                ("BACKGROUND", (0, 0), (-1, 0), Color(0.7617, 0.8359, 0.6054, 1)),
-                ("VALIGN", (0, 0), (-1, -1), "MIDDLE"),
+            ("INNERGRID", (0, 0), (-1, -1), 0.25, black),
+            ("BOX", (0, 0), (-1, -1), 0.75, black),
+            ("BACKGROUND", (0, 0), (-1, 0), Color(0.7617, 0.8359, 0.6054, 1)),
+            ("VALIGN", (0, 0), (-1, -1), "MIDDLE"),
         ]
         self.LIST_STYLE = TableStyle(self.LIST_STYLE_LIST)
         self.LIST_STYLE.wordWrap = "CFK"
