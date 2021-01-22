@@ -87,7 +87,7 @@ class ReportExcelMixin:
         )
         worksheet.merge_range(
             "A3:D3",
-            "Standard Report for {}".format(
+            "Standard Report for {} Component".format(
                 ", ".join([elem.name for elem in self.components])
             ),
             self.merge_format,
@@ -1534,7 +1534,7 @@ class PDFExcelMixin:
                 self.header_style,
             ),
             Paragraph(
-                "Standard Report for {}".format(
+                "Standard Report for {} Component".format(
                     ", ".join([elem.name for elem in self.components])
                 ),
                 self.header_style,
