@@ -3,6 +3,12 @@ Changelog
 
 * In case of major changes, an email should be sent to all users with the modifications.
 
+2.3.21 (2021-01-22)
+-------------------
+* Merge cells in PDF Standard Report
+* Fix duplicates in Standard Report
+  [dianaboiangiu]
+
 2.3.20 (2021-01-19)
 -------------------
 * Change data statistics button naming to "Generate"
