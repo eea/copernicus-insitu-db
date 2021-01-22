@@ -624,9 +624,7 @@ class ReportExcelMixin:
                     worksheet.write_row(index, 1, row_data, self.format_rows)
                     index += 1
             elif provider_count == 1:
-                dataprovider = (
-                    data_object.dataproviderrelation_set.first().data_provider
-                )
+                dataprovider = data_object.dataproviderrelation_set.first().provider
                 row_data = [
                     data_object.name,
                     dataprovider.name,
