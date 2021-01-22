@@ -3,6 +3,11 @@ Changelog
 
 * In case of major changes, an email should be sent to all users with the modifications.
 
+2.3.22 (2021-01-22)
+-------------------
+* Remove component from the component's names
+  [dianaboiangiu]
+
 2.3.21 (2021-01-22)
 -------------------
 * Merge cells in PDF Standard Report
