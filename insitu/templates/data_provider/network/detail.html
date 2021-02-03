@@ -119,6 +119,13 @@
                   </a>
                 {% endif %}
               {% endif %}
+              {% if provider.state.name == 'valid' %}
+                {% if provider.created_by == request.user or request.user in provider.created_by.team.teammates.all %}
+                  <a class="btn btn-primary" href="{% url 'provider:transition' pk=provider.pk source='valid' target='draft' %}">
+                    Move back to draft
+                  </a>
+                {% endif %}
+              {% endif %}
             </div>
             {% if provider.state.name != 'ready' and provider.state.name != 'valid' %}
               {% if provider.feedback %}

@@ -67,6 +67,8 @@ class ValidationWorkflow(Workflow):
         ("cancel", "ready", "draft"),
         ("request_changes", "ready", "changes"),
         ("make_changes", "changes", "draft"),
+        ("revalidate", "valid", "draft"),
+
     )
 
     @classmethod
@@ -164,10 +166,14 @@ class ValidationWorkflowModel(WorkflowEnabled, models.Model):
         pass
 
     @transition()
+    def revalidate(self):
+        pass
+
+    @transition()
     def make_changes(self):
         pass
 
-    @transition_check("mark_as_ready", "cancel", "make_changes")
+    @transition_check("mark_as_ready", "cancel", "make_changes", "revalidate")
     def check_owner_user(self, *args, **kwargs):
         """
         Check if the user is the creator or if the is user is in the creator's
@@ -349,6 +355,12 @@ class Requirement(ValidationWorkflowModel, SoftDeleteModel):
             obj.request_changes()
 
     @transition()
+    def revalidate(self):
+        for obj in self.get_related_objects():
+            obj.requesting_user = self.requesting_user
+            obj.revalidate()
+
+    @transition()
     def make_changes(self):
         for obj in self.get_related_objects():
             obj.requesting_user = self.requesting_user
@@ -488,6 +500,12 @@ class DataProvider(ValidationWorkflowModel, SoftDeleteModel):
         for obj in self.get_related_objects():
             obj.requesting_user = self.requesting_user
             obj.request_changes()
+
+    @transition()
+    def revalidate(self):
+        for obj in self.get_related_objects():
+            obj.requesting_user = self.requesting_user
+            obj.revalidate()
 
     @transition()
     def make_changes(self):
@@ -660,6 +678,12 @@ class Data(ValidationWorkflowModel, SoftDeleteModel):
         for obj in self.get_related_objects():
             obj.requesting_user = self.requesting_user
             obj.request_changes()
+
+    @transition()
+    def revalidate(self):
+        for obj in self.get_related_objects():
+            obj.requesting_user = self.requesting_user
+            obj.revalidate()
 
     @transition()
     def make_changes(self):

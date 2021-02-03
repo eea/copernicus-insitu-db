@@ -224,6 +224,13 @@
                   </a>
                 {% endif %}
               {% endif %}
+              {% if data.state.name == 'valid' %}
+                {% if data.created_by == request.user or request.user in data.created_by.team.teammates.all %}
+                  <a class="btn btn-primary" href="{% url 'data:transition' pk=data.pk source='valid' target='draft' %}">
+                    Move back to draft
+                  </a>
+                {% endif %}
+              {% endif %}
             </div>
             {% if data.state.name != 'ready' and data.state.name != 'valid' %}
               {% if data.feedback %}

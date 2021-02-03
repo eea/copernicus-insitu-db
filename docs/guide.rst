@@ -391,6 +391,7 @@ The users in the application can see this feedback when the object is in state "
 **Valid**
 
 In this state the object and its relations cannot be edited. The workflow has ended and the object cannot be modified anymore.
+The object can be placed back in the "Draft" state if the users agree that more changes should be made to it.
 
 ----------------------
 Requirement validation

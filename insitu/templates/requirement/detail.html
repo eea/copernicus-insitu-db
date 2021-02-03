@@ -178,6 +178,13 @@
                   </a>
                 {% endif %}
               {% endif %}
+              {% if requirement.state.name == 'valid' %}
+                {% if requirement.created_by == request.user or request.user in requirement.created_by.team.teammates.all %}
+                  <a class="btn btn-primary" href="{% url 'requirement:transition' pk=requirement.pk source='valid' target='draft' %}">
+                    Move back to draft
+                  </a>
+                {% endif %}
+              {% endif %}
             </div>
             {% if requirement.state.name != 'ready' and requirement.state.name != 'valid' %}
               {% if requirement.feedback %}
