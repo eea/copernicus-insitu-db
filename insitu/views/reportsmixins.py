@@ -1,4 +1,4 @@
-from insitu.models import Data, Requirement
+from insitu.models import Data, Product, Requirement, DataProvider
 from django.utils.html import strip_tags
 
 import datetime
@@ -215,10 +215,47 @@ class ReportExcelMixin:
             "HORIZONTAL RESOLUTION",
         ]
         worksheet.write_row("A2", headers, self.format_cols_headers)
+        products_not_included = Product.objects.exclude(id__in=self.products)
+        requirements_not_included = Requirement.objects.filter(
+            product_requirements__product__in=products_not_included,
+            product_requirements___deleted=False,
+        )
+
         self.requirements = (
             Requirement.objects.filter(
-                products__in=self.products, product_requirements___deleted=False
+                product_requirements___deleted=False,
+                product_requirements__product__in=self.products,
             )
+            .exclude(id__in=requirements_not_included)
+            .distinct()
+            .order_by("name")
+        )
+        data_not_included = Data.objects.filter(
+            datarequirement__requirement__in=requirements_not_included,
+            datarequirement___deleted=False,
+        )
+
+        self.data = (
+            Data.objects.filter(
+                datarequirement___deleted=False,
+                datarequirement__requirement__in=self.requirements,
+            )
+            .exclude(id__in=data_not_included)
+            .distinct()
+            .order_by("name")
+        )
+
+        data_providers_not_included = DataProvider.objects.filter(
+            dataproviderrelation__data__in=data_not_included,
+            dataproviderrelation___deleted=False,
+        ).distinct()
+
+        self.data_providers = (
+            DataProvider.objects.filter(
+                dataproviderrelation___deleted=False,
+                dataproviderrelation__data__in=self.data,
+            )
+            .exclude(id__in=data_providers_not_included)
             .distinct()
             .order_by("name")
         )
@@ -268,7 +305,13 @@ class ReportExcelMixin:
         worksheet.write_row("A2", headers, self.format_cols_headers)
         index = 2
         for product in self.products:
-            requirements = product.product_requirements.all()
+            requirements = (
+                product.product_requirements.filter(
+                    requirement_id__in=self.requirements
+                )
+                .order_by("requirement__name")
+                .order_by("requirement__name")
+            )
             requirement_count = requirements.count()
             if requirement_count >= 2:
                 worksheet.merge_range(
@@ -322,11 +365,25 @@ class ReportExcelMixin:
         requirement_index = 2
         for requirement in self.requirements:
             data_index = requirement_index
-            for datarequirement in requirement.datarequirement_set.all():
+            data_objects = (
+                Data.objects.filter(
+                    requirements__in=[requirement],
+                    datarequirement___deleted=False,
+                    datarequirement__requirement__in=self.requirements,
+                )
+                .filter(id__in=self.data)
+                .distinct()
+                .order_by("name")
+            )
+            for data_object in data_objects:
                 provider_index = data_index
                 for (
                     data_provider_relation
-                ) in datarequirement.data.dataproviderrelation_set.all():
+                ) in data_object.dataproviderrelation_set.filter(
+                    provider__in=self.data_providers
+                ).order_by(
+                    "provider__name"
+                ):
                     data_provider = data_provider_relation.provider
                     worksheet.write_row(
                         provider_index,
@@ -348,13 +405,13 @@ class ReportExcelMixin:
                     worksheet.write_row(
                         data_index,
                         2,
-                        [datarequirement.data.name, "", ""],
+                        [data_object.name, "", ""],
                         self.format_rows,
                     )
                     data_index = provider_index
                 elif provider_index == data_index + 1:
                     worksheet.write_row(
-                        data_index, 2, [datarequirement.data.name], self.format_rows
+                        data_index, 2, [data_object.name], self.format_rows
                     )
                 else:
                     worksheet.merge_range(
@@ -362,7 +419,7 @@ class ReportExcelMixin:
                         2,
                         provider_index - 1,
                         2,
-                        datarequirement.data.name,
+                        data_object.name,
                         self.format_rows,
                     )
                 data_index = provider_index
@@ -424,7 +481,9 @@ class ReportExcelMixin:
         worksheet.write_row("A2", headers, self.format_cols_headers)
         index = 2
         for product in self.products:
-            product_merge_dimension = product.product_requirements.all().count()
+            product_merge_dimension = product.product_requirements.filter(
+                requirement_id__in=self.requirements
+            ).count()
             if product_merge_dimension >= 2:
                 worksheet.merge_range(
                     index,
@@ -434,7 +493,9 @@ class ReportExcelMixin:
                     product.name,
                     self.format_rows,
                 )
-                for product_requirement in product.product_requirements.all():
+                for product_requirement in product.product_requirements.filter(
+                    requirement_id__in=self.requirements
+                ).order_by("requirement__name"):
                     data = [
                         product_requirement.requirement.name,
                         product_requirement.requirement.id,
@@ -445,7 +506,9 @@ class ReportExcelMixin:
                     worksheet.write_row(index, 1, data, self.format_rows)
                     index += 1
             elif product_merge_dimension == 1:
-                product_requirement = product.product_requirements.first()
+                product_requirement = product.product_requirements.filter(
+                    requirement_id__in=self.requirements
+                ).first()
                 worksheet.write_row(
                     index,
                     0,
@@ -488,16 +551,28 @@ class ReportExcelMixin:
         worksheet.write_row("A2", headers, self.format_cols_headers)
         product_index = 2
         for product in self.products:
-            requirements = [x.requirement for x in product.product_requirements.all()]
-            data = Data.objects.filter(
-                requirements__in=requirements, datarequirement___deleted=False
-            ).distinct()
+            requirements = [
+                x.requirement
+                for x in product.product_requirements.filter(
+                    requirement_id__in=self.requirements
+                ).order_by("requirement__name")
+            ]
+            data = (
+                Data.objects.filter(
+                    datarequirement__requirement__in=requirements,
+                    datarequirement___deleted=False,
+                )
+                .filter(id__in=self.data)
+                .distinct()
+                .order_by("name")
+            )
             data_index = product_index
             for data_object in data:
                 data_requirement_index = data_index
-                for data_requirement in data_object.datarequirement_set.filter(
-                    requirement_id__in=self.requirements
-                ):
+                data_requirements = data_object.datarequirement_set.filter(
+                    requirement_id__in=self.requirements, _deleted=False
+                ).order_by("requirement__name")
+                for data_requirement in data_requirements:
                     worksheet.write_row(
                         data_requirement_index,
                         2,
@@ -558,13 +633,6 @@ class ReportExcelMixin:
             "DATA POLICY",
         ]
         worksheet.write_row("A2", headers, self.format_cols_headers)
-        self.data = (
-            Data.objects.filter(
-                requirements__in=self.requirements, datarequirement___deleted=False
-            )
-            .distinct()
-            .order_by("name")
-        )
         index = 2
         for data_object in self.data:
             row_data = [
@@ -598,7 +666,9 @@ class ReportExcelMixin:
         worksheet.write_row("A2", headers, self.format_cols_headers)
         index = 2
         for data_object in self.data:
-            provider_count = data_object.dataproviderrelation_set.all().count()
+            provider_count = data_object.dataproviderrelation_set.filter(
+                provider__in=self.data_providers
+            ).count()
             if provider_count >= 2:
                 worksheet.merge_range(
                     index,
@@ -608,7 +678,11 @@ class ReportExcelMixin:
                     data_object.name,
                     self.format_rows,
                 )
-                for dataprovider_relation in data_object.dataproviderrelation_set.all():
+                for (
+                    dataprovider_relation
+                ) in data_object.dataproviderrelation_set.all().order_by(
+                    "provider__name"
+                ):
                     dataprovider = dataprovider_relation.provider
                     row_data = [
                         dataprovider.name,
@@ -669,14 +743,50 @@ class ReportExcelMixin:
 
 class PDFExcelMixin:
     def generate_table_1_pdf(self):
+        products_not_included = Product.objects.exclude(id__in=self.products)
+        requirements_not_included = Requirement.objects.filter(
+            product_requirements__product__in=products_not_included,
+            product_requirements___deleted=False,
+        )
+
         self.requirements = (
             Requirement.objects.filter(
-                products__in=self.products, product_requirements___deleted=False
+                product_requirements___deleted=False,
+                product_requirements__product__in=self.products,
             )
+            .exclude(id__in=requirements_not_included)
+            .distinct()
+            .order_by("name")
+        )
+        data_not_included = Data.objects.filter(
+            datarequirement__requirement__in=requirements_not_included,
+            datarequirement___deleted=False,
+        )
+
+        self.data = (
+            Data.objects.filter(
+                datarequirement___deleted=False,
+                datarequirement__requirement__in=self.requirements,
+            )
+            .exclude(id__in=data_not_included)
             .distinct()
             .order_by("name")
         )
 
+        data_providers_not_included = DataProvider.objects.filter(
+            dataproviderrelation__data__in=data_not_included,
+            dataproviderrelation___deleted=False,
+        ).distinct()
+
+        self.data_providers = (
+            DataProvider.objects.filter(
+                dataproviderrelation___deleted=False,
+                dataproviderrelation__data__in=self.data,
+            )
+            .exclude(id__in=data_providers_not_included)
+            .distinct()
+            .order_by("name")
+        )
         data = [
             [
                 Paragraph("REQUIREMENT UID", self.headerstyle_table1),
@@ -757,7 +867,9 @@ class PDFExcelMixin:
         span_for_merging = []
         for product in self.products:
             product_name = product.name
-            product_requirements = product.product_requirements.all()
+            product_requirements = product.product_requirements.filter(
+                requirement_id__in=self.requirements
+            ).order_by("requirement__name")
             for idx, productrequirement in enumerate(product_requirements):
                 table_data.append(
                     [
@@ -821,12 +933,22 @@ class PDFExcelMixin:
         for requirement in self.requirements:
             requirement_name = requirement.name
             requirement_id = requirement.id
-            for idx, datarequirement in enumerate(
-                requirement.datarequirement_set.all()
-            ):
-                data_name = datarequirement.data.name
+            data_objects = (
+                Data.objects.filter(
+                    requirements__in=[requirement],
+                    datarequirement___deleted=False,
+                    datarequirement__requirement__in=self.requirements,
+                )
+                .filter(id__in=self.data)
+                .distinct()
+                .order_by("name")
+            )
+            for idx, data_object in enumerate(data_objects):
+                data_name = data_object.name
                 for idx_2, data_provider_relation in enumerate(
-                    datarequirement.data.dataproviderrelation_set.all()
+                    data_object.dataproviderrelation_set.filter(
+                        provider__in=self.data_providers
+                    ).order_by("provider__name")
                 ):
                     data_provider = data_provider_relation.provider
                     table_data.append(
@@ -853,7 +975,7 @@ class PDFExcelMixin:
                     requirement_name = ""
                     data_name = ""
                     requirement_id = ""
-                if not datarequirement.data.dataproviderrelation_set.all():
+                if not data_object.dataproviderrelation_set.all():
                     table_data.append(
                         [
                             Paragraph(requirement_name, self.rowstyle),
@@ -878,7 +1000,7 @@ class PDFExcelMixin:
                     )
                 )
 
-            if not requirement.datarequirement_set.all():
+            if not data_objects:
                 table_data.append(
                     [
                         Paragraph(requirement_name, self.rowstyle),
@@ -944,7 +1066,9 @@ class PDFExcelMixin:
         table_data = []
         for product in self.products:
             product_name = product.name
-            product_requirements = product.product_requirements.all()
+            product_requirements = product.product_requirements.filter(
+                requirement_id__in=self.requirements
+            ).order_by("requirement__name")
             for idx, product_requirement in enumerate(product_requirements):
                 requirement = product_requirement.requirement
                 table_data.append(
@@ -1019,15 +1143,26 @@ class PDFExcelMixin:
         table_data = []
         for product in self.products:
             product_name = product.name
-            requirements = [x.requirement for x in product.product_requirements.all()]
-            data_objects = Data.objects.filter(
-                requirements__in=requirements, datarequirement___deleted=False
-            ).distinct()
+            requirements = [
+                x.requirement
+                for x in product.product_requirements.filter(
+                    requirement_id__in=self.requirements
+                )
+            ]
+            data_objects = (
+                Data.objects.filter(
+                    datarequirement__requirement__in=requirements,
+                    datarequirement___deleted=False,
+                )
+                .filter(id__in=self.data)
+                .distinct()
+                .order_by("name")
+            )
             for idx, data_object in enumerate(data_objects):
                 data_name = data_object.name
                 data_requirements = data_object.datarequirement_set.filter(
-                    requirement_id__in=self.requirements
-                )
+                    requirement_id__in=self.requirements, _deleted=False
+                ).order_by("requirement__name")
                 for idx_2, data_requirement in enumerate(data_requirements):
                     table_data.append(
                         [
@@ -1047,7 +1182,7 @@ class PDFExcelMixin:
                         count_after_merge += 1
                     product_name = ""
                     data_name = ""
-                if not data_object.datarequirement_set.all():
+                if not data_requirements:
                     table_data.append(
                         [
                             Paragraph(product_name, self.rowstyle),
@@ -1071,7 +1206,7 @@ class PDFExcelMixin:
                     )
                 )
 
-            if not data:
+            if not data_objects:
                 table_data.append(
                     [
                         Paragraph(product_name, self.rowstyle),
@@ -1083,6 +1218,16 @@ class PDFExcelMixin:
                 )
                 product_name = ""
                 data_name = ""
+                count_after_merge += 1
+                span_for_merging.append(
+                    (
+                        "LINEABOVE",
+                        (1, count_for_merge),
+                        (1, count_after_merge),
+                        0.25,
+                        black,
+                    )
+                )
 
             span_for_merging.append(
                 ("LINEABOVE", (0, count_for_merge), (0, count_after_merge), 0.25, black)
@@ -1119,14 +1264,16 @@ class PDFExcelMixin:
 
         self.data_objects = (
             Data.objects.filter(
-                requirements__in=self.requirements, datarequirement___deleted=False
+                datarequirement__requirement__in=self.requirements,
+                datarequirement___deleted=False,
             )
+            .filter(id__in=self.data)
             .distinct()
             .order_by("name")
         )
         table_data = []
         for data_object in self.data_objects:
-            data.append(
+            table_data.append(
                 [
                     Paragraph(data_object.name, self.rowstyle),
                     Paragraph(
@@ -1144,7 +1291,16 @@ class PDFExcelMixin:
                     ),
                 ]
             )
-
+        if not table_data:
+            table_data.append(
+                [
+                    Paragraph("", self.rowstyle),
+                    Paragraph("", self.rowstyle),
+                    Paragraph("", self.rowstyle),
+                    Paragraph("", self.rowstyle),
+                    Paragraph("", self.rowstyle),
+                ]
+            )
         data.extend(table_data)
         t = Table(data, colWidths=[125, 125, 125, 125, 125], repeatRows=1)
         t.setStyle(self.LIST_STYLE)
@@ -1168,7 +1324,9 @@ class PDFExcelMixin:
         table_data = []
         for data_object in self.data_objects:
             data_name = data_object.name
-            data_providers_relations = data_object.dataproviderrelation_set.all()
+            data_providers_relations = data_object.dataproviderrelation_set.filter(
+                provider__in=self.data_providers
+            ).order_by("provider__name")
             for idx, dataprovider_relation in enumerate(data_providers_relations):
                 dataprovider = dataprovider_relation.provider
                 table_data.append(
@@ -1206,15 +1364,9 @@ class PDFExcelMixin:
                 table_data.append(
                     [
                         Paragraph(data_name, self.rowstyle),
-                        Paragraph(dataprovider.name, self.rowstyle),
+                        Paragraph("", self.rowstyle),
                         Paragraph(
-                            getattr(
-                                getattr(
-                                    dataprovider.details.first(), "provider_type", ""
-                                ),
-                                "name",
-                                "",
-                            ),
+                            "",
                             self.rowstyle,
                         ),
                         Paragraph(
@@ -1234,6 +1386,16 @@ class PDFExcelMixin:
             count_for_merge = count_after_merge
             span_for_merging.append(
                 ("LINEABOVE", (0, count_for_merge), (0, count_after_merge), 0.25, black)
+            )
+        if not table_data:
+            table_data.append(
+                [
+                    Paragraph("", self.rowstyle),
+                    Paragraph("", self.rowstyle),
+                    Paragraph("", self.rowstyle),
+                    Paragraph("", self.rowstyle),
+                    Paragraph("", self.rowstyle),
+                ]
             )
         data.extend(table_data)
         style = []
