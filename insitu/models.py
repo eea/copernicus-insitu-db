@@ -68,7 +68,6 @@ class ValidationWorkflow(Workflow):
         ("request_changes", "ready", "changes"),
         ("make_changes", "changes", "draft"),
         ("revalidate", "valid", "draft"),
-
     )
 
     @classmethod

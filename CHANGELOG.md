@@ -3,6 +3,13 @@ Changelog
 
 * In case of major changes, an email should be sent to all users with the modifications.
 
+2.3.23 (2021-02-03)
+-------------------
+* Add state transition Valid -> Draft
+* Show only objects in vertical relation to the Component in Standard Report
+* Sort objects alphabetically in Standard Report
+  [dianaboiangiu]
+
 2.3.22 (2021-01-22)
 -------------------
 * Remove component from the component's names
