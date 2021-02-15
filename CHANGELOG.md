@@ -3,6 +3,11 @@ Changelog
 
 * In case of major changes, an email should be sent to all users with the modifications.
 
+2.3.24 (2021-02-15)
+-------------------
+* Return Standard Report to showing links to other components
+  [dianaboiangiu]
+
 2.3.23 (2021-02-03)
 -------------------
 * Add state transition Valid -> Draft
