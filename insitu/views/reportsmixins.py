@@ -75,7 +75,7 @@ class ReportExcelMixin:
         )
 
     def generate_header_sheet(self, workbook, worksheet):
-        worksheet.set_column("A1:D1", 30)
+        worksheet.set_column("A1:D1", 50)
         worksheet.set_row(0, 30)
         worksheet.set_row(2, 20)
         worksheet.set_row(3, 20)
@@ -100,7 +100,7 @@ class ReportExcelMixin:
         )
         worksheet.merge_range("A6:D6", "", self.format_rows_introduction)
         bold = workbook.add_format({"bold": True})
-        worksheet.set_row(5, 540)
+        worksheet.set_row(5, 560)
         superscript = workbook.add_format({"font_script": 1})
         worksheet.write_rich_string(
             "A6",
@@ -215,24 +215,14 @@ class ReportExcelMixin:
             "HORIZONTAL RESOLUTION",
         ]
         worksheet.write_row("A2", headers, self.format_cols_headers)
-        products_not_included = Product.objects.exclude(id__in=self.products)
-        requirements_not_included = Requirement.objects.filter(
-            product_requirements__product__in=products_not_included,
-            product_requirements___deleted=False,
-        )
 
         self.requirements = (
             Requirement.objects.filter(
                 product_requirements___deleted=False,
                 product_requirements__product__in=self.products,
             )
-            .exclude(id__in=requirements_not_included)
             .distinct()
             .order_by("name")
-        )
-        data_not_included = Data.objects.filter(
-            datarequirement__requirement__in=requirements_not_included,
-            datarequirement___deleted=False,
         )
 
         self.data = (
@@ -240,22 +230,15 @@ class ReportExcelMixin:
                 datarequirement___deleted=False,
                 datarequirement__requirement__in=self.requirements,
             )
-            .exclude(id__in=data_not_included)
             .distinct()
             .order_by("name")
         )
-
-        data_providers_not_included = DataProvider.objects.filter(
-            dataproviderrelation__data__in=data_not_included,
-            dataproviderrelation___deleted=False,
-        ).distinct()
 
         self.data_providers = (
             DataProvider.objects.filter(
                 dataproviderrelation___deleted=False,
                 dataproviderrelation__data__in=self.data,
             )
-            .exclude(id__in=data_providers_not_included)
             .distinct()
             .order_by("name")
         )
@@ -307,6 +290,7 @@ class ReportExcelMixin:
         for product in self.products:
             requirements = (
                 product.product_requirements.filter(
+                    _deleted=False,
                     requirement_id__in=self.requirements
                 )
                 .order_by("requirement__name")
@@ -371,7 +355,6 @@ class ReportExcelMixin:
                     datarequirement___deleted=False,
                     datarequirement__requirement__in=self.requirements,
                 )
-                .filter(id__in=self.data)
                 .distinct()
                 .order_by("name")
             )
@@ -380,6 +363,7 @@ class ReportExcelMixin:
                 for (
                     data_provider_relation
                 ) in data_object.dataproviderrelation_set.filter(
+                    _deleted=False,
                     provider__in=self.data_providers
                 ).order_by(
                     "provider__name"
@@ -743,24 +727,13 @@ class ReportExcelMixin:
 
 class PDFExcelMixin:
     def generate_table_1_pdf(self):
-        products_not_included = Product.objects.exclude(id__in=self.products)
-        requirements_not_included = Requirement.objects.filter(
-            product_requirements__product__in=products_not_included,
-            product_requirements___deleted=False,
-        )
-
         self.requirements = (
             Requirement.objects.filter(
                 product_requirements___deleted=False,
                 product_requirements__product__in=self.products,
             )
-            .exclude(id__in=requirements_not_included)
             .distinct()
             .order_by("name")
-        )
-        data_not_included = Data.objects.filter(
-            datarequirement__requirement__in=requirements_not_included,
-            datarequirement___deleted=False,
         )
 
         self.data = (
@@ -768,22 +741,15 @@ class PDFExcelMixin:
                 datarequirement___deleted=False,
                 datarequirement__requirement__in=self.requirements,
             )
-            .exclude(id__in=data_not_included)
             .distinct()
             .order_by("name")
         )
-
-        data_providers_not_included = DataProvider.objects.filter(
-            dataproviderrelation__data__in=data_not_included,
-            dataproviderrelation___deleted=False,
-        ).distinct()
 
         self.data_providers = (
             DataProvider.objects.filter(
                 dataproviderrelation___deleted=False,
                 dataproviderrelation__data__in=self.data,
             )
-            .exclude(id__in=data_providers_not_included)
             .distinct()
             .order_by("name")
         )
@@ -868,6 +834,7 @@ class PDFExcelMixin:
         for product in self.products:
             product_name = product.name
             product_requirements = product.product_requirements.filter(
+                _deleted=False,
                 requirement_id__in=self.requirements
             ).order_by("requirement__name")
             for idx, productrequirement in enumerate(product_requirements):
@@ -937,7 +904,6 @@ class PDFExcelMixin:
                 Data.objects.filter(
                     requirements__in=[requirement],
                     datarequirement___deleted=False,
-                    datarequirement__requirement__in=self.requirements,
                 )
                 .filter(id__in=self.data)
                 .distinct()
@@ -947,7 +913,7 @@ class PDFExcelMixin:
                 data_name = data_object.name
                 for idx_2, data_provider_relation in enumerate(
                     data_object.dataproviderrelation_set.filter(
-                        provider__in=self.data_providers
+                        _deleted=False
                     ).order_by("provider__name")
                 ):
                     data_provider = data_provider_relation.provider
@@ -1067,7 +1033,7 @@ class PDFExcelMixin:
         for product in self.products:
             product_name = product.name
             product_requirements = product.product_requirements.filter(
-                requirement_id__in=self.requirements
+                _deleted=False
             ).order_by("requirement__name")
             for idx, product_requirement in enumerate(product_requirements):
                 requirement = product_requirement.requirement
@@ -1146,7 +1112,7 @@ class PDFExcelMixin:
             requirements = [
                 x.requirement
                 for x in product.product_requirements.filter(
-                    requirement_id__in=self.requirements
+                    _deleted=False,
                 )
             ]
             data_objects = (
@@ -1154,7 +1120,6 @@ class PDFExcelMixin:
                     datarequirement__requirement__in=requirements,
                     datarequirement___deleted=False,
                 )
-                .filter(id__in=self.data)
                 .distinct()
                 .order_by("name")
             )
@@ -1267,7 +1232,6 @@ class PDFExcelMixin:
                 datarequirement__requirement__in=self.requirements,
                 datarequirement___deleted=False,
             )
-            .filter(id__in=self.data)
             .distinct()
             .order_by("name")
         )
@@ -1325,7 +1289,8 @@ class PDFExcelMixin:
         for data_object in self.data_objects:
             data_name = data_object.name
             data_providers_relations = data_object.dataproviderrelation_set.filter(
-                provider__in=self.data_providers
+                provider__in=self.data_providers,
+                _deleted=False
             ).order_by("provider__name")
             for idx, dataprovider_relation in enumerate(data_providers_relations):
                 dataprovider = dataprovider_relation.provider
