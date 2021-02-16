@@ -1,4 +1,4 @@
-from insitu.models import Data, Product, Requirement, DataProvider
+from insitu.models import Data, Requirement, DataProvider
 from django.utils.html import strip_tags
 
 import datetime
@@ -290,8 +290,7 @@ class ReportExcelMixin:
         for product in self.products:
             requirements = (
                 product.product_requirements.filter(
-                    _deleted=False,
-                    requirement_id__in=self.requirements
+                    _deleted=False, requirement_id__in=self.requirements
                 )
                 .order_by("requirement__name")
                 .order_by("requirement__name")
@@ -363,8 +362,7 @@ class ReportExcelMixin:
                 for (
                     data_provider_relation
                 ) in data_object.dataproviderrelation_set.filter(
-                    _deleted=False,
-                    provider__in=self.data_providers
+                    _deleted=False, provider__in=self.data_providers
                 ).order_by(
                     "provider__name"
                 ):
@@ -834,8 +832,7 @@ class PDFExcelMixin:
         for product in self.products:
             product_name = product.name
             product_requirements = product.product_requirements.filter(
-                _deleted=False,
-                requirement_id__in=self.requirements
+                _deleted=False, requirement_id__in=self.requirements
             ).order_by("requirement__name")
             for idx, productrequirement in enumerate(product_requirements):
                 table_data.append(
@@ -1289,8 +1286,7 @@ class PDFExcelMixin:
         for data_object in self.data_objects:
             data_name = data_object.name
             data_providers_relations = data_object.dataproviderrelation_set.filter(
-                provider__in=self.data_providers,
-                _deleted=False
+                provider__in=self.data_providers, _deleted=False
             ).order_by("provider__name")
             for idx, dataprovider_relation in enumerate(data_providers_relations):
                 dataprovider = dataprovider_relation.provider
