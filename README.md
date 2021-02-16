@@ -7,7 +7,8 @@ Copernicus services on in situ data requirements (current and expected), data us
 
 ![Build](https://github.com/eea/copernicus-insitu-db/workflows/CI/badge.svg)
 [![Coverage](https://coveralls.io/repos/github/eea/copernicus-insitu-db/badge.svg?branch=master)](https://coveralls.io/github/eea/copernicus-insitu-db?branch=master)
-[![Docker Build Status](https://img.shields.io/docker/build/eeacms/copernicus-insitu-db)](https://hub.docker.com/r/eeacms/copernicus-insitu-db/builds)
+[![Docker build](https://img.shields.io/docker/automated/eeacms/copernicus-insitu-db)](https://hub.docker.com/r/eeacms/copernicus-insitu-db)
+[![Docker latest version](https://img.shields.io/docker/v/eeacms/copernicus-insitu-db)]()
 
 ## Prerequisites
 
