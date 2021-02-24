@@ -202,7 +202,9 @@ class ReportsStandardReportView(ProtectedTemplateView, ReportExcelMixin, PDFExce
 
     def get_filtered_services(self):
         # only take those services into consideration
-        services = CopernicusService.objects.filter(acronym__in=["CEMS", "CLMS", "CSS"])
+        services = CopernicusService.objects.filter(
+            acronym__in=["CEMS", "CLMS", "CSS", "CAMS", "C3S", "CMEMS", "CSC"]
+        )
         return services
 
     def get_context_data(self, **kwargs):
