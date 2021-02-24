@@ -3,6 +3,11 @@ Changelog
 
 * In case of major changes, an email should be sent to all users with the modifications.
 
+2.3.25 (2021-02-24)
+-------------------
+* Add the other services to Standard Report
+  [dianaboiangiu]
+
 2.3.24 (2021-02-15)
 -------------------
 * Return Standard Report to showing links to other components
