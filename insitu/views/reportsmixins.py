@@ -630,17 +630,18 @@ class ReportExcelMixin:
 
     def generate_table_8(self, workbook, worksheet):
         worksheet.set_column("A1:B1", 40)
-        worksheet.set_column("C1:F1", 25)
+        worksheet.set_column("C1:G1", 25)
 
         worksheet.set_row(0, 30)
         worksheet.set_row(1, 17)
         worksheet.merge_range(
-            "A1:F1", "DATASETS AND RELATED DATA PROVIDERS", self.format_header
+            "A1:G1", "DATASETS AND RELATED DATA PROVIDERS", self.format_header
         )
         headers = [
             "DATA",
             "DATA PROVIDER",
             "DATA PROVIDER TYPE",
+            "DATA PROVIDER ROLE",
             "DATA QUALITY CONTROL",
             "DATA DISSEMINATION",
             "DATA TIMELINESS",
@@ -666,6 +667,7 @@ class ReportExcelMixin:
                     "provider__name"
                 ):
                     dataprovider = dataprovider_relation.provider
+                    role = dataprovider_relation.get_role_display()
                     row_data = [
                         dataprovider.name,
                         getattr(
@@ -673,6 +675,7 @@ class ReportExcelMixin:
                             "name",
                             "",
                         ),
+                        role,
                         getattr(data_object.quality_control_procedure, "name", ""),
                         getattr(data_object.dissemination, "name", ""),
                         getattr(data_object.timeliness, "name", ""),
@@ -680,10 +683,12 @@ class ReportExcelMixin:
                     worksheet.write_row(index, 1, row_data, self.format_rows)
                     index += 1
             elif provider_count == 1:
-                dataprovider = data_object.dataproviderrelation_set.first().provider
+                dataprovider_relation = data_object.dataproviderrelation_set.first()
+                dataprovider = dataprovider_relation.provider
                 row_data = [
                     data_object.name,
                     dataprovider.name,
+                    dataprovider_relation.get_role_display(),
                     getattr(
                         getattr(dataprovider.details.first(), "provider_type", ""),
                         "name",
@@ -697,7 +702,10 @@ class ReportExcelMixin:
                 index += 1
             else:
                 worksheet.write_row(
-                    index, 0, [data_object.name, "", "", "", "", ""], self.format_rows
+                    index,
+                    0,
+                    [data_object.name, "", "", "", "", "", ""],
+                    self.format_rows,
                 )
                 index += 1
 
@@ -1273,6 +1281,7 @@ class PDFExcelMixin:
                 Paragraph("DATA", self.table_headerstyle),
                 Paragraph("DATA PROVIDER", self.table_headerstyle),
                 Paragraph("DATA PROVIDER TYPE", self.table_headerstyle),
+                Paragraph("DATA PROVIDER ROLE", self.table_headerstyle),
                 Paragraph("DATA QUALITY CONTROL", self.table_headerstyle),
                 Paragraph("DATA DISSEMINATION", self.table_headerstyle),
                 Paragraph("DATA TIMELINESS", self.table_headerstyle),
@@ -1290,6 +1299,7 @@ class PDFExcelMixin:
             ).order_by("provider__name")
             for idx, dataprovider_relation in enumerate(data_providers_relations):
                 dataprovider = dataprovider_relation.provider
+                role = dataprovider_relation.get_role_display()
                 table_data.append(
                     [
                         Paragraph(data_name, self.rowstyle),
@@ -1302,6 +1312,10 @@ class PDFExcelMixin:
                                 "name",
                                 "",
                             ),
+                            self.rowstyle,
+                        ),
+                        Paragraph(
+                            role,
                             self.rowstyle,
                         ),
                         Paragraph(
@@ -1330,6 +1344,7 @@ class PDFExcelMixin:
                             "",
                             self.rowstyle,
                         ),
+                        Paragraph("", self.rowstyle),
                         Paragraph(
                             getattr(data_object.quality_control_procedure, "name", ""),
                             self.rowstyle,
@@ -1356,6 +1371,7 @@ class PDFExcelMixin:
                     Paragraph("", self.rowstyle),
                     Paragraph("", self.rowstyle),
                     Paragraph("", self.rowstyle),
+                    Paragraph("", self.rowstyle),
                 ]
             )
         data.extend(table_data)
@@ -1372,7 +1388,7 @@ class PDFExcelMixin:
                 ("LINEBEFORE", (0, 0), (-1, -1), 0.25, black),
             ]
         )
-        t = Table(data, colWidths=[150, 150, 90, 90, 120, 90], repeatRows=1)
+        t = Table(data, colWidths=[150, 150, 90, 90, 90, 120, 90], repeatRows=1)
         t.setStyle(TableStyle(style))
         return t
 

@@ -20,9 +20,6 @@ class Command(BaseCommand):
                 related_object.save()
 
     def handle(self, *args, **options):
-        import pdb
-
-        pdb.set_trace()
         requirements = Requirement.objects.filter(
             created_by__username=options["old_username"]
         )
