@@ -3,6 +3,11 @@ Changelog
 
 * In case of major changes, an email should be sent to all users with the modifications.
 
+2.3.26 (2021-02-26)
+-------------------
+* Add provider role to Standard Report
+  [dianaboiangiu]
+
 2.3.25 (2021-02-24)
 -------------------
 * Add the other services to Standard Report
