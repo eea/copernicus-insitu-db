@@ -8,13 +8,13 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('insitu', '0032_extend_product_acronym'),
+        ("insitu", "0032_extend_product_acronym"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='dataprovider',
-            name='edmo',
+            model_name="dataprovider",
+            name="edmo",
             field=models.IntegerField(null=True),
         ),
     ]

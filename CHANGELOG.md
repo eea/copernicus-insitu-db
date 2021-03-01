@@ -6,6 +6,7 @@ Changelog
 2.3.26 (2021-02-26)
 -------------------
 * Add provider role to Standard Report
+* Fix misleading help url
   [dianaboiangiu]
 
 2.3.25 (2021-02-24)
