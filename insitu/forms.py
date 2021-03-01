@@ -493,7 +493,7 @@ class DataProviderNetworkForm(CreatedByFormMixin, forms.ModelForm):
 
     class Meta:
         model = models.DataProvider
-        fields = ["name", "description", "countries", "is_network"]
+        fields = ["name", "edmo", "description", "countries", "is_network"]
 
 
 class DataProviderNetworkMembersForm(forms.ModelForm):
@@ -560,7 +560,7 @@ class DataProviderNonNetworkForm(CreatedByFormMixin, forms.ModelForm):
 
     class Meta:
         model = models.DataProvider
-        fields = ["name", "description", "countries", "networks"]
+        fields = ["name", "edmo", "description", "countries", "networks"]
 
     def save(self, created_by="", commit=True):
         instance = super().save(created_by, commit)

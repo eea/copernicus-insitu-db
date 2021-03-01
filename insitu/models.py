@@ -430,7 +430,7 @@ class DataProvider(ValidationWorkflowModel, SoftDeleteModel):
         ("DataProviderRelation", "provider"),
     ]
     elastic_delete_signal = signals.data_provider_deleted
-
+    edmo = models.IntegerField(null=True)
     name = models.CharField(max_length=255)
     description = models.TextField(blank=True)
     is_network = models.BooleanField(default=False)

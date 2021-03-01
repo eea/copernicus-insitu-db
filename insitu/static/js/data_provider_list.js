@@ -122,7 +122,7 @@ $(document).ready(function () {
               "text-danger'></span>";
           }
         },
-        "targets": [7],
+        "targets": [8],
         "bSortable": false
       }
     ]

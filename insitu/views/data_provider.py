@@ -55,6 +55,7 @@ class DataProviderListJson(ESDatatableView):
     columns = [
         "name",
         "acronym",
+        "edmo",
         "address",
         "phone",
         "email",

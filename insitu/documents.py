@@ -303,7 +303,7 @@ class DataProviderDoc(DocType):
 
     class Meta:
         model = DataProvider
-        fields = ["id"]
+        fields = ["id", "edmo"]
         related_models = [
             DataProviderRelation,
             Data,
