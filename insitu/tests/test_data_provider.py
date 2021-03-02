@@ -10,7 +10,7 @@ from insitu.utils import soft_deleted
 
 
 class DataProviderTests(base.FormCheckTestCase):
-    fields = ["name", "is_network", "description"]
+    fields = ["name", "edmo", "is_network", "description"]
     many_to_many_fields = ["networks", "countries"]
     required_fields = ["name", "is_network", "countries"]
     target_type = "data provider"
@@ -21,6 +21,7 @@ class DataProviderTests(base.FormCheckTestCase):
 
         self._DATA = {
             "name": "test name",
+            "edmo": 234,
             "description": "test description",
             "countries": [country.pk for country in countries],
             "is_network": True,

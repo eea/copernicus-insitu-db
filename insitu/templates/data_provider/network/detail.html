@@ -55,7 +55,11 @@
 
       <tr class="row">
         <th class="col-md-4 col-sm-6">Edmo</th>
-        <td class="col-md-8 col-sm-6">{{ provider.edmo }}</td>
+        <td class="col-md-8 col-sm-6">
+          {% if provider.edmo %}
+            {{ provider.edmo }}
+          {% endif %}
+        </td>
       </tr>
 
       <tr class="row">
