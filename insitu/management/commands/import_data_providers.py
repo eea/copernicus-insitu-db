@@ -4,7 +4,7 @@ from django.db import transaction
 from openpyxl import load_workbook
 import re
 import sys
-
+import csv
 
 from insitu import models as insitu_models
 from picklists import models as pickmodels
@@ -41,69 +41,44 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         filename = options["filename"][0]
-        wb = load_workbook(filename=filename)
-        ws = wb.get_sheet_by_name("Ark1")
-        with transaction.atomic():
-            fields = MODEL_FIELDS
-            for row in ws.iter_rows(min_row=5):
-                has_network = False
-                data_provider_details = {}
-                data_provider = {}
-                networks = []
-                countries = []
-                for i in range(0, len(fields) - 1):
-                    field = fields[i]
-                    value = row[i].value if row[i].value is not None else ""
-                    if field in DATA_PROVIDER_DETAILS_FIELDS:
-                        if field == "provider_type":
-                            provider_type_model = (
-                                pickmodels.ProviderType.objects.filter(
-                                    name=value
-                                ).first()
-                            )
-                            data_provider_details[field] = provider_type_model
-                        else:
-                            data_provider_details[field] = value
-                    elif field in DATA_PROVIDER_FIELDS:
-                        if field == "countries":
-                            country = pickmodels.Country.objects.filter(
-                                name=value
-                            ).first()
-                            countries.append(country)
-                        elif field == "networks":
-                            networks_name = re.split(", ", value)
-                            if networks_name != [""]:
-                                has_network = True
-                                for network_name in networks_name:
-                                    network = insitu_models.DataProvider.objects.filter(
-                                        name__iexact=network_name
-                                    ).first()
-                                    networks.append(network)
-                        else:
-                            data_provider[field] = value
-                if has_network:
-                    user_id = (
-                        get_user_model().objects.get(email="erik.buch@eurogoos.eu").id
+        with open(filename, newline='') as csvfile:
+            reader = csv.DictReader(csvfile)
+            for row in reader:
+                user = insitu_models.User.objects.get(username=row['owner'])
+                country = pickmodels.Country.objects.get(code=row['country'])
+                if not country:
+                    print("Country {} not found".format(row['code']))
+                    continue
+                provider_type = pickmodels.ProviderType.objects.filter(name=row['type']).first()
+                if not provider_type:
+                    print("Provider type {} not found".format(row['type']))
+                    continue
+                data_provider = insitu_models.DataProvider.objects.filter(name=row['name']).first()
+                if data_provider:
+                    print("Updating data provider {}".format(row['name']))
+                    data_provider.edmo = row['edmo']
+                    data_provider.countries.add(country)
+                    if data_provider.is_network == False:
+                        data_provider.details.provider_type = provider_type
+                    data_provider.save()
+                    continue
+
+                if row['is_network'].lower() == 'true':
+                    data_provider = insitu_models.DataProvider.objects.create(
+                        is_network=True,
+                        name=row['name'],
+                        edmo=row['edmo'],
+                        created_by=user,
                     )
-                    data_provider_obj = insitu_models.DataProvider.objects.create(
-                        created_by_id=user_id, **data_provider
-                    )
-                    data_provider_obj.countries = countries
-                    data_provider_obj.networks = networks
-                    insitu_models.DataProviderDetails.objects.create(
-                        data_provider_id=data_provider_obj.id,
-                        created_by_id=user_id,
-                        **data_provider_details,
-                    )
+                    data_provider.countries.add(country)
+                    data_provider.save()
                 else:
-                    print(
-                        "\nWarning! Data provider",
-                        data_provider["name"],
-                        (
-                            "hasn't been inserted because it doens't have any "
-                            "networks related"
-                        ),
+                    data_provider = insitu_models.DataProvider.objects.create(
+                        name=row['name'],
+                        edmo=row['edmo'],
+                        created_by=user,
                     )
-                sys.stdout.write(".")
-                sys.stdout.flush()
-        print()
+                    data_provider.countries.add(country)
+                    details = insitu_models.DataProviderDetails(data_provider=data_provider)
+                    data_provider.details.provider_type = provider_type
+                    data_provider.save()
