@@ -3,10 +3,16 @@ Changelog
 
 * In case of major changes, an email should be sent to all users with the modifications.
 
+2.3.27 (2021-03-01)
+-------------------
+* Add the new field EDMO to data providers
+* Fix misleading help url
+* Update script for importing data providers
+  [dianaboiangiu]
+
 2.3.26 (2021-02-26)
 -------------------
 * Add provider role to Standard Report
-* Fix misleading help url
   [dianaboiangiu]
 
 2.3.25 (2021-02-24)

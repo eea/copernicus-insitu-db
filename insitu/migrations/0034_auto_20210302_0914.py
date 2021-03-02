@@ -8,13 +8,13 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('insitu', '0033_dataprovider_edmo'),
+        ("insitu", "0033_dataprovider_edmo"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='dataprovider',
-            name='edmo',
+            model_name="dataprovider",
+            name="edmo",
             field=models.IntegerField(blank=True, null=True),
         ),
     ]
