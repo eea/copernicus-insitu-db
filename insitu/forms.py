@@ -108,7 +108,7 @@ class ProductGroupRequirementForm(ProductRequirementBaseForm):
 
     class Meta:
         model = models.ProductRequirement
-        exclude = ["product", "created_by", "state"]
+        exclude = ["product", "created_by", "state", "owner_history"]
 
     def clean(self):
         cleaned_data = super().clean()

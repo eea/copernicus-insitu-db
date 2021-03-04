@@ -1,7 +1,6 @@
 import csv
 import json
-from datetime import datetime
-
+from django.utils import timezone
 from django.conf import settings
 
 from insitu.models import UserLog
@@ -20,7 +19,7 @@ class BaseLoggingView:
             spamwriter = csv.writer(csvfile, delimiter=",")
             row = ",".join(
                 [
-                    datetime.now().strftime("%d %B %Y %H:%M"),
+                    timezone.now().strftime("%d %B %Y %H:%M"),
                     request.user.username,
                     action,
                     self.target_type,
@@ -35,7 +34,7 @@ class BaseLoggingView:
     @staticmethod
     def add_user_log(user, action, id, target_type):
         text = " ".join([action, target_type, str(id)]).strip(" ")
-        log = {"text": text, "date": datetime.now(), "user": user}
+        log = {"text": text, "date": timezone.now(), "user": user}
         UserLog.objects.create(**log)
 
 

@@ -249,6 +249,14 @@
           <i>{{ data.created_by.email }}</i>
         </td>
       </tr>
+      {% if data.owner_history %}
+        <tr class="row">
+          <th class="col-md-4 col-sm-6">Creators history</th>
+          <td class="col-md-8 col-sm-6">
+            {{ data.owner_history }}
+          </td>
+        </tr>
+      {% endif %}
       </tbody>
     </table>
   </div>

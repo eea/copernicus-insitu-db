@@ -142,6 +142,22 @@ class SoftDeleteModel(models.Model):
             self.elastic_delete_signal.send(sender=self)
 
 
+class OwnerHistoryModel(models.Model):
+    owner_history = models.TextField(default="")
+
+    class Meta:
+        abstract = True
+
+    def set_owner_history(self, user):
+        self.owner_history = ";".join(
+            [
+                "{} {}, ({})".format(user.first_name, user.last_name, user.email),
+                self.owner_history,
+            ]
+        )
+        self.save()
+
+
 class ValidationWorkflowModel(WorkflowEnabled, models.Model):
     state = StateField(ValidationWorkflow)
 
@@ -215,7 +231,7 @@ class Team(models.Model):
     requests = models.ManyToManyField(User, related_name="requests", blank=True)
 
 
-class Metric(ValidationWorkflowModel):
+class Metric(OwnerHistoryModel, ValidationWorkflowModel):
     threshold = models.CharField(max_length=100)
     breakthrough = models.CharField(max_length=100)
     goal = models.CharField(max_length=100)
@@ -270,7 +286,7 @@ class Component(models.Model):
         return self.name
 
 
-class Requirement(ValidationWorkflowModel, SoftDeleteModel):
+class Requirement(OwnerHistoryModel, ValidationWorkflowModel, SoftDeleteModel):
     related_objects = [
         ("ProductRequirement", "requirement"),
         ("DataRequirement", "requirement"),
@@ -398,7 +414,7 @@ class Product(SoftDeleteModel):
         return self.name
 
 
-class ProductRequirement(ValidationWorkflowModel, SoftDeleteModel):
+class ProductRequirement(OwnerHistoryModel, ValidationWorkflowModel, SoftDeleteModel):
     product = models.ForeignKey(
         Product, on_delete=models.CASCADE, related_name="product_requirements"
     )
@@ -424,7 +440,7 @@ class ProductRequirement(ValidationWorkflowModel, SoftDeleteModel):
         return "{} - {}".format(self.product.name, self.requirement.name)
 
 
-class DataProvider(ValidationWorkflowModel, SoftDeleteModel):
+class DataProvider(OwnerHistoryModel, ValidationWorkflowModel, SoftDeleteModel):
     related_objects = [
         ("DataProviderDetails", "data_provider"),
         ("DataProviderRelation", "provider"),
@@ -513,7 +529,7 @@ class DataProvider(ValidationWorkflowModel, SoftDeleteModel):
             obj.make_changes()
 
 
-class DataProviderDetails(ValidationWorkflowModel, SoftDeleteModel):
+class DataProviderDetails(OwnerHistoryModel, ValidationWorkflowModel, SoftDeleteModel):
     acronym = models.CharField(max_length=10, blank=True)
     website = models.CharField(max_length=255, blank=True)
     address = models.TextField(blank=True)
@@ -543,7 +559,7 @@ class DataProviderDetails(ValidationWorkflowModel, SoftDeleteModel):
         signals.data_provider_updated.send(sender=self)
 
 
-class Data(ValidationWorkflowModel, SoftDeleteModel):
+class Data(OwnerHistoryModel, ValidationWorkflowModel, SoftDeleteModel):
     related_objects = [
         ("DataRequirement", "data"),
         ("DataProviderRelation", "data"),
@@ -691,7 +707,7 @@ class Data(ValidationWorkflowModel, SoftDeleteModel):
             obj.make_changes()
 
 
-class DataRequirement(ValidationWorkflowModel, SoftDeleteModel):
+class DataRequirement(OwnerHistoryModel, ValidationWorkflowModel, SoftDeleteModel):
     data = models.ForeignKey(Data, on_delete=models.CASCADE)
     requirement = models.ForeignKey(Requirement, on_delete=models.CASCADE)
     information_costs = models.BooleanField(default=False)
@@ -708,7 +724,7 @@ class DataRequirement(ValidationWorkflowModel, SoftDeleteModel):
         return "{} - {}".format(self.data.name, self.requirement.name)
 
 
-class DataProviderRelation(ValidationWorkflowModel, SoftDeleteModel):
+class DataProviderRelation(OwnerHistoryModel, ValidationWorkflowModel, SoftDeleteModel):
     ORIGINATOR = 1
     DISTRIBUTOR = 2
     ROLE_CHOICES = (

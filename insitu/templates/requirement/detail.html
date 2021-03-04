@@ -203,6 +203,14 @@
           <i>{{ requirement.created_by.email }}</i>
         </td>
       </tr>
+      {% if requirement.owner_history %}
+        <tr class="row">
+          <th class="col-md-4 col-sm-6">Creators history</th>
+          <td class="col-md-8 col-sm-6">
+            {{ requirement.owner_history }}
+          </td>
+        </tr>
+      {% endif %}
       </tbody>
     </table>
   </div>
