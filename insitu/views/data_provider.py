@@ -100,71 +100,35 @@ class DataProviderAddNetwork(CreatedByMixin, LoggingProtectedCreateView):
     permission_denied_redirect = reverse_lazy("provider:list")
     target_type = "data provider network"
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        if "details" not in context:
+            context["details"] = forms.DataProviderDetailsForm()
+        return context
+
     def form_valid(self, form):
-        response = super().form_valid(form)
+        details_form = forms.DataProviderDetailsForm(data=form.data)
+        if not details_form.is_valid():
+            return self.form_invalid(form)
+        super().form_valid(form)
+        data = form.data.copy()
+        data["data_provider"] = self.object.pk
+        details_form = forms.DataProviderDetailsForm(data=data)
+        details_form.save(created_by=self.object.created_by)
         messages.success(
             self.request, "The data provider network was created successfully!"
         )
-        return response
+        return HttpResponseRedirect(self.get_success_url())
+
+    def form_invalid(self, form):
+        details_form = forms.DataProviderDetailsForm(form.data)
+        details_form.is_valid()
+        return self.render_to_response(
+            self.get_context_data(form=form, details=details_form)
+        )
 
     def get_success_url(self):
         return reverse("provider:detail", kwargs={"pk": self.object.pk})
-
-
-class DataProviderEditNetwork(LoggingProtectedUpdateView):
-    template_name = "data_provider/network/edit.html"
-    form_class = forms.DataProviderNetworkForm
-    context_object_name = "provider"
-    model = models.DataProvider
-    permission_classes = (IsOwnerUser, IsDraftObject, IsNotReadOnlyUser)
-    permission_denied_redirect = reverse_lazy("provider:list")
-    target_type = "data provider network"
-
-    def form_valid(self, form):
-        response = super().form_valid(form)
-        messages.success(
-            self.request, "The data provider network was updated successfully!"
-        )
-        return response
-
-    def get_success_url(self):
-        return reverse("provider:detail", kwargs={"pk": self.object.pk})
-
-
-class DataProviderEditNetworkMembers(ProtectedUpdateView):
-    template_name = "data_provider/network/edit_members.html"
-    form_class = forms.DataProviderNetworkMembersForm
-    context_object_name = "provider"
-    model = models.DataProvider
-    permission_classes = (IsOwnerUser, IsDraftObject, IsNotReadOnlyUser)
-    permission_denied_redirect = reverse_lazy("provider:list")
-
-    def form_valid(self, form):
-        response = super().form_valid(form)
-        messages.success(
-            self.request,
-            "The members for this data provider network were updated successfully!",
-        )
-        return response
-
-    def get_success_url(self):
-        return reverse("provider:detail", kwargs={"pk": self.object.pk})
-
-
-class DataProviderDeleteNetwork(LoggingProtectedDeleteView):
-    template_name = "data_provider/network/delete.html"
-    form_class = forms.DataProviderNetworkForm
-    context_object_name = "provider"
-    model = models.DataProvider
-    permission_classes = (IsOwnerUser, IsDraftObject, IsNotReadOnlyUser)
-    permission_denied_redirect = reverse_lazy("provider:list")
-    target_type = "data provider network"
-
-    def get_success_url(self):
-        messages.success(
-            self.request, "The data provider network was deleted successfully!"
-        )
-        return reverse("provider:list")
 
 
 class DataProviderAddNonNetwork(CreatedByMixin, LoggingProtectedCreateView):
@@ -190,6 +154,51 @@ class DataProviderAddNonNetwork(CreatedByMixin, LoggingProtectedCreateView):
         details_form = forms.DataProviderDetailsForm(data=data)
         details_form.save(created_by=self.object.created_by)
         messages.success(self.request, "The data provider was created successfully!")
+        return HttpResponseRedirect(self.get_success_url())
+
+    def form_invalid(self, form):
+        details_form = forms.DataProviderDetailsForm(form.data)
+        details_form.is_valid()
+        return self.render_to_response(
+            self.get_context_data(form=form, details=details_form)
+        )
+
+    def get_success_url(self):
+        return reverse("provider:detail", kwargs={"pk": self.object.pk})
+
+
+class DataProviderEditNetwork(LoggingProtectedUpdateView):
+    template_name = "data_provider/network/edit.html"
+    form_class = forms.DataProviderNetworkForm
+    context_object_name = "provider"
+    model = models.DataProvider
+    permission_classes = (IsOwnerUser, IsDraftObject, IsNotReadOnlyUser)
+    permission_denied_redirect = reverse_lazy("provider:list")
+    target_type = "data provider network"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        if "details" not in context:
+            details = self.object.details.first()
+            context["details"] = forms.DataProviderDetailsForm(instance=details)
+        return context
+
+    def _update_objects(self, form):
+        self.object = form.save()
+        details = self.object.details.first()
+        data = form.data.copy()
+        data["data_provider"] = self.object.pk
+        details_form = forms.DataProviderDetailsForm(instance=details, data=data)
+        details_form.save()
+
+    def form_valid(self, form):
+        details_form = forms.DataProviderDetailsForm(data=form.data)
+        if not details_form.is_valid():
+            return self.form_invalid(form)
+        self._update_objects(form)
+        messages.success(
+            self.request, "The data provider network was updated successfully!"
+        )
         return HttpResponseRedirect(self.get_success_url())
 
     def form_invalid(self, form):
@@ -244,6 +253,42 @@ class DataProviderEditNonNetwork(LoggingProtectedUpdateView):
 
     def get_success_url(self):
         return reverse("provider:detail", kwargs={"pk": self.object.pk})
+
+
+class DataProviderEditNetworkMembers(ProtectedUpdateView):
+    template_name = "data_provider/network/edit_members.html"
+    form_class = forms.DataProviderNetworkMembersForm
+    context_object_name = "provider"
+    model = models.DataProvider
+    permission_classes = (IsOwnerUser, IsDraftObject, IsNotReadOnlyUser)
+    permission_denied_redirect = reverse_lazy("provider:list")
+
+    def form_valid(self, form):
+        response = super().form_valid(form)
+        messages.success(
+            self.request,
+            "The members for this data provider network were updated successfully!",
+        )
+        return response
+
+    def get_success_url(self):
+        return reverse("provider:detail", kwargs={"pk": self.object.pk})
+
+
+class DataProviderDeleteNetwork(LoggingProtectedDeleteView):
+    template_name = "data_provider/network/delete.html"
+    form_class = forms.DataProviderNetworkForm
+    context_object_name = "provider"
+    model = models.DataProvider
+    permission_classes = (IsOwnerUser, IsDraftObject, IsNotReadOnlyUser)
+    permission_denied_redirect = reverse_lazy("provider:list")
+    target_type = "data provider network"
+
+    def get_success_url(self):
+        messages.success(
+            self.request, "The data provider network was deleted successfully!"
+        )
+        return reverse("provider:list")
 
 
 class DataProviderDeleteNonNetwork(LoggingProtectedDeleteView):

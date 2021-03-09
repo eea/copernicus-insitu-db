@@ -88,6 +88,51 @@
         </td>
       </tr>
       <tr class="row">
+        <th class="col-md-4 col-sm-6">Acronym</th>
+        <td class="col-md-8 col-sm-6">{{ provider.details.first.acronym }}</td>
+      </tr>
+      <tr class="row">
+        <th class="col-md-4 col-sm-6">Website</th>
+        <td class="col-md-8 col-sm-6">
+          <a href="{{ provider.details.first.website }}" target="_blank">
+            {{ provider.details.first.website }}
+          </a>
+        </td>
+      </tr>
+      <tr class="row">
+        <th class="col-md-4 col-sm-6">Address</th>
+        <td class="col-md-8 col-sm-6">{{ provider.details.first.address }}</td>
+      </tr>
+      <tr class="row">
+        <th class="col-md-4 col-sm-6">Phone</th>
+        <td class="col-md-8 col-sm-6">
+          <a href="tel:{{ provider.details.first.phone }}">
+            {{ provider.details.first.phone }}
+          </a>
+        </td>
+      </tr>
+      <tr class="row">
+        <th class="col-md-4 col-sm-6">Email</th>
+        <td class="col-md-8 col-sm-6">
+          <a href="mailto:{{ provider.details.first.email }}" target="_top">
+            {{ provider.details.first.email }}
+          </a>
+        </td>
+      </tr>
+      <tr class="row">
+        <th class="col-md-4 col-sm-6">Contact person</th>
+        <td class="col-md-8 col-sm-6">
+          {{ provider.details.first.contact_person }}</td>
+      </tr>
+      <tr class="row">
+        <th class="col-md-4 col-sm-6">
+          Provider type
+          <a target="_blank" href="/help#providertype"><span class="glyphicon glyphicon-question-sign"></span></a>
+        </th>
+        <td class="col-md-8 col-sm-6">
+          {{ provider.details.first.provider_type }}</td>
+      </tr>
+      <tr class="row">
         <th class="col-md-4 col-sm-6">State</th>
         <td class="col-md-8 col-sm-6">
           {{ provider.state.title }}

@@ -249,10 +249,18 @@ class DataProviderTests(base.FormCheckTestCase):
     def test_add_network_provider(self):
         self.erase_logging_file()
         data = self._DATA
+        details_data = self._DETAILS_DATA
+        data.update(**details_data)
         resp = self.client.post(reverse("provider:add_network"), data)
         self.assertEqual(resp.status_code, 302)
         data["networks"] = []
         self.check_single_object(models.DataProvider, data)
+        provider = models.DataProvider.objects.last()
+        details = provider.details.first()
+        details_data.pop("provider_type")
+        for attr in details_data.keys():
+            self.assertEqual(getattr(details, attr), data[attr])
+        self.assertEqual(getattr(details, "provider_type").pk, data["provider_type"])
         self.logging()
 
     def test_get_edit_network_provider(self):
@@ -269,12 +277,22 @@ class DataProviderTests(base.FormCheckTestCase):
         self.login_creator()
         self.erase_logging_file()
         data = self._DATA
+        details_data = self._DETAILS_DATA
+        data.update(**details_data)
         network = base.DataProviderFactory(is_network=True, created_by=self.creator)
+        details = base.DataProviderDetailsFactory(
+            data_provider=network, created_by=self.creator
+        )
         resp = self.client.post(
             reverse("provider:edit_network", kwargs={"pk": network.pk}), data
         )
         self.assertEqual(resp.status_code, 302)
         data["networks"] = []
+        details.refresh_from_db()
+        details_data.pop("provider_type")
+        for attr in details_data.keys():
+            self.assertEqual(getattr(details, attr), data[attr])
+        self.assertEqual(getattr(details, "provider_type").pk, data["provider_type"])
         self.check_single_object(models.DataProvider, data)
         self.logging()
 

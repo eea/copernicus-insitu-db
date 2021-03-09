@@ -34,7 +34,7 @@ class Command(BaseCommand):
                     data_provider.edmo = row["edmo"]
                     data_provider.countries.add(country)
                     if not data_provider.is_network:
-                        data_provider.details.provider_type = provider_type
+                        data_provider.details.first().provider_type = provider_type
                     data_provider.save()
                     continue
 
@@ -54,6 +54,9 @@ class Command(BaseCommand):
                         created_by=user,
                     )
                     data_provider.countries.add(country)
-                    insitu_models.DataProviderDetails(data_provider=data_provider)
-                    data_provider.details.provider_type = provider_type
+                    insitu_models.DataProviderDetails.objects.create(
+                        data_provider=data_provider,
+                        provider_type=provider_type,
+                        created_by=user,
+                    )
                     data_provider.save()

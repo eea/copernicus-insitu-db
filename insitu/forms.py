@@ -531,7 +531,7 @@ class DataProviderNetworkMembersForm(forms.ModelForm):
 class DataProviderDetailsForm(CreatedByFormMixin, forms.ModelForm):
     data_provider = forms.ModelChoiceField(
         widget=forms.HiddenInput,
-        queryset=models.DataProvider.objects.filter(is_network=False),
+        queryset=models.DataProvider.objects.all(),
         required=False,
     )
     email = forms.CharField(required=False)
