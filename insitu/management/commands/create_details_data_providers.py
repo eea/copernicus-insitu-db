@@ -1,5 +1,3 @@
-import csv
-
 from django.core.management.base import BaseCommand
 
 from insitu import models as insitu_models
