@@ -3,6 +3,12 @@ Changelog
 
 * In case of major changes, an email should be sent to all users with the modifications.
 
+2.3.28 (2021-03-09)
+-------------------
+* Add contact details for data provider networks
+* Add owner history for all objects
+  [dianaboiangiu]
+
 2.3.27 (2021-03-01)
 -------------------
 * Add the new field EDMO to data providers
