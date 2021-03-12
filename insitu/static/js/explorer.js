@@ -97,7 +97,7 @@ ExplorerEditor.prototype.updateQueryString = function(key, value, url) {
 };
 
 ExplorerEditor.prototype.formatSql = function() {
-    $.post('../format/', {sql: this.editor.getValue() }, function(data) {
+    $.post('../format/', {sql: this.editor.getValue(), timeout: 0, }, function(data) {
         this.editor.setValue(data.formatted);
     }.bind(this));
 };

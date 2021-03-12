@@ -208,7 +208,7 @@
     $('#pivot-download-excel').click(function () {
       $('.pvtTable').first().find('.pvtTotalLabel').remove()
       $('.pvtTable').first().find('.pvtTotal').remove()
-      var wb = XLSX.utils.table_to_book(document.getElementsByClassName('pvtTable')[0], {"sheet": "Sheet 1"})
+      var wb = XLSX.utils.table_to_book(document.getElementsByClassName('pvtTable')[0], {"sheet": "Sheet 1", "raw": true})
       var wbout = XLSX.write(wb,  {bookType: 'xlsx', bookSST: true, type: 'binary'});
       function s2ab(s) {
         var buf = new ArrayBuffer(s.length);

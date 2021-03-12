@@ -3,6 +3,11 @@ Changelog
 
 * In case of major changes, an email should be sent to all users with the modifications.
 
+2.3.29 (2021-03-12)
+-------------------
+* Fix report 8 scale display in excel
+  [dianaboiangiu]
+
 2.3.28 (2021-03-09)
 -------------------
 * Add contact details for data provider networks
