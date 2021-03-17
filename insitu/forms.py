@@ -187,6 +187,7 @@ class RequirementForm(forms.ModelForm):
             "dissemination",
             "quality_control_procedure",
             "group",
+            "status",
             "owner",
         ]
 
@@ -302,6 +303,7 @@ class RequirementForm(forms.ModelForm):
             "dissemination": self.cleaned_data["dissemination"],
             "quality_control_procedure": self.cleaned_data["quality_control_procedure"],
             "group": self.cleaned_data["group"],
+            "status": self.cleaned_data["status"],
         }
 
         if not self.initial:
