@@ -314,13 +314,13 @@ class Requirement(OwnerHistoryModel, ValidationWorkflowModel, SoftDeleteModel):
     vertical_resolution = models.ForeignKey(
         Metric, on_delete=models.CASCADE, related_name="+"
     )
-    # status = models.ForeignKey(
-    #     pickmodels.Status,
-    #     null=True,
-    #     blank=True,
-    #     on_delete=models.CASCADE,
-    #     related_name="+",
-    # )
+    status = models.ForeignKey(
+        pickmodels.Status,
+        null=True,
+        blank=True,
+        on_delete=models.CASCADE,
+        related_name="+",
+    )
     created_by = models.ForeignKey(User)
 
     feedback = models.TextField(blank=True)

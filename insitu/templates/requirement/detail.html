@@ -84,6 +84,14 @@
 
       <tr class="row">
         <th class="col-md-4 col-sm-6">
+          Status
+          <a target="_blank" href="/help#status"><span class="glyphicon glyphicon-question-sign"></span></a>
+        </th>
+        <td class="col-md-8 col-sm-6">{{ requirement.status|default_if_none:"-" }}</td>
+      </tr>
+
+      <tr class="row">
+        <th class="col-md-4 col-sm-6">
           Uncertainty
           <a target="_blank" href="/help#metrics"><span class="glyphicon glyphicon-question-sign"></span></a>
         </th>
