@@ -3,6 +3,11 @@ Changelog
 
 * In case of major changes, an email should be sent to all users with the modifications.
 
+2.3.32 (2021-03-19)
+-------------------
+* Add Status field to Requirement
+  [dianaboiangiu]
+
 2.3.30 (2021-03-12)
 -------------------
 * Comment extra field in model
