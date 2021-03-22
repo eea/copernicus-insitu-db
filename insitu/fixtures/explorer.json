@@ -88,11 +88,11 @@
         "pk": 7,
         "fields": {
             "title": "Data providers per countries",
-            "sql": "SELECT dp.data_provider_id AS \"Data provider UID\",\r\n       dp.data_provider_name AS \"Data provider name\",\r\n       coalesce(dp.data_provider_type, '') AS \"Data provider Provider type\",\r\n       dp.data_provider_country AS \"Data provider country\",\r\n       coalesce(dp.data_provider_network_name, '') AS \"Data provider network name\",\r\n       coalesce(dp.data_provider_network_country, '') AS \"Data provider network country\",\r\n       coalesce(dpd.product_component, '') AS \"Product component\",\r\n       coalesce(dpd.product_copernicus_service, '') AS \"Product copernicus service\",\r\n       coalesce(cast(dpd.data_id as varchar), '') AS \"Data UID\",\r\n       coalesce(dpd.data_name, '') AS \"Data name\"\r\nFROM insitu_dataprovider_special_view dp\r\nLEFT OUTER JOIN insitu_dataprovider_product_direct_view dpd  ON dpd.dataproviderrelation_provider_id = dp.data_provider_id;",
+            "sql": "SELECT dp.data_provider_id AS \"Data provider UID\",\r\n       dp.data_provider_name AS \"Data provider name\",\r\n       coalesce(dp.data_provider_type, '') AS \"Data provider Provider type\",\r\n       dp.data_provider_country AS \"Data provider country\",\r\n       dp.data_provider_is_network AS \"Data provider Network flag\",\r\n       coalesce(dp.data_provider_network_name, '') AS \"Data provider network name\",\r\n       coalesce(dp.data_provider_network_country, '') AS \"Data provider network country\",\r\n       coalesce(dpd.product_component, '') AS \"Product component\",\r\n       coalesce(dpd.product_copernicus_service, '') AS \"Product copernicus service\",\r\n       coalesce(cast(dpd.data_id as varchar), '') AS \"Data UID\",\r\n       coalesce(dpd.data_name, '') AS \"Data name\",\r\n       coalesce(dpd.dataproviderrelation_role,'-') AS \"Data Provider role\"\r\nFROM insitu_dataprovider_special_view dp\r\nLEFT OUTER JOIN insitu_dataprovider_product_direct_view dpd  ON dpd.dataproviderrelation_provider_id = dp.data_provider_id;",
             "description": "Use cases:\r\n1.  List Data Providers for a given Country or Network\r\n2.  List all commercial Data Providers for a given Country or Network (filter by provider type)",
             "created_by_user": 1,
             "created_at": "2018-11-01T13:49:26.768Z",
-            "last_run_date": "2020-11-02T15:31:32.929Z",
+            "last_run_date": "2021-03-22T14:25:44.199Z",
             "snapshot": false,
             "connection": "default"
         }

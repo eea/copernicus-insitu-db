@@ -192,6 +192,7 @@ CREATE VIEW insitu_dataprovider_view as
 CREATE VIEW insitu_dataprovider_special_view as
     SELECT dp.id AS "data_provider_id",
            dp.name AS "data_provider_name",
+           dp.is_network AS "data_provider_is_network",
            pt.name AS "data_provider_type",
            c.name AS "data_provider_country",
            dpnetwork.name AS "data_provider_network_name",
@@ -213,6 +214,12 @@ CREATE VIEW insitu_dataprovider_product_direct_view as
            cs.name as "product_copernicus_service",
            d.id as "data_id",
            d.name as "data_name",
+              CASE
+                     WHEN dpr.role = 1 THEN 'Originator'
+                     WHEN dpr.role = 2 THEN 'Distributor'
+                     WHEN dpr.role IS NULL THEN '-'
+                     ELSE ''
+              END as "dataproviderrelation_role",
            dpr.provider_id as "dataproviderrelation_provider_id"
     FROM insitu_product p
     INNER JOIN insitu_component c ON c.id = p.component_id
