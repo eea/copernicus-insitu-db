@@ -3,6 +3,11 @@ Changelog
 
 * In case of major changes, an email should be sent to all users with the modifications.
 
+2.3.35 (2021-03-23)
+-------------------
+* Add help links for edmo and provider roles
+  [dianaboiangiu]
+
 2.3.34 (2021-03-23)
 -------------------
 * Updates to the Help section
