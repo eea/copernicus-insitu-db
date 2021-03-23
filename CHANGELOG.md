@@ -3,6 +3,11 @@ Changelog
 
 * In case of major changes, an email should be sent to all users with the modifications.
 
+2.3.34 (2021-03-23)
+-------------------
+* Updates to the Help section
+  [dianaboiangiu]
+
 2.3.33 (2021-03-22)
 -------------------
 * Add fields: is network, provider role to Report 7
