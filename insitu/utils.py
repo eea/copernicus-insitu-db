@@ -43,6 +43,11 @@ PICKLISTS_DESCRIPTION = {
         "The policy dictated terms associated with access to required data and "
         "any associated costs."
     ),
+    "ProviderType": (
+        "The following definitions mainly refer to the Primary Role of the "
+        "provider and the funding nature. It is recommended to only use "
+        "Commercial, Institutional and Research categories."
+    ),
     "ProductGroup": (
         "The product group attribute is used to assemble a group (or product "
         "family) of individual products under the same heading.This attribute "

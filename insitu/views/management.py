@@ -84,41 +84,55 @@ class HelpPage(ProtectedTemplateView):
         context["models"] = dict()
 
         PICKLISTS = [
+            models.Area,
             models.Barrier,
             models.ComplianceLevel,
-            models.Area,
             models.Criticality,
             models.Country,
             models.DataFormat,
             models.DataPolicy,
+            "data_provider_definitions",
+            "data_provider_roles",
             models.DataType,
             models.DefinitionLevel,
             models.Dissemination,
             models.EssentialVariable,
             models.InspireTheme,
+            "metrics",
             models.ProductGroup,
-            models.Status,
             models.ProviderType,
             models.Relevance,
             models.RequirementGroup,
             models.QualityControlProcedure,
+            models.Status,
             models.Timeliness,
             models.UpdateFrequency,
         ]
 
         for model in PICKLISTS:
-            data = {
-                "nice_name": model._meta.verbose_name,
-                "description": PICKLISTS_DESCRIPTION.get(model.__name__, None),
-                "objects": model.objects.order_by("pk"),
-                "fields": [
-                    field.name
-                    for field in model._meta.fields
-                    if field.name not in ("id", "sort_order")
-                ],
-            }
-            context["models"][model._meta.model_name] = data
-            context["email"] = settings.SUPPORT_EMAIL
+            if type(model) == str:
+                data = {
+                    "non_standard": True,
+                    "nice_name": model.replace("_", " ").capitalize(),
+                }
+                context["models"][model] = data
+            else:
+                sorting_field = "pk"
+                if "sort_order" in [field.name for field in model._meta.fields]:
+                    sorting_field = "sort_order"
+                data = {
+                    "nice_name": model._meta.verbose_name,
+                    "description": PICKLISTS_DESCRIPTION.get(model.__name__, None),
+                    "objects": model.objects.order_by(sorting_field),
+                    "fields": [
+                        field.name
+                        for field in model._meta.fields
+                        if field.name not in ("id", "sort_order")
+                    ],
+                    "non_standard": False,
+                }
+                context["models"][model._meta.model_name] = data
+        context["email"] = settings.SUPPORT_EMAIL
         return context
 
 
