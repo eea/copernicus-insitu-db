@@ -64,7 +64,7 @@ class Status(models.Model):
 
     class Meta:
         ordering = ["sort_order"]
-        verbose_name_plural = "product status"
+        verbose_name_plural = "status"
 
     def __str__(self):
         return self.name

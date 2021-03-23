@@ -281,7 +281,10 @@
         <thead>
         <tr>
           <th>Data provider</th>
-          <th>Role</th>
+          <th>
+            Role
+            <a target="_blank" href="/help#data_provider_roles"><span class="glyphicon glyphicon-question-sign"></span></a>
+          </th>
           <th class="no-sort">Is network</th>
           {% if data.state.name == 'draft' %}
             {% if request.user == data.created_by or request.user.is_superuser or request.user in data.created_by.team.teammates.all %}

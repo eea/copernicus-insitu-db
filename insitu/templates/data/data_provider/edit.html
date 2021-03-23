@@ -32,7 +32,7 @@
 
     {% bootstrap_field form.provider required_css_class='required' %}
 
-    {% bootstrap_field form.role required_css_class='required' %}
+    {% bootstrap_field form.role addon_after='<a target="_blank" href="/help#data_provider_roles"><span class="glyphicon glyphicon-question-sign"></span></a>' required_css_class='required' %}
 
     <input type="hidden" name="data" value="{{ rel.data.pk }}" />
     <input class="btn btn-primary" type="submit" value="Save" />
