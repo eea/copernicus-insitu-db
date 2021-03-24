@@ -39,6 +39,8 @@
         {% include "bits/help_data_provider_roles.html" %}
       {% elif model == 'metrics' %}
         {% include "bits/help_metrics.html" %}
+      {% elif model == 'state' %}
+        {% include "bits/help_state.html" %}
       {% endif %}
     {% else %}
       <div class="row" id="{{ model }}">

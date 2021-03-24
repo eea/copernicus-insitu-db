@@ -1,0 +1,62 @@
+
+<div class="row" id="state">
+  <h1>State</h1>
+  <h4>
+    <strong>
+      Requirement, Data and Data Provider are all passing through a validation workflow.
+      The state field shows the user in which validation stage the object is in.
+    </strong>
+  </h4>
+  <table class="table table-bordered">
+    <thead>
+      <tr>
+        <td><strong>name</strong></td>
+        <td><strong>description</strong></td>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Draft</strong></td>
+        <td>
+          This is the state that the object has on its creation. In this
+          state the object and its relations are editable. The owner or
+          one of their teammates can mark as ready the object.
+        </td>
+      </tr>
+      <tr>
+        <td><strong>Ready for validation</strong></td>
+        <td>
+          In this state the object and its relations cannot be edited.
+          A user different from the owner or their teammates can either
+          mark as valid the object and end the workflow or request changes
+          if that user considers that there is missing information.
+        </td>
+      </tr>
+      <tr>
+        <td><strong>Changes requested</strong></td>
+        <td>
+          In this state the object and its relations cannot be edited.
+          The owner or one of their teammates can get the object back
+          to the draft state. When an object’s state is changed into
+          “changes requested”, the user requesting the changes can
+          fill a feedback field in which they inform the owner of the
+          object about the changes that should be made. The owner
+          receives an e-mail that their object has requests for changes,
+          the user that made those requests and what changes the user
+          requested (from the feedback field). The users in the application
+          can see this feedback when the object is in state “Changes requested” or “Draft”
+          on the detail page of the object.
+        </td>
+      </tr>
+      <tr>
+        <td><strong>Valid</strong></td>
+        <td>
+          In this state the object and its relations cannot be edited.
+          The workflow has ended and the object cannot be modified anymore.
+          The object can be placed back in the “Draft” state if the users
+          agree that more changes should be made to it.
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>

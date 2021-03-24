@@ -104,6 +104,7 @@ class HelpPage(ProtectedTemplateView):
             models.Relevance,
             models.RequirementGroup,
             models.QualityControlProcedure,
+            "state",
             models.Status,
             models.Timeliness,
             models.UpdateFrequency,

@@ -136,7 +136,10 @@
           {{ provider.details.first.provider_type }}</td>
       </tr>
       <tr class="row">
-        <th class="col-md-4 col-sm-6">State</th>
+        <th class="col-md-4 col-sm-6">
+          State
+          <a target="_blank" href="/help#state"><span class="glyphicon glyphicon-question-sign"></span></a>
+        </th>
         <td class="col-md-8 col-sm-6">
           {{ provider.state.title }}
           {% if not user|has_group:READ_ONLY_GROUP %}
