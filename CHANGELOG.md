@@ -3,6 +3,12 @@ Changelog
 
 * In case of major changes, an email should be sent to all users with the modifications.
 
+2.4.1 (2021-04-01)
+------------------
+* Add clear feedback button option
+* Add Changelog table for better handling the releases
+  [dianaboiangiu]
+
 2.4.0 (2021-03-30)
 ------------------
 * Add validation states description in Help page
