@@ -18,10 +18,12 @@ class EntrustedEntityAdmin(admin.ModelAdmin):
     search_fields = ["acronym", "name"]
     list_display = ("acronym", "name", "website")
 
+
 @admin.register(models.ChangeLog)
 class ChangeLogAdmin(admin.ModelAdmin):
     search_fields = ["version", "current"]
     list_display = ("version", "description", "created_at", "current")
+
 
 @admin.register(models.Component)
 class ComponentAdmin(admin.ModelAdmin):

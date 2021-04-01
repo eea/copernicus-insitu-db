@@ -369,6 +369,4 @@ class DataClearFeedback(LoggingProtectedCreateView):
         data = self.get_object(self.get_queryset())
         data.feedback = ""
         data.save()
-        return HttpResponseRedirect(
-            reverse("data:detail", kwargs={"pk": data.pk})
-        )
+        return HttpResponseRedirect(reverse("data:detail", kwargs={"pk": data.pk}))

@@ -368,6 +368,7 @@ class DataProviderTransition(
             pass
         raise Http404()
 
+
 class DataProviderClearFeedback(LoggingProtectedCreateView):
     model = models.DataProvider
     context_object_name = "provider"

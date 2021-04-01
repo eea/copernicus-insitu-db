@@ -157,6 +157,7 @@ class OwnerHistoryModel(models.Model):
         )
         self.save()
 
+
 class ChangeLog(models.Model):
     version = models.CharField(max_length=10, null=True)
     description = models.TextField(null=True)
@@ -166,6 +167,7 @@ class ChangeLog(models.Model):
 
     def __str__(self):
         return self.version
+
 
 class ValidationWorkflowModel(WorkflowEnabled, models.Model):
     state = StateField(ValidationWorkflow)

@@ -8,19 +8,27 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('insitu', '0037_requirement_status'),
+        ("insitu", "0037_requirement_status"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='ChangeLog',
+            name="ChangeLog",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('version', models.CharField(max_length=10, null=True)),
-                ('description', models.TextField(null=True)),
-                ('current', models.BooleanField(default=False)),
-                ('created_at', models.DateField(null=True)),
-                ('updated_at', models.DateField(auto_now=True, null=True)),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("version", models.CharField(max_length=10, null=True)),
+                ("description", models.TextField(null=True)),
+                ("current", models.BooleanField(default=False)),
+                ("created_at", models.DateField(null=True)),
+                ("updated_at", models.DateField(auto_now=True, null=True)),
             ],
         ),
     ]

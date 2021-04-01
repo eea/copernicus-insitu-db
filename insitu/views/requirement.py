@@ -293,6 +293,7 @@ class RequirementTransition(
             pass
         raise Http404()
 
+
 class RequirementClearFeedback(LoggingProtectedCreateView):
     model = models.Requirement
     context_object_name = "requirement"

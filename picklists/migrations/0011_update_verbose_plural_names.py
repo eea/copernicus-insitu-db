@@ -8,16 +8,19 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('picklists', '0010_auto_20200305_1553'),
+        ("picklists", "0010_auto_20200305_1553"),
     ]
 
     operations = [
         migrations.AlterModelOptions(
-            name='status',
-            options={'ordering': ['sort_order'], 'verbose_name_plural': 'status'},
+            name="status",
+            options={"ordering": ["sort_order"], "verbose_name_plural": "status"},
         ),
         migrations.AlterModelOptions(
-            name='updatefrequency',
-            options={'ordering': ['sort_order'], 'verbose_name_plural': 'update frequency'},
+            name="updatefrequency",
+            options={
+                "ordering": ["sort_order"],
+                "verbose_name_plural": "update frequency",
+            },
         ),
     ]
