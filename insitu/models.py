@@ -157,6 +157,15 @@ class OwnerHistoryModel(models.Model):
         )
         self.save()
 
+class ChangeLog(models.Model):
+    version = models.CharField(max_length=10, null=True)
+    description = models.TextField(null=True)
+    current = models.BooleanField(default=False)
+    created_at = models.DateField(null=True)
+    updated_at = models.DateField(auto_now=True, null=True)
+
+    def __str__(self):
+        return self.version
 
 class ValidationWorkflowModel(WorkflowEnabled, models.Model):
     state = StateField(ValidationWorkflow)

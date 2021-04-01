@@ -21,7 +21,7 @@ from insitu.views.protected import (
 from insitu.views.protected.views import ProtectedTemplateView
 from insitu.utils import PICKLISTS_DESCRIPTION
 from picklists import models
-from insitu.models import Product, Requirement, Data, DataProvider
+from insitu.models import Product, Requirement, Data, DataProvider, ChangeLog
 
 
 class Manager(ProtectedTemplateView):
@@ -180,6 +180,7 @@ class AboutView(ProtectedTemplateView):
             "logged_users": Session.objects.filter(
                 expire_date__gte=timezone.now()
             ).count(),
+            "change_logs": ChangeLog.objects.all().order_by("-created_at"),
             "registered_users": User.objects.all().count(),
         }
 

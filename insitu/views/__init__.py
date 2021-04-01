@@ -12,7 +12,7 @@ from .crash_me import *
 from .user_records import *
 
 from django.views.generic import TemplateView
-from insitu.models import UserLog
+from insitu.models import UserLog, ChangeLog
 
 
 class HomeView(TemplateView):
@@ -21,5 +21,6 @@ class HomeView(TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         user_log = UserLog.objects.filter().order_by("-date")[:5]
+        context["change_log_latest"] = ChangeLog.objects.filter(current=True).first()
         context["user_log"] = user_log
         return context

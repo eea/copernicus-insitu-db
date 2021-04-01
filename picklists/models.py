@@ -232,7 +232,7 @@ class UpdateFrequency(models.Model):
 
     class Meta:
         ordering = ["sort_order"]
-        verbose_name_plural = "update_frequency"
+        verbose_name_plural = "update frequency"
 
     def __str__(self):
         return self.name

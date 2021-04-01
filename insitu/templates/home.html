@@ -37,12 +37,12 @@
         <div class="latest-information">
           <div>
             <p class="latest-changes-text">Latest changes</p>
-            <h4 class="font-weight-bold">2.4.0 (2021-03-30)</h4>
-            <ul>
-              <li>Add validation states description in Help pageles</li>
-              <li>Add information about the filtering done on the objects in Reports</li>
-            </ul>
-
+            {% if change_log_latest %}
+              <h4 class="font-weight-bold">{{ change_log_latest.version }} ( {{change_log_latest.created_at}} )</h4>
+              <ul>
+                {{ change_log_latest.description|safe }}
+              </ul>
+            {% endif %}
             <p><strong>The UserManual is available <a href="{% url 'user_manual' %}">here.</strong></a></p>
             {% if DEBUG %}
               <p class="latest-changes-text"><strong>This is a DEMO application</strong></p>
