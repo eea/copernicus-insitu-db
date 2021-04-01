@@ -356,3 +356,19 @@ class DataTransition(ChangesRequestedMailMixin, LoggingTransitionProtectedDetail
         except ForbiddenTransition:
             pass
         raise Http404()
+
+
+class DataClearFeedback(LoggingProtectedCreateView):
+    model = models.Data
+    context_object_name = "data"
+    permission_classes = (IsOwnerUser, IsDraftObject, IsNotReadOnlyUser)
+    permission_denied_redirect = reverse_lazy("data:list")
+    target_type = "data"
+
+    def post(self, request, *args, **kwargs):
+        data = self.get_object(self.get_queryset())
+        data.feedback = ""
+        data.save()
+        return HttpResponseRedirect(
+            reverse("data:detail", kwargs={"pk": data.pk})
+        )

@@ -57,6 +57,11 @@ requirement_patterns = [
         r"^(?P<requirement_pk>[0-9]+)/data/",
         include(data_requirement_patterns, namespace="data"),
     ),
+    url(
+        r"^(?P<pk>[0-9]+)/clear_feedback/$",
+        views.RequirementClearFeedback.as_view(),
+        name="clear_feedback",
+    ),
 ]
 
 data_data_provider_patterns = [
@@ -85,6 +90,11 @@ data_patterns = [
         r"^(?P<pk>[0-9]+)/transition/(?P<source>[a-z]+)-to-(?P<target>[a-z]+)/$",
         views.DataTransition.as_view(),
         name="transition",
+    ),
+    url(
+        r"^(?P<pk>[0-9]+)/clear_feedback/$",
+        views.DataClearFeedback.as_view(),
+        name="clear_feedback",
     ),
 ]
 
@@ -123,6 +133,11 @@ provider_patterns = [
         r"^(?P<pk>[0-9]+)/transition/(?P<source>[a-z]+)-to-(?P<target>[a-z]+)/$",
         views.DataProviderTransition.as_view(),
         name="transition",
+    ),
+    url(
+        r"^(?P<pk>[0-9]+)/clear_feedback/$",
+        views.DataProviderClearFeedback.as_view(),
+        name="clear_feedback",
     ),
 ]
 

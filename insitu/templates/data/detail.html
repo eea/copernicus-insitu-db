@@ -241,6 +241,14 @@
                   <h5>Feedback:</h5>
                   {{ data.feedback|linebreaksbr }}
                 </div>
+                {% if data.created_by == request.user or request.user in data.created_by.team.teammates.all %}
+                  <form method="POST" action="{% url 'data:clear_feedback' data.pk %}">
+                    {% csrf_token %}
+                    <button class="btn btn-primary" type="submit">
+                      Clear feedback text
+                    </button>
+                  </form>
+                {% endif %}
               {% endif %}
             {% endif %}
           {% endif %}

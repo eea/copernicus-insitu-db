@@ -367,3 +367,18 @@ class DataProviderTransition(
         except ForbiddenTransition:
             pass
         raise Http404()
+
+class DataProviderClearFeedback(LoggingProtectedCreateView):
+    model = models.DataProvider
+    context_object_name = "provider"
+    permission_classes = (IsOwnerUser, IsDraftObject, IsNotReadOnlyUser)
+    permission_denied_redirect = reverse_lazy("provider:list")
+    target_type = "provider"
+
+    def post(self, request, *args, **kwargs):
+        provider = self.get_object(self.get_queryset())
+        provider.feedback = ""
+        provider.save()
+        return HttpResponseRedirect(
+            reverse("provider:detail", kwargs={"pk": provider.pk})
+        )

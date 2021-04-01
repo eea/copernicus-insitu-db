@@ -3,6 +3,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.core.urlresolvers import reverse
 from django.http import Http404
 from django.http.response import HttpResponseRedirect
+from django.urls import reverse_lazy
 from xworkflows import ForbiddenTransition
 
 from insitu import documents
@@ -291,3 +292,18 @@ class RequirementTransition(
         except ForbiddenTransition:
             pass
         raise Http404()
+
+class RequirementClearFeedback(LoggingProtectedCreateView):
+    model = models.Requirement
+    context_object_name = "requirement"
+    permission_classes = (IsOwnerUser, IsDraftObject, IsNotReadOnlyUser)
+    permission_denied_redirect = reverse_lazy("requirement:list")
+    target_type = "requirement"
+
+    def post(self, request, *args, **kwargs):
+        requirement = self.get_object(self.get_queryset())
+        requirement.feedback = ""
+        requirement.save()
+        return HttpResponseRedirect(
+            reverse("requirement:detail", kwargs={"pk": requirement.pk})
+        )

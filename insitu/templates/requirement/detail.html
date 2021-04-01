@@ -203,6 +203,14 @@
                   <h5>Feedback:</h5>
                     {{ requirement.feedback|linebreaksbr }}
                 </div>
+                {% if requirement.created_by == request.user or request.user in requirement.created_by.team.teammates.all %}
+                  <form method="POST" action="{% url 'requirement:clear_feedback' requirement.pk %}">
+                    {% csrf_token %}
+                    <button class="btn btn-primary" type="submit">
+                      Clear feedback text
+                    </button>
+                  </form>
+                {% endif %}
               {% endif %}
             {% endif %}
           {% endif %}
