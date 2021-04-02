@@ -20,7 +20,7 @@
   <h3><b>&emsp;Incidents</b></h3>
 
   <br>
-  {% if issues %}
+  {% if issues and request.user.is_superuser %}
     <table class="table table-striped">
       <thead>
         <tr>

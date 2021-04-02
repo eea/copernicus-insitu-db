@@ -263,11 +263,7 @@
           <th>Criticality</th>
           <th class="no-sort">Barriers</th>
           <th class="no-sort">Note</th>
-          {% if requirement.state.name == 'draft' %}
-            {% if requirement.created_by == request.user or request.user in requirement.created_by.team.teammates.all or request.user.is_superuser %}
-              <th class="no-sort"></th>
-            {% endif %}
-          {% endif %}
+          <th class="no-sort"></th>
         </tr>
         </thead>
         <tbody>
@@ -282,14 +278,18 @@
             <td>{{ rel.criticality }}</td>
             <td>
               {% for barrier in rel.barriers.all %}
-                <div>{{ barrier }}</div>
+                {% if forloop.last %}
+                  <span>{{ barrier }}</span>
+                {% else %}
+                  <span>{{ barrier }},</span>
+                {% endif %}
               {% endfor %}
             </td>
             <td>{{ rel.note }}</td>
-            {% if not user|has_group:READ_ONLY_GROUP %}
-              {% if requirement.state.name == 'draft' %}
-                {% if rel.created_by == request.user  or request.user == requirement.created_by or request.user in rel.created_by.team.teammates.all or request.user.is_superuser %}
-                  <td class="row">
+            <td class="row">
+              {% if not user|has_group:READ_ONLY_GROUP %}
+                {% if requirement.state.name == 'draft' %}
+                  {% if rel.created_by == request.user  or request.user == requirement.created_by or request.user in rel.created_by.team.teammates.all or request.user.is_superuser %}
                     <a href="{% url 'requirement:product:edit' requirement_pk=requirement.pk pk=rel.pk %}"
                        class="col-sm-6">
                       <span class="glyphicon glyphicon-edit"></span>
@@ -298,10 +298,10 @@
                        class="col-sm-6">
                       <span class="glyphicon glyphicon-trash"></span>
                     </a>
-                  </td>
+                  {% endif %}
                 {% endif %}
               {% endif %}
-            {% endif %}
+            </td>
           </tr>
         {% endfor %}
         </tbody>
@@ -333,11 +333,7 @@
           <th class="no-sort">Note</th>
           <th class="no-sort">Information costs</th>
           <th class="no-sort">Handling costs</th>
-          {% if requirement.state.name == 'draft' %}
-            {% if requirement.created_by == request.user or request.user in requirement.created_by.team.teammates.all or request.user.is_superuser %}
-              <th class="no-sort"></th>
-            {% endif %}
-          {% endif %}
+          <th class="no-sort"></th>
         </tr>
         </thead>
         <tbody>
@@ -362,20 +358,20 @@
                 <span class='glyphicon glyphicon-remove-circle text-danger'></span>
               {% endif %}
             </td>
-            {% if not user|has_group:READ_ONLY_GROUP %}
-              {% if requirement.state.name == 'draft' %}
-                {% if rel.created_by == request.user or request.user == requirement.created_by or request.user in rel.created_by.team.teammates.all or request.user.is_superuser %}
-                  <td class="row">
+            <td class="row">
+              {% if not user|has_group:READ_ONLY_GROUP %}
+                {% if requirement.state.name == 'draft' %}
+                  {% if request.user == rel.created_by or request.user == requirement.created_by or request.user in rel.created_by.team.teammates.all or request.user.is_superuser %}
                     <a href="{% url 'requirement:data:edit' requirement_pk=requirement.pk pk=rel.pk %}" class="col-sm-6">
                       <span class="glyphicon glyphicon-edit"></span>
                     </a>
                     <a href="{% url 'requirement:data:delete' requirement_pk=requirement.pk pk=rel.pk %}" class="col-sm-6">
                       <span class="glyphicon glyphicon-trash"></span>
                     </a>
-                  </td>
+                  {% endif %}
                 {% endif %}
               {% endif %}
-            {% endif %}
+            </td>
           </tr>
         {% endfor %}
         </tbody>

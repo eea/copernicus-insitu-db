@@ -249,6 +249,7 @@ class RequirementTransition(
         objects = [
             {"obj": item, "type": item.__class__.__name__}
             for item in self.object.get_related_objects()
+            if item.state != target
         ]
         context.update(
             {

@@ -230,10 +230,7 @@ class ValidationWorkflowModel(WorkflowEnabled, models.Model):
         """
         Check if the user is the creator
         """
-        return (
-            self.requesting_user == self.created_by
-            or self.requesting_user not in self.created_by.team.teammates.all()
-        )
+        return True
 
 
 class Team(models.Model):
@@ -366,36 +363,48 @@ class Requirement(OwnerHistoryModel, ValidationWorkflowModel, SoftDeleteModel):
     @transition()
     def mark_as_ready(self):
         for obj in self.get_related_objects():
+            if obj.state == ValidationWorkflow.states['ready']:
+                continue
             obj.requesting_user = self.requesting_user
             obj.mark_as_ready()
 
     @transition()
     def validate(self):
         for obj in self.get_related_objects():
+            if obj.state == ValidationWorkflow.states['valid']:
+                continue
             obj.requesting_user = self.requesting_user
             obj.validate()
 
     @transition()
     def cancel(self):
         for obj in self.get_related_objects():
+            if obj.state == ValidationWorkflow.states['draft']:
+                continue
             obj.requesting_user = self.requesting_user
             obj.cancel()
 
     @transition()
     def request_changes(self):
         for obj in self.get_related_objects():
+            if obj.state == ValidationWorkflow.states['changes']:
+                continue
             obj.requesting_user = self.requesting_user
             obj.request_changes()
 
     @transition()
     def revalidate(self):
         for obj in self.get_related_objects():
+            if obj.state == ValidationWorkflow.states['draft']:
+                continue
             obj.requesting_user = self.requesting_user
             obj.revalidate()
 
     @transition()
     def make_changes(self):
         for obj in self.get_related_objects():
+            if obj.state == ValidationWorkflow.states['draft']:
+                continue
             obj.requesting_user = self.requesting_user
             obj.make_changes()
 
@@ -513,36 +522,48 @@ class DataProvider(OwnerHistoryModel, ValidationWorkflowModel, SoftDeleteModel):
     @transition()
     def mark_as_ready(self):
         for obj in self.get_related_objects():
+            if obj.state == ValidationWorkflow.states['ready']:
+                continue
             obj.requesting_user = self.requesting_user
             obj.mark_as_ready()
 
     @transition()
     def validate(self):
         for obj in self.get_related_objects():
+            if obj.state == ValidationWorkflow.states['valid']:
+                continue
             obj.requesting_user = self.requesting_user
             obj.validate()
 
     @transition()
     def cancel(self):
         for obj in self.get_related_objects():
+            if obj.state == ValidationWorkflow.states['draft']:
+                continue
             obj.requesting_user = self.requesting_user
             obj.cancel()
 
     @transition()
     def request_changes(self):
         for obj in self.get_related_objects():
+            if obj.state == ValidationWorkflow.states['changes']:
+                continue
             obj.requesting_user = self.requesting_user
             obj.request_changes()
 
     @transition()
     def revalidate(self):
         for obj in self.get_related_objects():
+            if obj.state == ValidationWorkflow.states['draft']:
+                continue
             obj.requesting_user = self.requesting_user
             obj.revalidate()
 
     @transition()
     def make_changes(self):
         for obj in self.get_related_objects():
+            if obj.state == ValidationWorkflow.states['draft']:
+                continue
             obj.requesting_user = self.requesting_user
             obj.make_changes()
 
@@ -691,36 +712,48 @@ class Data(OwnerHistoryModel, ValidationWorkflowModel, SoftDeleteModel):
     @transition()
     def mark_as_ready(self):
         for obj in self.get_related_objects():
+            if obj.state == ValidationWorkflow.states['ready']:
+                continue
             obj.requesting_user = self.requesting_user
             obj.mark_as_ready()
 
     @transition()
     def validate(self):
         for obj in self.get_related_objects():
+            if obj.state == ValidationWorkflow.states['valid']:
+                continue
             obj.requesting_user = self.requesting_user
             obj.validate()
 
     @transition()
     def cancel(self):
         for obj in self.get_related_objects():
+            if obj.state == ValidationWorkflow.states['draft']:
+                continue
             obj.requesting_user = self.requesting_user
             obj.cancel()
 
     @transition()
     def request_changes(self):
         for obj in self.get_related_objects():
+            if obj.state == ValidationWorkflow.states['changes']:
+                continue
             obj.requesting_user = self.requesting_user
             obj.request_changes()
 
     @transition()
     def revalidate(self):
         for obj in self.get_related_objects():
+            if obj.state == ValidationWorkflow.states['draft']:
+                continue
             obj.requesting_user = self.requesting_user
             obj.revalidate()
 
     @transition()
     def make_changes(self):
         for obj in self.get_related_objects():
+            if obj.state == ValidationWorkflow.states['draft']:
+                continue
             obj.requesting_user = self.requesting_user
             obj.make_changes()
 

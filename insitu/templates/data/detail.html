@@ -297,11 +297,7 @@
             <a target="_blank" href="/help#data_provider_roles"><span class="glyphicon glyphicon-question-sign"></span></a>
           </th>
           <th class="no-sort">Is network</th>
-          {% if data.state.name == 'draft' %}
-            {% if request.user == data.created_by or request.user.is_superuser or request.user in data.created_by.team.teammates.all %}
-              <th class="no-sort" width="10%"></th>
-            {% endif %}
-          {% endif %}
+          <th class="no-sort" width="10%"></th>
         </tr>
         </thead>
         <tbody>
@@ -319,20 +315,20 @@
                 <span class='glyphicon glyphicon-remove-circle text-danger'></span>
               {% endif %}
             </td>
-            {% if not user|has_group:READ_ONLY_GROUP %}
-              {% if rel.state.name == 'draft' %}
-                {% if request.user == rel.created_by or request.user == data.created_by or request.user.is_superuser or request.user in rel.created_by.team.teammates.all %}
-                  <td class="row">
+            <td class="row">
+              {% if not user|has_group:READ_ONLY_GROUP %}
+                {% if rel.state.name == 'draft' %}
+                  {% if request.user == rel.created_by or request.user == data.created_by or request.user.is_superuser or request.user in rel.created_by.team.teammates.all %}
                     <a href="{% url 'data:provider:edit' group_pk=data.pk pk=rel.pk %}" class="col-sm-6">
                       <span class="glyphicon glyphicon-edit"></span>
                     </a>
                     <a href="{% url 'data:provider:delete' group_pk=data.pk pk=rel.pk %}" class="col-sm-6">
                       <span class="glyphicon glyphicon-trash"></span>
                     </a>
-                  </td>
+                  {% endif %}
                 {% endif %}
               {% endif %}
-            {% endif %}
+            </td>
           </tr>
         {% endfor %}
         </tbody>
