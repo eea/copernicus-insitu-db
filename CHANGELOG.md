@@ -3,6 +3,11 @@ Changelog
 
 * In case of major changes, an email should be sent to all users with the modifications.
 
+2.4.2 (2021-04-02)
+------------------
+* Fix sentry errors
+  [dianaboiangiu]
+
 2.4.1 (2021-04-01)
 ------------------
 * Add clear feedback button option
