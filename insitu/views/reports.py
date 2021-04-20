@@ -9,7 +9,6 @@ import string
 import xlsxwriter
 from io import BytesIO
 
-from django.db.models import Q
 from django.template.loader import get_template
 from openpyxl import load_workbook
 from openpyxl.writer.excel import save_virtual_workbook
@@ -277,9 +276,9 @@ class ReportsStandardReportView(ProtectedTemplateView, ReportExcelMixin, PDFExce
         components = self.request.POST.getlist("component")
         self.services = CopernicusService.objects.filter(id__in=services)
         self.components = Component.objects.filter(id__in=components)
-        self.products = Product.objects.filter(
-            component_id__in=components
-        ).order_by("name")
+        self.products = Product.objects.filter(component_id__in=components).order_by(
+            "name"
+        )
         if request.POST["action"] == "Generate PDF":
             return self.generate_pdf()
         elif request.POST["action"] == "Generate Excel":
