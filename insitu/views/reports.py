@@ -277,15 +277,9 @@ class ReportsStandardReportView(ProtectedTemplateView, ReportExcelMixin, PDFExce
         components = self.request.POST.getlist("component")
         self.services = CopernicusService.objects.filter(id__in=services)
         self.components = Component.objects.filter(id__in=components)
-        if "3" in components:
-            components.remove("3")
-            self.products = Product.objects.filter(
-                Q(component_id__in=components) | Q(id=415) | Q(id=416)
-            ).order_by("name")
-        else:
-            self.products = Product.objects.filter(
-                component_id__in=components
-            ).order_by("name")
+        self.products = Product.objects.filter(
+            component_id__in=components
+        ).order_by("name")
         if request.POST["action"] == "Generate PDF":
             return self.generate_pdf()
         elif request.POST["action"] == "Generate Excel":
