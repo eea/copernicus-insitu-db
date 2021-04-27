@@ -123,3 +123,6 @@ After the documentation has changed, a new PDF file should be generated and it s
         cd docs/
         make latexpdf
         cp _build/latex/CIS2.pdf ../insitu/static/docs/CIS2.pdf
+        
+        
+        
