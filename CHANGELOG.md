@@ -3,6 +3,11 @@ Changelog
 
 * In case of major changes, an email should be sent to all users with the modifications.
 
+2.4.4 (2021-04-27)
+------------------
+* Add object level permissions for user
+  [dianaboiangiu]
+
 2.4.3 (2021-04-20)
 ------------------
 * Consider all Global Land's products in Standard Report
