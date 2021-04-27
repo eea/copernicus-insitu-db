@@ -3,6 +3,7 @@ pipeline {
 
   environment {
         GIT_NAME = "copernicus-insitu-db"
+        SONARQUBE_TAGS = "cis2.eea.europa.eu"
     }
 
   stages {
