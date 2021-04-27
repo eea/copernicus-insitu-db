@@ -8,14 +8,6 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         requirements = Requirement.objects.all()
-        metrics = [
-            "uncertainty",
-            "update_frequency",
-            "timeliness",
-            "scale",
-            "horizontal_resolution",
-            "vertical_resolution",
-        ]
 
         for requirement in requirements:
             for product_req in requirement.product_requirements.all():

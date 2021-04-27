@@ -222,7 +222,7 @@ class ValidationWorkflowModel(WorkflowEnabled, models.Model):
         return (
             self.requesting_user != self.created_by
             and self.requesting_user not in self.created_by.team.teammates.all()
-            and self.has_user_perm(self.requesting_user) != True
+            and self.has_user_perm(self.requesting_user) is not True
         )
 
     @transition_check(
