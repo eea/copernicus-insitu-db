@@ -59,7 +59,18 @@ pipeline {
     stage('Code') {
       steps {
         parallel(
+          
+          "JS Lint": {
+            node(label: 'docker') {
+              sh '''docker run -i --rm --name="$BUILD_TAG-jslint" -e GIT_SRC="https://github.com/eea/$GIT_NAME.git" -e GIT_NAME="$GIT_NAME" -e GIT_BRANCH="$BRANCH_NAME" -e GIT_CHANGE_ID="$CHANGE_ID" eeacms/jslint4java'''
+            }
+          },
 
+          "Flake8": {
+            node(label: 'docker') {
+              sh '''docker run -i --rm --name="$BUILD_TAG-flake8" -e GIT_SRC="https://github.com/eea/$GIT_NAME.git" -e GIT_NAME="$GIT_NAME" -e GIT_BRANCH="$BRANCH_NAME" -e GIT_CHANGE_ID="$CHANGE_ID" eeacms/flake8'''
+            }
+          },
           "ZPT Lint": {
             node(label: 'docker') {
               sh '''docker run -i --rm --name="$BUILD_TAG-zptlint" -e GIT_BRANCH="$BRANCH_NAME" -e ADDONS="$GIT_NAME" -e DEVELOP="src/$GIT_NAME" -e GIT_CHANGE_ID="$CHANGE_ID" eeacms/plone-test:4 zptlint'''
