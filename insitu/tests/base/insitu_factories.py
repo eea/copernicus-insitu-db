@@ -71,18 +71,17 @@ class RequirementFactory(DjangoModelFactory):
     @staticmethod
     def create_metrics(creator, state="draft"):
         data = {
-            "uncertainty": MetricFactory(created_by=creator, state=state),
-            "update_frequency": MetricFactory(created_by=creator, state=state),
-            "timeliness": MetricFactory(created_by=creator, state=state),
+            "uncertainty": MetricFactory(created_by=creator),
+            "update_frequency": MetricFactory(created_by=creator),
+            "timeliness": MetricFactory(created_by=creator),
             "scale": MetricFactory(
                 created_by=creator,
-                state=state,
                 threshold=40,
                 breakthrough=20,
                 goal=10,
             ),
-            "horizontal_resolution": MetricFactory(created_by=creator, state=state),
-            "vertical_resolution": MetricFactory(created_by=creator, state=state),
+            "horizontal_resolution": MetricFactory(created_by=creator),
+            "vertical_resolution": MetricFactory(created_by=creator),
         }
         return data
 

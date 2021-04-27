@@ -4,6 +4,8 @@ from django.contrib import admin
 from django.urls import reverse
 from django.utils.safestring import mark_safe
 
+from guardian.admin import GuardedModelAdmin
+
 from insitu import models
 
 
@@ -33,8 +35,10 @@ class ComponentAdmin(admin.ModelAdmin):
 
 
 @admin.register(models.Requirement)
-class RequirementAdmin(admin.ModelAdmin):
+class RequirementAdmin(GuardedModelAdmin):
     readonly_fields = ("components",)
+    search_fields = ["name"]
+    list_display = ("id", "name")
 
     def components(self, obj):
         links = [
@@ -47,6 +51,18 @@ class RequirementAdmin(admin.ModelAdmin):
         return mark_safe(", ".join(links))
 
     components.short_description = "components"
+
+
+@admin.register(models.Data)
+class DataAdmin(GuardedModelAdmin):
+    search_fields = ["name"]
+    list_display = ("id", "name")
+
+
+@admin.register(models.DataProvider)
+class DataProviderAdmin(GuardedModelAdmin):
+    search_fields = ["name"]
+    list_display = ("id", "name")
 
 
 class BaseDisplayDeleteAdminMixin:
@@ -77,7 +93,5 @@ class DataProviderRelationAdmin(BaseDisplayDeleteAdminMixin, admin.ModelAdmin):
 
 
 admin.site.register(models.Product)
-admin.site.register(models.DataProvider)
 admin.site.register(models.DataProviderDetails)
-admin.site.register(models.Data)
 admin.site.register(models.Metric)

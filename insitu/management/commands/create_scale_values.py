@@ -11,7 +11,6 @@ class Command(BaseCommand):
         for requirement in requirements:
             if requirement.scale is not None:
                 scale = requirement.scale
-                scale.state = requirement.state
                 scale.save()
             else:
                 metric = Metric.objects.create(
@@ -19,7 +18,6 @@ class Command(BaseCommand):
                     breakthrough="",
                     goal="",
                     created_by=requirement.created_by,
-                    state=requirement.state,
                 )
                 requirement.scale = metric
                 requirement.save()

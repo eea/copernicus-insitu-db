@@ -54,10 +54,14 @@ class IsProductEditorUserOrIsSuperUser(IsAuthenticated):
 
 
 class IsOwnerUser(IsAuthenticated):
+    def user_has_permission_over_object_or_related_objects(self, request, view, obj):
+        pass
+
     def has_object_permission(self, request, view, obj):
         return super().has_object_permission(request, view, obj) and (
             obj.created_by == request.user
             or request.user.is_superuser
+            or obj.has_user_perm(request.user)
             or request.user in obj.created_by.team.teammates.all()
         )
 

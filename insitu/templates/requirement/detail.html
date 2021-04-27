@@ -15,6 +15,7 @@
 {% endblock %}
 
 {% block content %}
+  {% has_user_perm requirement user as user_perm %}
   <div class="row">
     <span class="margin-left-btn">
       <a class="btn btn-default btn-sm" href="{% url 'requirement:list' %}">Back to requirement list</a>
@@ -24,7 +25,7 @@
 
       {% if not user|has_group:READ_ONLY_GROUP %}
         {% if requirement.state.name == 'draft' %}
-          {% if request.user == requirement.created_by or request.user.is_superuser or request.user in requirement.created_by.team.teammates.all %}
+          {% if request.user == requirement.created_by or request.user.is_superuser or request.user in requirement.created_by.team.teammates.all or user_perm %}
             <span class="pull-right">
               <a class="btn btn-primary pull-right"
                  href="{% url 'requirement:delete' requirement.pk %}">Delete requirement</a>
@@ -155,7 +156,7 @@
           {% if not user|has_group:READ_ONLY_GROUP %}
             <div class="pull-right">
               {% if requirement.state.name == 'draft' %}
-                {% if requirement.created_by == request.user or request.user in requirement.created_by.team.teammates.all %}
+                {% if requirement.created_by == request.user or request.user in requirement.created_by.team.teammates.all or user_perm %}
                   <a class="btn btn-primary"
                      href="{% url 'requirement:transition' pk=requirement.pk source='draft' target='ready' %}">
                     Mark as ready
@@ -169,12 +170,12 @@
                     Mark as valid
                   </a>
                 {% endif %}
-                {% if requirement.created_by != request.user and request.user not in requirement.created_by.team.teammates.all %}
+                {% if requirement.created_by != request.user and request.user not in requirement.created_by.team.teammates.all and not user_perm %}
                   <a class="btn btn-primary"
                      href="{% url 'requirement:transition' pk=requirement.pk source='ready' target='changes' %}">
                     Request changes
                   </a>
-                {% elif requirement.created_by == request.user or request.user in requirement.created_by.team.teammates.all %}
+                {% elif requirement.created_by == request.user or request.user in requirement.created_by.team.teammates.all or user_perm %}
                   <a class="btn btn-primary"
                      href="{% url 'requirement:transition' pk=requirement.pk source='ready' target='draft' %}">
                     Move back to draft
@@ -182,7 +183,7 @@
                 {% endif %}
               {% endif %}
               {% if requirement.state.name == 'changes' %}
-                {% if requirement.created_by == request.user or request.user in requirement.created_by.team.teammates.all %}
+                {% if requirement.created_by == request.user or request.user in requirement.created_by.team.teammates.all or user_perm %}
                   <a class="btn btn-primary"
                      href="{% url 'requirement:transition' pk=requirement.pk source='changes' target='draft' %}">
                     Implement feedback
@@ -190,7 +191,7 @@
                 {% endif %}
               {% endif %}
               {% if requirement.state.name == 'valid' %}
-                {% if requirement.created_by == request.user or request.user in requirement.created_by.team.teammates.all %}
+                {% if requirement.created_by == request.user or request.user in requirement.created_by.team.teammates.all or user_perm %}
                   <a class="btn btn-primary" href="{% url 'requirement:transition' pk=requirement.pk source='valid' target='draft' %}">
                     Move back to draft
                   </a>
@@ -203,7 +204,7 @@
                   <h5>Feedback:</h5>
                     {{ requirement.feedback|linebreaksbr }}
                 </div>
-                {% if requirement.created_by == request.user or request.user in requirement.created_by.team.teammates.all %}
+                {% if requirement.created_by == request.user or request.user in requirement.created_by.team.teammates.all or user_perm %}
                   <form method="POST" action="{% url 'requirement:clear_feedback' requirement.pk %}">
                     {% csrf_token %}
                     <button class="btn btn-primary" type="submit">
@@ -239,7 +240,7 @@
       <span>Products</span>
       {% if not user|has_group:READ_ONLY_GROUP %}
         {% if requirement.state.name == 'draft' %}
-          {% if requirement.created_by == request.user or request.user in requirement.created_by.team.teammates.all or request.user.is_superuser %}
+          {% if requirement.created_by == request.user or request.user in requirement.created_by.team.teammates.all or request.user.is_superuser or user_perm %}
           <span class="pull-right">
           <a class="btn btn-primary pull-right"
              href="{% url 'requirement:product:add' requirement.pk %}">Add requirement to product</a>
@@ -289,7 +290,7 @@
             <td class="row">
               {% if not user|has_group:READ_ONLY_GROUP %}
                 {% if requirement.state.name == 'draft' %}
-                  {% if rel.created_by == request.user  or request.user == requirement.created_by or request.user in rel.created_by.team.teammates.all or request.user.is_superuser %}
+                  {% if rel.created_by == request.user  or request.user == requirement.created_by or request.user in rel.created_by.team.teammates.all or request.user.is_superuser or user_perm %}
                     <a href="{% url 'requirement:product:edit' requirement_pk=requirement.pk pk=rel.pk %}"
                        class="col-sm-6">
                       <span class="glyphicon glyphicon-edit"></span>
@@ -314,7 +315,7 @@
       <span>Data</span>
       {% if not user|has_group:READ_ONLY_GROUP %}
         {% if requirement.state.name == 'draft' %}
-          {% if requirement.created_by == request.user or request.user in requirement.created_by.team.teammates.all or request.user.is_superuser %}
+          {% if requirement.created_by == request.user or request.user in requirement.created_by.team.teammates.all or request.user.is_superuser or user_perm %}
             <span class="pull-right">
               <a class="btn btn-primary pull-right"
                  href="{% url 'requirement:data:add' requirement.pk %}">Add requirement to data</a>
@@ -361,7 +362,7 @@
             <td class="row">
               {% if not user|has_group:READ_ONLY_GROUP %}
                 {% if requirement.state.name == 'draft' %}
-                  {% if request.user == rel.created_by or request.user == requirement.created_by or request.user in rel.created_by.team.teammates.all or request.user.is_superuser %}
+                  {% if request.user == rel.created_by or request.user == requirement.created_by or request.user in rel.created_by.team.teammates.all or request.user.is_superuser or user_perm %}
                     <a href="{% url 'requirement:data:edit' requirement_pk=requirement.pk pk=rel.pk %}" class="col-sm-6">
                       <span class="glyphicon glyphicon-edit"></span>
                     </a>

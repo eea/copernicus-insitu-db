@@ -208,6 +208,7 @@ class ValidationWorkflowModel(WorkflowEnabled, models.Model):
         return (
             self.requesting_user == self.created_by
             or self.requesting_user in self.created_by.team.teammates.all()
+            or self.has_user_perm(self.requesting_user)
         )
 
     @transition_check(
@@ -221,6 +222,7 @@ class ValidationWorkflowModel(WorkflowEnabled, models.Model):
         return (
             self.requesting_user != self.created_by
             and self.requesting_user not in self.created_by.team.teammates.all()
+            and self.has_user_perm(self.requesting_user) != True
         )
 
     @transition_check(
@@ -239,7 +241,7 @@ class Team(models.Model):
     requests = models.ManyToManyField(User, related_name="requests", blank=True)
 
 
-class Metric(OwnerHistoryModel, ValidationWorkflowModel):
+class Metric(OwnerHistoryModel):
     threshold = models.CharField(max_length=100)
     breakthrough = models.CharField(max_length=100)
     goal = models.CharField(max_length=100)
@@ -341,17 +343,13 @@ class Requirement(OwnerHistoryModel, ValidationWorkflowModel, SoftDeleteModel):
     def __str__(self):
         return self.name
 
-    def get_related_objects(self):
-        metrics = [
-            "uncertainty",
-            "update_frequency",
-            "timeliness",
-            "scale",
-            "horizontal_resolution",
-            "vertical_resolution",
-        ]
-        objects = [getattr(self, metric) for metric in metrics]
+    def has_user_perm(self, user):
+        return user.has_perm("change_requirement", self) and user.has_perm(
+            "delete_requirement", self
+        )
 
+    def get_related_objects(self):
+        objects = []
         objects += [obj for obj in self.product_requirements.all()]
         objects += [obj for obj in self.datarequirement_set.all()]
         return objects
@@ -466,6 +464,11 @@ class ProductRequirement(OwnerHistoryModel, ValidationWorkflowModel, SoftDeleteM
     def __str__(self):
         return "{} - {}".format(self.product.name, self.requirement.name)
 
+    def has_user_perm(self, user):
+        return user.has_perm("change_requirement", self.requirement) and user.has_perm(
+            "delete_requirement", self.requirement
+        )
+
 
 class DataProvider(OwnerHistoryModel, ValidationWorkflowModel, SoftDeleteModel):
     related_objects = [
@@ -489,6 +492,11 @@ class DataProvider(OwnerHistoryModel, ValidationWorkflowModel, SoftDeleteModel):
 
     def __str__(self):
         return self.name
+
+    def has_user_perm(self, user):
+        return user.has_perm("change_dataprovider", self) and user.has_perm(
+            "delete_dataprovider", self
+        )
 
     def get_elastic_search_data(self):
         data = dict()
@@ -596,6 +604,11 @@ class DataProviderDetails(OwnerHistoryModel, ValidationWorkflowModel, SoftDelete
     ):
         super().save(force_insert, force_update, using, update_fields)
         signals.data_provider_updated.send(sender=self)
+
+    def has_user_perm(self, user):
+        return user.has_perm(
+            "change_dataprovider", self.data_provider
+        ) and user.has_perm("delete_dataprovider", self.data_provider)
 
 
 class Data(OwnerHistoryModel, ValidationWorkflowModel, SoftDeleteModel):
@@ -757,6 +770,9 @@ class Data(OwnerHistoryModel, ValidationWorkflowModel, SoftDeleteModel):
             obj.requesting_user = self.requesting_user
             obj.make_changes()
 
+    def has_user_perm(self, user):
+        return user.has_perm("change_data", self) and user.has_perm("delete_data", self)
+
 
 class DataRequirement(OwnerHistoryModel, ValidationWorkflowModel, SoftDeleteModel):
     data = models.ForeignKey(Data, on_delete=models.CASCADE)
@@ -773,6 +789,11 @@ class DataRequirement(OwnerHistoryModel, ValidationWorkflowModel, SoftDeleteMode
 
     def __str__(self):
         return "{} - {}".format(self.data.name, self.requirement.name)
+
+    def has_user_perm(self, user):
+        return user.has_perm("change_requirement", self.requirement) and user.has_perm(
+            "delete_requirement", self.requirement
+        )
 
 
 class DataProviderRelation(OwnerHistoryModel, ValidationWorkflowModel, SoftDeleteModel):
@@ -791,6 +812,11 @@ class DataProviderRelation(OwnerHistoryModel, ValidationWorkflowModel, SoftDelet
 
     def __str__(self):
         return "{} - {}".format(self.data.name, self.provider.name)
+
+    def has_user_perm(self, user):
+        return user.has_perm("change_data", self.data) and user.has_perm(
+            "delete_data", self.data
+        )
 
 
 class UserLog(models.Model):

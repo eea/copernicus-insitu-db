@@ -301,7 +301,7 @@ class RequirementTests(base.FormCheckTestCase):
             data=data, created_by=self.creator, requirement=requirement
         )
 
-        items = [requirement, data_requirement] + list(metrics.values())
+        items = [requirement, data_requirement]
         for item in items:
             self.assertEqual((getattr(item, "state")).name, "draft")
 
@@ -356,7 +356,7 @@ class RequirementTests(base.FormCheckTestCase):
             data=data, created_by=self.creator, requirement=requirement
         )
 
-        items = [requirement, data_requirement] + list(metrics.values())
+        items = [requirement, data_requirement]
         for item in items:
             self.assertEqual((getattr(item, "state")).name, "draft")
         self.client.force_login(self.creator)
@@ -385,9 +385,7 @@ class RequirementTests(base.FormCheckTestCase):
             data=data, created_by=self.creator, provider=provider
         )
 
-        items = [requirement, data, data_requirement, provider, data_provider] + list(
-            metrics.values()
-        )
+        items = [requirement, data, data_requirement, provider, data_provider]
 
         response = self.client.post(
             reverse(
@@ -417,7 +415,7 @@ class RequirementTests(base.FormCheckTestCase):
             data=data, state="ready", created_by=self.creator, requirement=requirement
         )
 
-        items = [requirement, data_requirement] + list(metrics.values())
+        items = [requirement, data_requirement]
         for item in items:
             self.assertEqual((getattr(item, "state")).name, "ready")
 

@@ -18,10 +18,6 @@ class Command(BaseCommand):
         ]
 
         for requirement in requirements:
-            for metric in metrics:
-                metric_object = getattr(requirement, metric)
-                metric_object.state = requirement.state
-                metric_object.save()
             for product_req in requirement.product_requirements.all():
                 product_req.state = requirement.state
                 product_req.save()

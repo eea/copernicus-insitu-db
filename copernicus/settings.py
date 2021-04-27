@@ -62,6 +62,7 @@ INSTALLED_APPS = [
     "hijack",
     "compat",
     "docs",
+    "guardian",
     "explorer",
     "hijack_admin",
     "suit",
@@ -197,6 +198,11 @@ ELASTICSEARCH_DSL = {
         "timeout": env("ELASTICSEARCH_TIMEOUT", 120),
     },
 }
+
+AUTHENTICATION_BACKENDS = (
+    "django.contrib.auth.backends.ModelBackend",  # default
+    "guardian.backends.ObjectPermissionBackend",
+)
 
 MAX_RESULT_WINDOW = 10000  # This is ElasticSearch's default, but we define it
 # here explicitly to minimize refactoring in case we ever change it.
