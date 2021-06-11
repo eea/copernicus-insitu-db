@@ -1,5 +1,5 @@
 $(document).ready(function () {
-  let scroll_size = $('#id_changelog_container').height()
+  let scroll_size = $('#id_changelog_container').height();
   $('#id_changelog').DataTable({
     "lengthChange": false,
     "searching": false,

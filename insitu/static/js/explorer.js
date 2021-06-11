@@ -63,8 +63,8 @@ ExplorerEditor.prototype.doCodeMirrorSubmit = function() {
 
 ExplorerEditor.prototype.savePivotState = function(state) {
     bmark = btoa(JSON.stringify(_(state).pick('aggregatorName', 'rows', 'cols', 'rendererName', 'vals')));
-    $el = $('#pivot-bookmark')
-    $el.attr('href', $el.data('baseurl') + '#' + bmark)
+    $el = $('#pivot-bookmark');
+    $el.attr('href', $el.data('baseurl') + '#' + bmark);
 };
 
 ExplorerEditor.prototype.updateQueryString = function(key, value, url) {
@@ -228,13 +228,13 @@ ExplorerEditor.prototype.bind = function() {
     $(".sort").click(function(e) {
         var t = $(e.target).data('sort');
         var dir = $(e.target).data('dir');
-        $('.sort').css('background-image', 'url(//cdn.datatables.net/1.10.0/images/sort_both.png)')
+        $('.sort').css('background-image', 'url(//cdn.datatables.net/1.10.0/images/sort_both.png)');
         if (dir == 'asc'){
             $(e.target).data('dir', 'desc');
-            $(e.target).css('background-image', 'url(//cdn.datatables.net/1.10.0/images/sort_asc.png)')
+            $(e.target).css('background-image', 'url(//cdn.datatables.net/1.10.0/images/sort_asc.png)');
         } else {
             $(e.target).data('dir', 'asc');
-            $(e.target).css('background-image', 'url(//cdn.datatables.net/1.10.0/images/sort_desc.png)')
+            $(e.target).css('background-image', 'url(//cdn.datatables.net/1.10.0/images/sort_desc.png)');
         }
         var vals = [];
         var ct = 0;
@@ -259,7 +259,7 @@ ExplorerEditor.prototype.bind = function() {
     } else {
         try {
             pivotState = JSON.parse(atob(pivotState.substr(1)));
-            pivotState['onRefresh'] = this.savePivotState;
+            pivotState.onRefresh = this.savePivotState;
             navToPivot = true;
         } catch(e) {
             pivotState = {onRefresh: this.savePivotState};
@@ -280,7 +280,7 @@ ExplorerEditor.prototype.bind = function() {
             scrollContainer: function() {
                                 return this.$table.closest('.overflow-wrapper');
                             }.bind(this)
-        })
+        });
     }.bind(this), 1);
 
     this.$rows.change(function() { this.showRows(); }.bind(this));

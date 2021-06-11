@@ -25,21 +25,21 @@ $(document).ready(function () {
         body: function (data, row, column, node) {
           if (row === 7) {
             if (data.indexOf('glyphicon-ok-circle') != -1) {
-              return 'Yes'
+              return 'Yes';
             }
             else {
-              return 'No'
+              return 'No';
             }
           }
           if (row === 0 || row === 3 || row === 4) {
-            return $.parseHTML(data)[0].innerHTML
+            return $.parseHTML(data)[0].innerHTML;
           }
 
-          return data
+          return data;
         }
       }
     }
-  }
+  };
   var $table = $('#providers').dataTable({
     "processing": true,
     "serverSide": true,
@@ -53,7 +53,7 @@ $(document).ready(function () {
       },
       "dataSrc": function (json) {
         $.each(json.filters, function (key, value) {
-          updateFilterOptions(key, value)
+          updateFilterOptions(key, value);
         });
         return json.data;
       }
@@ -79,8 +79,8 @@ $(document).ready(function () {
           var created = new Date().toDateString();
           cols[0] = { text: 'https://cis2.eea.europa.eu , ' + created, alignment: 'right', margin: [50, 10], };
           var objFooter = {};
-          objFooter['columns'] = cols;
-          doc['footer'] = objFooter;
+          objFooter.columns = cols;
+          doc.footer = objFooter;
         }
       }),
       $.extend(true, {}, buttonCommon, {

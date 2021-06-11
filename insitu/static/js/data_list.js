@@ -1,7 +1,9 @@
+/*jshint multistr: true */
+
 function updateFilterOptions(filter, option_data) {
   var select = $('#' + filter);
   select.find('option').remove();
-  select.append('<option value="All">All</option>')
+  select.append('<option value="All">All</option>');
   $.each(option_data.options, function (i, option) {
     var selected = '';
     if (option_data.selected == option) {
@@ -35,8 +37,8 @@ $(document).ready(function () {
         var created = new Date().toDateString();
         cols[0] = { text: 'https://cis2.eea.europa.eu , ' + created, alignment: 'right', margin: [50, 10], };
         var objFooter = {};
-        objFooter['columns'] = cols;
-        doc['footer'] = objFooter;
+        objFooter.columns = cols;
+        doc.footer = objFooter;
       }
     },
     {
@@ -67,7 +69,7 @@ $(document).ready(function () {
       },
       "dataSrc": function (json) {
         $.each(json.filters, function (key, value) {
-          updateFilterOptions(key, value)
+          updateFilterOptions(key, value);
         });
         return json.data;
       }
@@ -82,7 +84,7 @@ $(document).ready(function () {
       data.data_format = $('#data_format').val();
       data.quality_control_procedure = $('#quality_control_procedure').val();
       data.dissemination = $('#dissemination').val();
-      data.requirement = $('#requirement').val()
+      data.requirement = $('#requirement').val();
       data.state = $('#state').val();
       data.component = $('#component').val();
     },
