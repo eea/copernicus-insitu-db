@@ -1,5 +1,5 @@
 from django.conf import settings
-from django.core.urlresolvers import reverse
+from django.urls import reverse
 from django.db.models import Prefetch
 from django_elasticsearch_dsl import DocType, Index, fields
 from elasticsearch_dsl.analysis import analyzer, tokenizer, normalizer

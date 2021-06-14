@@ -21,9 +21,7 @@ class IsDraftObject(BasePermission):
 
 class IsAuthenticated(BasePermission):
     def has_permission(self, request, view):
-        return (
-            request.user and request.user.is_authenticated() and request.user.is_active
-        )
+        return request.user and request.user.is_authenticated and request.user.is_active
 
 
 class IsNotReadOnlyUser(IsAuthenticated):

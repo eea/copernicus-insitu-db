@@ -60,12 +60,11 @@ INSTALLED_APPS = [
     "bootstrap3",
     "django_xworkflows",
     "hijack",
-    "compat",
+    # TODO add hijack back in admin as soon as admin
+    # integration is available in the main hijack package
     "docs",
     "guardian",
     "explorer",
-    "hijack_admin",
-    "suit",
     "wkhtmltopdf",
     "picklists",
     "insitu",
@@ -207,10 +206,6 @@ AUTHENTICATION_BACKENDS = (
 MAX_RESULT_WINDOW = 10000  # This is ElasticSearch's default, but we define it
 # here explicitly to minimize refactoring in case we ever change it.
 
-# Django Suit customizations
-
-SUIT_CONFIG = {"ADMIN_NAME": "Copernicus Insitu DB"}
-
 LOGGING_CSV_FILENAME = env("LOGGING_CSV_FILENAME", "user-actions-logging.csv")
 LOGGING_CSV_PATH = os.path.join(BASE_DIR, "logging", LOGGING_CSV_FILENAME)
 
@@ -273,7 +268,7 @@ SITE_URL = env("SITE_URL", "")
 if DEBUG_TOOLBAR:
 
     def show_toolbar(request):
-        return request.user.is_authenticated() and request.user.is_superuser
+        return request.user.is_authenticated and request.user.is_superuser
 
     INTERNAL_IPS = ALLOWED_HOSTS
 

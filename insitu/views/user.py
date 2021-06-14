@@ -1,5 +1,5 @@
 from django.contrib import messages
-from django.core.urlresolvers import reverse, reverse_lazy
+from django.urls import reverse, reverse_lazy
 from django.contrib.auth.forms import AuthenticationForm, PasswordChangeForm
 from django.contrib.auth import login as auth_login, logout as auth_logout
 from django.shortcuts import redirect
@@ -24,7 +24,7 @@ class LoginView(FormView):
     template_name = "auth/login.html"
 
     def dispatch(self, request, *args, **kwargs):
-        if request.user.is_authenticated():
+        if request.user.is_authenticated:
             return redirect(reverse("home"))
         return super(FormView, self).dispatch(request, *args, **kwargs)
 

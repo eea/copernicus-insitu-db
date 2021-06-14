@@ -1,5 +1,5 @@
 from django.contrib import messages
-from django.core.urlresolvers import reverse, reverse_lazy
+from django.urls import reverse, reverse_lazy
 from django.http import Http404
 from django.http.response import HttpResponseRedirect
 from xworkflows import ForbiddenTransition

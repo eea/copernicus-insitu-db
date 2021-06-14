@@ -1,7 +1,7 @@
 import os
 
 from django.core.management import call_command
-from django.core.urlresolvers import reverse
+from django.urls import reverse
 
 from insitu import models
 from insitu.tests import base

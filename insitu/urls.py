@@ -50,12 +50,12 @@ requirement_patterns = [
     ),
     url(
         r"^(?P<requirement_pk>[0-9]+)/product/",
-        include(product_requirement_patterns, namespace="product"),
+        include((product_requirement_patterns, "insitu"), namespace="product"),
     ),
     url(r"^add/$", views.RequirementAdd.as_view(), name="add"),
     url(
         r"^(?P<requirement_pk>[0-9]+)/data/",
-        include(data_requirement_patterns, namespace="data"),
+        include((data_requirement_patterns, "insitu"), namespace="data"),
     ),
     url(
         r"^(?P<pk>[0-9]+)/clear_feedback/$",
@@ -84,7 +84,7 @@ data_patterns = [
     url(r"^(?P<pk>[0-9]+)/delete/$", views.DataDelete.as_view(), name="delete"),
     url(
         r"^(?P<group_pk>[0-9]+)/provider/",
-        include(data_data_provider_patterns, namespace="provider"),
+        include((data_data_provider_patterns, "insitu"), namespace="provider"),
     ),
     url(
         r"^(?P<pk>[0-9]+)/transition/(?P<source>[a-z]+)-to-(?P<target>[a-z]+)/$",
@@ -211,12 +211,15 @@ urlpatterns = [
         ),
         name="password_reset_complete",
     ),
-    url(r"^product/", include(product_patterns, namespace="product")),
-    url(r"^requirement/", include(requirement_patterns, namespace="requirement")),
-    url(r"^data/", include(data_patterns, namespace="data")),
-    url(r"^provider/", include(provider_patterns, namespace="provider")),
-    url(r"", include(auth_patterns, namespace="auth")),
-    url(r"^reports/", include(reports_patterns, namespace="reports")),
+    url(r"^product/", include((product_patterns, "insitu"), namespace="product")),
+    url(
+        r"^requirement/",
+        include((requirement_patterns, "insitu"), namespace="requirement"),
+    ),
+    url(r"^data/", include((data_patterns, "insitu"), namespace="data")),
+    url(r"^provider/", include((provider_patterns, "insitu"), namespace="provider")),
+    url(r"", include((auth_patterns, "insitu"), namespace="auth")),
+    url(r"^reports/", include((reports_patterns, "insitu"), namespace="reports")),
     url(r"manage$", views.Manager.as_view(), name="manage"),
     url(r"help$", views.HelpPage.as_view(), name="help"),
     url(r"about$", views.AboutView.as_view(), name="about"),

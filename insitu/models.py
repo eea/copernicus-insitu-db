@@ -245,7 +245,7 @@ class Metric(OwnerHistoryModel):
     threshold = models.CharField(max_length=100)
     breakthrough = models.CharField(max_length=100)
     goal = models.CharField(max_length=100)
-    created_by = models.ForeignKey(User)
+    created_by = models.ForeignKey(User, on_delete=models.PROTECT)
     created_at = models.DateTimeField(auto_now_add=True, null=True)
     updated_at = models.DateTimeField(auto_now=True, null=True)
 
@@ -331,7 +331,7 @@ class Requirement(OwnerHistoryModel, ValidationWorkflowModel, SoftDeleteModel):
         on_delete=models.CASCADE,
         related_name="+",
     )
-    created_by = models.ForeignKey(User)
+    created_by = models.ForeignKey(User, on_delete=models.PROTECT)
 
     feedback = models.TextField(blank=True)
 
@@ -457,7 +457,7 @@ class ProductRequirement(OwnerHistoryModel, ValidationWorkflowModel, SoftDeleteM
         pickmodels.Criticality, on_delete=models.CASCADE, related_name="+"
     )
     barriers = models.ManyToManyField(pickmodels.Barrier)
-    created_by = models.ForeignKey(User)
+    created_by = models.ForeignKey(User, on_delete=models.PROTECT)
     created_at = models.DateTimeField(auto_now_add=True, null=True)
     updated_at = models.DateTimeField(auto_now=True, null=True)
 
@@ -486,7 +486,7 @@ class DataProvider(OwnerHistoryModel, ValidationWorkflowModel, SoftDeleteModel):
     feedback = models.TextField(blank=True)
 
     countries = models.ManyToManyField(pickmodels.Country)
-    created_by = models.ForeignKey(User)
+    created_by = models.ForeignKey(User, on_delete=models.PROTECT)
     created_at = models.DateTimeField(auto_now_add=True, null=True)
     updated_at = models.DateTimeField(auto_now=True, null=True)
 
@@ -589,7 +589,7 @@ class DataProviderDetails(OwnerHistoryModel, ValidationWorkflowModel, SoftDelete
     data_provider = models.ForeignKey(
         DataProvider, on_delete=models.CASCADE, related_name="details"
     )
-    created_by = models.ForeignKey(User)
+    created_by = models.ForeignKey(User, on_delete=models.PROTECT)
     created_at = models.DateTimeField(auto_now_add=True, null=True)
     updated_at = models.DateTimeField(auto_now=True, null=True)
 
@@ -694,7 +694,7 @@ class Data(OwnerHistoryModel, ValidationWorkflowModel, SoftDeleteModel):
     geographical_coverage = models.ManyToManyField(pickmodels.Country, blank=True)
     requirements = models.ManyToManyField(Requirement, through="DataRequirement")
     providers = models.ManyToManyField(DataProvider, through="DataProviderRelation")
-    created_by = models.ForeignKey(User)
+    created_by = models.ForeignKey(User, on_delete=models.PROTECT)
     created_at = models.DateTimeField(auto_now_add=True, null=True)
     updated_at = models.DateTimeField(auto_now=True, null=True)
 
@@ -783,7 +783,7 @@ class DataRequirement(OwnerHistoryModel, ValidationWorkflowModel, SoftDeleteMode
     level_of_compliance = models.ForeignKey(
         pickmodels.ComplianceLevel, on_delete=models.CASCADE, related_name="+"
     )
-    created_by = models.ForeignKey(User)
+    created_by = models.ForeignKey(User, on_delete=models.PROTECT)
     created_at = models.DateTimeField(auto_now_add=True, null=True)
     updated_at = models.DateTimeField(auto_now=True, null=True)
 
@@ -806,7 +806,7 @@ class DataProviderRelation(OwnerHistoryModel, ValidationWorkflowModel, SoftDelet
     data = models.ForeignKey(Data, on_delete=models.CASCADE)
     provider = models.ForeignKey(DataProvider, on_delete=models.CASCADE)
     role = models.IntegerField(choices=ROLE_CHOICES, db_index=True)
-    created_by = models.ForeignKey(User)
+    created_by = models.ForeignKey(User, on_delete=models.PROTECT)
     created_at = models.DateTimeField(auto_now_add=True, null=True)
     updated_at = models.DateTimeField(auto_now=True, null=True)
 

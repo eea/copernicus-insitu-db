@@ -1,6 +1,6 @@
 import copy
 
-from django.core.urlresolvers import reverse
+from django.urls import reverse
 
 from insitu import models
 from insitu.tests import base

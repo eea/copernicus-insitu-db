@@ -1,4 +1,4 @@
-from django.core.urlresolvers import reverse
+from django.urls import reverse
 from django.contrib import auth
 from django.test import TestCase
 
@@ -39,7 +39,7 @@ class UserAuthenticationTests(TestCase):
     def test_logout(self):
         self.client.get(reverse("auth:logout"))
         user = auth.get_user(self.client)
-        self.assertFalse(user.is_authenticated())
+        self.assertFalse(user.is_authenticated)
 
     def test_get_change_password(self):
         self.client.force_login(self.user)

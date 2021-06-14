@@ -23,7 +23,7 @@ urlpatterns = [
     url(r"^admin/", admin.site.urls),
     url(r"^hijack/", include("hijack.urls")),
     url(r"^", include("insitu.urls")),
-    url(r"^picklists/", include("picklists.urls", namespace="pick")),
+    url(r"^picklists/", include(("picklists.urls", "picklists"), namespace="pick")),
     url(r"^explorer/", include("explorer.urls")),
 ]
 

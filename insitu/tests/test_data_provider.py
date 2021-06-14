@@ -1,7 +1,7 @@
 import os
 
 from django.core.management import call_command
-from django.core.urlresolvers import reverse
+from django.urls import reverse
 
 from insitu import models
 from insitu.documents import DataProviderDoc
@@ -381,8 +381,8 @@ class DataProviderTests(base.FormCheckTestCase):
             id=3,
             is_network=True,
             created_by=self.creator,
-            members=[member_1.pk, member_2.pk],
         )
+        network.members.set([member_1.pk, member_2.pk])
         data = dict()
         data["members"] = [member_1.pk]
         resp = self.client.post(
