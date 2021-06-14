@@ -234,8 +234,8 @@ EXPLORER_SQL_WHITELIST = {
 }
 
 
-def EXPLORER_PERMISSION_VIEW(u):
-    return u.is_authenticated
+def EXPLORER_PERMISSION_VIEW(request):
+    return request.user.is_authenticated
 
 
 EXPLORER_DEFAULT_CONNECTION = "default"

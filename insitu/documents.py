@@ -1,7 +1,7 @@
 from django.conf import settings
 from django.urls import reverse
 from django.db.models import Prefetch
-from django_elasticsearch_dsl import DocType, Index, fields
+from django_elasticsearch_dsl import Document, Index, fields
 from elasticsearch_dsl.analysis import analyzer, tokenizer, normalizer
 from elasticsearch_dsl.search import Search
 
@@ -52,7 +52,7 @@ case_insensitive_normalizer = normalizer(
 
 
 @insitu_products.doc_type
-class ProductDoc(DocType):
+class ProductDoc(Document):
     acronym = fields.KeywordField()
     description = fields.TextField()
     name = fields.TextField(
@@ -81,7 +81,7 @@ class ProductDoc(DocType):
         document = ProductDoc.get(id=sender.id)
         document.delete()
 
-    class Meta:
+    class Django:
         model = Product
         fields = [
             "id",
@@ -89,7 +89,7 @@ class ProductDoc(DocType):
 
 
 @insitu_requirements.doc_type
-class RequirementDoc(DocType):
+class RequirementDoc(Document):
     name = fields.TextField(
         analyzer=case_insensitive_analyzer,
         fielddata=True,
@@ -133,7 +133,7 @@ class RequirementDoc(DocType):
 
     note = fields.TextField()
 
-    class Meta:
+    class Django:
         model = Requirement
         related_models = [ProductRequirement, Product]
         fields = [
@@ -180,7 +180,7 @@ class RequirementDoc(DocType):
 
 
 @insitu_data.doc_type
-class DataDoc(DocType):
+class DataDoc(Document):
     name = fields.TextField(
         analyzer=case_insensitive_analyzer,
         fielddata=True,
@@ -216,7 +216,7 @@ class DataDoc(DocType):
         },
     )
 
-    class Meta:
+    class Django:
         model = Data
         fields = [
             "id",
@@ -274,7 +274,7 @@ class DataDoc(DocType):
 
 
 @insitu_dataproviders.doc_type
-class DataProviderDoc(DocType):
+class DataProviderDoc(Document):
     name = fields.TextField(
         analyzer=case_insensitive_analyzer,
         fielddata=True,
@@ -301,7 +301,7 @@ class DataProviderDoc(DocType):
         },
     )
 
-    class Meta:
+    class Django:
         model = DataProvider
         fields = ["id", "edmo"]
         related_models = [

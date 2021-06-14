@@ -21,7 +21,9 @@ from explorer.app_settings import UNSAFE_RENDERING
 from explorer.exporters import get_exporter_class
 from explorer.forms import QueryForm
 from explorer.models import Query
-from explorer.views import DownloadQueryView, PlayQueryView, _export, query_viewmodel
+from explorer.views import DownloadQueryView, PlayQueryView
+from explorer.views.export import _export
+from explorer.views.utils import query_viewmodel
 from explorer.utils import extract_params
 from explorer.utils import url_get_rows
 
