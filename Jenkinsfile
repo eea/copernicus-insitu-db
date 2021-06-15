@@ -4,7 +4,8 @@ pipeline {
   environment {
         GIT_NAME = "copernicus-insitu-db"
         SONARQUBE_TAGS = "cis2.eea.europa.eu"
-        CSSLINT_PARAMS = "--exclude-list=insitu/static/css/animate.css,insitu/static/css/bootstrap-datetime-picker.min.css,insitu/static/css/bootstrap-theme.min.css,insitu/static/css/bootstrap.min.css,insitu/static/css/buttons.dataTables.min.css,insitu/static/css/codemirror.min.css,insitu/static/css/jquery.dataTables.min.css,insitu/static/css/pivot.min.css,insitu/static/css/select2-bootstrap.min.css,insitu/static/css/select2.min.css"
+        CSSLINT_PARAMS = "--exclude-list=copernicus-insitu-db/insitu/static/css/animate.css,copernicus-insitu-db/insitu/static/css/bootstrap-datetime-picker.min.css,copernicus-insitu-db/insitu/static/css/bootstrap-theme.min.css,copernicus-insitu-db/insitu/static/css/bootstrap.min.css,copernicus-insitu-db/insitu/static/css/buttons.dataTables.min.css,copernicus-insitu-db/insitu/static/css/codemirror.min.css,copernicus-insitu-db/insitu/static/css/jquery.dataTables.min.css,copernicus-insitu-db/insitu/static/css/pivot.min.css,copernicus-insitu-db/insitu/static/css/select2-bootstrap.min.css,copernicus-insitu-db/insitu/static/css/select2.min.css"
+        JSHINT_PARAMS = "--exclude-path copernicus-insitu-db/.jshintignore"
     }
 
   stages {
@@ -17,7 +18,7 @@ pipeline {
             node(label: 'docker') {
               script {
                 catchError(buildResult: 'SUCCESS', stageResult: 'UNSTABLE') {
-                  sh '''docker run -i --rm --name="$BUILD_TAG-jshint" -e GIT_SRC="https://github.com/eea/$GIT_NAME.git" -e GIT_NAME="$GIT_NAME" -e GIT_BRANCH="$BRANCH_NAME" -e GIT_CHANGE_ID="$CHANGE_ID" eeacms/jshint'''
+                  sh '''docker run -i --rm --name="$BUILD_TAG-jshint" -e PARAMS="$JSHINT_PARAMS" -e GIT_SRC="https://github.com/eea/$GIT_NAME.git" -e GIT_NAME="$GIT_NAME" -e GIT_BRANCH="$BRANCH_NAME" -e GIT_CHANGE_ID="$CHANGE_ID" eeacms/jshint'''
                 }
               }
             }

@@ -25,7 +25,7 @@ function GetTemplateDouble(identifier) {
 
 $(document).ready(function () {
   GetTemplateSimple($('#user_data'));
-  GetTemplateSimple($('#user_providers'))
+  GetTemplateSimple($('#user_providers'));
   GetTemplateSimple($('#user_requirements'));
   GetTemplateDouble($('#user_data_requirements'));
   GetTemplateDouble($('#user_provider_relationships'));

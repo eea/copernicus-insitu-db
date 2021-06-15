@@ -269,7 +269,7 @@ ExplorerEditor.prototype.bind = function() {
     $.ajax({
       dataType: "json",
       url: "/reports/" + this.queryId + "/json",
-    }).success(function(results) {$(".pivot-table").pivotUI(results, pivotState)}); 
+    }).success(function(results) {$(".pivot-table").pivotUI(results, pivotState);});
 
     if(navToPivot){
       $("#pivot-tab-label").tab("show");
