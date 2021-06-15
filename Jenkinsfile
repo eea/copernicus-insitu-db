@@ -4,6 +4,7 @@ pipeline {
   environment {
         GIT_NAME = "copernicus-insitu-db"
         SONARQUBE_TAGS = "cis2.eea.europa.eu"
+        PARAMS = "--exclude-list=insitu/static/css/animate.css,insitu/static/css/bootstrap-datetime-picker.min.css,insitu/static/css/bootstrap-theme.min.css,insitu/static/css/bootstrap.min.css,insitu/static/css/buttons.dataTables.min.css,insitu/static/css/codemirror.min.css,insitu/static/css/jquery.dataTables.min.css,insitu/static/css/pivot.min.css,insitu/static/css/select2-bootstrap.min.css,insitu/static/css/select2.min.css"
     }
 
   stages {

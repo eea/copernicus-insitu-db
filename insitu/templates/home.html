@@ -11,6 +11,19 @@
       <div class="jumbotron main-title col-lg-7">
         <h1>In Situ Component</h1>
         <p>Copernicus In Situ Component Information System</p>
+        <div>
+          <h4 class="latest-changes-text">Latest changes</h5>
+          {% if change_log_latest %}
+            <h6 class="font-weight-bold latest-information">{{ change_log_latest.version }} ( {{change_log_latest.created_at}} )</h4>
+            <ul>
+              {{ change_log_latest.description|safe }}
+            </ul>
+          {% endif %}
+          <p class="latest-information"><strong>The UserManual is available <a href="{% url 'user_manual' %}">here.</strong></a></p>
+          {% if DEBUG %}
+            <p class="latest-information latest-changes-text"><strong>This is a DEMO application</strong></p>
+          {% endif %}
+        </div>
       </div>
       {% if user.is_authenticated %}
         <div class="user_log col-sm-1 col-xs-offset-1">
@@ -34,23 +47,9 @@
             </div>
           </div>
         </div>
-        <div class="latest-information">
-          <div>
-            <p class="latest-changes-text">Latest changes</p>
-            {% if change_log_latest %}
-              <h4 class="font-weight-bold">{{ change_log_latest.version }} ( {{change_log_latest.created_at}} )</h4>
-              <ul>
-                {{ change_log_latest.description|safe }}
-              </ul>
-            {% endif %}
-            <p><strong>The UserManual is available <a href="{% url 'user_manual' %}">here.</strong></a></p>
-            {% if DEBUG %}
-              <p class="latest-changes-text"><strong>This is a DEMO application</strong></p>
-            {% endif %}
-          </div>
-        </div>
+
       {% endif %}
-      <div id="footer">
+      <div class="footer">
         <img class="logo-copernicus" src="{% static "/images/logo-copernicus.png"  %}" alt="Copernicus Logo" hspace="150">
         <img class="in-situ-logo" src="{% static "/images/in-situ-logo.png" %}" alt="In Situ Logo">
         <img class="european_commission-logo" src="{% static "/images/european_commission.png" %}"
