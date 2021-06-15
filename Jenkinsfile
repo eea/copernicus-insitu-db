@@ -4,7 +4,7 @@ pipeline {
   environment {
         GIT_NAME = "copernicus-insitu-db"
         SONARQUBE_TAGS = "cis2.eea.europa.eu"
-        PARAMS = "--exclude-list=insitu/static/css/animate.css,insitu/static/css/bootstrap-datetime-picker.min.css,insitu/static/css/bootstrap-theme.min.css,insitu/static/css/bootstrap.min.css,insitu/static/css/buttons.dataTables.min.css,insitu/static/css/codemirror.min.css,insitu/static/css/jquery.dataTables.min.css,insitu/static/css/pivot.min.css,insitu/static/css/select2-bootstrap.min.css,insitu/static/css/select2.min.css"
+        CSSLINT_PARAMS = "--exclude-list=insitu/static/css/animate.css,insitu/static/css/bootstrap-datetime-picker.min.css,insitu/static/css/bootstrap-theme.min.css,insitu/static/css/bootstrap.min.css,insitu/static/css/buttons.dataTables.min.css,insitu/static/css/codemirror.min.css,insitu/static/css/jquery.dataTables.min.css,insitu/static/css/pivot.min.css,insitu/static/css/select2-bootstrap.min.css,insitu/static/css/select2.min.css"
     }
 
   stages {
@@ -27,7 +27,7 @@ pipeline {
             node(label: 'docker') {
               script {
                 catchError(buildResult: 'SUCCESS', stageResult: 'UNSTABLE') {
-                  sh '''docker run -i --rm --name="$BUILD_TAG-csslint" -e GIT_SRC="https://github.com/eea/$GIT_NAME.git" -e GIT_NAME="$GIT_NAME" -e GIT_BRANCH="$BRANCH_NAME" -e GIT_CHANGE_ID="$CHANGE_ID" eeacms/csslint'''
+                  sh '''docker run -i --rm --name="$BUILD_TAG-csslint" -e GIT_SRC="https://github.com/eea/$GIT_NAME.git" -e GIT_NAME="$GIT_NAME" -e GIT_BRANCH="$BRANCH_NAME" -e GIT_CHANGE_ID="$CHANGE_ID" eeacms/csslint -e PARAMS="$CSSLINT_PARAMS"'''
                 }
               }
             }
