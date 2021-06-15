@@ -27,7 +27,7 @@ pipeline {
             node(label: 'docker') {
               script {
                 catchError(buildResult: 'SUCCESS', stageResult: 'UNSTABLE') {
-                  sh '''docker run -i --rm --name="$BUILD_TAG-csslint" -e GIT_SRC="https://github.com/eea/$GIT_NAME.git" -e GIT_NAME="$GIT_NAME" -e GIT_BRANCH="$BRANCH_NAME" -e GIT_CHANGE_ID="$CHANGE_ID" eeacms/csslint -e PARAMS="$CSSLINT_PARAMS"'''
+                  sh '''docker run -i --rm --name="$BUILD_TAG-csslint" -e PARAMS="$CSSLINT_PARAMS" -e GIT_SRC="https://github.com/eea/$GIT_NAME.git" -e GIT_NAME="$GIT_NAME" -e GIT_BRANCH="$BRANCH_NAME" -e GIT_CHANGE_ID="$CHANGE_ID" eeacms/csslint'''
                 }
               }
             }
