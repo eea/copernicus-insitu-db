@@ -3,6 +3,11 @@ Changelog
 
 * In case of major changes, an email should be sent to all users with the modifications.
 
+2.4.5 (2021-06-15)
+------------------
+* Bump Django to 2.2.24
+  [dianaboiangiu]
+
 2.4.4 (2021-04-27)
 ------------------
 * Add object level permissions for user

@@ -1,0 +1,8 @@
+insitu/static/js/*.min.js
+
+
+insitu/static/js/changelog.js
+insitu/static/js/jquery_cookie.js
+insitu/static/js/tableExport.js
+
+docs/
