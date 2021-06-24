@@ -89,7 +89,7 @@ pipeline {
 
     stage('Report to SonarQube') {
       steps {
-        node(label: 'Copernicus-insitu-db') {
+        node(label: 'swarm') {
           script{
             // get the code
             checkout scm
