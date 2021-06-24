@@ -60,7 +60,7 @@ pipeline {
     stage('Code') {
       steps {
         parallel(
-          
+
           // "JS Lint": {
           //   node(label: 'docker') {
           //     sh '''docker run -i --rm --name="$BUILD_TAG-jslint" -e GIT_SRC="https://github.com/eea/$GIT_NAME.git" -e GIT_NAME="$GIT_NAME" -e GIT_BRANCH="$BRANCH_NAME" -e GIT_CHANGE_ID="$CHANGE_ID" eeacms/jslint4java'''
@@ -93,23 +93,16 @@ pipeline {
           script{
             // get the code
             checkout scm
-            // get the result of the tests that were run in a previous Jenkins test 
-            dir("xunit-reports") {
-              unstash "xunit-reports" 
-            }
+            // get the result of the tests that were run in a previous Jenkins test
             // get the result of the cobertura test
-            unstash "coverage.xml" 
-            // get the sonar-scanner binary location 
+            // get the sonar-scanner binary location
             def scannerHome = tool 'SonarQubeScanner';
-            // get the nodejs binary location 
+            // get the nodejs binary location
             def nodeJS = tool 'NodeJS11';
             // run with the SonarQube configuration of API and token
             withSonarQubeEnv('Sonarqube') {
-                // make sure you have the same path to the code as in the coverage report
-                sh '''sed -i "s|/plone/instance/src/$GIT_NAME|$(pwd)|g" coverage.xml'''
-                // run sonar scanner         
-                sh '''find xunit-functional -type f -exec mv {} xunit-reports/ ";"'''
-                sh "export PATH=$PATH:${scannerHome}/bin:${nodeJS}/bin; sonar-scanner -Dsonar.python.xunit.skipDetails=true -Dsonar.python.xunit.reportPath=xunit-reports/*.xml -Dsonar.python.coverage.reportPath=coverage.xml -Dsonar.sources=./eea -Dsonar.projectKey=$GIT_NAME-$BRANCH_NAME -Dsonar.projectVersion=$BRANCH_NAME-$BUILD_NUMBER"
+                // run sonar scanner
+                sh "export PATH=$PATH:${scannerHome}/bin:${nodeJS}/bin; sonar-scanner -Dsonar.python.xunit.skipDetails=true -Dsonar.sources=./eea -Dsonar.projectKey=$GIT_NAME-$BRANCH_NAME -Dsonar.projectVersion=$BRANCH_NAME-$BUILD_NUMBER"
                 sh '''try=2; while [ \$try -gt 0 ]; do curl -s -XPOST -u "${SONAR_AUTH_TOKEN}:" "${SONAR_HOST_URL}api/project_tags/set?project=${GIT_NAME}-${BRANCH_NAME}&tags=${SONARQUBE_TAGS},${BRANCH_NAME}" > set_tags_result; if [ \$(grep -ic error set_tags_result ) -eq 0 ]; then try=0; else cat set_tags_result; echo "... Will retry"; sleep 60; try=\$(( \$try - 1 )); fi; done'''
             }
           }
