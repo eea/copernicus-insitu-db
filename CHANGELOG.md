@@ -3,6 +3,11 @@ Changelog
 
 * In case of major changes, an email should be sent to all users with the modifications.
 
+2.4.6 (2021-06-24)
+------------------
+* Add duplicate provider links to another data command
+  [dianaboiangiu]
+
 2.4.5 (2021-06-15)
 ------------------
 * Bump Django to 2.2.24
