@@ -24,6 +24,5 @@ COPY . $APP_HOME
 WORKDIR $APP_HOME
 
 RUN pip install --no-cache-dir -r $REQFILE
-RUN cd docs && make html
 
 ENTRYPOINT ["./docker-entrypoint.sh"]
