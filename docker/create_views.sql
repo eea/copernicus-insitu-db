@@ -212,6 +212,7 @@ CREATE VIEW insitu_dataprovider_special_view as
 CREATE VIEW insitu_dataprovider_product_direct_view as
     SELECT c.name as "product_component",
            cs.name as "product_copernicus_service",
+           rp.name as "requirement_group",
            d.id as "data_id",
            d.name as "data_name",
               CASE
@@ -226,6 +227,7 @@ CREATE VIEW insitu_dataprovider_product_direct_view as
     INNER JOIN insitu_copernicusservice cs ON cs.id = c.service_id
     INNER JOIN insitu_productrequirement pr ON p.id = pr.product_id
     INNER JOIN insitu_requirement r ON r.id = pr.requirement_id
+    INNER JOIN picklists_requirementgroup rp ON rp.id = r.group_id
     INNER JOIN insitu_datarequirement dr ON r.id = dr.requirement_id
     INNER JOIN insitu_data d ON d.id = dr.data_id
     INNER JOIN insitu_dataproviderrelation dpr ON d.id = dpr.data_id

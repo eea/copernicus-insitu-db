@@ -38,7 +38,7 @@
             "created_at": "2018-08-01T08:43:31.504Z",
             "last_run_date": "2021-03-29T13:37:30.408Z",
             "snapshot": false,
-            "connection": null
+            "connection": ""
         }
     },
     {
@@ -64,7 +64,7 @@
             "description": "Use cases:\r\n 1. List data providers which deliver data and a count of data delivered.\r\n\r\nFiltering done on the objects of the report: \r\n- Data providers with at least one link to a data set",
             "created_by_user": 1,
             "created_at": "2018-08-01T08:44:12.306Z",
-            "last_run_date": "2021-03-29T11:24:22.184Z",
+            "last_run_date": "2021-06-14T10:49:38.666Z",
             "snapshot": false,
             "connection": "default"
         }
@@ -88,11 +88,11 @@
         "pk": 7,
         "fields": {
             "title": "Data providers per countries",
-            "sql": "SELECT dp.data_provider_id AS \"Data provider UID\",\r\n       dp.data_provider_name AS \"Data provider name\",\r\n       coalesce(dp.data_provider_type, '') AS \"Data provider Provider type\",\r\n       dp.data_provider_country AS \"Data provider country\",\r\n       dp.data_provider_is_network AS \"Data provider Network flag\",\r\n       coalesce(dp.data_provider_network_name, '') AS \"Data provider network name\",\r\n       coalesce(dp.data_provider_network_country, '') AS \"Data provider network country\",\r\n       coalesce(dpd.product_component, '') AS \"Product component\",\r\n       coalesce(dpd.product_copernicus_service, '') AS \"Product copernicus service\",\r\n       coalesce(cast(dpd.data_id as varchar), '') AS \"Data UID\",\r\n       coalesce(dpd.data_name, '') AS \"Data name\",\r\n       coalesce(dpd.dataproviderrelation_role,'-') AS \"Data Provider role\"\r\nFROM insitu_dataprovider_special_view dp\r\nLEFT OUTER JOIN insitu_dataprovider_product_direct_view dpd  ON dpd.dataproviderrelation_provider_id = dp.data_provider_id;",
+            "sql": "SELECT dp.data_provider_id AS \"Data provider UID\",\r\n       dp.data_provider_name AS \"Data provider name\",\r\n       coalesce(dp.data_provider_type, '') AS \"Data provider Provider type\",\r\n       dp.data_provider_country AS \"Data provider country\",\r\n       dp.data_provider_is_network AS \"Data provider Network flag\",\r\n    \r\n       coalesce(dp.data_provider_network_name, '') AS \"Data provider network name\",\r\n       coalesce(dp.data_provider_network_country, '') AS \"Data provider network country\",\r\n       coalesce(dpd.product_component, '') AS \"Product component\",\r\n       coalesce(dpd.product_copernicus_service, '') AS \"Product copernicus service\",\r\n       coalesce(cast(dpd.data_id as varchar), '') AS \"Data UID\",\r\n       coalesce(dpd.data_name, '') AS \"Data name\",\r\n       coalesce(dpd.dataproviderrelation_role,'-') AS \"Data Provider role\",\r\n       coalesce(dpd.requirement_group, '-') as \"Requirement group\"\r\n FROM insitu_dataprovider_special_view dp\r\nLEFT OUTER JOIN insitu_dataprovider_product_direct_view dpd  ON dpd.dataproviderrelation_provider_id = dp.data_provider_id;",
             "description": "Use cases:\r\n1.  List Data Providers for a given Country or Network\r\n2.  List all commercial Data Providers for a given Country or Network (filter by provider type)\r\n\r\nFiltering done on the objects of the report:\r\n- All Data Providers are shown in this report\r\n- Data sets which have a link to a component and service through  a product and a requirement",
             "created_by_user": 1,
             "created_at": "2018-11-01T13:49:26.768Z",
-            "last_run_date": "2021-03-29T12:43:44.223Z",
+            "last_run_date": "2021-07-05T06:52:29.605Z",
             "snapshot": false,
             "connection": "default"
         }
@@ -120,7 +120,7 @@
             "description": "Use cases:\r\n1.  List Data fully compliant with Requirements ( filter by Level of compliance)\r\n\r\nFiltering done on the objects of the report: \r\n- Products that have a link to at least one requirement which has at least one link to a data set.\r\n- Requirements with at least one link to a data set and at least one link to a product\r\n- Data with at least one link to a requirement linked to a product",
             "created_by_user": 1,
             "created_at": "2018-11-01T15:40:37.236Z",
-            "last_run_date": "2021-03-29T11:24:14.312Z",
+            "last_run_date": "2021-06-14T10:49:24.321Z",
             "snapshot": false,
             "connection": "default"
         }

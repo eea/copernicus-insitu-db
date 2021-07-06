@@ -266,10 +266,67 @@ ExplorerEditor.prototype.bind = function() {
         }
     }
 
+    function filter_countries(event) {
+        var countriesEU = [
+            "Austria", "Belgium", "Bulgaria", "Czech Republic", "Cyprus", "Croatia", "Denmark", "Estonia", "Finland", "France",
+            "Germany", "Greece", "Ireland", "Italy", "Latvia", "Lithuania", "Luxembourg", "Malta", "Poland", "Romania", "Slovakia",
+            "Slovenia", "Spain", "Sweden", "Netherlands", "Hungary"
+        ]
+        var countriesEEA = [
+            "Belgium", "Bulgaria", "Czech Republic", "Denmark", "Cyprus", "Latvia", "Lithuania", "Luxembourg", "Spain", "France",
+            "Croatia", "Italy", "Poland", "Portugal", "Romania", "Slovenia", "Hungary", "Malta", "Netherlands", "Austria", "Iceland",
+            "Liechtenstein", "Norway", "Slovakia", "Finland", "Sweden", "Germany", "Estonia", "Ireland", "Greece"
+        ]
+        var eumetnetMembers = [
+            "Austria", "Belgium", "Croatia", "Cyprus", "Czech Republic", "Denmark", "Estonia", "Finland", "France", "Montenegro",
+            "Germany", "Greece", "Hungary", "Iceland", "Ireland", "Italy", "Latvia", "Luxembourg", "Malta", "Netherlands", "Norway",
+            "Poland", "Portugal", "Serbia", "Slovakia", "Slovenia", "Spain", "Sweden", "Switzerland", "Macedonia, The Former Yugoslav Republic Of", "United Kingdom"
+        ]
+        var copernicusMembers = [
+            "Austria", "Belgium", "Bulgaria", "Czech Republic", "Cyprus", "Croatia", "Denmark", "Estonia", "Finland", "France", "Germany",
+            "Greece", "Iceland", "Ireland", "Italy", "Latvia", "Lithuania", "Luxembourg", "Malta", "Norway", "Poland", "Romania", "Slovakia",
+            "Slovenia", "Spain", "Sweden", "Netherlands", "Hungary"
+        ]
+        var countries = []
+        if ($(".eu-members").is(":checked")){
+          countries = countriesEU
+        } else if ($(".eea-members").is(":checked")){
+          countries = countriesEEA
+        } else if ($(".metnet-members").is(":checked")){
+          countries = eumetnetMembers
+        } else if ($(".copernicus-members").is(":checked")){
+          countries = copernicusMembers
+        }
+        var $selectNone = $("span:contains('"+event.data.param1 +"')").closest('.pvtFilterBox').first().find("button:contains('Select None')");
+        var $applyButton = $("span:contains('"+event.data.param1 +"')").closest('.pvtFilterBox').first().find("button:contains('Apply')");
+        $selectNone.trigger("click");
+        $.each(countries, function( index, value ) {
+         var $checkboxCountry = $("span:contains('"+event.data.param1 +"')").closest('.pvtFilterBox').first().find("span:contains('"+ value +"')").parent().first().find('input');
+         $checkboxCountry.trigger('click');
+         $checkboxCountry.prop( "checked", true );
+       });
+        $applyButton.trigger("click");
+      };
     $.ajax({
       dataType: "json",
       url: "/reports/" + this.queryId + "/json",
-    }).success(function(results) {$(".pivot-table").pivotUI(results, pivotState);});
+    }).success(function(results) {
+        $(".pivot-table").pivotUI(results, pivotState);
+        tmpHTML = "<div><input class='radio-inline eea-members' type='radio' name='filter_members'>" +
+                  "<span style='font-size: 14px;'>EEA members</span></div>" +
+                  "<div><input class='radio-inline eu-members' type='radio' name='filter_members'>" +
+                  "<span style='font-size: 14px;'>EU members</span></div>" +
+                  "<div><input class='radio-inline metnet-members' type='radio' name='filter_members'>" +
+                  "<span style='font-size: 14px;'>EUMETNET Members</span></div>" +
+                  "<div><input class='radio-inline copernicus-members' type='radio' name='filter_members'>" +
+                  "<span style='font-size: 14px;'>Copernicus Members</span></div>" +
+                  "</div>" +
+                  "<button type='button' class='btn btn-primary btn-md pivot-set-countries'>Set countries to EU countries</button>"
+        $("span:contains('Data provider network country')").parent('h4').append(tmpHTML)
+        $("span:contains('Data provider country')").parent('h4').append(tmpHTML)
+        $("span:contains('Data provider network country')").parent('h4').find('.pivot-set-countries').click({'param1': 'Data provider network country'}, filter_countries)
+        $("span:contains('Data provider country')").parent('h4').find('.pivot-set-countries').click({'param1': 'Data provider country'}, filter_countries)
+    });
 
     if(navToPivot){
       $("#pivot-tab-label").tab("show");
