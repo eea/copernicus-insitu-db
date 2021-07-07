@@ -27,6 +27,7 @@ if [ "x$DJANGO_INDEX_CONTENT" = "xyes" ]; then
   python manage.py search_index -f --rebuild
 fi
 
+
 if [ -z "$1" ]; then
   uwsgi uwsgi.ini
 fi
