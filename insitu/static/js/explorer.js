@@ -321,7 +321,7 @@ ExplorerEditor.prototype.bind = function() {
                   "<div><input class='radio-inline copernicus-members' type='radio' name='filter_members'>" +
                   "<span style='font-size: 14px;'>Copernicus Members</span></div>" +
                   "</div>" +
-                  "<button type='button' class='btn btn-primary btn-md pivot-set-countries'>Set countries to EU countries</button>"
+                  "<button type='button' class='btn btn-primary btn-md pivot-set-countries'>Filter countries by membership</button>"
         $("span:contains('Data provider network country')").parent('h4').append(tmpHTML)
         $("span:contains('Data provider country')").parent('h4').append(tmpHTML)
         $("span:contains('Data provider network country')").parent('h4').find('.pivot-set-countries').click({'param1': 'Data provider network country'}, filter_countries)
