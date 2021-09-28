@@ -22,7 +22,7 @@ $(document).ready(function () {
           if (row === 0) {
             return $.parseHTML(data)[0].innerHTML.replace(/^\s+|\s+$/g, '');
           }
-          if (row <= 8 && row >= 4) {
+          if (row <= 9 && row >= 4) {
             goal = $.parseHTML(data)[0].innerHTML;
             breakthrough = $.parseHTML(data)[1].innerHTML;
             threshold = $.parseHTML(data)[2].innerHTML;
