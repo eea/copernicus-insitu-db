@@ -3,6 +3,11 @@ Changelog
 
 * In case of major changes, an email should be sent to all users with the modifications.
 
+2.4.7 (2021-09-29)
+------------------
+* Fix display issue in export excel/pdf in Requirement listing
+  [dianaboiangiu]
+
 2.4.6 (2021-06-24)
 ------------------
 * Add duplicate provider links to another data command
