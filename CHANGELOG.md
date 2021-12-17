@@ -3,6 +3,14 @@ Changelog
 
 * In case of major changes, an email should be sent to all users with the modifications.
 
+2.6.0 (2021-12-17)
+------------------
+* Add read-only access for unauthenticated users
+
+2.5.0 (2021-10-01)
+------------------
+* Suport users
+
 2.4.7 (2021-09-29)
 ------------------
 * Fix display issue in export excel/pdf in Requirement listing
