@@ -15,7 +15,6 @@
 
     <!-- Collect the nav links, forms, and other content for toggling -->
     <div class="collapse navbar-collapse" id="main-menu">
-      {% if user.is_authenticated %}
         <ul class="nav navbar-nav">
           {% url 'product:list' as products_list %}
           <li class="{% active products_list %}">
@@ -37,7 +36,7 @@
             <a href="{{ provider_list }}">Data providers</a>
           </li>
 
-          {% if not user|has_group:READ_ONLY_GROUP %}
+          {% if not user|has_group:READ_ONLY_GROUP and user.is_authenticated %}
             {% url 'auth:edit_teammates' as edit_teammates %}
             <li class="{% active edit_teammates %}">
               <a href="{{ edit_teammates }}">Edit teammates</a>
@@ -51,10 +50,12 @@
             </li>
           {% endif %}
 
-          {% url 'about' as about %}
-          <li class="{% active about %}">
-            <a href="{{ about }}">About</a>
-          </li>
+          {% if user.is_authenticated %}
+            {% url 'about' as about %}
+            <li class="{% active about %}">
+              <a href="{{ about }}">About</a>
+            </li>
+          {% endif %}
 
           {% url 'reports:list' as reports %}
           <li class="{% active reports %}">
@@ -62,17 +63,21 @@
           </li>
 
         </ul>
-      {% endif %}
       <ul class="pull-right nav navbar-nav">
         {% if user.is_authenticated %}
            <li>
             <a href="{% url 'user_records' user.id %}">Hello, {{ user.username }}</a>
-          </li>         {% url 'help' as help %}
-          <li class="{% active help %}">
-            <a href="{{ help }}">
-              <span class="glyphicon glyphicon-question-sign"></span> Help
-            </a>
           </li>
+        {% endif %}
+
+        {% url 'help' as help %}
+        <li class="{% active help %}">
+          <a href="{{ help }}">
+            <span class="glyphicon glyphicon-question-sign"></span> Help
+          </a>
+        </li>
+
+        {% if user.is_authenticated %}
           {% url 'auth:change_password' as change_password %}
           <li class="{% active change_password %}">
             <a href="{{ change_password }}">

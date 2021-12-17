@@ -35,12 +35,14 @@
           {% endif %}
         {% endif %}
         <br>
-        <span class="pull-right">
-          <a class="btn btn-primary pull-right"
-             href="{% url 'requirement:add' %}?pk={{ requirement.pk }}">
-            Clone requirement
-          </a>
-        </span>
+        {% if user.is_authenticated %}
+          <span class="pull-right">
+            <a class="btn btn-primary pull-right"
+              href="{% url 'requirement:add' %}?pk={{ requirement.pk }}">
+              Clone requirement
+            </a>
+          </span>
+        {% endif %}
       {% endif %}
     </h1>
   </div>
@@ -139,12 +141,14 @@
         {% include 'bits/metric.html' with metric=requirement.vertical_resolution %}
       </tr>
 
-      <tr class="row">
-        <th class="col-md-4 col-sm-6">
-          Owner
-        </th>
-        <td class="col-md-8 col-sm-6">{{ requirement.owner }}</td>
-      </tr>
+      {% if user.is_authenticated %}
+        <tr class="row">
+          <th class="col-md-4 col-sm-6">
+            Owner
+          </th>
+          <td class="col-md-8 col-sm-6">{{ requirement.owner }}</td>
+        </tr>
+      {% endif %}
 
       <tr class="row">
         <th class="col-md-4 col-sm-6">
@@ -153,7 +157,7 @@
         </th>
         <td class="col-md-8 col-sm-6">
           {{ requirement.state.title }}
-          {% if not user|has_group:READ_ONLY_GROUP %}
+          {% if not user|has_group:READ_ONLY_GROUP and user.is_authenticated %}
             <div class="pull-right">
               {% if requirement.state.name == 'draft' %}
                 {% if requirement.created_by == request.user or request.user in requirement.created_by.team.teammates.all or user_perm %}
@@ -217,19 +221,21 @@
           {% endif %}
         </td>
       </tr>
-      <tr class="row">
-        <th class="col-md-4 col-sm-6">Created by</th>
-        <td class="col-md-8 col-sm-6">{{ requirement.created_by.get_full_name }},
-          <i>{{ requirement.created_by.email }}</i>
-        </td>
-      </tr>
-      {% if requirement.owner_history %}
+      {% if user.is_authenticated %}
         <tr class="row">
-          <th class="col-md-4 col-sm-6">Creators history</th>
-          <td class="col-md-8 col-sm-6">
-            {{ requirement.owner_history }}
+          <th class="col-md-4 col-sm-6">Created by</th>
+          <td class="col-md-8 col-sm-6">{{ requirement.created_by.get_full_name }},
+            <i>{{ requirement.created_by.email }}</i>
           </td>
         </tr>
+        {% if requirement.owner_history %}
+          <tr class="row">
+            <th class="col-md-4 col-sm-6">Creators history</th>
+            <td class="col-md-8 col-sm-6">
+              {{ requirement.owner_history }}
+            </td>
+          </tr>
+        {% endif %}
       {% endif %}
       </tbody>
     </table>

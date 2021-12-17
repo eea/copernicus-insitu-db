@@ -159,7 +159,7 @@ class DataProviderRelationPermissionsTests(base.PermissionsCheckTestCase):
     def test_provider_relation_add_not_auth(self):
         data = base.DataFactory(created_by=self.creator)
         self.check_user_redirect_all_methods(
-            redirect_url=self.login_url,
+            redirect_url=reverse("data:list"),
             url=reverse("data:provider:add", kwargs={"group_pk": data.pk}),
         )
 
@@ -172,7 +172,7 @@ class DataProviderRelationPermissionsTests(base.PermissionsCheckTestCase):
             created_by=self.creator,
         )
         self.check_user_redirect_all_methods(
-            redirect_url=self.login_url,
+            redirect_url=reverse("data:list"),
             url=reverse(
                 "data:provider:edit",
                 kwargs={"group_pk": data.pk, "pk": provider_relation.pk},
@@ -220,7 +220,7 @@ class DataProviderRelationPermissionsTests(base.PermissionsCheckTestCase):
             created_by=self.creator,
         )
         self.check_user_redirect_all_methods(
-            redirect_url=self.login_url,
+            redirect_url=reverse("data:list"),
             url=reverse(
                 "data:provider:delete",
                 kwargs={"group_pk": data.pk, "pk": provider_relation.pk},

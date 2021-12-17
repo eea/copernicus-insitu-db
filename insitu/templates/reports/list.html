@@ -8,7 +8,7 @@
   <div class="row">
     <h1 class="col-sm-12">
       <span>Reports</span>
-      {% if not user|has_group:READ_ONLY_GROUP %}
+      {% if not user|has_group:READ_ONLY_GROUP and user.is_authenticated %}
         <span class="pull-right">
           <a class="btn btn-primary" href="{% url 'reports:snapshot' %}">Download database</a>
           <a class="btn btn-primary pull-right" style="margin-left:5px" href="{% url 'reports:playground' %}">Playground</a>
@@ -17,22 +17,28 @@
     </h1>
   </div>
 
+  {% if user.is_authenticated %}
   <div class="container" style="margin-bottom:20px;">
     <a href="{% url 'reports:standard_report' %}"><h3>Standard Report</h3></a>
-    <h3>Special reports:</h3>
-    <p>Those reports are exported as spreadsheet files with unmerged cells that can be filtered afterwards with specialized tools.</p>
-    <h4>1.This report contains all relevant columns from products, requirements, data and data requirements for the following services:</h4>
-    <p>a) Copernicus Emergency Management Service</p>
-    <p>b) Copernicus Land Monitoring Service</p>
-    <p>c) Copernicus Security Service</p>
-    <a id="" class="btn btn-primary" href="{% static 'sheets/Special_report_1.xlsx' %}" download>Download Excel</a>
+      <h3>Special reports:</h3>
+      <p>Those reports are exported as spreadsheet files with unmerged cells that can be filtered afterwards with specialized tools.</p>
+      <h4>1.This report contains all relevant columns from products, requirements, data and data requirements for the following services:</h4>
+      <p>a) Copernicus Emergency Management Service</p>
+      <p>b) Copernicus Land Monitoring Service</p>
+      <p>c) Copernicus Security Service</p>
+      <a id="" class="btn btn-primary" href="{% static 'sheets/Special_report_1.xlsx' %}" download>Download Excel</a>
 
-    <h4>2.This report contains all relevant columns from products, requirements, data and data requirements for the following services:</h4>
-    <p>a) Copernicus Atmosphere Monitoring Service</p>
-    <p>b) Copernicus Marine Environment Monitoring Service</p>
-    <p>c) Copernicus Climate Change Service</p>
-    <a id="" class="btn btn-primary" href="{% static 'sheets/Special_report_2.xlsx' %}">Download Excel</a>
-  </div>
+      <h4>2.This report contains all relevant columns from products, requirements, data and data requirements for the following services:</h4>
+      <p>a) Copernicus Atmosphere Monitoring Service</p>
+      <p>b) Copernicus Marine Environment Monitoring Service</p>
+      <p>c) Copernicus Climate Change Service</p>
+      <a id="" class="btn btn-primary" href="{% static 'sheets/Special_report_2.xlsx' %}">Download Excel</a>
+    </div>
+  {% else %}
+    <div class="container" style="margin-bottom:20px;">
+      <a href="{% url 'reports:standard_report' %}"><h3>Standard Report</h3></a>
+    </div>
+  {% endif %}
 
   <div>
     <table class="table table-bordered">
@@ -45,7 +51,6 @@
     </thead>
     <tbody>
       {% for query in queries %}
-        {% if query.id != 11 and query.id != 12 %}
           <tr>
             <td>{{ query.id }}</td>
             <td>
@@ -55,7 +60,6 @@
             </td>
             <td>{{ query.description | linebreaks }}</td>
           </tr>
-        {% endif %}
       {% endfor %}
     </tbody>
   </table>

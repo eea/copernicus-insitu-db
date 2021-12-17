@@ -28,7 +28,7 @@
   <div class="row">
     <h1 class="col-sm-12">
       <span>Data</span>
-      {% if not user|has_group:READ_ONLY_GROUP %}
+      {% if not user|has_group:READ_ONLY_GROUP and user.is_authenticated %}
         <span class="pull-right">
           <a class="btn btn-primary pull-right"
              href="{% url 'data:add' %}">New data</a>

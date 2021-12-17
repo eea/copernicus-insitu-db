@@ -22,7 +22,7 @@
     </span>
     <h1 class="col-sm-12">
       <span>Data provider</span>
-      {% if not user|has_group:READ_ONLY_GROUP %}
+      {% if not user|has_group:READ_ONLY_GROUP and user.is_authenticated %}
         {% if provider.state.name == 'draft' %}
           {% if request.user == provider.created_by or request.user.is_superuser or request.user in provider.created_by.team.teammates.all or user_perm %}
             <span class="pull-right margin-left-btn">
@@ -143,7 +143,7 @@
         </th>
         <td class="col-md-8 col-sm-6">
           {{ provider.state.title }}
-          {% if not user|has_group:READ_ONLY_GROUP %}
+          {% if not user|has_group:READ_ONLY_GROUP and user.is_authenticated %}
             <div class="pull-right">
               {% if provider.state.name == 'draft' %}
                 {% if provider.created_by == request.user or request.user in provider.created_by.team.teammates.all or user_perm %}
@@ -202,19 +202,21 @@
           {% endif %}
         </td>
       </tr>
-      <tr class="row">
-        <th class="col-md-4 col-sm-6">Created by</th>
-        <td class="col-md-8 col-sm-6">{{ provider.created_by.get_full_name }},
-          <i>{{ provider.created_by.email }}</i>
-        </td>
-      </tr>
-      {% if provider.owner_history %}
+      {% if user.is_authenticated %}
         <tr class="row">
-          <th class="col-md-4 col-sm-6">Creators history</th>
-          <td class="col-md-8 col-sm-6">
-            {{ provider.owner_history }}
+          <th class="col-md-4 col-sm-6">Created by</th>
+          <td class="col-md-8 col-sm-6">{{ provider.created_by.get_full_name }},
+            <i>{{ provider.created_by.email }}</i>
           </td>
         </tr>
+        {% if provider.owner_history %}
+          <tr class="row">
+            <th class="col-md-4 col-sm-6">Creators history</th>
+            <td class="col-md-8 col-sm-6">
+              {{ provider.owner_history }}
+            </td>
+          </tr>
+        {% endif %}
       {% endif %}
       </tbody>
     </table>

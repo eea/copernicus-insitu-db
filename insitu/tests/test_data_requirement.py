@@ -183,7 +183,7 @@ class DataRequirementPermissionsTests(base.PermissionsCheckTestCase):
         metrics = base.RequirementFactory.create_metrics(self.creator)
         requirement = base.RequirementFactory(created_by=self.creator, **metrics)
         self.check_user_redirect_all_methods(
-            redirect_url=self.login_url,
+            redirect_url=reverse("requirement:list"),
             url=reverse(
                 "requirement:data:add", kwargs={"requirement_pk": requirement.pk}
             ),
@@ -199,7 +199,7 @@ class DataRequirementPermissionsTests(base.PermissionsCheckTestCase):
             created_by=self.creator,
         )
         self.check_user_redirect_all_methods(
-            redirect_url=self.login_url,
+            redirect_url=reverse("requirement:list"),
             url=reverse(
                 "requirement:data:edit",
                 kwargs={
@@ -259,7 +259,7 @@ class DataRequirementPermissionsTests(base.PermissionsCheckTestCase):
             created_by=self.creator,
         )
         self.check_user_redirect_all_methods(
-            redirect_url=self.login_url,
+            redirect_url=reverse("requirement:list"),
             url=reverse(
                 "requirement:data:delete",
                 kwargs={

@@ -561,31 +561,28 @@ class DataPermissionsTests(base.PermissionsCheckTestCase):
         self.redirect_login_url = reverse("auth:login")
 
     def test_list_data_json_non_auth(self):
-        self.check_permission_denied(method="GET", url=reverse("data:json"))
+        resp = self.client.get(reverse("data:json"))
+        self.assertEqual(resp.status_code, 200)
 
     def test_list_data_non_auth(self):
-        self.check_user_redirect(
-            method="GET", url=reverse("data:list"), redirect_url=self.redirect_login_url
-        )
+        resp = self.client.get(reverse("data:json"))
+        self.assertEqual(resp.status_code, 200)
 
     def test_detail_data_non_auth(self):
         data = base.DataFactory(created_by=self.creator)
-        self.check_user_redirect(
-            method="GET",
-            url=reverse("data:detail", kwargs={"pk": data.pk}),
-            redirect_url=self.redirect_login_url,
-        )
+        resp = self.client.get(reverse("data:detail", kwargs={"pk": data.pk}))
+        self.assertEqual(resp.status_code, 200)
 
     def test_add_data_non_auth(self):
         self.check_user_redirect_all_methods(
-            url=reverse("data:add"), redirect_url=self.redirect_login_url
+            url=reverse("data:add"), redirect_url=reverse("data:list")
         )
 
     def test_edit_network_data_non_auth(self):
         data = base.DataFactory(created_by=self.creator)
         self.check_user_redirect_all_methods(
             url=reverse("data:edit", kwargs={"pk": data.pk}),
-            redirect_url=self.redirect_login_url,
+            redirect_url=reverse("data:list"),
         )
 
     def test_edit_network_data_auth(self):
@@ -606,7 +603,7 @@ class DataPermissionsTests(base.PermissionsCheckTestCase):
         data = base.DataFactory(created_by=self.creator)
         self.check_user_redirect_all_methods(
             url=reverse("data:delete", kwargs={"pk": data.pk}),
-            redirect_url=self.redirect_login_url,
+            redirect_url=reverse("data:list"),
         )
 
     def test_delete_network_data_auth(self):

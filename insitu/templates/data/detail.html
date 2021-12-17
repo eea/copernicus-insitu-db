@@ -43,7 +43,7 @@
         {% endif %}
       {% endif %}
       <br>
-      {% if not user|has_group:READ_ONLY_GROUP %}
+      {% if not user|has_group:READ_ONLY_GROUP and user.is_authenticated %}
         <span class="pull-right">
           <a class="btn btn-primary pull-right"
              href="{% url 'data:add' %}?pk={{ data.pk }}">
@@ -195,7 +195,7 @@
           <a target="_blank" href="/help#state"><span class="glyphicon glyphicon-question-sign"></span></a>
         </th>
         <td class="col-md-8 col-sm-6">{{ data.state.title }}
-          {% if not user|has_group:READ_ONLY_GROUP %}
+          {% if not user|has_group:READ_ONLY_GROUP and user.is_authenticated %}
             <div class="pull-right">
               {% if data.state.name == 'draft' %}
                 {% if data.created_by == request.user or request.user in data.created_by.team.teammates.all or user_perm %}
@@ -254,19 +254,21 @@
           {% endif %}
         </td>
       </tr>
-      <tr class="row">
-        <th class="col-md-4 col-sm-6">Created by</th>
-        <td class="col-md-8 col-sm-6">{{ data.created_by.get_full_name }},
-          <i>{{ data.created_by.email }}</i>
-        </td>
-      </tr>
-      {% if data.owner_history %}
+      {% if user.is_authenticated %}
         <tr class="row">
-          <th class="col-md-4 col-sm-6">Creators history</th>
-          <td class="col-md-8 col-sm-6">
-            {{ data.owner_history }}
+          <th class="col-md-4 col-sm-6">Created by</th>
+          <td class="col-md-8 col-sm-6">{{ data.created_by.get_full_name }},
+            <i>{{ data.created_by.email }}</i>
           </td>
         </tr>
+        {% if data.owner_history %}
+          <tr class="row">
+            <th class="col-md-4 col-sm-6">Creators history</th>
+            <td class="col-md-8 col-sm-6">
+              {{ data.owner_history }}
+            </td>
+          </tr>
+        {% endif %}
       {% endif %}
       </tbody>
     </table>

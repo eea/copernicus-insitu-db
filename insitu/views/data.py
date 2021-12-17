@@ -32,7 +32,7 @@ from picklists import models as pickmodels
 
 class DataList(ProtectedTemplateView):
     template_name = "data/list.html"
-    permission_classes = (IsAuthenticated,)
+    permission_classes = ()
     permission_denied_redirect = reverse_lazy("auth:login")
     target_type = "data"
 
@@ -122,7 +122,7 @@ class DataListJson(ESDatatableView):
     }
 
     document = documents.DataDoc
-    permission_classes = (IsAuthenticated,)
+    permission_classes = ()
 
 
 class DataAdd(CreatedByMixin, LoggingProtectedCreateView):
@@ -243,7 +243,7 @@ class DataDetail(ProtectedDetailView):
     template_name = "data/detail.html"
     model = models.Data
     context_object_name = "data"
-    permission_classes = (IsAuthenticated,)
+    permission_classes = ()
     permission_denied_redirect = reverse_lazy("auth:login")
     target_type = "data"
 

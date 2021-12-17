@@ -9,11 +9,14 @@
 {% block title %} Help {% endblock %}
 
 {% block content %}
+
   <div class="row" >
-    <h4>
-      Still need help? Send me an email at
-      <a href="mailto:{{ email }}">{{ email }}</a>
-    </h4>
+    {% if user.is_authenticated %}
+      <h4>
+        Still need help? Send me an email at
+        <a href="mailto:{{ email }}">{{ email }}</a>
+      </h4>
+    {% endif %}
     <h4>
       Click <a href="{% url 'user_manual' %}">here</a> to view User Manual.
       ( <a href="{% static 'docs/CIS2.pdf' %}" download>

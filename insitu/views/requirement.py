@@ -77,7 +77,7 @@ class RequirementDetail(ProtectedDetailView):
     template_name = "requirement/detail.html"
     model = models.Requirement
     context_object_name = "requirement"
-    permission_classes = (IsAuthenticated,)
+    permission_classes = ()
     target_type = "requirement"
 
     def permission_denied(self, request):
@@ -87,7 +87,7 @@ class RequirementDetail(ProtectedDetailView):
 
 class RequirementList(ProtectedTemplateView):
     template_name = "requirement/list.html"
-    permission_classes = (IsAuthenticated,)
+    permission_classes = ()
     target_type = "requirements"
 
     def permission_denied(self, request):
@@ -157,7 +157,7 @@ class RequirementListJson(ESDatatableView):
         "products__component__name",
     ]  # These are the corresponding model fields, in the same order.
     document = documents.RequirementDoc
-    permission_classes = (IsAuthenticated,)
+    permission_classes = ()
 
 
 class RequirementAdd(GetInitialMixin, CreatedByMixin, LoggingProtectedCreateView):

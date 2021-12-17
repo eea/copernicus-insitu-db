@@ -30,7 +30,7 @@ from picklists import models as pickmodels
 
 class DataProviderList(ProtectedTemplateView):
     template_name = "data_provider/list.html"
-    permission_classes = (IsAuthenticated,)
+    permission_classes = ()
     permission_denied_redirect = reverse_lazy("auth:login")
     target_type = "data providers"
 
@@ -76,13 +76,13 @@ class DataProviderListJson(ESDatatableView):
         "data__requirements__products__component__name",
     ]
     document = documents.DataProviderDoc
-    permission_classes = (IsAuthenticated,)
+    permission_classes = ()
 
 
 class DataProviderDetail(ProtectedDetailView):
     model = models.DataProvider
     context_object_name = "provider"
-    permission_classes = (IsAuthenticated,)
+    permission_classes = ()
     permission_denied_redirect = reverse_lazy("provider:list")
     target_type = "data provider"
 

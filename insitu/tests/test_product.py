@@ -185,59 +185,56 @@ class ProductTests(base.FormCheckTestCase):
 
 class ProductPermissionTests(base.PermissionsCheckTestCase):
     def setUp(self):
-        self.redirect_product_url_non_auth = reverse("auth:login")
-        self.redirect_product_url_auth = reverse("product:list")
+        self.redirect_url = reverse("product:list")
         self.methods = ["GET", "POST"]
 
     def test_list_product_json_non_auth(self):
-        self.check_permission_denied(method="GET", url=reverse("product:json"))
+        resp = self.client.get(reverse("product:json"))
+        self.assertEqual(resp.status_code, 200)
 
     def test_product_list_not_auth(self):
-        self.check_user_redirect_all_methods(
-            redirect_url=self.redirect_product_url_non_auth, url=reverse("product:list")
-        )
+        resp = self.client.get(reverse("product:list"))
+        self.assertEqual(resp.status_code, 200)
 
     def test_product_detail_not_auth(self):
         product = base.ProductFactory()
-        self.check_user_redirect_all_methods(
-            redirect_url=self.redirect_product_url_non_auth,
-            url=reverse("product:detail", kwargs={"pk": product.pk}),
-        )
+        resp = self.client.get(reverse("product:detail", kwargs={"pk": product.pk}))
+        self.assertEqual(resp.status_code, 200)
 
     def test_product_add_not_auth(self):
         self.check_user_redirect_all_methods(
-            redirect_url=self.redirect_product_url_non_auth, url=reverse("product:add")
+            redirect_url=self.redirect_url, url=reverse("product:add")
         )
 
     def test_product_edit_not_auth(self):
         product = base.ProductFactory()
         self.check_user_redirect_all_methods(
-            redirect_url=self.redirect_product_url_non_auth,
+            redirect_url=self.redirect_url,
             url=reverse("product:edit", kwargs={"pk": product.pk}),
         )
 
     def test_product_delete_not_auth(self):
         product = base.ProductFactory()
         self.check_user_redirect_all_methods(
-            redirect_url=self.redirect_product_url_non_auth,
+            redirect_url=self.redirect_url,
             url=reverse("product:delete", kwargs={"pk": product.pk}),
         )
 
     def test_product_relation_add_auth(self):
         self.check_authenticated_user_redirect_all_methods(
-            redirect_url=self.redirect_product_url_auth, url=reverse("product:add")
+            redirect_url=self.redirect_url, url=reverse("product:add")
         )
 
     def test_product_relation_edit_auth(self):
         product = base.ProductFactory()
         self.check_authenticated_user_redirect_all_methods(
-            redirect_url=self.redirect_product_url_auth,
+            redirect_url=self.redirect_url,
             url=reverse("product:edit", kwargs={"pk": product.pk}),
         )
 
     def test_product_relation_delete_auth(self):
         product = base.ProductFactory()
         self.check_authenticated_user_redirect_all_methods(
-            redirect_url=self.redirect_product_url_auth,
+            redirect_url=self.redirect_url,
             url=reverse("product:delete", kwargs={"pk": product.pk}),
         )

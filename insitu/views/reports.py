@@ -44,20 +44,29 @@ def as_text(value):
 
 class ReportsListView(ProtectedTemplateView):
     template_name = "reports/list.html"
-    permission_classes = (protected.IsAuthenticated,)
+    permission_classes = ()
     permission_denied_redirect = reverse_lazy("auth:login")
 
     def get_context_data(self, **kwargs):
         context = super(ReportsListView, self).get_context_data(**kwargs)
-        context["queries"] = (
-            Query.objects.all().order_by("id").values("id", "title", "description")
-        )
+        if self.request.user.is_authenticated:
+            context["queries"] = (
+                Query.objects.exclude(id__in=[11, 12, 13, 14])
+                .order_by("id")
+                .values("id", "title", "description")
+            )
+        else:
+            context["queries"] = (
+                Query.objects.exclude(id__in=[1, 8, 11, 12])
+                .order_by("id")
+                .values("id", "title", "description")
+            )
         return context
 
 
 class ReportsDetailView(ProtectedTemplateView):
     template_name = "reports/detail.html"
-    permission_classes = (protected.IsAuthenticated,)
+    permission_classes = ()
     permission_denied_redirect = reverse_lazy("auth:login")
 
     def get(self, request, *args, **kwargs):
@@ -198,7 +207,7 @@ class Pdf(View):
 
 class ReportsStandardReportView(ProtectedTemplateView, ReportExcelMixin, PDFExcelMixin):
     template_name = "reports/standard_report.html"
-    permission_classes = (protected.IsAuthenticated,)
+    permission_classes = ()
     permission_denied_redirect = reverse_lazy("auth:login")
 
     def get_filtered_services(self):

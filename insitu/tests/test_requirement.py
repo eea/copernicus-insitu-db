@@ -435,32 +435,30 @@ class RequirementTests(base.FormCheckTestCase):
 class RequirementPermissionTests(base.PermissionsCheckTestCase):
     def setUp(self):
         super().setUp()
-        self.redirect_requirement_url_non_auth = reverse("auth:login")
-        self.redirect_requirement_url_auth = reverse("requirement:list")
+        self.redirect_url = reverse("requirement:list")
         self.methods = ["GET", "POST"]
 
     def test_list_requirement_json_non_auth(self):
-        self.check_permission_denied(method="GET", url=reverse("requirement:json"))
+        resp = self.client.get(reverse("requirement:json"))
+        self.assertEqual(resp.status_code, 200)
 
     def test_requirement_list_not_auth(self):
-        self.check_user_redirect_all_methods(
-            redirect_url=self.redirect_requirement_url_non_auth,
-            url=reverse("requirement:list"),
-        )
+        resp = self.client.get(reverse("requirement:list"))
+        self.assertEqual(resp.status_code, 200)
 
     def test_requirement_detail_not_auth(self):
         metrics = base.RequirementFactory.create_metrics(self.creator)
         requirement = base.RequirementFactory(
             name="Test requirement", created_by=self.creator, **metrics
         )
-        self.check_user_redirect_all_methods(
-            redirect_url=self.redirect_requirement_url_non_auth,
-            url=reverse("requirement:detail", kwargs={"pk": requirement.pk}),
+        resp = self.client.get(
+            reverse("requirement:detail", kwargs={"pk": requirement.pk})
         )
+        self.assertEqual(resp.status_code, 200)
 
     def test_requirement_add_not_auth(self):
         self.check_user_redirect_all_methods(
-            redirect_url=self.redirect_requirement_url_non_auth,
+            redirect_url=self.redirect_url,
             url=reverse("requirement:add"),
         )
 
@@ -470,7 +468,7 @@ class RequirementPermissionTests(base.PermissionsCheckTestCase):
             name="Test requirement", created_by=self.creator, **metrics
         )
         self.check_user_redirect_all_methods(
-            redirect_url=self.redirect_requirement_url_non_auth,
+            redirect_url=self.redirect_url,
             url=reverse("requirement:edit", kwargs={"pk": requirement.pk}),
         )
 
@@ -499,7 +497,7 @@ class RequirementPermissionTests(base.PermissionsCheckTestCase):
             name="Test requirement", created_by=self.creator, **metrics
         )
         self.check_user_redirect_all_methods(
-            redirect_url=self.redirect_requirement_url_non_auth,
+            redirect_url=self.redirect_url,
             url=reverse("requirement:delete", kwargs={"pk": requirement.pk}),
         )
 

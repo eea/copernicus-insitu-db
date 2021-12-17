@@ -76,7 +76,7 @@ class Manager(ProtectedTemplateView):
 
 class HelpPage(ProtectedTemplateView):
     template_name = "help.html"
-    permission_classes = (IsAuthenticated,)
+    permission_classes = ()
     permission_denied_redirect = reverse_lazy("auth:login")
 
     def get_context_data(self, **kwargs):
