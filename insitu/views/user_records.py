@@ -17,18 +17,19 @@ from insitu.views.protected import (
 from datetime import date, datetime
 
 
-def export_logs(request):
-    start_date = request.GET["start_date"]\
-        if request.GET["start_date"] else date.today()
-    end_date = datetime.combine(
-        datetime.strptime(request.GET["end_date"], '%Y-%m-%d').date(),
-        datetime.now().time())\
-        if request.GET["end_date"] else datetime.today()
+class ExportLogs(ProtectedTemplateView):
+    def get(self, request):
+        start_date = request.GET["start_date"]\
+            if request.GET["start_date"] else date.today()
+        end_date = datetime.combine(
+            datetime.strptime(request.GET["end_date"], '%Y-%m-%d').date(),
+            datetime.now().time())\
+            if request.GET["end_date"] else datetime.today()
 
-    requested_user = request.GET["requested_user"]
-    query = LoggedAction.objects.filter(user=requested_user)\
-        .filter(logged_date__range=[start_date, end_date])
-    return export_logs_excel(query)
+        requested_user = request.GET["requested_user"]
+        query = LoggedAction.objects.filter(user=requested_user)\
+            .filter(logged_date__range=[start_date, end_date])
+        return export_logs_excel(query)
 
 
 class UserRecordsView(ProtectedTemplateView):
