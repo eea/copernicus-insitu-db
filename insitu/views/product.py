@@ -24,7 +24,6 @@ from insitu.views.protected import (
     LoggingProtectedDeleteView,
 )
 from insitu.views.protected.permissions import (
-    IsAuthenticated,
     IsProductEditorUserOrIsSuperUser,
     IsSuperuser,
 )
