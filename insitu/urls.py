@@ -236,4 +236,9 @@ urlpatterns = [
         views.UserRecordsView.as_view(),
         name="user_records",
     ),
+    url(
+        r"user/logs",
+        views.ExportLogs.as_view(),
+        name="export_logs",
+    ),
 ]

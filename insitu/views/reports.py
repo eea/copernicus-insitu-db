@@ -32,7 +32,6 @@ from wkhtmltopdf.views import PDFTemplateResponse
 from insitu.models import Component, CopernicusService, Product
 from insitu.forms import StandardReportForm
 from insitu.views.reportsmixins import ReportExcelMixin, PDFExcelMixin
-from insitu.views import protected
 from insitu.views.protected.views import ProtectedTemplateView, ProtectedView
 
 

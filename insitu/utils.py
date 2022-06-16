@@ -1,4 +1,7 @@
 from contextlib import contextmanager
+import xlsxwriter
+from io import BytesIO
+from django.http import HttpResponse
 
 
 ALL_OPTIONS_LABEL = "All"
@@ -89,6 +92,37 @@ def get_choices(field, model_cls=None, objects=None):
     elif objects:
         model_values = list(objects.values_list(field, flat=True))
     return [ALL_OPTIONS_LABEL] + model_values
+
+
+def export_logs_excel(queryset):
+    output = BytesIO()
+    workbook = xlsxwriter.Workbook(output, {"remove_timezone": True})
+    date_format = workbook.add_format({"num_format": "d mmm yyyy hh:mm AM/PM"})
+    worksheet = workbook.add_worksheet()
+    worksheet.write(0, 0, "ID")
+    worksheet.write(0, 1, "Date")
+    worksheet.write(0, 2, "User")
+    worksheet.write(0, 3, "Action")
+    worksheet.write(0, 4, "Target type")
+    worksheet.write(0, 5, "Target ID")
+    worksheet.write(0, 6, "Extra")
+
+    row = 1
+    for obj in queryset:
+        worksheet.write(row, 0, obj.id)
+        worksheet.write(row, 1, obj.logged_date, date_format)
+        worksheet.write(row, 2, obj.user)
+        worksheet.write(row, 3, obj.action)
+        worksheet.write(row, 4, obj.target_type)
+        worksheet.write(row, 5, obj.id_target)
+        worksheet.write(row, 6, obj.extra)
+        row += 1
+    workbook.close()
+
+    response = HttpResponse(content_type="application/vnd.ms-excel")
+    response["Content-Disposition"] = 'attachment;filename="user_actions_logs.xlsx"'
+    response.write(output.getvalue())
+    return response
 
 
 @contextmanager
