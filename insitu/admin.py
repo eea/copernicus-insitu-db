@@ -67,7 +67,6 @@ class RequirementAdmin(GuardedModelAdmin):
     list_display = ("id", "name")
 
     def components(self, obj):
-        print("Dumla", obj.components)
         links = [
             '<a href="{}">{}</a>'.format(
                 reverse("admin:insitu_component_change", args=(component.pk,)),
@@ -75,7 +74,6 @@ class RequirementAdmin(GuardedModelAdmin):
             )
             for component in obj.components
         ]
-        print("links: ", links)
         return mark_safe(", ".join(links))
 
     components.short_description = "components"
