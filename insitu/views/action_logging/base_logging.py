@@ -3,7 +3,7 @@ import json
 from django.utils import timezone
 from django.conf import settings
 
-from insitu.models import UserLog
+from insitu.models import UserLog, LoggedAction
 
 
 class BaseLoggingView:
@@ -15,20 +15,14 @@ class BaseLoggingView:
         return ""
 
     def log_action(self, request, action, id=""):
-        with open(settings.LOGGING_CSV_PATH, "a+") as csvfile:
-            spamwriter = csv.writer(csvfile, delimiter=",")
-            row = ",".join(
-                [
-                    timezone.now().strftime("%d %B %Y %H:%M"),
-                    request.user.username,
-                    action,
-                    self.target_type,
-                    str(id),
-                    self.extra,
-                ]
-            ).strip(",")
-            spamwriter.writerow(row.split(","))
-
+        LoggedAction.objects.create(
+            logged_date=timezone.now(),
+            user=request.user.username,
+            action=action,
+            target_type=self.target_type,
+            id_target=str(id),
+            extra=self.extra
+        )
         BaseLoggingView.add_user_log(request.user, action, id, self.target_type)
 
     @staticmethod

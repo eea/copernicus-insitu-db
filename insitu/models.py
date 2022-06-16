@@ -169,6 +169,15 @@ class ChangeLog(models.Model):
         return self.version
 
 
+class LoggedAction(models.Model):
+    logged_date = models.DateTimeField(null=True)
+    user = models.CharField(max_length=20, null=True)
+    action = models.CharField(max_length=50, null=True)
+    target_type = models.CharField(max_length=20, null=True)
+    id_target = models.CharField(max_length=5, null=True)
+    extra = models.CharField(max_length=150, null=True)
+
+
 class ValidationWorkflowModel(WorkflowEnabled, models.Model):
     state = StateField(ValidationWorkflow)
 

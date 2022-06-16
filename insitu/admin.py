@@ -7,6 +7,11 @@ from django.utils.safestring import mark_safe
 from guardian.admin import GuardedModelAdmin
 
 from insitu import models
+from insitu.utils import export_logs_excel
+
+
+def logs_export_as_excel(LoggedActionAdmin, request, queryset):
+    return export_logs_excel(queryset)
 
 
 @admin.register(models.CopernicusService)
@@ -27,6 +32,27 @@ class ChangeLogAdmin(admin.ModelAdmin):
     list_display = ("version", "description", "created_at", "current")
 
 
+@admin.register(models.LoggedAction)
+class LoggedActionAdmin(GuardedModelAdmin):
+    readonly_fields = ("logged_date", "obj_link")
+    search_fields = ["logged_date", "user", "target_type", "id_target"]
+    list_display = ("logged_date", "user", "target_type", "obj_link")
+    actions = [logs_export_as_excel]
+
+    def obj_link(self, obj):
+        if obj.id_target:
+            links = [
+                '<a href="{}">{}</a>'.format(
+                    reverse(f"admin:insitu_{obj.target_type}_change", args=(obj.id_target,)),
+                    obj.id_target
+                )
+            ]
+            return mark_safe(", ".join(links))
+
+    obj_link.short_description = "Target ID"
+    logs_export_as_excel.short_description = "Export logs as Excel"
+
+
 @admin.register(models.Component)
 class ComponentAdmin(admin.ModelAdmin):
     search_fields = ["acronym", "name"]
@@ -41,6 +67,7 @@ class RequirementAdmin(GuardedModelAdmin):
     list_display = ("id", "name")
 
     def components(self, obj):
+        print("Dumla", obj.components)
         links = [
             '<a href="{}">{}</a>'.format(
                 reverse("admin:insitu_component_change", args=(component.pk,)),
@@ -48,6 +75,7 @@ class RequirementAdmin(GuardedModelAdmin):
             )
             for component in obj.components
         ]
+        print("links: ", links)
         return mark_safe(", ".join(links))
 
     components.short_description = "components"
