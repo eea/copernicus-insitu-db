@@ -6,20 +6,28 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('insitu', '0040_auto_20210614_1044'),
+        ("insitu", "0040_auto_20210614_1044"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='LoggedAction',
+            name="LoggedAction",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('logged_date', models.DateTimeField(null=True)),
-                ('user', models.CharField(max_length=20, null=True)),
-                ('action', models.CharField(max_length=50, null=True)),
-                ('target_type', models.CharField(max_length=20, null=True)),
-                ('id_target', models.CharField(max_length=5, null=True)),
-                ('extra', models.CharField(max_length=150, null=True)),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("logged_date", models.DateTimeField(null=True)),
+                ("user", models.CharField(max_length=20, null=True)),
+                ("action", models.CharField(max_length=50, null=True)),
+                ("target_type", models.CharField(max_length=20, null=True)),
+                ("id_target", models.CharField(max_length=5, null=True)),
+                ("extra", models.CharField(max_length=150, null=True)),
             ],
         ),
     ]

@@ -19,7 +19,7 @@ class BaseLoggingView:
             action=action,
             target_type=self.target_type,
             id_target=str(id),
-            extra=self.extra
+            extra=self.extra,
         )
         BaseLoggingView.add_user_log(request.user, action, id, self.target_type)
 

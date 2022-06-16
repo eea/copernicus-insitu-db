@@ -43,10 +43,10 @@ class LoggedActionAdmin(GuardedModelAdmin):
         if obj.id_target:
             links = [
                 '<a href="{}">{}</a>'.format(
-                    reverse(f"admin:insitu_{obj.target_type}_change",
-                            args=(obj.id_target,)
-                            ),
-                    obj.id_target
+                    reverse(
+                        f"admin:insitu_{obj.target_type}_change", args=(obj.id_target,)
+                    ),
+                    obj.id_target,
                 )
             ]
             return mark_safe(", ".join(links))

@@ -20,8 +20,10 @@ class Command(BaseCommand):
                 related_object.save()
 
     def handle(self, *args, **options):
-        print(f"Transfering data from {options['old_username']} to "
-              f"{options['new_username']}")
+        print(
+            f"Transfering data from {options['old_username']} to "
+            f"{options['new_username']}"
+        )
         old_user = User.objects.get(username=options["old_username"])
         objects = Requirement.objects.filter(created_by=old_user)
         print(f"Transfering requirements...{objects}")

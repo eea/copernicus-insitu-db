@@ -8,7 +8,7 @@ from insitu.models import (
     ProductRequirement,
     Requirement,
     User,
-    LoggedAction
+    LoggedAction,
 )
 from insitu.views import ProtectedTemplateView
 from insitu.views.protected import (
@@ -19,16 +19,22 @@ from datetime import date, datetime
 
 class ExportLogs(ProtectedTemplateView):
     def get(self, request):
-        start_date = request.GET["start_date"]\
-            if request.GET["start_date"] else date.today()
-        end_date = datetime.combine(
-            datetime.strptime(request.GET["end_date"], '%Y-%m-%d').date(),
-            datetime.now().time())\
-            if request.GET["end_date"] else datetime.today()
+        start_date = (
+            request.GET["start_date"] if request.GET["start_date"] else date.today()
+        )
+        end_date = (
+            datetime.combine(
+                datetime.strptime(request.GET["end_date"], "%Y-%m-%d").date(),
+                datetime.now().time(),
+            )
+            if request.GET["end_date"]
+            else datetime.today()
+        )
 
         requested_user = request.GET["requested_user"]
-        query = LoggedAction.objects.filter(user=requested_user)\
-            .filter(logged_date__range=[start_date, end_date])
+        query = LoggedAction.objects.filter(user=requested_user).filter(
+            logged_date__range=[start_date, end_date]
+        )
         return export_logs_excel(query)
 
 

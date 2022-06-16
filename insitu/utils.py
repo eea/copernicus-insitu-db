@@ -96,8 +96,8 @@ def get_choices(field, model_cls=None, objects=None):
 
 def export_logs_excel(queryset):
     output = BytesIO()
-    workbook = xlsxwriter.Workbook(output, {'remove_timezone': True})
-    date_format = workbook.add_format({'num_format': 'd mmm yyyy hh:mm AM/PM'})
+    workbook = xlsxwriter.Workbook(output, {"remove_timezone": True})
+    date_format = workbook.add_format({"num_format": "d mmm yyyy hh:mm AM/PM"})
     worksheet = workbook.add_worksheet()
     worksheet.write(0, 0, "ID")
     worksheet.write(0, 1, "Date")
@@ -119,8 +119,8 @@ def export_logs_excel(queryset):
         row += 1
     workbook.close()
 
-    response = HttpResponse(content_type='application/vnd.ms-excel')
-    response['Content-Disposition'] = 'attachment;filename="user_actions_logs.xlsx"'
+    response = HttpResponse(content_type="application/vnd.ms-excel")
+    response["Content-Disposition"] = 'attachment;filename="user_actions_logs.xlsx"'
     response.write(output.getvalue())
     return response
 

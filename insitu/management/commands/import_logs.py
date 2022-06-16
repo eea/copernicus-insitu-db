@@ -19,5 +19,5 @@ class Command(BaseCommand):
                     action=row[2],
                     target_type=row[3],
                     id_target=row[4],
-                    extra=row[5:6] if row[5:6] else None
+                    extra=row[5:6] if row[5:6] else None,
                 )
