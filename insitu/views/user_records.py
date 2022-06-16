@@ -37,7 +37,6 @@ class UserRecordsView(ProtectedTemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["users_list"] = User.objects.all()
         current_user = self.request.user
         context["data_list"] = Data.objects.filter(created_by=current_user)
         context["providers_list"] = DataProvider.objects.filter(created_by=current_user)
