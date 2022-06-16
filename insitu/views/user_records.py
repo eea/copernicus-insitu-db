@@ -18,14 +18,16 @@ from datetime import date, datetime
 
 
 def export_logs(request):
-    start_date = request.GET["start_date"] if request.GET["start_date"] else date.today()
+    start_date = request.GET["start_date"]\
+        if request.GET["start_date"] else date.today()
     end_date = datetime.combine(
         datetime.strptime(request.GET["end_date"], '%Y-%m-%d').date(),
         datetime.now().time())\
         if request.GET["end_date"] else datetime.today()
 
     requested_user = request.GET["requested_user"]
-    query = LoggedAction.objects.filter(user=requested_user).filter(logged_date__range=[start_date, end_date])
+    query = LoggedAction.objects.filter(user=requested_user)\
+        .filter(logged_date__range=[start_date, end_date])
     return export_logs_excel(query)
 
 
@@ -37,6 +39,7 @@ class UserRecordsView(ProtectedTemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        context["users_list"] = User.objects.all()
         current_user = self.request.user
         context["data_list"] = Data.objects.filter(created_by=current_user)
         context["providers_list"] = DataProvider.objects.filter(created_by=current_user)

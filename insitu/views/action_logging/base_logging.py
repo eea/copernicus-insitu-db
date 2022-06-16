@@ -1,7 +1,5 @@
-import csv
 import json
 from django.utils import timezone
-from django.conf import settings
 
 from insitu.models import UserLog, LoggedAction
 
