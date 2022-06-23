@@ -34,24 +34,11 @@ class ChangeLogAdmin(admin.ModelAdmin):
 
 @admin.register(models.LoggedAction)
 class LoggedActionAdmin(GuardedModelAdmin):
-    readonly_fields = ("logged_date", "obj_link")
+    readonly_fields = ("logged_date", )
     search_fields = ["logged_date", "user", "target_type", "id_target"]
-    list_display = ("logged_date", "user", "target_type", "obj_link")
+    list_display = ("logged_date", "user", "action", "target_type", "id_target", "extra")
     actions = [logs_export_as_excel]
 
-    def obj_link(self, obj):
-        if obj.id_target:
-            links = [
-                '<a href="{}">{}</a>'.format(
-                    reverse(
-                        f"admin:insitu_{obj.target_type}_change", args=(obj.id_target,)
-                    ),
-                    obj.id_target,
-                )
-            ]
-            return mark_safe(", ".join(links))
-
-    obj_link.short_description = "Target ID"
     logs_export_as_excel.short_description = "Export logs as Excel"
 
 
