@@ -2,6 +2,10 @@ Changelog
 =========
 
 * In case of major changes, an email should be sent to all users with the modifications.
+2.6.1 (2022-06-23)
+------------------
+* Add access for users log files
+
 
 2.6.0 (2021-12-17)
 ------------------
