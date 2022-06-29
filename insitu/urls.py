@@ -241,4 +241,14 @@ urlpatterns = [
         views.ExportLogs.as_view(),
         name="export_logs",
     ),
+    url(
+        r"user/change_name",
+        views.ChangeName.as_view(),
+        name="change_name",
+    ),
+    url(
+        r"user/change_email",
+        views.ChangeEmail.as_view(),
+        name="change_email",
+    ),
 ]

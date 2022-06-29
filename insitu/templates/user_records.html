@@ -31,6 +31,39 @@
 
   <div class="row">
     <h1 class="col-sm-12">
+      <span>Update personal information</span>
+    </h1>
+  </div>
+
+  <form method="POST" action="{% url 'change_name' %}">
+    {% csrf_token %}
+    <div class="panel-body form-inline filters">
+      <label for="first_name">First name:</label>
+      <input type="text" name="first_name" class="form-control input-sm" required>
+    </div>
+
+    <div class="panel-body form-inline filters">
+    <label for="last_name">Last name:</label>
+    <input type="text" name="last_name" class="form-control input-sm" required>
+    </div>
+    <button class="btn btn-primary" type="submit">
+      Change name
+    </button>
+  </form>
+
+  <form method="POST" action="{% url 'change_email' %}">
+    {% csrf_token %}
+    <div class="panel-body form-inline filters">
+      <label for="email">Email:</label>
+      <input type="email" name="email" class="form-control input-sm" required>
+    </div>
+    <button class="btn btn-primary" type="submit">
+      Change email
+    </button>
+  </form>
+
+  <div class="row">
+    <h1 class="col-sm-12">
       <span>Export logging information</span>
     </h1>
   </div>
