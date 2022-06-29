@@ -43,8 +43,8 @@
     </div>
 
     <div class="panel-body form-inline filters">
-    <label for="last_name">Last name:</label>
-    <input type="text" name="last_name" class="form-control input-sm" required>
+      <label for="last_name">Last name:</label>
+      <input type="text" name="last_name" class="form-control input-sm" required>
     </div>
     <button class="btn btn-primary" type="submit">
       Change name
@@ -70,10 +70,12 @@
   <form method="GET" action="{% url 'export_logs' %}">
     <div class="panel-body form-inline filters">
       <div class="form-group filters-style">
-        From: <input type="date" name="start_date">
+        <label for="start_date">From:</label>
+        <input type="date" name="start_date">
       </div>
       <div class="form-group filters-style">
-        To: <input type="date" name="end_date">
+        <label for="end_date">To:</label>
+        <input type="date" name="end_date">
       </div>
 
       <div class="form-group filters-style">
