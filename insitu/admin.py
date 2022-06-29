@@ -34,9 +34,16 @@ class ChangeLogAdmin(admin.ModelAdmin):
 
 @admin.register(models.LoggedAction)
 class LoggedActionAdmin(GuardedModelAdmin):
-    readonly_fields = ("logged_date", )
+    readonly_fields = ("logged_date",)
     search_fields = ["logged_date", "user", "target_type", "id_target"]
-    list_display = ("logged_date", "user", "action", "target_type", "id_target", "extra")
+    list_display = (
+        "logged_date",
+        "user",
+        "action",
+        "target_type",
+        "id_target",
+        "extra",
+    )
     actions = [logs_export_as_excel]
 
     logs_export_as_excel.short_description = "Export logs as Excel"
