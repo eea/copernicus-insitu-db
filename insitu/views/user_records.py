@@ -19,27 +19,27 @@ from django.shortcuts import redirect
 from django.contrib import messages
 
 
-class ChangeName(ProtectedTemplateView):
+class ChangeNameEmail(ProtectedTemplateView):
     def post(self, request):
         current_user = self.request.user
         first_name = request.POST["first_name"]
         last_name = request.POST["last_name"]
-        User.objects.filter(username=current_user.username).update(
-            first_name=first_name, last_name=last_name
-        )
-        messages.success(self.request, "Name changed successfully!")
-        return redirect("user_records", pk=current_user.pk)
-
-
-class ChangeEmail(ProtectedTemplateView):
-    def post(self, request):
-        current_user = self.request.user
         email = request.POST["email"]
-        if User.objects.filter(email=email).exists():
-            messages.error(self.request, "Email is already taken!")
-        else:
-            User.objects.filter(username=current_user.username).update(email=email)
-            messages.success(self.request, "Email changed successfully!")
+
+        if first_name:
+            User.objects.filter(pk=current_user.id).update(first_name=first_name)
+            messages.success(self.request, "First name changed successfully!")
+        if last_name:
+            User.objects.filter(pk=current_user.id).update(last_name=last_name)
+            messages.success(self.request, "Last name changed successfully!")
+
+        if email:
+            if User.objects.filter(email=email).exists():
+                messages.error(self.request, "Email is already taken!")
+            else:
+                User.objects.filter(pk=current_user.id).update(email=email)
+                messages.success(self.request, "Email changed successfully!")
+
         return redirect("user_records", pk=current_user.pk)
 
 

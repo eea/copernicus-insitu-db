@@ -243,12 +243,7 @@ urlpatterns = [
     ),
     url(
         r"user/change_name",
-        views.ChangeName.as_view(),
-        name="change_name",
-    ),
-    url(
-        r"user/change_email",
-        views.ChangeEmail.as_view(),
-        name="change_email",
+        views.ChangeNameEmail.as_view(),
+        name="change_name_email",
     ),
 ]
