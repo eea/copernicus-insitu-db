@@ -241,4 +241,9 @@ urlpatterns = [
         views.ExportLogs.as_view(),
         name="export_logs",
     ),
+    url(
+        r"user/change_name",
+        views.ChangeNameEmail.as_view(),
+        name="change_name_email",
+    ),
 ]

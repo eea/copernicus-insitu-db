@@ -31,16 +31,45 @@
 
   <div class="row">
     <h1 class="col-sm-12">
+      <span>Update personal information</span>
+    </h1>
+  </div>
+
+  <form method="POST" action="{% url 'change_name_email' %}">
+    {% csrf_token %}
+    <div class="panel-body form-inline filters">
+      <label for="first_name">First name:</label>
+      <input type="text" name="first_name" class="form-control input-sm" value="{{ user.first_name }}">
+    </div>
+
+    <div class="panel-body form-inline filters">
+      <label for="last_name">Last name:</label>
+      <input type="text" name="last_name" class="form-control input-sm" value="{{ user.last_name }}">
+    </div>
+
+    <div class="panel-body form-inline filters">
+      <label for="email">Email:</label>
+      <input type="email" name="email" class="form-control input-sm" value="{{ user.email }}">
+    </div>
+    <button class="btn btn-primary" type="submit">
+      Change data
+    </button>
+  </form>
+
+  <div class="row">
+    <h1 class="col-sm-12">
       <span>Export logging information</span>
     </h1>
   </div>
   <form method="GET" action="{% url 'export_logs' %}">
     <div class="panel-body form-inline filters">
       <div class="form-group filters-style">
-        From: <input type="date" name="start_date">
+        <label for="start_date">From:</label>
+        <input type="date" name="start_date">
       </div>
       <div class="form-group filters-style">
-        To: <input type="date" name="end_date">
+        <label for="end_date">To:</label>
+        <input type="date" name="end_date">
       </div>
 
       <div class="form-group filters-style">
