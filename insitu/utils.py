@@ -3,6 +3,7 @@ import xlsxwriter
 from io import BytesIO
 from django.http import HttpResponse
 
+from insitu.models import Data, DataProvider, Product, Requirement
 
 ALL_OPTIONS_LABEL = "All"
 
@@ -93,6 +94,18 @@ def get_choices(field, model_cls=None, objects=None):
         model_values = list(objects.values_list(field, flat=True))
     return [ALL_OPTIONS_LABEL] + model_values
 
+def get_name(obj_id, obj_type):
+    name = ''
+    if obj_id:
+        if obj_type == 'requirement':
+            name = Requirement.objects.really_all().filter(id=obj_id).first().name
+        elif obj_type == 'data':
+            name = Data.objects.really_all().filter(id=obj_id).first().name
+        elif obj_type == 'product':
+            name = Product.objects.really_all().filter(id=obj_id).first().name
+        elif obj_type == 'data provider':
+            name = DataProvider.objects.really_all().filter(id=obj_id).first().name
+    return name
 
 def export_logs_excel(queryset):
     output = BytesIO()
@@ -104,7 +117,8 @@ def export_logs_excel(queryset):
     worksheet.write(0, 2, "Action")
     worksheet.write(0, 3, "Target type")
     worksheet.write(0, 4, "Target ID")
-    worksheet.write(0, 5, "Extra")
+    worksheet.write(0, 5, "Target Name")
+    worksheet.write(0, 6, "Extra")
 
     row = 1
     for obj in queryset:
@@ -113,7 +127,8 @@ def export_logs_excel(queryset):
         worksheet.write(row, 2, obj.action)
         worksheet.write(row, 3, obj.target_type)
         worksheet.write(row, 4, obj.id_target)
-        worksheet.write(row, 5, obj.extra)
+        worksheet.write(row, 5, get_name(obj.id_target, obj.target_type))
+        worksheet.write(row, 6, obj.extra)
         row += 1
     workbook.close()
 
