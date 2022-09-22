@@ -15,7 +15,6 @@ from django.utils import timezone
 
 from insitu.forms import StatisticsDataForm
 from insitu.views.protected import (
-    IsAuthenticated,
     IsSuperuser,
 )
 from insitu.views.protected.views import ProtectedTemplateView

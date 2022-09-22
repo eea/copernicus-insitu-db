@@ -94,18 +94,20 @@ def get_choices(field, model_cls=None, objects=None):
         model_values = list(objects.values_list(field, flat=True))
     return [ALL_OPTIONS_LABEL] + model_values
 
+
 def get_name(obj_id, obj_type):
-    name = ''
+    name = ""
     if obj_id:
-        if obj_type == 'requirement':
+        if obj_type == "requirement":
             name = Requirement.objects.really_all().filter(id=obj_id).first().name
-        elif obj_type == 'data':
+        elif obj_type == "data":
             name = Data.objects.really_all().filter(id=obj_id).first().name
-        elif obj_type == 'product':
+        elif obj_type == "product":
             name = Product.objects.really_all().filter(id=obj_id).first().name
-        elif obj_type == 'data provider':
+        elif obj_type == "data provider":
             name = DataProvider.objects.really_all().filter(id=obj_id).first().name
     return name
+
 
 def export_logs_excel(queryset):
     output = BytesIO()
