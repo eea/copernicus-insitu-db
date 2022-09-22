@@ -10,7 +10,7 @@ from django.contrib.auth.models import User
 from django.contrib.sessions.models import Session
 from django.shortcuts import render
 from django.db.models import Q
-
+from django.views.generic import TemplateView
 from django.utils import timezone
 
 from insitu.forms import StatisticsDataForm
@@ -19,6 +19,7 @@ from insitu.views.protected import (
     IsSuperuser,
 )
 from insitu.views.protected.views import ProtectedTemplateView
+
 from insitu.utils import PICKLISTS_DESCRIPTION
 from picklists import models
 from insitu.models import Product, Requirement, Data, DataProvider, ChangeLog
@@ -137,10 +138,8 @@ class HelpPage(ProtectedTemplateView):
         return context
 
 
-class AboutView(ProtectedTemplateView):
+class AboutView(TemplateView):
     template_name = "about.html"
-    permission_classes = (IsAuthenticated,)
-    permission_denied_redirect = reverse_lazy("auth:login")
 
     @staticmethod
     def get_issues():

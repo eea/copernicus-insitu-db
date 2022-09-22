@@ -25,7 +25,7 @@ class LoginView(FormView):
 
     def dispatch(self, request, *args, **kwargs):
         if request.user.is_authenticated:
-            return redirect(reverse("home"))
+            return redirect(reverse("requirement:list"))
         return super(FormView, self).dispatch(request, *args, **kwargs)
 
     def form_valid(self, form):
@@ -34,7 +34,7 @@ class LoginView(FormView):
         return super(LoginView, self).form_valid(form)
 
     def get_success_url(self):
-        return reverse("home")
+        return reverse("requirement:list")
 
 
 class LogoutView(RedirectView):

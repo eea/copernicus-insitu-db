@@ -181,7 +181,7 @@ reports_patterns = [
 ]
 
 urlpatterns = [
-    url(r"^$", views.HomeView.as_view(), name="home"),
+    url(r"^$", RedirectView.as_view(url='/requirement/list')),
     url(
         r"^password/reset/$",
         auth_views.PasswordResetView.as_view(

@@ -5,75 +5,100 @@
 
 {% block content %}
   <h1>About</h1>
-
-  <h3><b>&emsp;Statistics</b></h3>
-
-  <div class="container">
-    <h4>Logged users: {{ logged_users }}</h4>
-    <h4>Registered users: {{ registered_users }}</h4>
-    <h4>Products: {{ products }}</h4>
-    <h4>Requirements: {{ requirements }}</h4>
-    <h4>Data: {{ data }}</h4>
-    <h4>Data providers: {{ data_providers }}</h4>
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <i class="fa fa-newspaper" aria-hidden="true"></i>
+      COPERNICUS IN SITU INFORMATION SYSTEM (CIS<sup>2</sup>)
+    </div>
+    <div class="pannel-body">
+     <p>CIS<sup>2</sup> is an open database designed to record the requirements of the Copernicus services for in situ data, how far they are met, the origin of each dataset, how each dataset is used, their importance, and the barriers to their seamless use, in order to provide a clear picture of what data is already available and what would be needed to deliver improved and more reliable products and monitoring services.</p>
+     <p> The information derived from this database helps the main players (EU Commission, EEA, Copernicus governance bodies, Member States, etc.) to prioritise actions to further improve the availability of the necessary data. It also provides a basis for dialogue between these players and the Services about priorities.</p>
+      <p>Across Copernicus as a whole, over 300 unique requirements have been identified, that have been linked to nearly 500 datasets and over 600 data providers; these datasets contribute to over 600 products.</p>
+      <p>The following pages contain the detail contained in the database;</p>
+      <ul>
+        <li>Service products to which In Situ data contribute</li>
+        <li>What data are required for these products, including criteria for ranging from meeting minimum needs upwards</li>
+        <li>Which datasets are used in practice, and </li>
+        <li>The identity of the data providers.</li>
+      </ul>
+      <p>Requirements for In Situ data can be expected to increase as new Service elements are developed, and the database is kept under regular review.</p>
+    </div>
   </div>
 
-  <h3><b>&emsp;Incidents</b></h3>
-
-  <br>
-  {% if issues and request.user.is_superuser %}
-    <table class="table table-striped">
-      <thead>
-        <tr>
-          <th scope="col">Name</th>
-          <th scope="col">Last Occur</th>
-          <th scope="col" style="text-align: center">Resolved</th>
-        </tr>
-      </thead>
-
-      <tbody>
-        {% for issue in issues %}
-          <tr>
-            <th scope="row">{{ issue.name }}</th>
-            <td>{{ issue.timestamp }}</td>
-            {% if issue.resolved %}
-              <td><span class="glyphicon glyphicon-ok-circle text-success sentry-center"></span></td>
-            {% else %}
-              <td><span class="glyphicon glyphicon-remove-circle text-danger sentry-center"></span></td>
-            {% endif %}
-          </tr>
-        {% endfor %}
-      </tbody>
-    </table>
-  {% else %}
-    <p>No issues have occurred recently.</p>
+  {% if request.user.is_authenticated %}
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <i class="fa fa-newspaper" aria-hidden="true"></i>
+      Changelog
+    </div>
+    <div class="pannel-body" style="overflow-y: scroll; height:400px;">
+      {% for change_log in change_logs %}
+      <div>
+          <h4 class="font-weight-bold">{{ change_log.version }} ( {{ change_log.created_at }} )</h4>
+          <ul>
+            {{ change_log.description|safe }}
+          </ul>
+        </div>
+    {% endfor %}
+    </div>
+  </div>
   {% endif %}
 
-  <div id="id_changelog_container" class="changelog_container">
-    <table id="id_changelog" class="table-hover table-condensed" style="width:100%">
-      <thead>
-        <tr>
-          <th>
-            <h3><b>&emsp;Changelog</b></h3>
-          </th>
-        </tr>
-      </thead>
-
-      <tbody>
-        {% for change_log in change_logs %}
-          <tr>
-            <td>
-              <h4 class="font-weight-bold">{{ change_log.version }} ( {{ change_log.created_at }} )</h4>
-              <ul>
-                {{ change_log.description|safe }}
-              </ul>
-            </td>
-          </tr>
-        {% endfor %}
-      </tbody>
-    </table>
+{% if request.user.is_authenticated %}
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <i class="fa fa-newspaper" aria-hidden="true"></i>
+      Statistics
+    </div>
+    <div class="pannel-body">
+      <h4><span class="font-weight-bold">Logged users: <span>{{ logged_users }}</h4>
+      <h4><span class="font-weight-bold">Registered users: <span>{{ registered_users }}</h4>
+      <h4><span class="font-weight-bold">Products: <span>{{ products }}</h4>
+      <h4><span class="font-weight-bold">Requirements: <span>{{ requirements }}</h4>
+      <h4><span class="font-weight-bold">Data: <span>{{ data }}</h4>
+      <h4><span class="font-weight-bold">Data providers: <span>{{ data_providers }}</h4>
+    </div>
   </div>
-{% endblock %}
+{% endif %}
 
+  {% if request.user.is_superuser %}
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <i class="fa fa-newspaper" aria-hidden="true"></i>
+        Incidents
+      </div>
+      <div class="pannel-body">
+       {% if issues %}
+        <table class="table table-striped">
+          <thead>
+            <tr>
+              <th scope="col">Name</th>
+              <th scope="col">Last Occur</th>
+              <th scope="col" style="text-align: center">Resolved</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            {% for issue in issues %}
+              <tr>
+                <th scope="row">{{ issue.name }}</th>
+                <td>{{ issue.timestamp }}</td>
+                {% if issue.resolved %}
+                  <td><span class="glyphicon glyphicon-ok-circle text-success sentry-center"></span></td>
+                {% else %}
+                  <td><span class="glyphicon glyphicon-remove-circle text-danger sentry-center"></span></td>
+                {% endif %}
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+        {% else %}
+          <p>No issues have occurred recently.</p>
+        {% endif %}
+      </div>
+    </div>
+  {% endif %}
+{% endblock %}
 
 {% block scripts %}
   <script src="{% static 'js/jquery-3.2.1.min.js' %}"></script>

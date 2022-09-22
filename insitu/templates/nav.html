@@ -1,21 +1,25 @@
 {% load navigation %}
 {% load utils %}
+{% load static %}
 
-<nav class="navbar navbar-default" role="navigation">
-  <div class="container-fluid">
-    <!-- Brand and toggle get grouped for better mobile display -->
-    <div class="navbar-header">
-      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
-              data-target="#main-menu"
-              aria-expanded="false">
-        <span class="sr-only">Toggle navigation</span>
-      </button>
-      <a class="navbar-brand" href="{% url 'home' %}">CIS<sup>2</sup></a>
-    </div>
+<nav class="navbar navbar-default navbar-dark extra-nav-style" role="navigation">
+  <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="navbar-collapse" aria-expanded="false">
+    <span class="sr-only">Toggle navigation</span>
+    <span class="icon-bar"></span>
+    <span class="icon-bar"></span>
+    <span class="icon-bar"></span>
+  </button>
+  <div id="main-menu">
+    <div class="navbar-wrapper" >
+      <a class="extra-navbar-brand navbar-brand extra-navbar-brand" href="{% url 'requirement:list' %}">Copernicus In Situ Component Information System (CIS<sup>2</sup>)</a>
+      <div class="navbar-collapse collapse" id="navbar-collapse">
+        <ul class="extra-navbar-brand nav navbar-nav">
 
-    <!-- Collect the nav links, forms, and other content for toggling -->
-    <div class="collapse navbar-collapse" id="main-menu">
-        <ul class="nav navbar-nav">
+          {% url 'about' as about %}
+          <li class="{% active about %}">
+            <a href="{{ about }}">About</a>
+          </li>
+
           {% url 'product:list' as products_list %}
           <li class="{% active products_list %}">
             <a href="{{ products_list }}">Products</a>
@@ -50,61 +54,56 @@
             </li>
           {% endif %}
 
-          {% if user.is_authenticated %}
-            {% url 'about' as about %}
-            <li class="{% active about %}">
-              <a href="{{ about }}">About</a>
-            </li>
-          {% endif %}
-
           {% url 'reports:list' as reports %}
           <li class="{% active reports %}">
             <a href="{{ reports }}">Reports</a>
           </li>
 
         </ul>
-      <ul class="pull-right nav navbar-nav">
-        {% if user.is_authenticated %}
-           <li>
-            <a href="{% url 'user_records' user.id %}">Hello, {{ user.username }}</a>
-          </li>
-        {% endif %}
-
-        {% url 'help' as help %}
-        <li class="{% active help %}">
-          <a href="{{ help }}">
-            <span class="glyphicon glyphicon-question-sign"></span> Help
-          </a>
-        </li>
-
-        {% if user.is_authenticated %}
-          {% url 'auth:change_password' as change_password %}
-          <li class="{% active change_password %}">
-            <a href="{{ change_password }}">
-              Change password
-            </a>
-          </li>
-          {% if user.is_superuser or user|has_group:PICKLISTS_EDITOR_GROUP %}
-            {% url 'admin:index' as admin %}
-            <li class="{% active admin %}">
-              <a href="{{ admin }}">Administration</a>
+        <ul class=" extra-navbar-brand pull-right nav navbar-nav extra-navbar-brand">
+          {% if user.is_authenticated %}
+            <li>
+              <a href="{% url 'user_records' user.id %}">Hello, {{ user.username }}</a>
             </li>
           {% endif %}
-          {% url 'auth:logout' as logout %}
-          <li class="{% active logout %}">
-            <a href="{{ logout }}">Logout</a>
-          </li>
-        {% else %}
-          <li ckass="{% active password_reset %}">
-            <a href="{% url 'password_reset' %}"><small>Forgot your password?</small></a>
+
+          {% url 'help' as help %}
+          <li class="{% active help %}">
+            <a href="{{ help }}">
+              <span class="glyphicon glyphicon-question-sign"></span> Help
+            </a>
           </li>
 
-          {% url 'auth:login' as login %}
-          <li class="{% active login %}">
-            <a href="{{ login }}">Login</a>
-          </li>
-        {% endif %}
-      </ul>
-    </div><!-- /.navbar-collapse -->
-  </div><!-- /.container-fluid -->
+          {% if user.is_authenticated %}
+            {% url 'auth:change_password' as change_password %}
+            <li class="{% active change_password %}">
+              <a href="{{ change_password }}">
+                Change password
+              </a>
+            </li>
+            {% if user.is_superuser or user|has_group:PICKLISTS_EDITOR_GROUP %}
+              {% url 'admin:index' as admin %}
+              <li class="{% active admin %}">
+                <a href="{{ admin }}">Administration</a>
+              </li>
+            {% endif %}
+            {% url 'auth:logout' as logout %}
+            <li class="{% active logout %}">
+              <a href="{{ logout }}">Logout</a>
+            </li>
+          {% else %}
+            <li ckass="{% active password_reset %}">
+              <a href="{% url 'password_reset' %}"><small>Forgot your password?</small></a>
+            </li>
+
+            {% url 'auth:login' as login %}
+            <li class="{% active login %}">
+              <a href="{{ login }}">Login</a>
+            </li>
+          {% endif %}
+        </ul>
+      </div>
+    </div>
+    <img class="logo-copernicus " src="{% static "/images/logo-for-nav.png"  %}" alt="Copernicus Logo">
+  </div>
 </nav>

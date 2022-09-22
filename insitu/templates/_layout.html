@@ -47,7 +47,7 @@
     {% hijack_notification %}
     {% include 'nav.html' %}
 
-    <div id="to-print" class="container">
+    <div id="to-print" class="container" style="min-height: 550px">
       {% block content %}
       {% endblock %}
 
@@ -101,5 +101,14 @@
     <noscript><p><img src="https://matomo.eea.europa.eu/piwik.php?idsite=26&amp;rec=1" style="border:0;" alt="" /></p></noscript>
     <!-- End Matomo Code -->
   {% endif %}
+    <footer>
+      <div  class="container footer-container">
+        <div>
+          <img class="footer-images img-larger"  src="{% static '/images/programme_eu.png'  %}" alt="Programme of the European Union">
+          <img class="footer-images"  src="{% static '/images/copernicus_logo.png'  %}" alt="Copernicus Logo">
+        </div>
+        <img class="footer-images img-larger"  src="{% static '/images/implemented-by-eea.svg'  %}" alt="EEA Logo">
+      </div>
+    </footer>
   </body>
 </html>
