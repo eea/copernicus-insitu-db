@@ -2,6 +2,10 @@ Changelog
 =========
 
 * In case of major changes, an email should be sent to all users with the modifications.
+2.6.3 (2022-09-22)
+------------------
+* Make changes to interface
+* Add name in user logging extraction
 2.6.2 (2022-06-23)
 ------------------
 * Improve user logging
