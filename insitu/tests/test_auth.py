@@ -22,7 +22,7 @@ class UserAuthenticationTests(TestCase):
         self.client.force_login(self.user)
         resp = self.client.get(reverse("auth:login"), follow=True)
         self.assertEqual(resp.status_code, 200)
-        self.assertRedirects(resp, reverse("requirement:list"))
+        self.assertRedirects(resp, reverse("about"))
         self.client.logout()
 
     def test_login_no_data(self):
@@ -34,7 +34,7 @@ class UserAuthenticationTests(TestCase):
     def test_user_login_successful(self):
         resp = self.client.post(reverse("auth:login"), self._DATA)
         self.assertEqual(resp.status_code, 302)
-        self.assertRedirects(resp, reverse("requirement:list"))
+        self.assertRedirects(resp, reverse("about"))
 
     def test_logout(self):
         self.client.get(reverse("auth:logout"))
@@ -56,7 +56,7 @@ class UserAuthenticationTests(TestCase):
         }
         resp = self.client.post(reverse("auth:change_password"), self.data, follow=True)
         self.assertEqual(resp.status_code, 200)
-        self.assertRedirects(resp, reverse("requirement:list"))
+        self.assertRedirects(resp, reverse("about"))
 
 
 class UserTeammatesTests(TestCase):
