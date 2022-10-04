@@ -2,6 +2,11 @@ Changelog
 =========
 
 * In case of major changes, an email should be sent to all users with the modifications.
+2.6.4 (2022-10-04)
+------------------
+* Improve report 7
+* Update interface
+
 2.6.3 (2022-09-22)
 ------------------
 * Make changes to interface
