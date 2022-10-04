@@ -22,7 +22,7 @@
             "description": "Use cases:\r\n1.  List Data  per given Product, Component, or Service\r\n2.  List Data used by a given Product, Component, or Service. with (no) information/handling cost\r\n3. Present a list of Data per Product group\r\n\r\nFiltering done on the objects of the report:\r\n- Products that have a link to at least one requirement which has at least one link to a data set.\r\n- Data with at least one link to a requirement linked to a product",
             "created_by_user": 1,
             "created_at": "2018-08-01T08:43:07.606Z",
-            "last_run_date": "2021-03-29T13:16:25.250Z",
+            "last_run_date": "2022-10-03T12:20:49.215Z",
             "snapshot": false,
             "connection": "default"
         }
@@ -88,11 +88,11 @@
         "pk": 7,
         "fields": {
             "title": "Data providers per countries",
-            "sql": "SELECT dp.data_provider_id AS \"Data provider UID\",\r\n       dp.data_provider_name AS \"Data provider name\",\r\n       coalesce(dp.data_provider_type, '') AS \"Data provider Provider type\",\r\n       dp.data_provider_country AS \"Data provider country\",\r\n       dp.data_provider_is_network AS \"Data provider Network flag\",\r\n    \r\n       coalesce(dp.data_provider_network_name, '') AS \"Data provider network name\",\r\n       coalesce(dp.data_provider_network_country, '') AS \"Data provider network country\",\r\n       coalesce(dpd.product_component, '') AS \"Product component\",\r\n       coalesce(dpd.product_copernicus_service, '') AS \"Product copernicus service\",\r\n       coalesce(cast(dpd.data_id as varchar), '') AS \"Data UID\",\r\n       coalesce(dpd.data_name, '') AS \"Data name\",\r\n       coalesce(dpd.dataproviderrelation_role,'-') AS \"Data Provider role\",\r\n       coalesce(dpd.requirement_group, '-') as \"Requirement group\"\r\n FROM insitu_dataprovider_special_view dp\r\nLEFT OUTER JOIN insitu_dataprovider_product_direct_view dpd  ON dpd.dataproviderrelation_provider_id = dp.data_provider_id;",
+            "sql": "SELECT dp.data_provider_id AS \"Data provider UID\",\r\n       dp.data_provider_name AS \"Data provider name\",\r\n       coalesce(dp.data_provider_type, '') AS \"Data provider Provider type\",\r\n       dp.data_provider_country AS \"Data provider country\",\r\n       dp.data_provider_is_network AS \"Data provider Network flag\",\r\n    \r\n       coalesce(dp.data_provider_network_name, '') AS \"Data provider network name\",\r\n       coalesce(dp.data_provider_network_country, '') AS \"Data provider network country\",\r\n       coalesce(dpd.product_component, '') AS \"Product component\",\r\n       coalesce(dpd.product_copernicus_service, '') AS \"Product copernicus service\",\r\n       coalesce(cast(dpd.data_id as varchar), '') AS \"Data UID\",\r\n       coalesce(dpd.data_name, '') AS \"Data name\",\r\n       coalesce(dpd.dataproviderrelation_role,'-') AS \"Data Provider role\",\r\n       coalesce(dpd.requirement_group, '-') as \"Requirement group\",\r\n       string_agg(distinct d.data_area, ', ') as \"Data Area\",\r\n       d.data_policy as \"Data Policy\",\r\n       string_agg(distinct d.data_geographical_coverage, ', ') as \"Data Geographical Coverage\"\r\n FROM insitu_dataprovider_special_view dp\r\nINNER JOIN insitu_dataprovider_product_direct_view dpd  ON dpd.dataproviderrelation_provider_id = dp.data_provider_id\r\nINNER JOIN insitu_data_view d ON dpd.data_id = d.data_id\r\ngroup by dp.data_provider_id, dp.data_provider_name, dp.data_provider_country, dp.data_provider_is_network,   d.data_policy,\r\ncoalesce(dp.data_provider_type, ''),coalesce(dp.data_provider_network_name, '') , coalesce(dp.data_provider_network_country, ''),\r\ncoalesce(dpd.product_component, ''), coalesce(dpd.product_copernicus_service, ''), coalesce(cast(dpd.data_id as varchar), ''),\r\n coalesce(dpd.data_name, ''), coalesce(dpd.dataproviderrelation_role,'-'),coalesce(dpd.requirement_group, '-') ;",
             "description": "Use cases:\r\n1.  List Data Providers for a given Country or Network\r\n2.  List all commercial Data Providers for a given Country or Network (filter by provider type)\r\n\r\nFiltering done on the objects of the report:\r\n- All Data Providers are shown in this report\r\n- Data sets which have a link to a component and service through  a product and a requirement",
             "created_by_user": 1,
             "created_at": "2018-11-01T13:49:26.768Z",
-            "last_run_date": "2021-07-05T06:52:29.605Z",
+            "last_run_date": "2022-10-03T12:41:16.276Z",
             "snapshot": false,
             "connection": "default"
         }
@@ -134,7 +134,7 @@
             "description": "Use cases:\r\n1. List INSPIRE themes covered by Data\r\n\r\nFiltering done on the objects of the report:\r\n- All Data sets are shown in this report",
             "created_by_user": 1,
             "created_at": "2018-11-01T16:27:53.396Z",
-            "last_run_date": "2021-03-29T12:44:55.204Z",
+            "last_run_date": "2022-10-03T12:20:13.820Z",
             "snapshot": false,
             "connection": "default"
         }
