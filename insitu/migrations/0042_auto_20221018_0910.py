@@ -6,33 +6,33 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('insitu', '0041_loggedaction'),
+        ("insitu", "0041_loggedaction"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='loggedaction',
-            name='action',
+            model_name="loggedaction",
+            name="action",
             field=models.CharField(max_length=512, null=True),
         ),
         migrations.AlterField(
-            model_name='loggedaction',
-            name='extra',
+            model_name="loggedaction",
+            name="extra",
             field=models.CharField(max_length=1024, null=True),
         ),
         migrations.AlterField(
-            model_name='loggedaction',
-            name='id_target',
+            model_name="loggedaction",
+            name="id_target",
             field=models.CharField(max_length=512, null=True),
         ),
         migrations.AlterField(
-            model_name='loggedaction',
-            name='target_type',
+            model_name="loggedaction",
+            name="target_type",
             field=models.CharField(max_length=512, null=True),
         ),
         migrations.AlterField(
-            model_name='loggedaction',
-            name='user',
+            model_name="loggedaction",
+            name="user",
             field=models.CharField(max_length=512, null=True),
         ),
     ]
