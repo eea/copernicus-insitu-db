@@ -171,11 +171,11 @@ class ChangeLog(models.Model):
 
 class LoggedAction(models.Model):
     logged_date = models.DateTimeField(null=True)
-    user = models.CharField(max_length=20, null=True)
-    action = models.CharField(max_length=50, null=True)
-    target_type = models.CharField(max_length=20, null=True)
-    id_target = models.CharField(max_length=5, null=True)
-    extra = models.CharField(max_length=150, null=True)
+    user = models.CharField(max_length=512, null=True)
+    action = models.CharField(max_length=512, null=True)
+    target_type = models.CharField(max_length=512, null=True)
+    id_target = models.CharField(max_length=512, null=True)
+    extra = models.CharField(max_length=1024, null=True)
 
 
 class ValidationWorkflowModel(WorkflowEnabled, models.Model):
