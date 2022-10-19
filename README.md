@@ -25,7 +25,7 @@ Copernicus services on in situ data requirements (current and expected), data us
 1. Start application stack:
 
         docker-compose up -d
-        docker-compose logs
+        docker-compose ps
 
 1. Run migrations, create superuser:
 
@@ -34,11 +34,13 @@ Copernicus services on in situ data requirements (current and expected), data us
         python manage.py createsuperuser
 
 1. Create SQL views:
+
         docker cp docker/create_views.sql insitu.db:create_views.sql
         docker exec -it insitu.db bash
         psql -U [psql_username] [psql_database] < create_views.sql
 
 1. Create elasticsearch index and start the development server:
+
         python manage.py search_index -f --rebuild
         python manage.py runserver 0.0.0.0:8000
 
