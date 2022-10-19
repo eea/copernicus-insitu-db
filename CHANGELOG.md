@@ -2,6 +2,10 @@ Changelog
 =========
 
 * In case of major changes, an email should be sent to all users with the modifications.
+2.6.5 (2022-10-19)
+------------------
+* Modify field length for LoggedActions
+
 2.6.4 (2022-10-04)
 ------------------
 * Improve report 7
