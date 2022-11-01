@@ -2,6 +2,11 @@ Changelog
 =========
 
 * In case of major changes, an email should be sent to all users with the modifications.
+
+2.6.6 (2022-11-1)
+-----------------
+* Update for report
+
 2.6.5 (2022-10-19)
 ------------------
 * Modify field length for LoggedActions
@@ -15,6 +20,7 @@ Changelog
 ------------------
 * Make changes to interface
 * Add name in user logging extraction
+
 2.6.2 (2022-06-23)
 ------------------
 * Improve user logging
@@ -22,7 +28,6 @@ Changelog
 2.6.1 (2022-06-23)
 ------------------
 * Add access for users log files
-
 
 2.6.0 (2021-12-17)
 ------------------
