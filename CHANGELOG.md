@@ -3,6 +3,10 @@ Changelog
 
 * In case of major changes, an email should be sent to all users with the modifications.
 
+2.7.1 (2022-11-09)
+------------------
+* Add missing explorer queries to fixtures
+
 2.7.0 (2022-11-02)
 ------------------
 * Update version to match the report version
