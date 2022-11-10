@@ -681,7 +681,6 @@ class UserEditAdminForm(forms.ModelForm):
 
 
 class CreateUserForm(UserCreationForm):
-
     def __init__(self, *args, **kwargs):
         super(UserCreationForm, self).__init__(*args, **kwargs)
 
@@ -706,7 +705,7 @@ class CreateUserForm(UserCreationForm):
             "password1",
             "password2",
             "first_name",
-            "last_name"
+            "last_name",
         ]
         widgets = {
             "username": forms.TextInput(attrs={"placeholder": "Username"}),

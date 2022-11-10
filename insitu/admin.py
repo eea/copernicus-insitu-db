@@ -19,32 +19,50 @@ class InsituUserAdmin(UserAdmin):
     form = UserEditAdminForm
     add_form = CreateUserForm
     add_fieldsets = [
-        (None, {
-            "fields": ["email", "username"],
-        }),
-        ("Personal info", {
-            "fields": ["first_name", "last_name"],
-        })
+        (
+            None,
+            {
+                "fields": ["email", "username"],
+            },
+        ),
+        (
+            "Personal info",
+            {
+                "fields": ["first_name", "last_name"],
+            },
+        ),
     ]
     fieldsets = [
-        (None, {
-            "fields": ["email"],
-        }),
-        ("Personal info", {
-            "fields": ["username", "first_name", "last_name"],
-        }),
-        ("Permissions", {
-            "fields": [
-                "is_active",
-                "is_superuser",
-                "is_staff",
-                "groups",
-                "user_permissions"
-            ],
-        }),
-        ("Important dates", {
-            "fields": ["date_joined", "last_login"],
-        }),
+        (
+            None,
+            {
+                "fields": ["email"],
+            },
+        ),
+        (
+            "Personal info",
+            {
+                "fields": ["username", "first_name", "last_name"],
+            },
+        ),
+        (
+            "Permissions",
+            {
+                "fields": [
+                    "is_active",
+                    "is_superuser",
+                    "is_staff",
+                    "groups",
+                    "user_permissions",
+                ],
+            },
+        ),
+        (
+            "Important dates",
+            {
+                "fields": ["date_joined", "last_login"],
+            },
+        ),
     ]
 
     def save_model(self, request, obj, form, change):
