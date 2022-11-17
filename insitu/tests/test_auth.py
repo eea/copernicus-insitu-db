@@ -4,6 +4,7 @@ from django.test import TestCase
 
 from insitu.models import User
 from insitu.tests import base
+from django.core import mail
 
 
 class UserAuthenticationTests(TestCase):
@@ -57,6 +58,28 @@ class UserAuthenticationTests(TestCase):
         resp = self.client.post(reverse("auth:change_password"), self.data, follow=True)
         self.assertEqual(resp.status_code, 200)
         self.assertRedirects(resp, reverse("about"))
+
+
+class CreateUserTest(TestCase):
+    def setUp(self):
+        super().setUp()
+        self.user = User.objects.create_superuser(
+            username="foobar", email="foo@bar.com", password="barbaz"
+        )
+        self.client.force_login(user=self.user)
+
+    def test_add_new_user(self):
+        new_user = {
+            "email": "new_user@test.com",
+            "username": "test",
+        }
+        response = self.client.post(
+            reverse("admin:auth_user_add"), new_user, follow=False
+        )
+
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(len(mail.outbox), 1)
+        self.assertEqual(mail.outbox[0].subject, "Set up Copernicus password")
 
 
 class UserTeammatesTests(TestCase):

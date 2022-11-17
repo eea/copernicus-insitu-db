@@ -13,6 +13,8 @@ from insitu import signals
 from picklists.models import (
     ProductGroup,
 )
+from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.models import User
 
 
 class CreatedByFormMixin:
@@ -670,3 +672,44 @@ class StatisticsDataForm(forms.Form):
     start_date = forms.DateField(input_formats=["%d-%m-%Y"])
     end_date = forms.DateField(input_formats=["%d-%m-%Y"])
     selected_object = forms.ChoiceField(choices=DATABASE_OBJECTS)
+
+
+class UserEditAdminForm(forms.ModelForm):
+    class Meta:
+        model = User
+        fields = "__all__"
+
+
+class CreateUserForm(UserCreationForm):
+    def __init__(self, *args, **kwargs):
+        super(UserCreationForm, self).__init__(*args, **kwargs)
+
+        self.fields["email"].required = True
+        self.fields["password1"].required = False
+        self.fields["password2"].required = False
+        self.fields["password1"].widget.attrs["autocomplete"] = "off"
+        self.fields["password2"].widget.attrs["autocomplete"] = "off"
+
+    password1 = forms.CharField(
+        widget=forms.PasswordInput(attrs={"placeholder": "Password"})
+    )
+    password2 = forms.CharField(
+        widget=forms.PasswordInput(attrs={"placeholder": "Please retype your password"})
+    )
+
+    class Meta:
+        model = models.User
+        fields = [
+            "username",
+            "email",
+            "password1",
+            "password2",
+            "first_name",
+            "last_name",
+        ]
+        widgets = {
+            "username": forms.TextInput(attrs={"placeholder": "Username"}),
+            "email": forms.EmailInput(attrs={"placeholder": "Email"}),
+            "first_name": forms.TextInput(attrs={"placeholder": "First Name"}),
+            "last_name": forms.TextInput(attrs={"placeholder": "Last Name"}),
+        }

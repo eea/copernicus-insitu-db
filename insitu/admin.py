@@ -3,11 +3,85 @@ from __future__ import unicode_literals
 from django.contrib import admin
 from django.urls import reverse
 from django.utils.safestring import mark_safe
+from django.utils.crypto import get_random_string
 
 from guardian.admin import GuardedModelAdmin
 
 from insitu import models
 from insitu.utils import export_logs_excel
+from insitu.forms import CreateUserForm, UserEditAdminForm
+from django.contrib.auth.models import User
+from django.contrib.auth.forms import PasswordResetForm
+from django.contrib.auth.admin import UserAdmin
+
+
+class InsituUserAdmin(UserAdmin):
+    form = UserEditAdminForm
+    add_form = CreateUserForm
+    add_fieldsets = [
+        (
+            None,
+            {
+                "fields": ["email", "username"],
+            },
+        ),
+        (
+            "Personal info",
+            {
+                "fields": ["first_name", "last_name"],
+            },
+        ),
+    ]
+    fieldsets = [
+        (
+            None,
+            {
+                "fields": ["email"],
+            },
+        ),
+        (
+            "Personal info",
+            {
+                "fields": ["username", "first_name", "last_name"],
+            },
+        ),
+        (
+            "Permissions",
+            {
+                "fields": [
+                    "is_active",
+                    "is_superuser",
+                    "is_staff",
+                    "groups",
+                    "user_permissions",
+                ],
+            },
+        ),
+        (
+            "Important dates",
+            {
+                "fields": ["date_joined", "last_login"],
+            },
+        ),
+    ]
+
+    def save_model(self, request, obj, form, change):
+        is_new_user = obj.pk is None
+
+        if is_new_user:
+            obj.set_password(get_random_string())
+
+        super().save_model(request, obj, form, change)
+
+        if is_new_user:
+            reset_form = PasswordResetForm({"email": obj.email})
+            assert reset_form.is_valid()
+            reset_form.save(
+                request=request,
+                use_https=request.is_secure(),
+                subject_template_name="mails/password_set_subject.txt",
+                html_email_template_name="mails/password_set_email.html",
+            )
 
 
 def logs_export_as_excel(LoggedActionAdmin, request, queryset):
@@ -114,6 +188,8 @@ class DataProviderRelationAdmin(BaseDisplayDeleteAdminMixin, admin.ModelAdmin):
     filter_model = models.DataProviderRelation
 
 
+admin.site.unregister(User)
+admin.site.register(User, InsituUserAdmin)
 admin.site.register(models.Product)
 admin.site.register(models.DataProviderDetails)
 admin.site.register(models.Metric)
