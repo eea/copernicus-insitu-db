@@ -104,7 +104,7 @@ class FormCheckTestCase(TestCase):
 
         # when the clone fails, the id_target and object is not filled in
         # and it can't be checked
-        if object and not "tried to clone" in action:
+        if object and "tried to clone" not in action:
             self.assertEqual(logged_action.id_target, str(object.id))
             if hasattr(object, "note"):
                 self.assertEqual(logged_action.target_note, object.note)

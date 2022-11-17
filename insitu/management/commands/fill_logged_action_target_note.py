@@ -38,7 +38,7 @@ class Command(BaseCommand):
 
         # Product
         print("\n\nFill target note for PRODUCT")
-        print("----------------------------")
+        print("------------------------------")
         product_ct = ContentType.objects.get(model="product")
         logged_products = LoggedAction.objects.filter(target_type="product")
 
@@ -50,16 +50,18 @@ class Command(BaseCommand):
                     )
                 except ObjectDoesNotExist:
                     print(f"Product not found for pk {logged_product.id_target}")
+                    continue
 
                 logged_product.target_note = product.note
                 logged_product.save()
                 print(
-                    f"Saved note for LoggedAction {logged_product.pk} product {product.pk}"
+                    f"Saved note for LoggedAction {logged_product.pk} "
+                    f"product {product.pk}"
                 )
 
         # Data
         print("\n\nFill target note for DATA")
-        print("-------------------------")
+        print("---------------------------")
         data_ct = ContentType.objects.get(model="data")
         logged_datas = LoggedAction.objects.filter(target_type="data")
 
@@ -69,6 +71,7 @@ class Command(BaseCommand):
                     data = data_ct.get_object_for_this_type(pk=logged_data.id_target)
                 except ObjectDoesNotExist:
                     print(f"Data not found for pk {logged_data.id_target}")
+                    continue
 
                 logged_data.target_note = data.note
                 logged_data.save()
@@ -86,9 +89,11 @@ class Command(BaseCommand):
                     datap = datap_ct.get_object_for_this_type(pk=logged_datap.id_target)
                 except ObjectDoesNotExist:
                     print(f"Data Provider not found for pk {logged_datap.id_target}")
+                    continue
 
                 logged_datap.target_note = datap.description
                 logged_datap.save()
                 print(
-                    f"Saved note for LoggedAction {logged_datap.pk} data provider {datap.pk}"
+                    f"Saved note for LoggedAction {logged_datap.pk} data "
+                    f"provider {datap.pk}"
                 )
