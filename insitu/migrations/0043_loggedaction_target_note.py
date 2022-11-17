@@ -6,13 +6,13 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('insitu', '0042_auto_20221018_0910'),
+        ("insitu", "0042_auto_20221018_0910"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='loggedaction',
-            name='target_note',
+            model_name="loggedaction",
+            name="target_note",
             field=models.TextField(blank=True),
         ),
     ]

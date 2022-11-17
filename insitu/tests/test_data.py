@@ -261,14 +261,14 @@ class DataTests(base.FormCheckTestCase):
         data = {}
         resp = self.client.post(reverse("data:add") + "?ready", data)
         self.check_required_errors(resp, self.errors)
-        self.check_logged_action('tried to create')
+        self.check_logged_action("tried to create")
 
     def test_add_data_draft(self):
         data = {}
         resp = self.client.post(reverse("data:add"), data)
         self.errors = {"name": self.REQUIRED_ERROR}
         self.check_required_errors(resp, self.errors)
-        self.check_logged_action('tried to create')
+        self.check_logged_action("tried to create")
 
     def test_add_data(self):
         self.erase_logging_file()
@@ -277,7 +277,7 @@ class DataTests(base.FormCheckTestCase):
         self.assertEqual(resp.status_code, 302)
         obj = self.check_single_object(models.Data, data)
         self.logging()
-        self.check_logged_action('created', obj)
+        self.check_logged_action("created", obj)
 
     def test_add_data_either_essential_variable_or_inspire_theme_required(self):
         self.erase_logging_file()
@@ -289,7 +289,7 @@ class DataTests(base.FormCheckTestCase):
         self.assertEqual(resp.status_code, 200)
         self.assertIsNot(resp.context["form"].errors, {})
         self.assertDictEqual(resp.context["form"].errors, self.custom_errors)
-        self.check_logged_action('tried to create')
+        self.check_logged_action("tried to create")
 
         data["essential_variables"] = essential_variables
         data["inspire_themes"] = []
@@ -297,7 +297,7 @@ class DataTests(base.FormCheckTestCase):
         self.assertEqual(resp.status_code, 302)
         data_1 = models.Data.objects.first()
         self.check_object(data_1, data)
-        self.check_logged_action('created', data_1, 2)
+        self.check_logged_action("created", data_1, 2)
 
         data["essential_variables"] = []
         data["inspire_themes"] = inspire_themes
@@ -306,7 +306,7 @@ class DataTests(base.FormCheckTestCase):
         data_2 = models.Data.objects.last()
         self.check_object(data_2, data)
         self.logging()
-        self.check_logged_action('created', data_2, 3)
+        self.check_logged_action("created", data_2, 3)
 
     def test_get_add_with_clone(self):
         self.erase_logging_file()
@@ -328,12 +328,7 @@ class DataTests(base.FormCheckTestCase):
         resp = self.client.post(reverse("data:add") + "?ready&pk=" + str(data.pk), {})
         self.assertEqual(resp.status_code, 200)
         self.check_required_errors(resp, self.errors)
-        self.check_logged_action(
-            "tried to clone data {pk} of".format(
-                pk=data.pk
-            ),
-            data
-        )
+        self.check_logged_action("tried to clone data {pk} of".format(pk=data.pk), data)
 
     def test_post_add_with_clone_ready(self):
         data = base.DataFactory(created_by=self.creator)
@@ -344,12 +339,7 @@ class DataTests(base.FormCheckTestCase):
         self.assertEqual(resp.status_code, 302)
         cloned_obj = models.Data.objects.last()
         self.check_object(cloned_obj, cloned_data)
-        self.check_logged_action(
-            "cloned data {pk} to".format(
-                pk=data.pk
-            ),
-            cloned_obj
-        )
+        self.check_logged_action("cloned data {pk} to".format(pk=data.pk), cloned_obj)
 
     def test_post_add_clone_without_ready(self):
         data = base.DataFactory(created_by=self.creator)
@@ -388,12 +378,12 @@ class DataTests(base.FormCheckTestCase):
             reverse("data:edit", kwargs={"pk": data_factory.pk}) + "?ready"
         )
         self.assertEqual(resp.status_code, 200)
-        self.check_logged_action('updated', obj)
+        self.check_logged_action("updated", obj)
         resp = self.client.post(
             reverse("data:edit", kwargs={"pk": data_factory.pk}) + "?ready", data
         )
         self.assertEqual(resp.status_code, 302)
-        self.check_logged_action('updated', obj, 2)
+        self.check_logged_action("updated", obj, 2)
 
     def test_get_delete_data(self):
         self.login_creator()
@@ -410,7 +400,7 @@ class DataTests(base.FormCheckTestCase):
         self.check_single_object_deleted(models.Data)
         self.check_objects_are_soft_deleted(models.Data, DataDoc)
         self.logging()
-        self.check_logged_action('deleted', data)
+        self.check_logged_action("deleted", data)
 
     def test_delete_data_related_objects(self):
         self.login_creator()
@@ -427,7 +417,7 @@ class DataTests(base.FormCheckTestCase):
         self.client.post(reverse("data:delete", kwargs={"pk": data.pk}))
         self.check_objects_are_soft_deleted(models.DataRequirement)
         self.check_objects_are_soft_deleted(models.DataProviderRelation)
-        self.check_logged_action('deleted', data)
+        self.check_logged_action("deleted", data)
 
     def test_transition(self):
         self.erase_logging_file()
@@ -480,11 +470,10 @@ class DataTests(base.FormCheckTestCase):
                     item.save()
             self.check_logged_action(
                 "changed state from {source} to {target} for".format(
-                    source=transition["source"],
-                    target=transition["target"]
+                    source=transition["source"], target=transition["target"]
                 ),
                 data,
-                idx + 1
+                idx + 1,
             )
         self.logging(check_username=False)
 
@@ -530,10 +519,7 @@ class DataTests(base.FormCheckTestCase):
         )
         self.assertEqual(response.status_code, 404)
 
-        self.check_logged_action(
-            "changed state from draft to nosuchstate for",
-            data
-        )
+        self.check_logged_action("changed state from draft to nosuchstate for", data)
 
         for item in items:
             getattr(item, "refresh_from_db")()
@@ -559,10 +545,7 @@ class DataTests(base.FormCheckTestCase):
         )
         self.assertEqual(response.status_code, 404)
 
-        self.check_logged_action(
-            "changed state from draft to valid for",
-            data
-        )
+        self.check_logged_action("changed state from draft to valid for", data)
 
         for item in items:
             getattr(item, "refresh_from_db")()
@@ -596,10 +579,7 @@ class DataTests(base.FormCheckTestCase):
         self.assertEqual(data.state, "changes")
         self.assertEqual(data.feedback, "this is a feedback test")
 
-        self.check_logged_action(
-            "changed state from ready to changes for",
-            data
-        )
+        self.check_logged_action("changed state from ready to changes for", data)
 
 
 class DataPermissionsTests(base.PermissionsCheckTestCase):

@@ -247,7 +247,7 @@ class DataProviderTests(base.FormCheckTestCase):
         data = {}
         resp = self.client.post(reverse("provider:add_network"), data)
         self.check_required_errors(resp, self.errors)
-        self.check_logged_action('tried to create')
+        self.check_logged_action("tried to create")
 
     def test_get_add_network_provider(self):
         resp = self.client.get(reverse("provider:add_network"))
@@ -269,7 +269,7 @@ class DataProviderTests(base.FormCheckTestCase):
             self.assertEqual(getattr(details, attr), data[attr])
         self.assertEqual(getattr(details, "provider_type").pk, data["provider_type"])
         self.logging()
-        self.check_logged_action('created', obj)
+        self.check_logged_action("created", obj)
 
     def test_get_edit_network_provider(self):
         self.login_creator()
@@ -304,7 +304,7 @@ class DataProviderTests(base.FormCheckTestCase):
         self.assertEqual(getattr(details, "provider_type").pk, data["provider_type"])
         obj = self.check_single_object(models.DataProvider, data)
         self.logging()
-        self.check_logged_action('updated', obj)
+        self.check_logged_action("updated", obj)
 
     def test_get_edit_network_members_provider(self):
         self.login_creator()
@@ -459,11 +459,10 @@ class DataProviderTests(base.FormCheckTestCase):
                     item.save()
             self.check_logged_action(
                 "changed state from {source} to {target} for".format(
-                    source=transition["source"],
-                    target=transition["target"]
+                    source=transition["source"], target=transition["target"]
                 ),
                 provider,
-                idx + 1
+                idx + 1,
             )
         self.logging(check_username=False)
 
@@ -510,8 +509,7 @@ class DataProviderTests(base.FormCheckTestCase):
             getattr(item, "refresh_from_db")()
             self.assertEqual((getattr(item, "state")).name, "draft")
         self.check_logged_action(
-            "changed state from draft to nosuchstate for",
-            provider
+            "changed state from draft to nosuchstate for", provider
         )
 
     def test_transition_existent_state_no_transition(self):
@@ -534,10 +532,7 @@ class DataProviderTests(base.FormCheckTestCase):
         for item in items:
             getattr(item, "refresh_from_db")()
             self.assertEqual((getattr(item, "state")).name, "draft")
-        self.check_logged_action(
-            "changed state from draft to valid for",
-            provider
-        )
+        self.check_logged_action("changed state from draft to valid for", provider)
 
     def test_transition_changes_requested_feedback(self):
         self.erase_logging_file()
@@ -566,10 +561,7 @@ class DataProviderTests(base.FormCheckTestCase):
         getattr(provider, "refresh_from_db")()
         self.assertEqual(provider.state, "changes")
         self.assertEqual(provider.feedback, "this is a feedback test")
-        self.check_logged_action(
-            "changed state from ready to changes for",
-            provider
-        )
+        self.check_logged_action("changed state from ready to changes for", provider)
 
     def test_get_add_non_network_provider_required_fields(self):
         resp = self.client.get(reverse("provider:add_non_network"))
@@ -841,11 +833,10 @@ class DataProviderTests(base.FormCheckTestCase):
                 self.assertEqual((getattr(item, "state")).name, transition["target"])
             self.check_logged_action(
                 "changed state from {source} to {target} for".format(
-                    source=transition["source"],
-                    target=transition["target"]
+                    source=transition["source"], target=transition["target"]
                 ),
                 provider,
-                idx + 1
+                idx + 1,
             )
         self.logging(check_username=False)
 
@@ -892,8 +883,7 @@ class DataProviderTests(base.FormCheckTestCase):
             getattr(item, "refresh_from_db")()
             self.assertEqual((getattr(item, "state")).name, "draft")
         self.check_logged_action(
-            "changed state from draft to nosuchstate for",
-            provider
+            "changed state from draft to nosuchstate for", provider
         )
 
     def test_transition_existent_state_no_transition_non_network(self):
@@ -916,10 +906,7 @@ class DataProviderTests(base.FormCheckTestCase):
         for item in items:
             getattr(item, "refresh_from_db")()
             self.assertEqual((getattr(item, "state")).name, "draft")
-        self.check_logged_action(
-            "changed state from draft to valid for",
-            provider
-        )
+        self.check_logged_action("changed state from draft to valid for", provider)
 
 
 class DataProviderPermissionsTests(base.PermissionsCheckTestCase):

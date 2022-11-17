@@ -29,11 +29,12 @@ class Command(BaseCommand):
                 except ObjectDoesNotExist:
                     print(f"Requirement not found for pk {logged_req.id_target}")
                     continue
-                
+
                 logged_req.target_note = req.note
                 logged_req.save()
-                print(f"Saved note for LoggedAction {logged_req.pk} requirement {req.pk}")
-
+                print(
+                    f"Saved note for LoggedAction {logged_req.pk} requirement {req.pk}"
+                )
 
         # Product
         print("\n\nFill target note for PRODUCT")
@@ -44,13 +45,17 @@ class Command(BaseCommand):
         for logged_product in logged_products:
             if logged_product.id_target:
                 try:
-                    product = product_ct.get_object_for_this_type(pk=logged_product.id_target)
+                    product = product_ct.get_object_for_this_type(
+                        pk=logged_product.id_target
+                    )
                 except ObjectDoesNotExist:
                     print(f"Product not found for pk {logged_product.id_target}")
 
                 logged_product.target_note = product.note
                 logged_product.save()
-                print(f"Saved note for LoggedAction {logged_product.pk} product {product.pk}")
+                print(
+                    f"Saved note for LoggedAction {logged_product.pk} product {product.pk}"
+                )
 
         # Data
         print("\n\nFill target note for DATA")
@@ -84,4 +89,6 @@ class Command(BaseCommand):
 
                 logged_datap.target_note = datap.description
                 logged_datap.save()
-                print(f"Saved note for LoggedAction {logged_datap.pk} data provider {datap.pk}")
+                print(
+                    f"Saved note for LoggedAction {logged_datap.pk} data provider {datap.pk}"
+                )

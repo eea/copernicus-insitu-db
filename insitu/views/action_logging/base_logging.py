@@ -16,7 +16,7 @@ class BaseLoggingView:
         target_note = ""
         target_obj = None
 
-        if hasattr(self, 'object'):
+        if hasattr(self, "object"):
             # self.get_object() will not work on 'add' requests
             target_obj = self.object
         else:
@@ -27,10 +27,10 @@ class BaseLoggingView:
             if isinstance(target_obj, int):
                 target_obj = self.get_object()
 
-            if hasattr(target_obj, 'note'):
+            if hasattr(target_obj, "note"):
                 target_note = target_obj.note
             # DataProvider doesn't have a note field, but it does have a description
-            elif hasattr(target_obj, 'description'):
+            elif hasattr(target_obj, "description"):
                 target_note = target_obj.description
         LoggedAction.objects.create(
             logged_date=timezone.now(),
