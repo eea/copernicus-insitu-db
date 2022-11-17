@@ -2,13 +2,6 @@ from django.contrib.contenttypes.models import ContentType
 from django.core.exceptions import ObjectDoesNotExist
 from django.core.management.base import BaseCommand
 
-# from insitu.models import (
-#     Requirement,
-#     Data,
-#     Product,
-#     DataProvider,
-#     LoggedAction
-# )
 from insitu.models import LoggedAction
 
 
