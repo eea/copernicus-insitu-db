@@ -2,7 +2,7 @@ from django.urls import reverse
 from django.contrib import auth
 from django.test import TestCase
 
-from insitu.models import User
+from insitu.models import User, Data
 from insitu.tests import base
 from django.core import mail
 
@@ -172,3 +172,32 @@ class UserTeammatesTests(TestCase):
         )
         self.assertEqual(resp.status_code, 302)
         self.assertNotIn(self.creator, self.user1.team.teammates.all())
+
+
+class TransferOwnershipTest(TestCase):
+    def setUp(self):
+        super().setUp()
+        self.user = User.objects.create_superuser(
+            username="foobar", email="foo@bar.com", password="barbaz"
+        )
+        self.user1 = base.UserFactory(
+            username="User1", first_name="Old", last_name="User"
+        )
+        self.user2 = base.UserFactory(
+            username="User2", first_name="New", last_name="User"
+        )
+        self.client.force_login(user=self.user)
+        data = Data(name="Test")
+        data.created_by = self.user1
+        data.save()
+
+    def test_transfer_ownership(self):
+        users = {
+            "old_user": self.user1.id,
+            "new_user": self.user2.id,
+            "disable_old_user": "yes",
+        }
+        response = self.client.post(reverse("auth:transfer_ownership"), users)
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(User.objects.get(id=self.user1.id).is_active, False)
+        self.assertEqual(Data.objects.get(name="Test").created_by, self.user2)

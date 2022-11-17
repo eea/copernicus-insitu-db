@@ -12,6 +12,42 @@
   <h1>Manage picklists and products</h1>
 
   <div class="row">
+    <h3>Transfer ownership</h3>
+    <form method="post" action="{% url 'auth:transfer_ownership' %}">
+      {% csrf_token %}
+
+      <div>
+        Previous owner:
+        <select name="old_user">
+          {% for u in users %}
+            <option value="{{ u.id }}">{{ u.first_name }} {{ u.last_name }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <br>
+      <div>
+        New owner:
+        <select name="new_user">
+          {% for u in users %}
+            <option value="{{ u.id }}">{{ u.first_name }} {{ u.last_name }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <br>
+
+      <div>
+        <p>Disable previous owner?</p>
+        <input type="radio" id="disable_old_user_yes" name="disable_old_user" value="yes">
+        <label for="disable_old_user_yes">Yes</label>
+        <input type="radio" id="disable_old_user_no" name="disable_old_user" value="no">
+        <label for="disable_old_user_no">No</label>
+      </div>
+      <br>
+      <input class="btn btn-primary" type="submit" value="Transfer ownership" />
+    </form>
+  </div>
+
+  <div class="row">
     <h3>Export picklists</h3>
     <a class="btn btn-primary" href="{% url 'pick:export' %}">
       Download all picklists
