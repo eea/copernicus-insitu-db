@@ -64,6 +64,7 @@ class DataProviderTests(base.FormCheckTestCase):
         data = resp.json()
         self.assertIsNot(data["recordsTotal"], 0)
         self.assertEqual(data["recordsTotal"], data["recordsFiltered"])
+        self.assertEqual(LoggedAction.objects.count(), 0)
 
     def test_list_provider_json_filter(self):
         base.DataProviderFactory(
@@ -83,6 +84,7 @@ class DataProviderTests(base.FormCheckTestCase):
         self.assertIsNot(data["recordsTotal"], 0)
         self.assertFalse(data["recordsTotal"] < 2)
         self.assertIs(data["recordsFiltered"], 1)
+        self.assertEqual(LoggedAction.objects.count(), 0)
 
     def test_list_provider_json_filter_component(self):
         metrics = base.RequirementFactory.create_metrics(self.creator)
@@ -213,6 +215,7 @@ class DataProviderTests(base.FormCheckTestCase):
                 data = resp.json()
                 # No records are filtered
                 self.assertIs(data["recordsFiltered"], 0)
+        self.assertEqual(LoggedAction.objects.count(), 0)
 
     def test_list_providers(self):
         self.erase_logging_file()
@@ -220,6 +223,7 @@ class DataProviderTests(base.FormCheckTestCase):
         resp = self.client.get(reverse("provider:list"))
         self.assertTemplateUsed(resp, "data_provider/list.html")
         self.logging()
+        self.assertEqual(LoggedAction.objects.count(), 0)
 
     def test_detail_provider(self):
         self.erase_logging_file()
@@ -227,6 +231,7 @@ class DataProviderTests(base.FormCheckTestCase):
         resp = self.client.get(reverse("provider:detail", kwargs={"pk": provider.pk}))
         self.assertEqual(resp.context["provider"], provider)
         self.logging()
+        self.assertEqual(LoggedAction.objects.count(), 0)
 
     def test_detail_provider_non_network(self):
         self.erase_logging_file()
@@ -236,11 +241,13 @@ class DataProviderTests(base.FormCheckTestCase):
         resp = self.client.get(reverse("provider:detail", kwargs={"pk": provider.pk}))
         self.assertEqual(resp.context["provider"], provider)
         self.logging()
+        self.assertEqual(LoggedAction.objects.count(), 0)
 
     def test_add_network_provider_required_fields(self):
         data = {}
         resp = self.client.post(reverse("provider:add_network"), data)
         self.check_required_errors(resp, self.errors)
+        self.check_logged_action('tried to create')
 
     def test_get_add_network_provider(self):
         resp = self.client.get(reverse("provider:add_network"))
@@ -254,7 +261,7 @@ class DataProviderTests(base.FormCheckTestCase):
         resp = self.client.post(reverse("provider:add_network"), data)
         self.assertEqual(resp.status_code, 302)
         data["networks"] = []
-        self.check_single_object(models.DataProvider, data)
+        obj = self.check_single_object(models.DataProvider, data)
         provider = models.DataProvider.objects.last()
         details = provider.details.first()
         details_data.pop("provider_type")
@@ -262,6 +269,7 @@ class DataProviderTests(base.FormCheckTestCase):
             self.assertEqual(getattr(details, attr), data[attr])
         self.assertEqual(getattr(details, "provider_type").pk, data["provider_type"])
         self.logging()
+        self.check_logged_action('created', obj)
 
     def test_get_edit_network_provider(self):
         self.login_creator()
@@ -272,6 +280,7 @@ class DataProviderTests(base.FormCheckTestCase):
         )
         self.assertEqual(resp.status_code, 200)
         self.logging()
+        self.assertEqual(LoggedAction.objects.count(), 0)
 
     def test_edit_network_provider(self):
         self.login_creator()
@@ -293,8 +302,9 @@ class DataProviderTests(base.FormCheckTestCase):
         for attr in details_data.keys():
             self.assertEqual(getattr(details, attr), data[attr])
         self.assertEqual(getattr(details, "provider_type").pk, data["provider_type"])
-        self.check_single_object(models.DataProvider, data)
+        obj = self.check_single_object(models.DataProvider, data)
         self.logging()
+        self.check_logged_action('updated', obj)
 
     def test_get_edit_network_members_provider(self):
         self.login_creator()
@@ -303,6 +313,7 @@ class DataProviderTests(base.FormCheckTestCase):
             reverse("provider:edit_network_members", kwargs={"pk": network.pk})
         )
         self.assertEqual(resp.status_code, 200)
+        self.assertEqual(LoggedAction.objects.count(), 0)
 
     def test_edit_network_members_provider(self):
         self.login_creator()
@@ -341,6 +352,7 @@ class DataProviderTests(base.FormCheckTestCase):
         self.assertEqual(network.members.get(id=member_1.pk).name, member_1.name)
         self.assertEqual(network.members.get(id=member_2.pk).name, member_2.name)
         self.assertEqual(network.members.get(id=member_3.pk).name, member_3.name)
+        self.assertEqual(LoggedAction.objects.count(), 0)
 
     def test_edit_network_members_validation_provider(self):
         self.login_creator()
@@ -360,6 +372,7 @@ class DataProviderTests(base.FormCheckTestCase):
             resp.context["form"].errors["__all__"][0],
             "Members should be different than the network.",
         )
+        self.assertEqual(LoggedAction.objects.count(), 0)
 
     def test_delete_network_members_provider(self):
         self.login_creator()
@@ -394,6 +407,7 @@ class DataProviderTests(base.FormCheckTestCase):
         self.assertEqual(resp.status_code, 302)
         self.assertEqual(network.members.count(), 1)
         self.assertEqual(network.members.get(id=member_1.pk).name, member_1.name)
+        self.assertEqual(LoggedAction.objects.count(), 0)
 
     def test_transition(self):
         self.erase_logging_file()
@@ -419,7 +433,7 @@ class DataProviderTests(base.FormCheckTestCase):
             {"source": "ready", "target": "valid", "user": self.creator},
         ]
 
-        for transition in transitions:
+        for idx, transition in enumerate(transitions):
             for item in items:
                 self.assertEqual((getattr(item, "state")).name, transition["source"])
             self.client.force_login(transition["user"])
@@ -443,6 +457,14 @@ class DataProviderTests(base.FormCheckTestCase):
                 for item in items:
                     item.state = transition["source"]
                     item.save()
+            self.check_logged_action(
+                "changed state from {source} to {target} for".format(
+                    source=transition["source"],
+                    target=transition["target"]
+                ),
+                provider,
+                idx + 1
+            )
         self.logging(check_username=False)
 
     def test_transition_with_draft_data(self):
@@ -465,6 +487,7 @@ class DataProviderTests(base.FormCheckTestCase):
             )
         )
         self.assertTrue(response.status_code, 200)
+        self.assertEqual(LoggedAction.objects.count(), 0)
 
     def test_transition_inexistent_state(self):
         self.login_creator()
@@ -486,6 +509,10 @@ class DataProviderTests(base.FormCheckTestCase):
         for item in items:
             getattr(item, "refresh_from_db")()
             self.assertEqual((getattr(item, "state")).name, "draft")
+        self.check_logged_action(
+            "changed state from draft to nosuchstate for",
+            provider
+        )
 
     def test_transition_existent_state_no_transition(self):
         self.login_creator()
@@ -507,6 +534,10 @@ class DataProviderTests(base.FormCheckTestCase):
         for item in items:
             getattr(item, "refresh_from_db")()
             self.assertEqual((getattr(item, "state")).name, "draft")
+        self.check_logged_action(
+            "changed state from draft to valid for",
+            provider
+        )
 
     def test_transition_changes_requested_feedback(self):
         self.erase_logging_file()
@@ -535,10 +566,15 @@ class DataProviderTests(base.FormCheckTestCase):
         getattr(provider, "refresh_from_db")()
         self.assertEqual(provider.state, "changes")
         self.assertEqual(provider.feedback, "this is a feedback test")
+        self.check_logged_action(
+            "changed state from ready to changes for",
+            provider
+        )
 
     def test_get_add_non_network_provider_required_fields(self):
         resp = self.client.get(reverse("provider:add_non_network"))
         self.assertEqual(resp.status_code, 200)
+        self.assertEqual(LoggedAction.objects.count(), 0)
 
     def test_add_non_network_provider_required_fields(self):
         data = {}
@@ -552,6 +588,7 @@ class DataProviderTests(base.FormCheckTestCase):
             field: self.REQUIRED_ERROR for field in self.details_required_fields
         }
         self.assertDictEqual(resp.context["details"].errors, detail_errors)
+        self.check_logged_action("tried to create")
 
     def test_add_non_network_provider_fail_detail_form_validation(self):
         self.erase_logging_file()
@@ -574,6 +611,7 @@ class DataProviderTests(base.FormCheckTestCase):
             field: self.REQUIRED_ERROR for field in self.details_required_fields
         }
         self.assertDictEqual(resp.context["details"].errors, detail_errors)
+        self.check_logged_action("created")
 
     def test_add_non_network_provider(self):
         self.erase_logging_file()
@@ -620,6 +658,7 @@ class DataProviderTests(base.FormCheckTestCase):
             self.assertEqual(getattr(details, attr), data[attr])
         self.assertEqual(getattr(details, "provider_type").pk, data["provider_type"])
         self.logging()
+        self.check_logged_action("created", provider)
 
     def test_get_edit_non_network_provider(self):
         self.login_creator()
@@ -628,6 +667,7 @@ class DataProviderTests(base.FormCheckTestCase):
             reverse("provider:edit_non_network", kwargs={"pk": provider.pk})
         )
         self.assertEqual(resp.status_code, 200)
+        self.assertEqual(LoggedAction.objects.count(), 0)
 
     def test_edit_non_network_provider(self):
         self.login_creator()
@@ -654,6 +694,7 @@ class DataProviderTests(base.FormCheckTestCase):
             self.assertEqual(getattr(details, attr), data[attr])
         self.assertEqual(getattr(details, "provider_type").pk, data["provider_type"])
         self.logging()
+        self.check_logged_action("updated", provider)
 
     def test_edit_non_network_provider_fail_detail_form_validation(self):
         self.login_creator()
@@ -669,6 +710,7 @@ class DataProviderTests(base.FormCheckTestCase):
             field: self.REQUIRED_ERROR for field in self.details_required_fields
         }
         self.assertDictEqual(resp.context["details"].errors, detail_errors)
+        self.check_logged_action("updated")
 
     def test_get_edit_network(self):
         self.login_creator()
@@ -679,6 +721,7 @@ class DataProviderTests(base.FormCheckTestCase):
         )
         self.assertEqual(response.status_code, 200)
         self.logging()
+        self.assertEqual(LoggedAction.objects.count(), 0)
 
     def test_get_delete_data_provider_network(self):
         self.login_creator()
@@ -688,6 +731,7 @@ class DataProviderTests(base.FormCheckTestCase):
         )
         self.assertEqual(resp.status_code, 200)
         self.logging()
+        self.assertEqual(LoggedAction.objects.count(), 0)
 
     def test_delete_data_provider_network(self):
         self.login_creator()
@@ -700,6 +744,7 @@ class DataProviderTests(base.FormCheckTestCase):
         self.check_single_object_deleted(models.DataProvider)
         self.check_objects_are_soft_deleted(models.DataProvider, DataProviderDoc)
         self.logging()
+        self.check_logged_action("deleted", provider)
 
     def test_delete_data_provider_network_related_objects(self):
         self.login_creator()
@@ -712,6 +757,7 @@ class DataProviderTests(base.FormCheckTestCase):
         self.client.post(reverse("provider:delete_network", kwargs={"pk": provider.pk}))
         self.check_objects_are_soft_deleted(models.DataProviderDetails)
         self.check_objects_are_soft_deleted(models.DataProviderRelation)
+        self.check_logged_action("deleted", provider)
 
     def test_get_delete_data_provider_non_network(self):
         self.login_creator()
@@ -720,6 +766,7 @@ class DataProviderTests(base.FormCheckTestCase):
             reverse("provider:delete_non_network", kwargs={"pk": provider.pk})
         )
         self.assertEqual(resp.status_code, 200)
+        self.assertEqual(LoggedAction.objects.count(), 0)
 
     def test_delete_data_provider_non_network(self):
         self.login_creator()
@@ -732,6 +779,7 @@ class DataProviderTests(base.FormCheckTestCase):
         self.check_single_object_deleted(models.DataProvider)
         self.check_objects_are_soft_deleted(models.DataProvider, DataProviderDoc)
         self.logging()
+        self.check_logged_action("deleted", provider)
 
     def test_delete_data_provider_non_network_related_objects(self):
         self.login_creator()
@@ -746,6 +794,7 @@ class DataProviderTests(base.FormCheckTestCase):
         )
         self.check_objects_are_soft_deleted(models.DataProviderDetails)
         self.check_objects_are_soft_deleted(models.DataProviderRelation)
+        self.check_logged_action("deleted", provider)
 
     def test_transition_non_network(self):
         self.erase_logging_file()
@@ -770,7 +819,7 @@ class DataProviderTests(base.FormCheckTestCase):
             {"source": "ready", "target": "valid", "user": self.other_user},
         ]
 
-        for transition in transitions:
+        for idx, transition in enumerate(transitions):
             for item in items:
                 self.assertEqual((getattr(item, "state")).name, transition["source"])
             self.client.force_login(transition["user"])
@@ -790,6 +839,14 @@ class DataProviderTests(base.FormCheckTestCase):
             for item in items:
                 getattr(item, "refresh_from_db")()
                 self.assertEqual((getattr(item, "state")).name, transition["target"])
+            self.check_logged_action(
+                "changed state from {source} to {target} for".format(
+                    source=transition["source"],
+                    target=transition["target"]
+                ),
+                provider,
+                idx + 1
+            )
         self.logging(check_username=False)
 
     def test_transition_with_draft_data_non_network(self):
@@ -812,6 +869,7 @@ class DataProviderTests(base.FormCheckTestCase):
             )
         )
         self.assertTrue(response.status_code, 200)
+        self.assertEqual(LoggedAction.objects.count(), 0)
 
     def test_transition_inexistent_state_non_network(self):
         self.login_creator()
@@ -833,6 +891,10 @@ class DataProviderTests(base.FormCheckTestCase):
         for item in items:
             getattr(item, "refresh_from_db")()
             self.assertEqual((getattr(item, "state")).name, "draft")
+        self.check_logged_action(
+            "changed state from draft to nosuchstate for",
+            provider
+        )
 
     def test_transition_existent_state_no_transition_non_network(self):
         self.login_creator()
@@ -854,6 +916,10 @@ class DataProviderTests(base.FormCheckTestCase):
         for item in items:
             getattr(item, "refresh_from_db")()
             self.assertEqual((getattr(item, "state")).name, "draft")
+        self.check_logged_action(
+            "changed state from draft to valid for",
+            provider
+        )
 
 
 class DataProviderPermissionsTests(base.PermissionsCheckTestCase):

@@ -4,6 +4,7 @@ import os
 from django.test import TestCase
 from copernicus.test_settings import LOGGING_CSV_FILENAME, LOGGING_CSV_PATH
 from insitu.tests.base import UserFactory
+from insitu.models import LoggedAction
 
 
 class FormCheckTestCase(TestCase):
@@ -79,6 +80,7 @@ class FormCheckTestCase(TestCase):
         self.assertEqual(qs.count(), 1)
         object = qs.first()
         self.check_object(object, data)
+        return object
 
     def check_single_object_deleted(self, model_cls):
         self.assertFalse(model_cls.objects.exists())
@@ -90,6 +92,24 @@ class FormCheckTestCase(TestCase):
             if document:
                 resp = document.get(id=obj.id, ignore=404)
                 self.assertIsNone(resp)
+
+    def check_logged_action(self, action, object=None, logged_action_id=None):
+        if logged_action_id:
+            logged_action = LoggedAction.objects.get(pk=logged_action_id)
+        else:
+            qs = LoggedAction.objects.all()
+            self.assertEqual(qs.count(), 1)
+            logged_action = qs.first()
+        self.assertEqual(logged_action.action, action)
+
+        # when the clone fails, the id_target and object is not filled in
+        # and it can't be checked
+        if object and not "tried to clone" in action:
+            self.assertEqual(logged_action.id_target, str(object.id))
+            if hasattr(object, "note"):
+                self.assertEqual(logged_action.target_note, object.note)
+            elif hasattr(object, "description"):
+                self.assertEqual(logged_action.target_note, object.description)
 
     def tearDown(self):
         super().tearDown()
