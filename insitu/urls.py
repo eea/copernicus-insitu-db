@@ -149,6 +149,11 @@ auth_patterns = [
     ),
     url(r"^edit_teammates/", views.EditTeamMatesView.as_view(), name="edit_teammates"),
     url(
+        r"^transfer_ownership/",
+        views.TransferOwnership.as_view(),
+        name="transfer_ownership",
+    ),
+    url(
         r"^accept_teammate_request/(?P<sender_user>[0-9]+)",
         views.AcceptTeammateRequestView.as_view(),
         name="accept_request",

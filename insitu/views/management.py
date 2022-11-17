@@ -6,9 +6,10 @@ from datetime import datetime
 from django.apps import apps
 from django.urls import reverse_lazy
 from django.conf import settings
+from django.contrib import messages
 from django.contrib.auth.models import User
 from django.contrib.sessions.models import Session
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.db.models import Q
 from django.views.generic import TemplateView
 from django.utils import timezone
@@ -24,6 +25,44 @@ from picklists import models
 from insitu.models import Product, Requirement, Data, DataProvider, ChangeLog
 
 
+class TransferOwnership(ProtectedTemplateView):
+    def post(self, request):
+        old_user = request.POST["old_user"]
+        new_user = request.POST["new_user"]
+        disable_old_user = request.POST["disable_old_user"]
+        if old_user == new_user:
+            messages.error(
+                self.request, "You cannot transfer ownership to the same user!"
+            )
+        else:
+
+            def transfer_ownership_on_objects(obj):
+                new_u = User.objects.get(id=new_user)
+                for data_object in obj:
+                    data_object.created_by = new_u
+                    data_object.save()
+                    obj = data_object.get_related_objects()
+                    for related_object in obj:
+                        related_object.created_by = new_u
+                        related_object.save()
+
+            objects = Requirement.objects.filter(created_by=old_user)
+            transfer_ownership_on_objects(objects)
+            objects = Data.objects.filter(created_by=old_user)
+            transfer_ownership_on_objects(objects)
+            objects = DataProvider.objects.filter(created_by=old_user)
+            transfer_ownership_on_objects(objects)
+
+            if disable_old_user == "yes":
+                old_u = User.objects.get(id=old_user)
+                old_u.is_active = False
+                old_u.save()
+                messages.success(self.request, "Previous owner successfully disabled")
+            messages.success(self.request, "Ownership successfully transferred")
+
+        return redirect("manage")
+
+
 class Manager(ProtectedTemplateView):
     template_name = "manage.html"
     permission_classes = (IsSuperuser,)
@@ -32,6 +71,7 @@ class Manager(ProtectedTemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["form"] = StatisticsDataForm()
+        context["users"] = User.objects.all()
         return context
 
     def get_statistics(self, model, **kwargs):
