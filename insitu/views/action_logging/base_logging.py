@@ -13,6 +13,25 @@ class BaseLoggingView:
         return ""
 
     def log_action(self, request, action, id=""):
+        target_note = ""
+        target_obj = None
+
+        if hasattr(self, 'object'):
+            # self.get_object() will not work on 'add' requests
+            target_obj = self.object
+        else:
+            target_obj = self.get_object()
+
+        if target_obj:
+            # On edit self.object is just the id of the object
+            if isinstance(target_obj, int):
+                target_obj = self.get_object()
+
+            if hasattr(target_obj, 'note'):
+                target_note = target_obj.note
+            # DataProvider doesn't have a note field, but it does have a description
+            elif hasattr(target_obj, 'description'):
+                target_note = target_obj.description
         LoggedAction.objects.create(
             logged_date=timezone.now(),
             user=request.user.username,
@@ -20,6 +39,7 @@ class BaseLoggingView:
             target_type=self.target_type,
             id_target=str(id),
             extra=self.extra,
+            target_note=target_note,
         )
         BaseLoggingView.add_user_log(request.user, action, id, self.target_type)
 
