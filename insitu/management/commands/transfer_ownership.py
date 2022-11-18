@@ -31,7 +31,7 @@ class Command(BaseCommand):
             )
             return
 
-        if not obj.created_by.username == options["old_username"]:
+        if obj.created_by.username != options["old_username"]:
             print(
                 "{} {} is not created by {}".format(
                     options["object_type"], options["id"], options["old_username"]

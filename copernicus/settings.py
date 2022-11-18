@@ -60,6 +60,7 @@ INSTALLED_APPS = [
     "bootstrap3",
     "django_xworkflows",
     "hijack",
+    "django_jenkins",
     # TODO add hijack back in admin as soon as admin
     # integration is available in the main hijack package
     "docs",

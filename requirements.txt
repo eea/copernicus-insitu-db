@@ -8,6 +8,7 @@ django-hijack==2.3.0
 django-sql-explorer==2.2
 django-wkhtmltopdf==3.3.0
 django-xworkflows==1.0.0
+django-jenkins
 Django==2.2.24 # upgrade to Django 3.2 when django-xworkflows has support ready
 reportlab==3.5.67
 elasticsearch-dsl==6.4.0

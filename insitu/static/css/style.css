@@ -171,10 +171,6 @@ a.extra-navbar-brand {
   color: white
 }
 
-.navbar-wrapper {
-  display: flex;
-  flex-direction: column;
-}
 .padding_user_log {
   padding: 0 16px 16px 0;
 }
@@ -190,11 +186,7 @@ a.extra-navbar-brand {
 
 .flex-child:first-child {
   margin-right: 20px;
-} 
-
-.flex-child:first-child {
-  margin-right: 20px;
-} 
+}
 
 .navbar-header {
   float: left;

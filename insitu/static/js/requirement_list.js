@@ -1,9 +1,9 @@
 function updateFilterOptions(filter, option_data) {
-  var select = $('#' + filter);
+  let select = $('#' + filter);
   select.find('option').remove();
   select.append('<option value="All">All</option>');
-  $.each(option_data.options, function (i, option) {
-    var selected = '';
+  $.each(option_data.options, function (_i, option) {
+    let selected = '';
     if (option_data.selected == option) {
       selected = ' selected';
     }
@@ -12,21 +12,21 @@ function updateFilterOptions(filter, option_data) {
   });
 }
 $(document).ready(function () {
-  var buttonCommon = {
+  let buttonCommon = {
     exportOptions: {
       format: {
-        header: function (data, columnIdx) {
+        header: function (data, _columnIdx) {
           return data.split('<span')[0].replace(/^\s+|\s+$/g, '');
         },
-        body: function (data, row, column, node) {
+        body: function (data, row, _column, _node) {
           if (row === 0) {
             return $.parseHTML(data)[0].innerHTML.replace(/^\s+|\s+$/g, '');
           }
           if (row <= 9 && row >= 4) {
-            goal = $.parseHTML(data)[0].innerHTML;
-            breakthrough = $.parseHTML(data)[1].innerHTML;
-            threshold = $.parseHTML(data)[2].innerHTML;
-            metrics = '';
+            let goal = $.parseHTML(data)[0].innerHTML;
+            let breakthrough = $.parseHTML(data)[1].innerHTML;
+            let threshold = $.parseHTML(data)[2].innerHTML;
+            let metrics = '';
             if (goal) {
               metrics += 'Threshold: ' + '\n' + $.parseHTML(data)[0].innerHTML + '\n';
             }
@@ -63,10 +63,10 @@ $(document).ready(function () {
         title: 'CIS2 Requirements',
         orientation: 'landscape',
         customize: function (doc) {
-          var cols = [];
-          var created = new Date().toDateString();
+          let cols = [];
+          let created = new Date().toDateString();
           cols[0] = { text: 'https://cis2.eea.europa.eu , ' + created, alignment: 'right', margin: [50, 10], };
-          var objFooter = {};
+          let objFooter = {};
           objFooter.columns = cols;
           doc.footer = objFooter;
         }
@@ -100,7 +100,7 @@ $(document).ready(function () {
       }
     },
     "stateSave": true,
-    "stateSaveParams": function (settings, data) {
+    "stateSaveParams": function (_settings, data) {
       data.dissemination = $('#dissemination').val();
       data.quality_control_procedure = $('#quality_control_procedure').val();
       data.group = $('#group').val();
@@ -108,7 +108,7 @@ $(document).ready(function () {
       data.state = $('#state').val();
       data.component = $('#component').val();
     },
-    "stateLoadParams": function (settings, data) {
+    "stateLoadParams": function (_settings, data) {
       $('#dissemination').val(data.dissemination);
       $('#quality_control_procedure').val(data.quality_control_procedure);
       $('#group').val(data.group);
@@ -116,21 +116,21 @@ $(document).ready(function () {
       $('#state').val(data.state);
       $('#component').val();
     },
-    "drawCallback": function (settings) {
-      var info = $(this).closest('.dataTables_wrapper').find('.dataTables_info');
+    "drawCallback": function (_settings) {
+      let info = $(this).closest('.dataTables_wrapper').find('.dataTables_info');
       info.toggle(this.api().page.info().recordsDisplay > 9);
     },
     "columnDefs": [
       {
-        "render": function (data, type, row) {
+        "render": function (data, _type, _row) {
           function generate_div(color, data) {
             return "<div class='col-sm-12 " + color + " no-padding-left'>" + data +
               "</div>";
           }
 
-          var threshold = data.split('T: ').pop().split(' - B: ').shift();
-          var breakthrough = data.split('B: ').pop().split(' - G: ').shift();
-          var goal = data.split('G: ').pop();
+          let threshold = data.split('T: ').pop().split(' - B: ').shift();
+          let breakthrough = data.split('B: ').pop().split(' - G: ').shift();
+          let goal = data.split('G: ').pop();
           return (
             generate_div('orange', threshold) +
             generate_div('blue', breakthrough) +
@@ -143,15 +143,15 @@ $(document).ready(function () {
   }).fnFilterOnReturn();
 
   $('#dissemination,#quality_control_procedure,#group,#product,#state,#component').on(
-    'change', function (event) {
-      var table = $table.DataTable();
+    'change', function (_event) {
+      let table = $table.DataTable();
       table.ajax.reload();
     }
   );
 
   $('#reset-btn').on('click', function () {
     $('#dissemination,#quality_control_procedure,#group,#product,#state,#component').val('All');
-    var table = $table.DataTable();
+    let table = $table.DataTable();
     table.state.clear();
     table.ajax.reload();
     table.search('').draw();

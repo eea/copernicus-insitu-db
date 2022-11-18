@@ -1,9 +1,9 @@
 function updateFilterOptions(filter, option_data) {
-  var select = $('#' + filter);
+  let select = $('#' + filter);
   select.find('option').remove();
   select.append('<option value="All">All</option>');
-  $.each(option_data.options, function(i, option){
-    var selected = '';
+  $.each(option_data.options, function(_i, option){
+    let selected = '';
     if(option_data.selected == option){
       selected = ' selected';
     }
@@ -31,10 +31,10 @@ $(document).ready(function () {
       title: 'CIS2 Products',
       orientation: 'landscape',
       customize: function (doc){
-        var cols = [];
-        var created = new Date().toDateString();
+        let cols = [];
+        let created = new Date().toDateString();
         cols[0] = {text: 'https://cis2.eea.europa.eu , ' + created, alignment: 'right', margin:[50, 10], };
-        var objFooter = {};
+        let objFooter = {};
         objFooter.columns = cols;
         doc.footer=objFooter;
       }
@@ -50,7 +50,7 @@ $(document).ready(function () {
       "infoFiltered": "<span class='green-text'>(filtered from _MAX_ total records)<span>"
      },
     "stateSave": true,
-    "stateSaveParams": function(settings, data){
+    "stateSaveParams": function(_settings, data){
       data.service = $('#service').val();
       data.component = $('#component').val();
       data.entity = $('#entity').val();
@@ -58,7 +58,7 @@ $(document).ready(function () {
       data.status = $('#status').val();
       data.area = $('#area').val();
     },
-    "stateLoadParams": function (settings, data) {
+    "stateLoadParams": function (_settings, data) {
       $('#service').val(data.service);
       $('#component').val(data.component);
       $('#entity').val(data.entity);
@@ -83,20 +83,20 @@ $(document).ready(function () {
         return json.data;
       }
     },
-    "drawCallback": function(settings) {
-      var info = $(this).closest('.dataTables_wrapper').find('.dataTables_info');
+    "drawCallback": function(_settings) {
+      let info = $(this).closest('.dataTables_wrapper').find('.dataTables_info');
       info.toggle(this.api().page.info().recordsDisplay > 9);
     },
   }).fnFilterOnReturn();
 
-  $('#service,#entity,#component,#group,#status,#area').on('change', function (event) {
-    var table = $table.DataTable();
+  $('#service,#entity,#component,#group,#status,#area').on('change', function (_event) {
+    let table = $table.DataTable();
     table.ajax.reload();
   });
 
   $('#reset-btn').on('click', function () {
     $('#service,#entity,#component,#group,#status,#area').val('All');
-    var table = $table.DataTable();
+    let table = $table.DataTable();
     table.state.clear();
     table.ajax.reload();
     table.search('').draw();
