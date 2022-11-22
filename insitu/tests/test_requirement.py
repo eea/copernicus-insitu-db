@@ -164,6 +164,7 @@ class RequirementTests(base.FormCheckTestCase):
         data = {}
         resp = self.client.post(reverse("requirement:add"), data)
         self.check_required_errors(resp, self.errors)
+        self.check_logged_action("tried to create")
 
     def test_get_create_requirement(self):
         resp = self.client.get(reverse("requirement:add"))
@@ -174,7 +175,8 @@ class RequirementTests(base.FormCheckTestCase):
         data = self._DATA
         resp = self.client.post(reverse("requirement:add"), data)
         self.assertEqual(resp.status_code, 302)
-        self.check_single_object(models.Requirement, data)
+        obj = self.check_single_object(models.Requirement, data)
+        self.check_logged_action("created", obj)
         self.logging()
 
     def test_get_add_with_clone(self):
@@ -199,6 +201,9 @@ class RequirementTests(base.FormCheckTestCase):
         resp = self.client.post(
             reverse("requirement:add") + "?pk=" + str(requirement.pk), cloned_data
         )
+        self.check_logged_action(
+            "tried to clone object {pk} of".format(pk=requirement.pk), requirement
+        )
         self.assertEqual(resp.context["form"].errors, self.cloned_errors)
 
     def test_post_add_with_clone(self):
@@ -214,10 +219,17 @@ class RequirementTests(base.FormCheckTestCase):
             reverse("requirement:add") + "?pk=" + str(requirement.pk), cloned_data
         )
         self.assertEqual(resp.status_code, 200)
+        self.check_logged_action(
+            "tried to clone object {pk} of".format(pk=requirement.pk), requirement
+        )
 
         cloned_data["uncertainty__threshold"] = "test threshold 2"
         resp = self.client.post(
             reverse("requirement:add") + "?pk=" + str(requirement.pk), cloned_data
+        )
+        new_requirement = models.Requirement.objects.last()
+        self.check_logged_action(
+            "cloned requirement {pk} to".format(pk=requirement.pk), new_requirement, 2
         )
         requirement.delete()
         self.assertEqual(resp.status_code, 302)
@@ -247,7 +259,8 @@ class RequirementTests(base.FormCheckTestCase):
             reverse("requirement:edit", kwargs={"pk": requirement.pk}), data
         )
         self.assertEqual(resp.status_code, 302)
-        self.check_single_object(models.Requirement, data)
+        obj = self.check_single_object(models.Requirement, data)
+        self.check_logged_action("updated", obj)
         self.logging()
 
     def test_get_delete_requirement(self):
@@ -272,6 +285,7 @@ class RequirementTests(base.FormCheckTestCase):
         )
         self.assertEqual(resp.status_code, 302)
         self.check_single_object_deleted(models.Requirement)
+        self.check_logged_action("deleted", requirement)
         self.check_objects_are_soft_deleted(models.Requirement, RequirementDoc)
 
     def test_delete_requirement_related_objects(self):
@@ -286,6 +300,7 @@ class RequirementTests(base.FormCheckTestCase):
             requirement=requirement, data=data, created_by=self.creator
         )
         self.client.post(reverse("requirement:delete", kwargs={"pk": requirement.pk}))
+        self.check_logged_action("deleted", requirement)
         self.check_objects_are_soft_deleted(models.ProductRequirement)
         self.check_objects_are_soft_deleted(models.DataRequirement)
 
@@ -316,7 +331,7 @@ class RequirementTests(base.FormCheckTestCase):
             {"source": "ready", "target": "valid", "user": self.creator},
         ]
 
-        for transition in transitions:
+        for idx, transition in enumerate(transitions):
             for item in items:
                 self.assertEqual((getattr(item, "state")).name, transition["source"])
             self.client.force_login(transition["user"])
@@ -340,6 +355,13 @@ class RequirementTests(base.FormCheckTestCase):
                 for item in items:
                     item.state = transition["source"]
                     item.save()
+            self.check_logged_action(
+                "changed state from {source} to {target} for".format(
+                    source=transition["source"], target=transition["target"]
+                ),
+                requirement,
+                idx + 1,
+            )
         self.logging(check_username=False)
 
     def test_transition_with_draft_data(self):
@@ -399,6 +421,10 @@ class RequirementTests(base.FormCheckTestCase):
         )
         self.assertEqual(response.status_code, 404)
 
+        self.check_logged_action(
+            "changed state from draft to nosuchstate for", requirement
+        )
+
         for item in items:
             getattr(item, "refresh_from_db")()
             self.assertEqual((getattr(item, "state")).name, "draft")
@@ -428,6 +454,9 @@ class RequirementTests(base.FormCheckTestCase):
             {"feedback": "this is a feedback test"},
         )
         getattr(requirement, "refresh_from_db")()
+
+        self.check_logged_action("changed state from ready to changes for", requirement)
+
         self.assertEqual(requirement.state, "changes")
         self.assertEqual(requirement.feedback, "this is a feedback test")
 

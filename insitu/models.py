@@ -176,6 +176,7 @@ class LoggedAction(models.Model):
     target_type = models.CharField(max_length=512, null=True)
     id_target = models.CharField(max_length=512, null=True)
     extra = models.CharField(max_length=1024, null=True)
+    target_note = models.TextField(blank=True)
 
 
 class ValidationWorkflowModel(WorkflowEnabled, models.Model):
