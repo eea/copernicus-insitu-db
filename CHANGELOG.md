@@ -3,6 +3,10 @@ Changelog
 
 * In case of major changes, an email should be sent to all users with the modifications.
 
+2.7.3 (2022-11-28)
+------------------
+* Add  `Target note` to `user_actions_log` export
+
 2.7.2 (2022-11-28)
 ------------------
 * Add set up password for new users
