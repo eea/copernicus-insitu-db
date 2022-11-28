@@ -47,7 +47,7 @@
       {% endif %}
     {% else %}
       <div class="row" id="{{ model }}">
-        <h1>{{ data.nice_name|capfirst }}</h1>
+        <h1><a href="#{{ model }}">{{ data.nice_name|capfirst }}</a></h1>
         {% if data.description %}
           <h4>
             <strong>
