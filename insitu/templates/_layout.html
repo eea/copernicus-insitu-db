@@ -101,13 +101,24 @@
     <noscript><p><img src="https://matomo.eea.europa.eu/piwik.php?idsite=26&amp;rec=1" style="border:0;" alt="" /></p></noscript>
     <!-- End Matomo Code -->
   {% endif %}
-    <footer>
+    <footer style="width: 100%;">
       <div  class="container footer-container">
         <div>
-          <img class="footer-images img-larger"  src="{% static '/images/programme_eu.png'  %}" alt="Programme of the European Union">
-          <img class="footer-images"  src="{% static '/images/copernicus_logo.png'  %}" alt="Copernicus Logo">
+          <a href="http://ec.europa.eu/" target="_blank">
+            <img style="width: 200px;"
+            src="{% static '/images/programme_eu.png'  %}"
+            alt="Programme of the European Union"
+            >
+          </a>
+          <a href="http://copernicus.eu/" target="_blank">
+            <img style="width: 200px;" src="{% static '/images/copernicus_logo.png'  %}" alt="Copernicus Logo">
+          </a>
         </div>
-        <img class="footer-images img-larger"  src="{% static '/images/implemented-by-eea.svg'  %}" alt="EEA Logo">
+        <div >
+          <a href="http://www.eea.europa.eu/" target="_blank">
+            <img style="width: 200px;" src="{% static '/images/implemented-by-eea.svg'  %}" alt="EEA Logo">
+          </a>
+        </div>
       </div>
     </footer>
   </body>

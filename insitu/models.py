@@ -143,7 +143,7 @@ class SoftDeleteModel(models.Model):
 
 
 class OwnerHistoryModel(models.Model):
-    owner_history = models.TextField(default="")
+    owner_history = models.TextField(default="", blank=True)
 
     class Meta:
         abstract = True
@@ -488,6 +488,7 @@ class DataProvider(OwnerHistoryModel, ValidationWorkflowModel, SoftDeleteModel):
     elastic_delete_signal = signals.data_provider_deleted
     edmo = models.IntegerField(blank=True, null=True)
     name = models.CharField(max_length=255)
+    native_name = models.CharField(max_length=255, blank=True, default="")
     description = models.TextField(blank=True)
     is_network = models.BooleanField(default=False)
     networks = models.ManyToManyField(

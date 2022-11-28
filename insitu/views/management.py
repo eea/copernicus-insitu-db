@@ -26,6 +26,8 @@ from insitu.models import Product, Requirement, Data, DataProvider, ChangeLog
 
 
 class TransferOwnership(ProtectedTemplateView):
+    permission_classes = (IsSuperuser,)
+
     def post(self, request):
         old_user = request.POST["old_user"]
         new_user = request.POST["new_user"]
