@@ -6,48 +6,48 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('insitu', '0044_dataprovider_native_name'),
+        ("insitu", "0044_dataprovider_native_name"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='data',
-            name='owner_history',
-            field=models.TextField(blank=True, default=''),
+            model_name="data",
+            name="owner_history",
+            field=models.TextField(blank=True, default=""),
         ),
         migrations.AlterField(
-            model_name='dataprovider',
-            name='owner_history',
-            field=models.TextField(blank=True, default=''),
+            model_name="dataprovider",
+            name="owner_history",
+            field=models.TextField(blank=True, default=""),
         ),
         migrations.AlterField(
-            model_name='dataproviderdetails',
-            name='owner_history',
-            field=models.TextField(blank=True, default=''),
+            model_name="dataproviderdetails",
+            name="owner_history",
+            field=models.TextField(blank=True, default=""),
         ),
         migrations.AlterField(
-            model_name='dataproviderrelation',
-            name='owner_history',
-            field=models.TextField(blank=True, default=''),
+            model_name="dataproviderrelation",
+            name="owner_history",
+            field=models.TextField(blank=True, default=""),
         ),
         migrations.AlterField(
-            model_name='datarequirement',
-            name='owner_history',
-            field=models.TextField(blank=True, default=''),
+            model_name="datarequirement",
+            name="owner_history",
+            field=models.TextField(blank=True, default=""),
         ),
         migrations.AlterField(
-            model_name='metric',
-            name='owner_history',
-            field=models.TextField(blank=True, default=''),
+            model_name="metric",
+            name="owner_history",
+            field=models.TextField(blank=True, default=""),
         ),
         migrations.AlterField(
-            model_name='productrequirement',
-            name='owner_history',
-            field=models.TextField(blank=True, default=''),
+            model_name="productrequirement",
+            name="owner_history",
+            field=models.TextField(blank=True, default=""),
         ),
         migrations.AlterField(
-            model_name='requirement',
-            name='owner_history',
-            field=models.TextField(blank=True, default=''),
+            model_name="requirement",
+            name="owner_history",
+            field=models.TextField(blank=True, default=""),
         ),
     ]
