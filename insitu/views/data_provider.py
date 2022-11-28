@@ -54,7 +54,6 @@ class DataProviderList(ProtectedTemplateView):
 class DataProviderListJson(ESDatatableView):
     columns = [
         "name",
-        "native_name",
         "acronym",
         "edmo",
         "address",
