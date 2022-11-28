@@ -120,7 +120,8 @@ def export_logs_excel(queryset):
     worksheet.write(0, 3, "Target type")
     worksheet.write(0, 4, "Target ID")
     worksheet.write(0, 5, "Target Name")
-    worksheet.write(0, 6, "Extra")
+    worksheet.write(0, 6, "Target Note")
+    worksheet.write(0, 7, "Extra")
 
     row = 1
     for obj in queryset:
@@ -130,7 +131,8 @@ def export_logs_excel(queryset):
         worksheet.write(row, 3, obj.target_type)
         worksheet.write(row, 4, obj.id_target)
         worksheet.write(row, 5, get_name(obj.id_target, obj.target_type))
-        worksheet.write(row, 6, obj.extra)
+        worksheet.write(row, 6, obj.target_note)
+        worksheet.write(row, 7, obj.extra)
         row += 1
     workbook.close()
 
