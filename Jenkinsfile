@@ -14,6 +14,7 @@ pipeline {
             parallel(
                 "Unit test": {
                     node(label: 'docker') {
+                        sh ' docker exec -it insitu.app sh'
                         sh 'python manage.py jenkins --settings=copernicus.test_settings'
                     }
                 }
