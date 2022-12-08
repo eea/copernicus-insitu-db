@@ -9,6 +9,17 @@ pipeline {
 
   stages {
 
+    stage('Test') {
+        steps {
+            parallel(
+                "Unit test": {
+                    node(label: 'docker') {
+                        sh 'python manage.py jenkins --settings=copernicus.test_settings'
+                    }
+                }
+            )
+        }
+    }
     stage('Cosmetics') {
       steps {
         parallel(
