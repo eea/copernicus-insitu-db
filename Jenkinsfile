@@ -14,8 +14,7 @@ pipeline {
             parallel(
                 "Unit test": {
                     node(label: 'docker') {
-                        sh ' docker exec -it insitu.app sh'
-                        sh 'python manage.py jenkins --settings=copernicus.test_settings'
+                        sh '''docker run -i --rm --name="$BUILD_TAG-test" -e GIT_SRC="https://github.com/eea/$GIT_NAME.git" -e GIT_NAME="$GIT_NAME" -e GIT_BRANCH="$BRANCH_NAME" -e GIT_CHANGE_ID="$CHANGE_ID" eeacms/test --settings=copernicus.test_settings'''
                     }
                 }
             )
