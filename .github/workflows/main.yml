@@ -34,4 +34,4 @@ jobs:
         run: docker exec insitu.app black . --check
 
       - name: Test Django app
-        run: docker exec insitu.app python manage.py jenkins --settings=copernicus.test_settings
+        run: docker exec insitu.app python manage.py test --settings=copernicus.test_settings
