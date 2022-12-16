@@ -7,7 +7,7 @@
         href="{% static 'css/jquery.dataTables.min.css' %}"/>
   <link rel="stylesheet" type="text/css"
         href="{% static 'css/buttons.dataTables.min.css' %}"/>
-  <style>
+  <style nonce="{{request.csp_nonce}}">
    .container {
      width:auto!important;
    }

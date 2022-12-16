@@ -28,7 +28,7 @@
     </title>
     {% if sentry_dsn %}
     <script src="https://cdn.ravenjs.com/3.17.0/raven.min.js" crossorigin="anonymous"></script>
-    <script>
+    <script nonce="{{request.csp_nonce}}">
       Raven.config('{{ sentry_dsn }}', {
         tags: {
           site: '{{ sentry_tag_site }}',
@@ -54,7 +54,7 @@
     {% hijack_notification %}
     {% include 'nav.html' %}
 
-    <div id="to-print" class="container" style="min-height: 550px">
+    <div id="to-print" class="container min-height-550">
       {% block content %}
       {% endblock %}
 
@@ -68,7 +68,7 @@
     {% block scripts %}
     {% endblock %}
     <script src="{% static 'js/bootstrap-notify.min.js' %}"></script>
-    <script>
+    <script nonce="{{request.csp_nonce}}">
       {% if messages %}
         {% for message in messages %}
           $.notify({
@@ -92,7 +92,7 @@
   {% endblock %}
   {% if MATOMO %}
     <!-- Matomo -->
-    <script type="text/javascript">
+    <script type="text/javascript" nonce="{{request.csp_nonce}}">
       var _paq = _paq || [];
       /* tracker methods like "setCustomDimension" should be called before "trackPageView" */
       _paq.push(['trackPageView']);
@@ -105,7 +105,7 @@
         g.type='text/javascript'; g.async=true; g.defer=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
       })();
     </script>
-    <noscript><p><img src="https://matomo.eea.europa.eu/piwik.php?idsite=26&amp;rec=1" style="border:0;" alt="" /></p></noscript>
+    <noscript><p><img src="https://matomo.eea.europa.eu/piwik.php?idsite=26&amp;rec=1" class="border-0" alt="" /></p></noscript>
     <!-- End Matomo Code -->
   {% endif %}
     <footer>

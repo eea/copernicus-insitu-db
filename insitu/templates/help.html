@@ -92,7 +92,7 @@
 {% block scripts %}
   <script src="{% static 'js/jquery-3.2.1.min.js' %}"></script>
   <script src="{% static 'js/bootstrap.min.js' %}"></script>
-  <script>
+  <script nonce="{{request.csp_nonce}}">
     $(document).ready(function(){
       $(window).scroll(function () {
         if ($(this).scrollTop() > 50) {

@@ -185,7 +185,7 @@
             </div>
             {% if provider.state.name != 'ready' and provider.state.name != 'valid' %}
               {% if provider.feedback %}
-                <div class="alert alert-danger" style="margin-top: 5%;" role="alert">
+                <div class="alert alert-danger margin-top-5" role="alert">
                   <h5>Feedback:</h5>
                   {{ provider.feedback|linebreaksbr }}
                 </div>
@@ -236,7 +236,7 @@
   <script src="{% static 'js/jszip.min.js' %}"></script>
   <script src="{% static 'js/pdfmake.min.js' %}"></script>
   <script src="{% static 'js/vfs_fonts.js' %}"></script>
-  <script>
+  <script nonce="{{request.csp_nonce}}">
     $(function () {
       var data_provider_name = '{{ provider.name | escapejs }}'
       var data_provider_title = data_provider_name

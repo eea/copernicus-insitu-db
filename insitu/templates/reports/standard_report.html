@@ -14,10 +14,10 @@
   <p>* Please use the Service multi-select to filter the Components. The objects (Products, Requirement, Data and Data Providers) will
       be filtered against the Components selected.
   </p>
-  <div class="container" style="margin-bottom:20px;">
+  <div class="container margin-bottom-20">
   </div>
 
-  <form action="" method="POST" style="width: 50%">
+  <form action="" method="POST" class="width-50">
     {% csrf_token %}
     <div class="form-group">
       <label class="control-label" for="id_service">Service</label>
@@ -45,7 +45,7 @@
 {% endblock %}
 
 {% block scripts %}
-  <script>
+  <script nonce="{{request.csp_nonce}}">
     $(document).ready(function () {
       var allOptions = $('#id_component option')
       $('#id_service').change(function () {

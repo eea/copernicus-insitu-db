@@ -7,7 +7,7 @@
         href="{% static 'css/jquery.dataTables.min.css' %}"/>
   <link rel="stylesheet" type="text/css"
         href="{% static 'css/buttons.dataTables.min.css' %}"/>
-  <style>
+  <style nonce="{{request.csp_nonce}}">
     .container {
       width: auto !important;
     }
@@ -32,7 +32,7 @@
         <span class="pull-right">
           <a class="btn btn-primary pull-right"
              href="{% url 'provider:add_network' %}">New data provider network</a>
-          <a class="btn btn-primary pull-right" style="margin-right:5px"
+          <a class="btn btn-primary pull-right margin-right-5"
              href="{% url 'provider:add_non_network' %}">New data provider</a>
         </span>
       {% endif %}
@@ -92,8 +92,8 @@
       </div>
     </div>
     <div class="col-lg-12">
-      <table id="providers" style="width: 100%;"
-             class="table table-condensed table-bordered table-hover">
+      <table id="providers"
+             class="width-100 table table-condensed table-bordered table-hover">
         <thead>
         <tr>
           <th>Name</th>

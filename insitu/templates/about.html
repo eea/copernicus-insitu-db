@@ -46,7 +46,7 @@
       <i class="fa fa-newspaper" aria-hidden="true"></i>
       Changelog
     </div>
-    <div class="pannel-body" style="overflow-y: scroll; height:400px;">
+    <div class="pannel-body pannel-body-overflow">
       {% for change_log in change_logs %}
       <div>
           <h4 class="font-weight-bold">{{ change_log.version }} ( {{ change_log.created_at }} )</h4>
@@ -89,7 +89,7 @@
             <tr>
               <th scope="col">Name</th>
               <th scope="col">Last Occur</th>
-              <th scope="col" style="text-align: center">Resolved</th>
+              <th scope="col text-align-center">Resolved</th>
             </tr>
           </thead>
 

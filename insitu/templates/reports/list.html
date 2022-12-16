@@ -11,14 +11,14 @@
       {% if not user|has_group:READ_ONLY_GROUP and user.is_authenticated %}
         <span class="pull-right">
           <a class="btn btn-primary" href="{% url 'reports:snapshot' %}">Download database</a>
-          <a class="btn btn-primary pull-right" style="margin-left:5px" href="{% url 'reports:playground' %}">Playground</a>
+          <a class="btn btn-primary pull-right margin-left-5" href="{% url 'reports:playground' %}">Playground</a>
         </span>
       {% endif %}
     </h1>
   </div>
 
   {% if user.is_authenticated %}
-  <div class="container" style="margin-bottom:20px;">
+  <div class="container margin-bottom-20">
     <a href="{% url 'reports:standard_report' %}"><h3>Standard Report</h3></a>
       <h3>Special reports:</h3>
       <p>Those reports are exported as spreadsheet files with unmerged cells that can be filtered afterwards with specialized tools.</p>
@@ -35,7 +35,7 @@
       <a id="" class="btn btn-primary" href="{% static 'sheets/Special_report_2.xlsx' %}">Download Excel</a>
     </div>
   {% else %}
-    <div class="container" style="margin-bottom:20px;">
+    <div class="container margin-bottom-20">
       <a href="{% url 'reports:standard_report' %}"><h3>Standard Report</h3></a>
     </div>
   {% endif %}

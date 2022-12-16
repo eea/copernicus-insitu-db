@@ -87,7 +87,7 @@
     </a>
   </div>
 
-  <div class="row" style="margin-bottom:100px;">
+  <div class="row margin-bottom-100">
     <h3>Import products</h3>
     <form class="form-inline import-form"
           method="post"
@@ -163,7 +163,7 @@
 
 {% block scripts %}
 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
-<script>
+<script nonce="{{request.csp_nonce}}">
   $(document).ready(function(){
     $('.datepicker').datepicker({
       maxDate: "+0d",
@@ -172,7 +172,7 @@
   });
 </script>
 
-<script>
+<script nonce="{{request.csp_nonce}}">
   $(document).ready(function () {
     $('.import-form').on('submit', function (e) {
       e.preventDefault();
