@@ -18,6 +18,10 @@ Changelog
 * Add anchor links to Help page
 * Add links to footer and nav images
 
+2.7.2 (2022-12-16)
+------------------
+* Exclude user id from `/user/records/` url
+
 2.7.1 (2022-11-09)
 ------------------
 * Add missing explorer queries to fixtures
