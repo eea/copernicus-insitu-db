@@ -237,7 +237,7 @@ urlpatterns = [
     ),
     url(r"crashme$", views.Crashme.as_view(), name="crashme"),
     url(
-        r"^user/(?P<pk>\d+)/records$",
+        r"^user/records/$",
         views.UserRecordsView.as_view(),
         name="user_records",
     ),
