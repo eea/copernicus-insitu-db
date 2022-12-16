@@ -40,7 +40,7 @@ class ChangeNameEmail(ProtectedTemplateView):
                 User.objects.filter(pk=current_user.id).update(email=email)
                 messages.success(self.request, "Email changed successfully!")
 
-        return redirect("user_records", pk=current_user.pk)
+        return redirect("user_records")
 
 
 class ExportLogs(ProtectedTemplateView):

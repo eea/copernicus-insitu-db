@@ -14,7 +14,7 @@ class UserRecordsTests(base.FormCheckTestCase):
         )
         link_table_name = "Links between Data and Data Providers"
 
-        resp = self.client.get(reverse("user_records", kwargs={"pk": self.creator.id}))
+        resp = self.client.get(reverse("user_records"))
 
         self.assertEqual(resp.status_code, 200)
         self.assertQuerysetEqual(resp.context["data_list"], ["<Data: test Data>"])
