@@ -3,6 +3,10 @@ Changelog
 
 * In case of major changes, an email should be sent to all users with the modifications.
 
+2.7.4 (2022-12-16)
+------------------
+* Exclude user id from `/user/records/` url
+
 2.7.3 (2022-11-28)
 ------------------
 * Add  `Target note` to `user_actions_log` export
@@ -17,10 +21,6 @@ Changelog
 * Improve interface for Management page
 * Add anchor links to Help page
 * Add links to footer and nav images
-
-2.7.2 (2022-12-16)
-------------------
-* Exclude user id from `/user/records/` url
 
 2.7.1 (2022-11-09)
 ------------------
