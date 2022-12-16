@@ -279,7 +279,18 @@ if DEBUG_TOOLBAR:
     }
 
 # Content Security Policy
-CSP_IMG_SRC = ("'self'")
-CSP_STYLE_SRC = ("'self'", "http://cdnjs.cloudflare.com", "http://code.jquery.com", "http://maxcdn.bootstrapcdn.com")
-CSP_SCRIPT_SRC = ("'self'", "http://cdnjs.cloudflare.com", "http://code.jquery.com", "https://matomo.eea.europa.eu", "cdn.ravenjs.com")
-CSP_INCLUDE_NONCE_IN = ['script-src', 'style-src']
+CSP_IMG_SRC = "'self'"
+CSP_STYLE_SRC = (
+    "'self'",
+    "http://cdnjs.cloudflare.com",
+    "http://code.jquery.com",
+    "http://maxcdn.bootstrapcdn.com",
+)
+CSP_SCRIPT_SRC = (
+    "'self'",
+    "http://cdnjs.cloudflare.com",
+    "http://code.jquery.com",
+    "https://matomo.eea.europa.eu",
+    "cdn.ravenjs.com",
+)
+CSP_INCLUDE_NONCE_IN = ["script-src", "style-src"]
