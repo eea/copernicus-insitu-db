@@ -8,133 +8,186 @@
   <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
 {% endblock %}
 
+{% block style %}
+  <link rel="stylesheet" type="text/css"
+        href="{% static 'css/jquery.dataTables.min.css' %}"/>
+  <link rel="stylesheet" type="text/css"
+        href="{% static 'css/buttons.dataTables.min.css' %}"/>
+  <style>
+    .transferMargin {
+      margin-left: 10px;
+    }
+    .inputWidth {
+      max-width: 95%;
+    }
+    .marginBottom {
+      margin-bottom: 15px;
+    }
+  </style>
+{% endblock %}
+
 {% block content %}
   <h1>Manage picklists and products</h1>
 
-  <div class="row">
-    <h3>Transfer ownership</h3>
-    <form method="post" action="{% url 'auth:transfer_ownership' %}">
-      {% csrf_token %}
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      Transfer ownership
+    </div>
+    <div class="pannel-body">
+      <form method="post" action="{% url 'auth:transfer_ownership' %}">
+        {% csrf_token %}
 
-      <div>
-        Previous owner:
-        <select name="old_user">
-          {% for u in users %}
-            <option value="{{ u.id }}">{{ u.first_name }} {{ u.last_name }}</option>
-          {% endfor %}
-        </select>
-      </div>
-      <br>
-      <div>
-        New owner:
-        <select name="new_user">
-          {% for u in users %}
-            <option value="{{ u.id }}">{{ u.first_name }} {{ u.last_name }}</option>
-          {% endfor %}
-        </select>
-      </div>
-      <br>
+        <div>
+          Previous owner:
+          <select name="old_user" class="form-control select transferMargin inputWidth">
+            {% for u in users %}
+              <option value="{{ u.id }}">{{ u.first_name }} {{ u.last_name }}</option>
+            {% endfor %}
+          </select>
 
-      <div>
-        <p>Disable previous owner?</p>
-        <input type="radio" id="disable_old_user_yes" name="disable_old_user" value="yes">
-        <label for="disable_old_user_yes">Yes</label>
-        <input type="radio" id="disable_old_user_no" name="disable_old_user" value="no">
-        <label for="disable_old_user_no">No</label>
-      </div>
-      <br>
-      <input class="btn btn-primary" type="submit" value="Transfer ownership" />
-    </form>
+        </div>
+        <br>
+        <div>
+          New owner:
+          <select name="new_user" class="form-control select transferMargin inputWidth">
+            {% for u in users %}
+              <option value="{{ u.id }}">{{ u.first_name }} {{ u.last_name }}</option>
+            {% endfor %}
+          </select>
+        </div>
+        <br>
+
+        <div>
+          <p>Disable previous owner?</p>
+          <div class="transferMargin">
+            <div class="form-check form-check-inline">
+
+              <input type="radio" id="disable_old_user_yes" name="disable_old_user" value="yes">
+              <label for="disable_old_user_yes">Yes</label>
+            </div>
+            <div class="form-check form-check-inline">
+
+              <input type="radio" id="disable_old_user_no" name="disable_old_user" value="no">
+              <label for="disable_old_user_no">No</label>
+            </div>
+          </div>
+        </div>
+        <br>
+        <input class="btn btn-primary" type="submit" value="Transfer ownership" />
+      </form>
+    </div>
   </div>
 
-  <div class="row">
-    <h3>Export picklists</h3>
-    <a class="btn btn-primary" href="{% url 'pick:export' %}">
-      Download all picklists
-    </a>
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <i class="fa fa-newspaper" aria-hidden="true"></i>
+      Export picklists
+    </div>
+    <div class="pannel-body">
+      <a href="{% url 'pick:export' %}">
+        Download all picklists
+      </a>
+    </div>
   </div>
 
-  <div class="row">
-    <h3>Import picklists</h3>
-    <form class="form-inline import-form"
-          method="post"
-          data-type="picklist"
-          enctype="multipart/form-data"
-          action="{% url 'pick:import' %}">
-      {% csrf_token %}
-
-      <div class="form-group">
-        <label class="control-label" for="workbook">Workbook</label>
-        <input id="workbook" name="workbook" class="form-control-static"
-               type="file" accept=".xlsx" required>
+  <div class="panel panel-default">
+      <div class="panel-heading">
+        Import picklists
       </div>
+      <div class="pannel-body">
+      <form class="form-inline import-form"
+            method="post"
+            data-type="picklist"
+            enctype="multipart/form-data"
+            action="{% url 'pick:import' %}">
+        {% csrf_token %}
 
-      <input type="submit" class="btn btn-primary" value="Import data">
-    </form>
+        <div class="form-group">
+          <label class="control-label marginBottom" for="workbook">Workbook</label><br>
+          <input id="workbook" name="workbook" class="form-control-static file marginBottom"
+                type="file" accept=".xlsx" required>
+        </div><br>
 
-    <p id="picklist-error" class="alert alert-danger" hidden>
-      File upload unsuccessful. Please check workbook has the right template.
-    </p>
-    <p id="picklist-success" class="alert alert-success" hidden>
-      File upload succesful.
-    </p>
+        <input type="submit" class="btn btn-primary" value="Import data">
+      </form>
+
+      <p id="picklist-error" class="alert alert-danger" hidden>
+        File upload unsuccessful. Please check workbook has the right template.
+      </p>
+      <p id="picklist-success" class="alert alert-success" hidden>
+        File upload succesful.
+      </p>
+    </div>
   </div>
 
-  <div class="row">
-    <h3>Export products</h3>
-    <a class="btn btn-primary" href="{% url 'product:export' %}">
-      Download all products
-    </a>
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      Export products
+    </div>
+    <div class="pannel-body">
+      <a href="{% url 'product:export' %}">
+        Download all products
+      </a>
+    </div>
   </div>
 
-  <div class="row margin-bottom-100">
-    <h3>Import products</h3>
-    <form class="form-inline import-form"
-          method="post"
-          data-type="product"
-          enctype="multipart/form-data"
-          action="{% url 'product:import' %}">
-      {% csrf_token %}
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      Import products
+    </div>
+    <div class="pannel-body">
+      <form class="form-inline import-form"
+            method="post"
+            data-type="product"
+            enctype="multipart/form-data"
+            action="{% url 'product:import' %}">
+        {% csrf_token %}
 
-      <div class="form-group">
-        <label class="control-label" for="workbook">Workbook</label>
-        <input id="workbook" name="workbook" class="form-control-static"
-               type="file" accept=".xlsx" required>
-      </div>
+        <div class="form-group">
+          <label class="control-label marginBottom" for="workbook">Workbook</label><br>
+          <input id="workbook" name="workbook" class="form-control-static marginBottom"
+                type="file" accept=".xlsx" required>
+        </div><br>
 
-      <input type="submit" class="btn btn-primary" value="Import data">
-    </form>
+        <input type="submit" class="btn btn-primary" value="Import data">
+      </form>
 
-    <p id="product-error" class="alert alert-danger" hidden>
-      File upload unsuccessful. Please check workbook has the right template.
-    </p>
-    <p id="product-success" class="alert alert-success" hidden>
-      File upload succesful.
-    </p>
+      <p id="product-error" class="alert alert-danger" hidden>
+        File upload unsuccessful. Please check workbook has the right template.
+      </p>
+      <p id="product-success" class="alert alert-success" hidden>
+        File upload succesful.
+      </p>
+    </div>
+  </div>
 
-    <h1>Extract data statistics</h1>
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      Extract data statistics
+    </div>
+    <div class="pannel-body">
+      <form method="post">
+        {% csrf_token %}
+        <div class="form-group required">
+          <label class="control-label" for="id_start_date">Start date</label>
+          <input type="text" name="start_date" class="form-control datepicker"
+                autocomplete="off" placeholder="Start date" title="" required=""
+                id="id_start_date" value="{{ form.start_date.value|default_if_none:'' }}">
+        </div>
 
-    <form method="post">
-      {% csrf_token %}
-      <div class="form-group required">
-        <label class="control-label" for="id_start_date">Start date</label>
-        <input type="text" name="start_date" class="form-control datepicker"
-               autocomplete="off" placeholder="Start date" title="" required="" 
-               id="id_start_date" value="{{ form.start_date.value|default_if_none:'' }}">
-      </div>
+        <div class="form-group required">
+          <label class="control-label" for="id_end_date">End date</label>
+          <input type="text" name="end_date" class="form-control datepicker"
+                autocomplete="off" placeholder="End date" title="" required="" id="id_end_date"
+                value="{{ form.end_date.value|default_if_none:'' }}">
+        </div>
 
-      <div class="form-group required">
-        <label class="control-label" for="id_end_date">End date</label>
-        <input type="text" name="end_date" class="form-control datepicker"
-               autocomplete="off" placeholder="End date" title="" required="" id="id_end_date"
-               value="{{ form.end_date.value|default_if_none:'' }}">
-      </div>
+        {% bootstrap_field form.selected_object required_css_class='required' %}
 
-      {% bootstrap_field form.selected_object required_css_class='required' %}
-
-      <input class="btn btn-primary" type="submit" value="Generate" />
-    </form>
-
+        <input class="btn btn-primary" type="submit" value="Generate" />
+      </form>
+    </div>
+  </div>
     {% if selected_object %}
       <div class="row">
         <table id="detail-table" class="table borderless col-sm-12">

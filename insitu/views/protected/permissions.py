@@ -75,7 +75,11 @@ class IsRequestedUser(IsAuthenticated):
 
 class IsCurrentUser(IsAuthenticated):
     def has_permission(self, request, view):
-        requesting_user = get_object_or_404(User, id=view.kwargs["pk"])
+        pk = view.kwargs.get("pk", None)
+        if pk:
+            requesting_user = get_object_or_404(User, id=pk)
+        else:
+            requesting_user = request.user
         return (
             super().has_permission(request, view)
             and requesting_user.id == request.user.id

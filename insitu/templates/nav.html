@@ -63,7 +63,7 @@
         <ul class=" extra-navbar-brand pull-right nav navbar-nav extra-navbar-brand">
           {% if user.is_authenticated %}
             <li>
-              <a href="{% url 'user_records' user.id %}">Hello, {{ user.username }}</a>
+              <a href="{% url 'user_records' %}">Hello, {{ user.username }}</a>
             </li>
           {% endif %}
 
@@ -104,6 +104,8 @@
         </ul>
       </div>
     </div>
-    <img class="logo-copernicus " src="{% static "/images/logo-for-nav.png"  %}" alt="Copernicus Logo">
+    <a href="https://insitu.copernicus.eu/" target="_blank">
+      <img class="logo-copernicus " src="{% static "/images/logo-for-nav.png"  %}" alt="Copernicus Logo">
+    </a>
   </div>
 </nav>

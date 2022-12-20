@@ -42,6 +42,7 @@ class ProductTests(base.FormCheckTestCase):
         data = {}
         resp = self.client.post(reverse("product:add"), data, follow=True)
         self.check_required_errors(resp, self.errors)
+        self.check_logged_action("tried to create")
 
     def test_get_create_product(self):
         resp = self.client.get(reverse("product:add"))
@@ -52,7 +53,8 @@ class ProductTests(base.FormCheckTestCase):
         resp = self.client.post(reverse("product:add"), data)
         self.assertEqual(resp.status_code, 302)
 
-        self.check_single_object(models.Product, data)
+        obj = self.check_single_object(models.Product, data)
+        self.check_logged_action("created", obj)
 
     def test_list_product_json(self):
         base.ProductFactory()
@@ -96,7 +98,8 @@ class ProductTests(base.FormCheckTestCase):
             reverse("product:edit", kwargs={"pk": product.pk}), data
         )
         self.assertEqual(resp.status_code, 302)
-        self.check_single_object(models.Product, data)
+        obj = self.check_single_object(models.Product, data)
+        self.check_logged_action("updated", obj)
 
     def test_entity_and_group_sync_other_filters(self):
         """
@@ -169,6 +172,7 @@ class ProductTests(base.FormCheckTestCase):
         product = base.ProductFactory()
         resp = self.client.post(reverse("product:delete", kwargs={"pk": product.pk}))
         self.assertEqual(resp.status_code, 302)
+        self.check_logged_action("deleted", product)
         self.check_single_object_deleted(models.Product)
         self.check_objects_are_soft_deleted(models.Product, ProductDoc)
 
@@ -180,6 +184,7 @@ class ProductTests(base.FormCheckTestCase):
             product=product, requirement=requirement, created_by=self.creator
         )
         self.client.post(reverse("product:delete", kwargs={"pk": product.pk}))
+        self.check_logged_action("deleted", product)
         self.check_objects_are_soft_deleted(models.ProductRequirement)
 
 

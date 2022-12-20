@@ -186,6 +186,8 @@ class DataRequirementAdmin(BaseDisplayDeleteAdminMixin, admin.ModelAdmin):
 @admin.register(models.DataProviderRelation)
 class DataProviderRelationAdmin(BaseDisplayDeleteAdminMixin, admin.ModelAdmin):
     filter_model = models.DataProviderRelation
+    list_display = ("__str__", "data_id", "provider_id")
+    list_filter = ("data_id", "provider_id")
 
 
 admin.site.unregister(User)

@@ -28,6 +28,7 @@
     {% csrf_token %}
 
     {% bootstrap_field form.name required_css_class='required' %}
+    {% bootstrap_field form.native_name %}
 
     {% bootstrap_field form.edmo addon_after='<a target="_blank" href="/help#edmo"><span class="glyphicon glyphicon-question-sign"></span></a>' %}
 
