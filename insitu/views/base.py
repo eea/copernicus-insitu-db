@@ -83,7 +83,7 @@ class ESDatatableView(BaseDatatableView, ProtectedView):
         search_text = self.request.GET.get("search[value]", "")
         if search_text:
             search = search.query(
-                "query_string", default_field="name", query='"' + search_text + '"'
+                "query_string", fields=["name", "acronym"], query='"' + search_text + '"'
             )
 
         if search.count() > settings.MAX_RESULT_WINDOW or not hasattr(
