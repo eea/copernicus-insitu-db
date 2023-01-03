@@ -84,6 +84,32 @@ class DataProviderTests(base.FormCheckTestCase):
         self.assertFalse(data["recordsTotal"] < 2)
         self.assertIs(data["recordsFiltered"], 1)
 
+    def test_list_provider_json_filter_acronym(self):
+        provider = base.DataProviderFactory(
+            name="Acronym Test",
+            created_by=self.creator,
+            countries=[base.CountryFactory(code="RO")],
+        )
+        base.DataProviderDetailsFactory(
+            acronym="TST", data_provider=provider, created_by=self.creator
+        )
+        other_provider = base.DataProviderFactory(
+            name="Other Acronym Test",
+            created_by=self.creator,
+            countries=[base.CountryFactory(code="UK")],
+        )
+        base.DataProviderDetailsFactory(
+            acronym="OTH", data_provider=other_provider, created_by=self.creator
+        )
+
+        resp = self.client.get(reverse("provider:json"), {"search[value]": "TST"})
+        self.assertEqual(resp.status_code, 200)
+
+        data = resp.json()
+        self.assertIsNot(data["recordsTotal"], 0)
+        self.assertFalse(data["recordsTotal"] < 2)
+        self.assertIs(data["recordsFiltered"], 1)
+
     def test_list_provider_json_filter_component(self):
         metrics = base.RequirementFactory.create_metrics(self.creator)
         romania = base.CountryFactory(code="RO")
