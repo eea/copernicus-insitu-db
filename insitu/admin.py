@@ -132,7 +132,11 @@ class ComponentAdmin(admin.ModelAdmin):
 
 @admin.register(models.Requirement)
 class RequirementAdmin(GuardedModelAdmin):
-    readonly_fields = ("components",)
+    readonly_fields = (
+        "components",
+        "created_at",
+        "updated_at",
+    )
     search_fields = ["name"]
     list_display = ("id", "name")
 
@@ -151,12 +155,20 @@ class RequirementAdmin(GuardedModelAdmin):
 
 @admin.register(models.Data)
 class DataAdmin(GuardedModelAdmin):
+    readonly_fields = (
+        "created_at",
+        "updated_at",
+    )
     search_fields = ["name"]
     list_display = ("id", "name")
 
 
 @admin.register(models.DataProvider)
 class DataProviderAdmin(GuardedModelAdmin):
+    readonly_fields = (
+        "created_at",
+        "updated_at",
+    )
     search_fields = ["name"]
     list_display = ("id", "name")
 
@@ -173,25 +185,58 @@ class BaseDisplayDeleteAdminMixin:
         return self.filter_model.objects.really_all()
 
 
+@admin.register(models.Metric)
+class MetricAdmin(GuardedModelAdmin):
+    readonly_fields = (
+        "created_at",
+        "updated_at",
+    )
+
+
+@admin.register(models.Product)
+class ProductAdmin(GuardedModelAdmin):
+    readonly_fields = (
+        "created_at",
+        "updated_at",
+    )
+
+
 @admin.register(models.ProductRequirement)
 class ProductRequirementAdmin(BaseDisplayDeleteAdminMixin, admin.ModelAdmin):
+    readonly_fields = (
+        "created_at",
+        "updated_at",
+    )
     filter_model = models.ProductRequirement
 
 
 @admin.register(models.DataRequirement)
 class DataRequirementAdmin(BaseDisplayDeleteAdminMixin, admin.ModelAdmin):
+    readonly_fields = (
+        "created_at",
+        "updated_at",
+    )
     filter_model = models.DataRequirement
 
 
 @admin.register(models.DataProviderRelation)
 class DataProviderRelationAdmin(BaseDisplayDeleteAdminMixin, admin.ModelAdmin):
     filter_model = models.DataProviderRelation
+    readonly_fields = (
+        "created_at",
+        "updated_at",
+    )
     list_display = ("__str__", "data_id", "provider_id")
     list_filter = ("data_id", "provider_id")
 
 
+@admin.register(models.DataProviderDetails)
+class DataProviderDetailsAdmin(GuardedModelAdmin):
+    readonly_fields = (
+        "created_at",
+        "updated_at",
+    )
+
+
 admin.site.unregister(User)
 admin.site.register(User, InsituUserAdmin)
-admin.site.register(models.Product)
-admin.site.register(models.DataProviderDetails)
-admin.site.register(models.Metric)
