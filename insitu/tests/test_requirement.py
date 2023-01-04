@@ -106,6 +106,25 @@ class RequirementTests(base.FormCheckTestCase):
         self.assertFalse(data["recordsTotal"] < 2)
         self.assertIs(data["recordsFiltered"], 1)
 
+    def test_list_requirement_json_filter_id(self):
+
+        metrics = base.RequirementFactory.create_metrics(self.creator)
+        base.RequirementFactory(
+            id=5, name="Test requirement", created_by=self.creator, **metrics
+        )
+
+        metrics = base.RequirementFactory.create_metrics(self.creator)
+        base.RequirementFactory(
+            id=10, name="Other requirement", created_by=self.creator, **metrics
+        )
+        resp = self.client.get(reverse("requirement:json"), {"search[value]": 5})
+        self.assertEqual(resp.status_code, 200)
+
+        data = resp.json()
+        self.assertIsNot(data["recordsTotal"], 0)
+        self.assertFalse(data["recordsTotal"] < 2)
+        self.assertIs(data["recordsFiltered"], 1)
+
     def test_list_requirement_json_filter_component(self):
 
         metrics = base.RequirementFactory.create_metrics(self.creator)
