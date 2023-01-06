@@ -17,6 +17,7 @@ from django.contrib.auth.admin import UserAdmin
 
 class TeamInline(admin.TabularInline):
     model = models.Team
+    fields = ("teammates",)
 
 
 class InsituUserAdmin(UserAdmin):
@@ -87,6 +88,9 @@ class InsituUserAdmin(UserAdmin):
                 subject_template_name="mails/password_set_subject.txt",
                 html_email_template_name="mails/password_set_email.html",
             )
+
+    def get_inline_instances(self, request, obj=None):
+        return obj and super(UserAdmin, self).get_inline_instances(request, obj) or []
 
 
 def logs_export_as_excel(LoggedActionAdmin, request, queryset):
