@@ -15,8 +15,13 @@ from django.contrib.auth.forms import PasswordResetForm
 from django.contrib.auth.admin import UserAdmin
 
 
+class TeamInline(admin.TabularInline):
+    model = models.Team
+
+
 class InsituUserAdmin(UserAdmin):
     form = UserEditAdminForm
+    inlines = [TeamInline]
     add_form = CreateUserForm
     add_fieldsets = [
         (
@@ -240,3 +245,4 @@ class DataProviderDetailsAdmin(GuardedModelAdmin):
 
 admin.site.unregister(User)
 admin.site.register(User, InsituUserAdmin)
+admin.site.register(models.Team)
