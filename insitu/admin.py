@@ -15,8 +15,14 @@ from django.contrib.auth.forms import PasswordResetForm
 from django.contrib.auth.admin import UserAdmin
 
 
+class TeamInline(admin.TabularInline):
+    model = models.Team
+    fields = ("teammates",)
+
+
 class InsituUserAdmin(UserAdmin):
     form = UserEditAdminForm
+    inlines = [TeamInline]
     add_form = CreateUserForm
     add_fieldsets = [
         (
@@ -82,6 +88,9 @@ class InsituUserAdmin(UserAdmin):
                 subject_template_name="mails/password_set_subject.txt",
                 html_email_template_name="mails/password_set_email.html",
             )
+
+    def get_inline_instances(self, request, obj=None):
+        return obj and super(UserAdmin, self).get_inline_instances(request, obj) or []
 
 
 def logs_export_as_excel(LoggedActionAdmin, request, queryset):
@@ -240,3 +249,4 @@ class DataProviderDetailsAdmin(GuardedModelAdmin):
 
 admin.site.unregister(User)
 admin.site.register(User, InsituUserAdmin)
+admin.site.register(models.Team)
