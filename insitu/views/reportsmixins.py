@@ -1907,13 +1907,13 @@ class CountryReportExcelMixin:
                 requirement__datarequirement__data__dataproviderrelation___deleted=fl,
                 requirement__datarequirement__data___deleted=False,
                 requirement__datarequirement___deleted=False,
-                requirement___deleted=False
+                requirement___deleted=False,
             ).values_list("name", flat=True)
             policies = DataPolicy.objects.filter(
                 data__dataproviderrelation__provider=dp,
                 data__dataproviderrelation__provider___deleted=False,
                 data__dataproviderrelation___deleted=False,
-                data___deleted=False
+                data___deleted=False,
             ).distinct()
             row = [dp.name]
             for obs in obs_headers:
@@ -2072,7 +2072,7 @@ class CountryReportPDFMixin:
                 requirement__datarequirement__data__dataproviderrelation___deleted=fl,
                 requirement__datarequirement__data___deleted=False,
                 requirement__datarequirement___deleted=False,
-                requirement___deleted=False
+                requirement___deleted=False,
             ).values_list("name", flat=True)
             policies = DataPolicy.objects.filter(
                 data__dataproviderrelation__provider=dp,
@@ -2091,11 +2091,13 @@ class CountryReportPDFMixin:
                 row.append(
                     Paragraph(
                         " / ".join(policy.name for policy in policies),
-                        self.add_column_data
+                        self.add_column_data,
                     )
                 )
             else:
-                row.append(Paragraph("None", self.add_column_data),)
+                row.append(
+                    Paragraph("None", self.add_column_data),
+                )
 
             row.append("")
 
