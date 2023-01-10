@@ -179,7 +179,11 @@ class DataProviderAdmin(GuardedModelAdmin):
         "updated_at",
     )
     search_fields = ["name"]
-    list_display = ("id", "name")
+    list_display = ("id", "name", "get_countries")
+    list_filter = ("countries",)
+
+    def get_countries(self, obj):
+        return ",\n".join([c.name for c in obj.countries.all()])
 
 
 class BaseDisplayDeleteAdminMixin:

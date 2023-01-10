@@ -29,10 +29,16 @@ from explorer.utils import url_get_rows
 
 from wkhtmltopdf.views import PDFTemplateResponse
 
-from insitu.models import Component, CopernicusService, Product
-from insitu.forms import StandardReportForm
-from insitu.views.reportsmixins import ReportExcelMixin, PDFExcelMixin
+from insitu.models import Component, CopernicusService, Product, DataProvider
+from insitu.forms import StandardReportForm, CountryReportForm
+from insitu.views.reportsmixins import (
+    ReportExcelMixin,
+    PDFExcelMixin,
+    CountryReportExcelMixin,
+    CountryReportPDFMixin,
+)
 from insitu.views.protected.views import ProtectedTemplateView, ProtectedView
+from picklists.models import Country
 
 
 def as_text(value):
@@ -295,3 +301,87 @@ class ReportsStandardReportView(ProtectedTemplateView, ReportExcelMixin, PDFExce
             return self.generate_excel()
         else:
             return HttpResponse("Inccorect value selected")
+
+
+class CountryReportView(
+    ProtectedTemplateView, CountryReportExcelMixin, CountryReportPDFMixin
+):
+    template_name = "reports/country_report.html"
+    permission_classes = ()
+    permission_denied_redirect = reverse_lazy("auth:login")
+
+    def get_context_data(self, **kwargs):
+        context = super(CountryReportView, self).get_context_data(**kwargs)
+        context["countries"] = Country.objects.all()
+        context["form"] = CountryReportForm()
+        return context
+
+    def generate_filename(self, extension):
+        country = Country.objects.get(code=self.country_code).name
+        date = datetime.datetime.now().strftime("%Y%m%d_%H%M")
+        filename = "_".join([country, "Country_Report", date]) + extension
+        return filename
+
+    def post(self, request, *args, **kwargs):
+        self.country_code = self.request.POST.getlist("country")[0]
+        self.dataproviders = DataProvider.objects.filter(
+            countries__code=self.country_code, is_network=False, _deleted=False
+        ).order_by("name")
+        self.dataproviders_networks = DataProvider.objects.filter(
+            countries__code=self.country_code, is_network=True, _deleted=False
+        ).order_by("name")
+        if request.POST["action"] == "Generate PDF":
+            return self.generate_pdf()
+        elif request.POST["action"] == "Generate Excel":
+            return self.generate_excel()
+        else:
+            return HttpResponse("Inccorect value selected")
+
+    def generate_excel(self):
+        output = BytesIO()
+        workbook = xlsxwriter.Workbook(output)
+        self.generate_excel_file(workbook)
+        workbook.close()
+        output.seek(0)
+        filename = self.generate_filename(".xlsx")
+        cont_type = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+        response = HttpResponse(
+            output,
+            content_type=cont_type,
+        )
+        response["Content-Disposition"] = "attachment; filename=%s" % filename
+        return response
+
+    def generate_pdf(self):
+        response = HttpResponse(content_type="application/pdf")
+        pdf_name = self.generate_filename(".pdf")
+        response["Content-Disposition"] = "attachment; filename=%s" % pdf_name
+
+        buff = BytesIO()
+        pdfmetrics.registerFont(
+            TTFont(
+                "Calibri",
+                "/var/local/copernicus/insitu/static/fonts/CalibriRegular.ttf",
+            )
+        )
+        pdfmetrics.registerFont(
+            TTFont(
+                "Calibri-Bold",
+                "/var/local/copernicus/insitu/static/fonts/CalibriBold.ttf",
+            )
+        )
+        pdfmetrics.registerFontFamily("Calibri", normal="Calibri", bold="CalibriBold")
+
+        menu_pdf = SimpleDocTemplate(
+            buff,
+            rightMargin=10,
+            pagesize=landscape(A4),
+            leftMargin=10,
+            topMargin=30,
+            bottomMargin=10,
+        )
+
+        self.generate_pdf_file(menu_pdf)
+        response.write(buff.getvalue())
+        buff.close()
+        return response

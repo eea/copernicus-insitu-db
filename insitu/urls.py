@@ -172,6 +172,11 @@ reports_patterns = [
         views.ReportsStandardReportView.as_view(),
         name="standard_report",
     ),
+    url(
+        r"^country_report/$",
+        views.CountryReportView.as_view(),
+        name="country_report",
+    ),
     url(r"^(?P<query_id>\d+)/$", views.ReportsDetailView.as_view(), name="detail"),
     url(r"^(?P<query_id>\d+)/json/$", views.ReportDataJsonView.as_view(), name="json"),
     url(r"^snapshot/$", views.SnapshotView.as_view(), name="snapshot"),

@@ -10,9 +10,7 @@ from django.utils.translation import ugettext_lazy as _
 from copernicus.settings import DEFAULT_FROM_EMAIL, SITE_URL
 from insitu import models
 from insitu import signals
-from picklists.models import (
-    ProductGroup,
-)
+from picklists.models import ProductGroup, Country
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 
@@ -664,6 +662,12 @@ class StandardReportForm(forms.Form):
     )
     component = forms.ModelMultipleChoiceField(
         required=False, queryset=models.Component.objects.all(), label="Component"
+    )
+
+
+class CountryReportForm(forms.Form):
+    country = forms.ModelChoiceField(
+        required=True, queryset=Country.objects.all(), label="Select a country"
     )
 
 
