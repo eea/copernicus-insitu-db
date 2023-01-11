@@ -10,7 +10,7 @@ Changelog
 2.7.5 (2023-01-11)
 ------------------
 * Add acronym search for Data Provider listing
-* Add ID to Provider listing and search
+* Add ID to Requirement listing and search
 * Add created/updated in admin
 * Add team model to admin and inline teammates to user
 * Add countries to Data Provider admin
