@@ -3,6 +3,16 @@ Changelog
 
 * In case of major changes, an email should be sent to all users with the modifications.
 
+2.7.5 (2023-01-11)
+------------------
+* Add acronym search for Data Provider listing
+* Add ID to Provider listing and search
+* Add created/updated in admin
+* Add team model to admin and inline teammates to user
+* Add countries to Data Provider admin
+* Add Country Report
+* Styling updates
+
 2.7.4 (2022-12-16)
 ------------------
 * Exclude user id from `/user/records/` url
