@@ -660,7 +660,7 @@ class Data(OwnerHistoryModel, ValidationWorkflowModel, SoftDeleteModel):
         null=True,
         blank=True,
         on_delete=models.CASCADE,
-        related_name="+",
+        related_name="data",
     )
     data_type = models.ForeignKey(
         pickmodels.DataType,

@@ -11,8 +11,10 @@ from reportlab.platypus import (
 )
 
 from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
-from reportlab.lib.colors import Color, red, black
+from reportlab.lib.colors import Color, HexColor, red, black
 from reportlab.lib.enums import TA_CENTER, TA_LEFT, TA_JUSTIFY
+
+from picklists.models import RequirementGroup, DataPolicy
 
 
 class ReportExcelMixin:
@@ -1761,4 +1763,391 @@ class PDFExcelMixin:
         )
         table8 = self.generate_table_8_pdf()
         elements.append(table8)
+        menu_pdf.build(elements)
+
+
+class CountryReportExcelMixin:
+    def set_formats(self, workbook):
+        self.merge_format_light = workbook.add_format(
+            {
+                "bold": 1,
+                "align": "center",
+                "valign": "vcenter",
+                "font_name": "Calibri",
+                "font_size": 14,
+                "text_wrap": 1,
+                "font_color": "black",
+                "bg_color": "#e2efd9",
+                "border": 1,
+                "border_color": "#808080",
+            }
+        )
+
+        self.merge_format = workbook.add_format(
+            {
+                "bold": 1,
+                "align": "center",
+                "valign": "vcenter",
+                "font_name": "Calibri",
+                "font_size": 14,
+                "text_wrap": 1,
+                "font_color": "black",
+                "bg_color": "#c5e0b3",
+                "border": 1,
+                "border_color": "#808080",
+            }
+        )
+
+        self.merge_format_dark = workbook.add_format(
+            {
+                "bold": 1,
+                "align": "center",
+                "valign": "vcenter",
+                "font_name": "Calibri",
+                "font_size": 14,
+                "text_wrap": 1,
+                "font_color": "black",
+                "bg_color": "#a8d08d",
+                "border": 1,
+                "border_color": "#808080",
+            }
+        )
+
+        self.dp_column_format = workbook.add_format(
+            {
+                "bold": 1,
+                "align": "left",
+                "valign": "vcenter",
+                "font_name": "Calibri",
+                "font_size": 14,
+                "text_wrap": 1,
+                "font_color": "black",
+                "bg_color": "#e2efd9",
+                "border": 1,
+                "border_color": "#808080",
+            }
+        )
+        self.obs_column_format = workbook.add_format(
+            {
+                "bold": 1,
+                "align": "center",
+                "valign": "vcenter",
+                "font_name": "Calibri",
+                "font_size": 14,
+                "text_wrap": 1,
+                "font_color": "black",
+                "bg_color": "#c5e0b3",
+                "border": 1,
+                "border_color": "#808080",
+            }
+        )
+
+        self.additional_column_format = workbook.add_format(
+            {
+                "bold": 1,
+                "align": "left",
+                "valign": "vcenter",
+                "font_name": "Calibri",
+                "font_size": 14,
+                "text_wrap": 1,
+                "font_color": "black",
+                "bg_color": "#a8d08d",
+                "border": 1,
+                "border_color": "#808080",
+            }
+        )
+        self.rotated_text = workbook.add_format(
+            {
+                "bold": 1,
+                "align": "center",
+                "valign": "vcenter",
+                "font_name": "Calibri",
+                "font_size": 14,
+                "text_wrap": 1,
+                "font_color": "black",
+                "bg_color": "#c5e0b3",
+                "border": 1,
+                "border_color": "#808080",
+            }
+        )
+        self.rotated_text.set_rotation(90)
+
+    def generate_table(self, workbook, worksheet, providers):
+        worksheet.set_column("A1:A1", 30, self.dp_column_format)
+        worksheet.set_column("B1:H1", 8, self.obs_column_format)
+        worksheet.set_column("I1:J1", 20, self.additional_column_format)
+        worksheet.merge_range(
+            "A1:A2",
+            "Data provider",
+            self.merge_format_light,
+        )
+        worksheet.merge_range("B1:H1", "Observation Data Type", self.merge_format)
+        worksheet.merge_range("I1:J1", "Additional information", self.merge_format_dark)
+        worksheet.set_row(1, 150)
+        obs_headers = [
+            "Meteorology",
+            "Ocean",
+            "Atmosphere",
+            "Hydrology",
+            "Cryosphere",
+            "Land cover / Land use",
+            "Terrestrial",
+        ]
+        worksheet.write_row("B2:H2", obs_headers, self.rotated_text)
+        additional_headers = ["Data policy", "Comments"]
+        worksheet.write_row("I2:J2", additional_headers, self.merge_format_dark)
+        worksheet.set_default_row(hide_unused_rows=True)
+
+        index = 2
+        # flake8 things
+        fl = False
+        for dp in providers:
+            rg = RequirementGroup.objects.filter(
+                requirement__datarequirement__data__dataproviderrelation__provider=dp,
+                requirement__datarequirement__data__dataproviderrelation___deleted=fl,
+                requirement__datarequirement__data___deleted=False,
+                requirement__datarequirement___deleted=False,
+                requirement___deleted=False,
+            ).values_list("name", flat=True)
+            policies = DataPolicy.objects.filter(
+                data__dataproviderrelation__provider=dp,
+                data__dataproviderrelation__provider___deleted=False,
+                data__dataproviderrelation___deleted=False,
+                data___deleted=False,
+            ).distinct()
+            row = [dp.name]
+            for obs in obs_headers:
+                if obs in rg:
+                    row.append("X")
+                else:
+                    row.append(" ")
+            if policies:
+                row.append(" / ".join(policy.name for policy in policies))
+            else:
+                row.append("None")
+
+            # Only write rows that have values
+            try:
+                row.index("X")
+                worksheet.write_row(index, 0, row)
+                index += 1
+            except ValueError:
+                continue
+
+    def generate_excel_file(self, workbook):
+        self.set_formats(workbook)
+        worksheet = workbook.add_worksheet("Data provider organisations")
+        self.generate_table(workbook, worksheet, self.dataproviders)
+
+        worksheet = workbook.add_worksheet("Data provider networks")
+        self.generate_table(workbook, worksheet, self.dataproviders_networks)
+
+
+class VerticalParagraph(Paragraph):
+    """Paragraph that is printed vertically"""
+
+    def __init__(self, args, **kwargs):
+        super().__init__(args, **kwargs)
+        self.horizontal_position = -self.style.leading
+
+    def draw(self):
+        """Draw text"""
+        canvas = self.canv
+        canvas.rotate(90)
+        canvas.translate(1, self.horizontal_position)
+        super().draw()
+
+    def wrap(self, available_width, _):
+        """Wrap text in table"""
+        string_width = self.canv.stringWidth(
+            self.getPlainText(), self.style.fontName, self.style.fontSize
+        )
+        self.horizontal_position = -(available_width + self.style.leading) / 2
+        height, _ = super().wrap(
+            availWidth=1 + string_width, availHeight=available_width
+        )
+        return self.style.leading, height
+
+
+class CountryReportPDFMixin:
+    def set_styles(self):
+        styles = getSampleStyleSheet()
+        self.dp_column = ParagraphStyle(
+            name="HeaderStyle",
+            fontName="Calibri-Bold",
+            parent=styles["Normal"],
+            fontSize=16,
+            textColor=black,
+            leading=20,
+            alignment=TA_CENTER,
+        )
+        self.dp_data_column = ParagraphStyle(
+            name="HeaderStyle",
+            fontName="Calibri-Bold",
+            parent=styles["Normal"],
+            fontSize=16,
+            textColor=black,
+            leading=20,
+            alignment=TA_LEFT,
+        )
+        self.obs_column = ParagraphStyle(
+            name="HeaderStyle",
+            fontName="Calibri-Bold",
+            parent=styles["Normal"],
+            fontSize=16,
+            textColor=black,
+            leading=20,
+            alignment=TA_CENTER,
+        )
+        self.add_column = ParagraphStyle(
+            name="HeaderStyle",
+            fontName="Calibri-Bold",
+            parent=styles["Normal"],
+            fontSize=16,
+            textColor=black,
+            leading=20,
+            alignment=TA_CENTER,
+        )
+        self.add_column_data = ParagraphStyle(
+            name="HeaderStyle",
+            fontName="Calibri-Bold",
+            parent=styles["Normal"],
+            fontSize=16,
+            textColor=black,
+            leading=20,
+            alignment=TA_LEFT,
+        )
+        self.table_header_style = ParagraphStyle(
+            name="TableHeaderStyle",
+            fontName="Calibri-Bold",
+            parent=styles["Normal"],
+            fontSize=16,
+            alignment=TA_CENTER,
+            spaceAfter=10,
+            textColor=red,
+            leading=20,
+        )
+
+    def generate_table_pdf(self, providers):
+        obs_headers = [
+            "Meteorology",
+            "Ocean",
+            "Atmosphere",
+            "Hydrology",
+            "Cryosphere",
+            "Land cover / Land use",
+            "Terrestrial",
+        ]
+        data = [
+            [
+                Paragraph("Data provider", self.dp_column),
+                Paragraph("Observation Data Type", self.obs_column),
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                Paragraph("Additional information", self.add_column),
+                "",
+            ],
+            [
+                "",
+                VerticalParagraph(obs_headers[0]),
+                VerticalParagraph(obs_headers[1]),
+                VerticalParagraph(obs_headers[2]),
+                VerticalParagraph(obs_headers[3]),
+                VerticalParagraph(obs_headers[4]),
+                VerticalParagraph(obs_headers[5]),
+                VerticalParagraph(obs_headers[6]),
+                Paragraph("Data policy", self.add_column),
+                Paragraph("Comments", self.add_column),
+            ],
+        ]
+
+        fl = False
+        for dp in providers:
+            rg = RequirementGroup.objects.filter(
+                requirement__datarequirement__data__dataproviderrelation__provider=dp,
+                requirement__datarequirement__data__dataproviderrelation___deleted=fl,
+                requirement__datarequirement__data___deleted=False,
+                requirement__datarequirement___deleted=False,
+                requirement___deleted=False,
+            ).values_list("name", flat=True)
+            policies = DataPolicy.objects.filter(
+                data__dataproviderrelation__provider=dp,
+                data__dataproviderrelation__provider___deleted=False,
+                data__dataproviderrelation___deleted=False,
+                data___deleted=False,
+            ).distinct()
+            row = [Paragraph(dp.name, self.dp_data_column)]
+            for obs in obs_headers:
+                if obs in rg:
+                    row.append(Paragraph("X", self.obs_column))
+                else:
+                    row.append("")
+
+            if policies:
+                row.append(
+                    Paragraph(
+                        " / ".join(policy.name for policy in policies),
+                        self.add_column_data,
+                    )
+                )
+            else:
+                row.append(
+                    Paragraph("None", self.add_column_data),
+                )
+
+            row.append("")
+
+            # Only write rows that have values
+            for cell in row:
+                if isinstance(cell, Paragraph):
+                    if cell.text == "X":
+                        data.append(row)
+                        break
+
+        style = [
+            ("GRID", (0, 0), (-1, -1), 0.5, HexColor("#808080")),
+            ("BACKGROUND", (0, 0), (0, -1), HexColor("#e2efd9")),
+            ("BACKGROUND", (1, 0), (7, -1), HexColor("#c5e0b3")),
+            ("BACKGROUND", (8, 0), (9, -1), HexColor("#a8d08d")),
+            ("SPAN", (0, 0), (0, 1)),
+            ("SPAN", (1, 0), (7, 0)),
+            ("SPAN", (8, 0), (9, 0)),
+            ("VALIGN", (0, 0), (-1, -1), "MIDDLE"),
+        ]
+        t = Table(
+            data, colWidths=[200, 30, 30, 30, 30, 30, 30, 30, 150, 200], repeatRows=1
+        )
+        t.setStyle(TableStyle(style))
+        return t
+
+    def generate_pdf_file(self, menu_pdf):
+        self.set_styles()
+        elements = []
+        elements.extend(
+            [
+                Paragraph(
+                    "Organisations",
+                    self.table_header_style,
+                ),
+            ]
+        )
+        table1 = self.generate_table_pdf(self.dataproviders)
+        elements.append(table1)
+
+        elements.append(PageBreak())
+        elements.extend(
+            [
+                Paragraph(
+                    "Networks",
+                    self.table_header_style,
+                ),
+            ]
+        )
+
+        table2 = self.generate_table_pdf(self.dataproviders_networks)
+        elements.append(table2)
         menu_pdf.build(elements)
