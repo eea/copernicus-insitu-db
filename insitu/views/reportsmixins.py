@@ -1874,15 +1874,15 @@ class CountryReportExcelMixin:
 
     def generate_table(self, workbook, worksheet, providers):
         worksheet.set_column("A1:A1", 30, self.dp_column_format)
-        worksheet.set_column("B1:H1", 8, self.obs_column_format)
-        worksheet.set_column("I1:J1", 20, self.additional_column_format)
+        worksheet.set_column("B1:G1", 8, self.obs_column_format)
+        worksheet.set_column("H1:J1", 20, self.additional_column_format)
         worksheet.merge_range(
             "A1:A2",
             "Data provider",
             self.merge_format_light,
         )
-        worksheet.merge_range("B1:H1", "Observation Data Type", self.merge_format)
-        worksheet.merge_range("I1:J1", "Additional information", self.merge_format_dark)
+        worksheet.merge_range("B1:G1", "Observation Data Type", self.merge_format)
+        worksheet.merge_range("H1:J1", "Additional information", self.merge_format_dark)
         worksheet.set_row(1, 150)
         obs_headers = [
             "Meteorology",
@@ -1890,12 +1890,11 @@ class CountryReportExcelMixin:
             "Atmosphere",
             "Hydrology",
             "Cryosphere",
-            "Land cover / Land use",
             "Terrestrial",
         ]
-        worksheet.write_row("B2:H2", obs_headers, self.rotated_text)
+        worksheet.write_row("B2:G2", obs_headers, self.rotated_text)
         additional_headers = ["Data policy", "Comments"]
-        worksheet.write_row("I2:J2", additional_headers, self.merge_format_dark)
+        worksheet.write_row("H2:J2", additional_headers, self.merge_format_dark)
         worksheet.set_default_row(hide_unused_rows=True)
 
         index = 2
@@ -2035,14 +2034,12 @@ class CountryReportPDFMixin:
             "Atmosphere",
             "Hydrology",
             "Cryosphere",
-            "Land cover / Land use",
             "Terrestrial",
         ]
         data = [
             [
                 Paragraph("Data provider", self.dp_column),
                 Paragraph("Observation Data Type", self.obs_column),
-                "",
                 "",
                 "",
                 "",
@@ -2059,7 +2056,6 @@ class CountryReportPDFMixin:
                 VerticalParagraph(obs_headers[3]),
                 VerticalParagraph(obs_headers[4]),
                 VerticalParagraph(obs_headers[5]),
-                VerticalParagraph(obs_headers[6]),
                 Paragraph("Data policy", self.add_column),
                 Paragraph("Comments", self.add_column),
             ],
@@ -2111,16 +2107,14 @@ class CountryReportPDFMixin:
         style = [
             ("GRID", (0, 0), (-1, -1), 0.5, HexColor("#808080")),
             ("BACKGROUND", (0, 0), (0, -1), HexColor("#e2efd9")),
-            ("BACKGROUND", (1, 0), (7, -1), HexColor("#c5e0b3")),
-            ("BACKGROUND", (8, 0), (9, -1), HexColor("#a8d08d")),
+            ("BACKGROUND", (1, 0), (6, -1), HexColor("#c5e0b3")),
+            ("BACKGROUND", (7, 0), (8, -1), HexColor("#a8d08d")),
             ("SPAN", (0, 0), (0, 1)),
-            ("SPAN", (1, 0), (7, 0)),
-            ("SPAN", (8, 0), (9, 0)),
+            ("SPAN", (1, 0), (6, 0)),
+            ("SPAN", (7, 0), (8, 0)),
             ("VALIGN", (0, 0), (-1, -1), "MIDDLE"),
         ]
-        t = Table(
-            data, colWidths=[200, 30, 30, 30, 30, 30, 30, 30, 150, 200], repeatRows=1
-        )
+        t = Table(data, colWidths=[200, 30, 30, 30, 30, 30, 30, 150, 200], repeatRows=1)
         t.setStyle(TableStyle(style))
         return t
 
