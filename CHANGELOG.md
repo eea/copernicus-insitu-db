@@ -3,6 +3,10 @@ Changelog
 
 * In case of major changes, an email should be sent to all users with the modifications.
 
+2.7.7 (2023-01-11)
+------------------
+* Remove Land use/Land cover from Country Report
+
 2.7.6 (2023-01-11)
 ------------------
 * Change order of report display in reports listing
