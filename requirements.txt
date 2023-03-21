@@ -14,7 +14,7 @@ elasticsearch-dsl==6.4.0
 openpyxl==3.0.7
 psycopg2==2.8.6
 pytz==2021.1
-sentry-sdk==1.1.0
+sentry-sdk==1.14.0
 Sphinx==4.0.2
 sphinxcontrib-websupport==1.2.4
 XlsxWriter==1.4.3
