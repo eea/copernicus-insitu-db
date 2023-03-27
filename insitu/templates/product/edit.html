@@ -48,7 +48,7 @@
 
 {% block scripts %}
   <script src="{% static 'js/select2.min.js' %}"></script>
-  <script>
+  <script nonce="{{request.csp_nonce}}">
     $(document).ready(function () {
       $('select').select2();
     });

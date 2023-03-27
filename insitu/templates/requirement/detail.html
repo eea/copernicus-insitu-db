@@ -29,7 +29,7 @@
             <span class="pull-right">
               <a class="btn btn-primary pull-right"
                  href="{% url 'requirement:delete' requirement.pk %}">Delete requirement</a>
-              <a class="btn btn-primary pull-right" style="margin-right:5px"
+              <a class="btn btn-primary pull-right margin-right-5"
                  href="{% url 'requirement:edit' requirement.pk %}">Edit requirement</a>
             </span>
           {% endif %}
@@ -204,7 +204,7 @@
             </div>
             {% if requirement.state.name != 'ready' and requirement.state.name != 'valid' %}
               {% if requirement.feedback %}
-                <div class="alert alert-danger" style="margin-top: 5%;" role="alert">
+                <div class="alert alert-danger margin-top-5" role="alert">
                   <h5>Feedback:</h5>
                     {{ requirement.feedback|linebreaksbr }}
                 </div>
@@ -225,7 +225,7 @@
         <tr class="row">
           <th class="col-md-4 col-sm-6">Created by</th>
           <td class="col-md-8 col-sm-6">{{ requirement.created_by.get_full_name }},
-            <i>{{ requirement.created_by.email }}</i>
+            <em>{{ requirement.created_by.email }}</em>
           </td>
         </tr>
         {% if requirement.owner_history %}
@@ -252,7 +252,7 @@
              href="{% url 'requirement:product:add' requirement.pk %}">Add requirement to product</a>
         </span>
           <span class="pull-right">
-          <a class="btn btn-primary pull-right" style="margin-right:5px"
+          <a class="btn btn-primary pull-right margin-right-5"
              href="{% url 'requirement:product:add_group' requirement.pk %}">Add requirement to product group</a>
         </span>
           {% endif %}
@@ -397,7 +397,7 @@
   <script src="{% static 'js/jszip.min.js' %}"></script>
   <script src="{% static 'js/pdfmake.min.js' %}"></script>
   <script src="{% static 'js/vfs_fonts.js' %}"></script>
-  <script>
+  <script nonce="{{request.csp_nonce}}">
     $(function () {
       $('[data-toggle="popover"]').popover({
         trigger: 'hover',
@@ -454,7 +454,7 @@
       });
     })
   </script>
-  <script>
+  <script nonce="{{request.csp_nonce}}">
     $(function () {
       var requirement_name = '{{ requirement.name | escapejs }}'
       var requirement_title = requirement_name

@@ -17,9 +17,9 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.*/
 
 function s2ab(s) {
-    var buf = new ArrayBuffer(s.length);
-    var view = new Uint8Array(buf);
-    for (var i=0; i!=s.length; ++i) view[i] = s.charCodeAt(i) & 0xFF;
+    let buf = new ArrayBuffer(s.length);
+    let view = new Uint8Array(buf);
+    for (let i=0; i!=s.length; ++i) view[i] = s.charCodeAt(i) & 0xFF;
     return buf;
   }
 
@@ -40,15 +40,15 @@ function s2ab(s) {
             };
             
             var options = $.extend(defaults, options);
-            var el = this;
+            let el = this;
             
             if(defaults.type == 'csv' || defaults.type == 'txt'){
             
                 // Header
-                var tdData ="";
+                let tdData ="";
                 $(el).find('thead').find('tr').each(function() {
                 tdData += "\n";					
-                    $(this).filter(':visible').find('th').each(function(index,data) {
+                    $(this).filter(':visible').find('th').each(function(index,_data) {
                         if ($(this).css('display') != 'none'){
                             if(defaults.ignoreColumn.indexOf(index) == -1){
                                 tdData += '"' + parseString($(this)) + '"' + defaults.separator;								
@@ -63,7 +63,7 @@ function s2ab(s) {
                 // Row vs Column
                 $(el).find('tbody').find('tr').each(function() {
                 tdData += "\n";
-                    $(this).filter(':visible').find('th').each(function(index,data) {
+                    $(this).filter(':visible').find('th').each(function(index,_data) {
                         if ($(this).css('display') != 'none'){
                             if(defaults.ignoreColumn.indexOf(index) == -1){
                                 tdData += '"'+ parseString($(this)) + '"'+ defaults.separator;
@@ -83,10 +83,10 @@ function s2ab(s) {
             }else if(defaults.type == 'sql'){
             
                 // Header
-                var tdData ="INSERT INTO `"+defaults.tableName+"` (";
+                let tdData ="INSERT INTO `"+defaults.tableName+"` (";
                 $(el).find('thead').find('tr').each(function() {
                 
-                    $(this).filter(':visible').find('th').each(function(index,data) {
+                    $(this).filter(':visible').find('th').each(function(index,_data) {
                         if ($(this).css('display') != 'none'){
                             if(defaults.ignoreColumn.indexOf(index) == -1){
                                 tdData += '`' + parseString($(this)) + '`,' ;							
@@ -101,7 +101,7 @@ function s2ab(s) {
                 // Row vs Column
                 $(el).find('tbody').find('tr').each(function() {
                 tdData += "(";
-                    $(this).filter(':visible').find('th').each(function(index,data) {
+                    $(this).filter(':visible').find('th').each(function(index,_data) {
                         if ($(this).css('display') != 'none'){
                             if(defaults.ignoreColumn.indexOf(index) == -1){
                                 tdData += '"'+ parseString($(this)) + '",';
@@ -133,7 +133,7 @@ function s2ab(s) {
                     var tdData ="";	
                     var jsonArrayTd = [];
                 
-                    $(this).filter(':visible').find('th').each(function(index,data) {
+                    $(this).filter(':visible').find('th').each(function(index,_data) {
                         if ($(this).css('display') != 'none'){
                             if(defaults.ignoreColumn.indexOf(index) == -1){
                                 jsonArrayTd.push(parseString($(this)));						
@@ -149,7 +149,7 @@ function s2ab(s) {
                     var tdData ="";	
                     var jsonArrayTd = [];
                 
-                    $(this).filter(':visible').find('th').each(function(index,data) {
+                    $(this).filter(':visible').find('th').each(function(index,_data) {
                         if ($(this).css('display') != 'none'){
                             if(defaults.ignoreColumn.indexOf(index) == -1){
                                 jsonArrayTd.push(parseString($(this)));							
@@ -161,7 +161,7 @@ function s2ab(s) {
                 });
                 
                 var jsonExportArray =[];
-                jsonExportArray.push({header:jsonHeaderArray,data:jsonArray});
+                jsonExportArray.push({header:jsonHeaderArray,_data:jsonArray});
                 
                 //Return as JSON
                 //console.log(JSON.stringify(jsonExportArray));
@@ -175,12 +175,12 @@ function s2ab(s) {
                 window.open('data:application/json;filename=exportData;' + base64data);
             }else if(defaults.type == 'xml'){
             
-                var xml = '<?xml version="1.0" encoding="utf-8"?>';
+                let xml = '<?xml version="1.0" encoding="utf-8"?>';
                 xml += '<tabledata><fields>';
 
                 // Header
                 $(el).find('thead').find('tr').each(function() {
-                    $(this).filter(':visible').find('th').each(function(index,data) {
+                    $(this).filter(':visible').find('th').each(function(index,_data) {
                         if ($(this).css('display') != 'none'){					
                             if(defaults.ignoreColumn.indexOf(index) == -1){
                                 xml += "<field>" + parseString($(this)) + "</field>";
@@ -191,11 +191,11 @@ function s2ab(s) {
                 xml += '</fields><data>';
                 
                 // Row Vs Column
-                var rowCount=1;
+                let rowCount=1;
                 $(el).find('tbody').find('tr').each(function() {
                     xml += '<row id="'+rowCount+'">';
-                    var colCount=0;
-                    $(this).filter(':visible').find('th').each(function(index,data) {
+                    let colCount=0;
+                    $(this).filter(':visible').find('th').each(function(index,_data) {
                         if ($(this).css('display') != 'none'){	
                             if(defaults.ignoreColumn.indexOf(index) == -1){
                                 xml += "<column-"+colCount+">"+parseString($(this))+"</column-"+colCount+">";
@@ -217,15 +217,15 @@ function s2ab(s) {
 
             }else if(defaults.type == 'excel' || defaults.type == 'doc'|| defaults.type == 'powerpoint'  ){
                 //console.log($(this).html());
-                var excel="<table>";
+                let excel="<table>";
                 // Header
                 $(el).find('thead').find('tr').each(function() {
                     excel += "<tr>";
-                    $(this).filter(':visible').find('th').each(function(index,data) {
+                    $(this).filter(':visible').find('th').each(function(index,_data) {
                         if ($(this).css('display') != 'none'){					
                             if(defaults.ignoreColumn.indexOf(index) == -1){
-                                colSpan = ($(this).prop('colSpan') > 0) ? $(this).prop('colSpan') : 1;
-								rowSpan = ($(this).prop('rowSpan') > 0) ? $(this).prop('rowSpan') : 1;
+                                let colSpan = ($(this).prop('colSpan') > 0) ? $(this).prop('colSpan') : 1;
+								let rowSpan = ($(this).prop('rowSpan') > 0) ? $(this).prop('rowSpan') : 1;
 								excel += "<td colSpan='"+colSpan+"' rowSpan='"+rowSpan+"'>" + parseString($(this))+ "</td>";
                             }
                         }
@@ -236,15 +236,15 @@ function s2ab(s) {
                 
                 
                 // Row Vs Column
-                var rowCount=1;
+                let rowCount=1;
                 $(el).find('tbody').find('tr').each(function() {
                     excel += "<tr>";
-                    var colCount=0;
-                    $(this).filter(':visible').find('th').each(function(index,data) {
+                    let colCount=0;
+                    $(this).filter(':visible').find('th').each(function(index,_data) {
                         if ($(this).css('display') != 'none'){	
                             if(defaults.ignoreColumn.indexOf(index) == -1){
-                                colSpan = ($(this).prop('colSpan') > 0) ? $(this).prop('colSpan') : 1;
-								rowSpan = ($(this).prop('rowSpan') > 0) ? $(this).prop('rowSpan') : 1;
+                                let colSpan = ($(this).prop('colSpan') > 0) ? $(this).prop('colSpan') : 1;
+								let rowSpan = ($(this).prop('rowSpan') > 0) ? $(this).prop('rowSpan') : 1;
 								excel += "<td colSpan='"+colSpan+"' rowSpan='"+rowSpan+"'>" + parseString($(this))+ "</td>";
                             }
                         }
@@ -259,7 +259,7 @@ function s2ab(s) {
                     console.log(excel);
                 }
                 
-                var excelFile = "<html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:x='urn:schemas-microsoft-com:office:"+defaults.type+"' xmlns='http://www.w3.org/TR/REC-html40'>";
+                let excelFile = "<html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:x='urn:schemas-microsoft-com:office:"+defaults.type+"' xmlns='http://www.w3.org/TR/REC-html40'>";
                 excelFile += "<head>";
                 excelFile += "<!--[if gte mso 9]>";
                 excelFile += "<xml>";
@@ -284,12 +284,12 @@ function s2ab(s) {
                 excelFile += "</html>";
 
                 var base64data = "base64," + $.base64.encode(excelFile);
-                var blob=new Blob([s2ab(excelFile)], {type:'data:application/vnd.ms-'+defaults.type});
+                let blob=new Blob([s2ab(excelFile)], {type:'data:application/vnd.ms-'+defaults.type});
                 if (navigator.msSaveOrOpenBlob) {
                     navigator.msSaveOrOpenBlob(blob, defaults.filename);
                 }
                 else {
-                  var link=document.createElement('a');
+                  let link=document.createElement('a');
                   link.href=window.URL.createObjectURL(blob);
                   link.download=defaults.filename;
                   document.body.appendChild(link);
@@ -299,7 +299,7 @@ function s2ab(s) {
             }else if(defaults.type == 'png'){
                 html2canvas($(el), {
                     onrendered: function(canvas) {										
-                        var img = canvas.toDataURL("image/png");
+                        let img = canvas.toDataURL("image/png");
                         window.open(img);
                         
                         
@@ -307,16 +307,16 @@ function s2ab(s) {
                 });		
             }else if(defaults.type == 'pdf'){
 
-                var doc = new jsPDF('p','pt', 'a4', true);
+                let doc = new jsPDF('p','pt', 'a4', true);
                 doc.setFontSize(defaults.pdfFontSize);
                 
                 // Header
-                var startColPosition=defaults.pdfLeftMargin;
+                let startColPosition=defaults.pdfLeftMargin;
                 $(el).find('thead').find('tr').each(function() {
-                    $(this).filter(':visible').find('th').each(function(index,data) {
+                    $(this).filter(':visible').find('th').each(function(index,_data) {
                         if ($(this).css('display') != 'none'){					
                             if(defaults.ignoreColumn.indexOf(index) == -1){
-                                var colPosition = startColPosition+ (index * 50);									
+                                let colPosition = startColPosition+ (index * 50);
                                 doc.text(colPosition,20, parseString($(this)));
                             }
                         }
@@ -325,9 +325,9 @@ function s2ab(s) {
             
             
                 // Row Vs Column
-                var startRowPosition = 20; var page =1;var rowPosition=0;
-                $(el).find('tbody').find('tr').each(function(index,data) {
-                    rowCalc = index+1;
+                let startRowPosition = 20; let page =1;let rowPosition=0;
+                $(el).find('tbody').find('tr').each(function(index,_data) {
+                   let rowCalc = index+1;
                     
                 if (rowCalc % 26 == 0){
                     doc.addPage();
@@ -336,10 +336,10 @@ function s2ab(s) {
                 }
                 rowPosition=(startRowPosition + (rowCalc * 10)) - ((page -1) * 280);
                     
-                    $(this).filter(':visible').find('th').each(function(index,data) {
+                    $(this).filter(':visible').find('th').each(function(index,_data) {
                         if ($(this).css('display') != 'none'){	
                             if(defaults.ignoreColumn.indexOf(index) == -1){
-                                var colPosition = startColPosition+ (index * 50);									
+                                let colPosition = startColPosition+ (index * 50);
                                 doc.text(colPosition,rowPosition, parseString($(this)));
                             }
                         }
@@ -355,7 +355,7 @@ function s2ab(s) {
             
             
             function parseString(data){
-            
+                let content_data
                 if(defaults.htmlContent == 'true'){
                     content_data = data.html().trim();
                 }else{

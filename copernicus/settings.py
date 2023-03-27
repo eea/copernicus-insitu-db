@@ -87,6 +87,7 @@ if DEBUG_TOOLBAR:
     ]
 
 MIDDLEWARE = [
+    "csp.middleware.CSPMiddleware",
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
@@ -276,3 +277,20 @@ if DEBUG_TOOLBAR:
         "SHOW_TOOLBAR_CALLBACK": "copernicus.settings.show_toolbar",
         # Rest of config
     }
+
+# Content Security Policy
+CSP_IMG_SRC = "'self'"
+CSP_STYLE_SRC = (
+    "'self'",
+    "http://cdnjs.cloudflare.com",
+    "http://code.jquery.com",
+    "http://maxcdn.bootstrapcdn.com",
+)
+CSP_SCRIPT_SRC = (
+    "'self'",
+    "http://cdnjs.cloudflare.com",
+    "http://code.jquery.com",
+    "https://matomo.eea.europa.eu",
+    "cdn.ravenjs.com",
+)
+CSP_INCLUDE_NONCE_IN = ["script-src", "style-src"]

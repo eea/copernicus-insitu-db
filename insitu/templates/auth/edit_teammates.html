@@ -31,7 +31,7 @@
           <td>
             {% for user in user.team.teammates.all %}
               <span class="col-sm-12 no-padding-left">{{ user.first_name }} {{ user.last_name }}, {{ user.email }}
-                <form style="display:inline;" >
+                <form class="display-inline">
                   <a href="{% url 'auth:delete_teammate' user.id %}">
                     <span class="glyphicon glyphicon-remove"></span>
                   </a>
@@ -56,7 +56,7 @@
 
 {% block scripts %}
   <script src="{% static 'js/select2.min.js' %}"></script>
-  <script>
+  <script nonce="{{request.csp_nonce}}">
     $(document).ready(function () {
       $('select').select2({
         sorter: function(data) {

@@ -1,3 +1,4 @@
+django-csp
 django-bootstrap3==15.0.0
 django-datatables-view==1.19.1
 django-docs==0.3.0

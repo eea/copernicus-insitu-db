@@ -2,6 +2,7 @@
 {% load static %}
 
 <head>
+  <title>Home</title>
   <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}"/>
 </head>
 
@@ -33,7 +34,7 @@
               {% if user_log %}
                 {% for log in user_log %}
                   <ul>
-                    <li><b>{{ log.user.username }} </b>{{ log.text }}
+                    <li><strong>{{ log.user.username }} </strong>{{ log.text }}
                       <br>
                       <span class="quiet">{{ log.date }}</span>
                     </li>
@@ -41,7 +42,7 @@
                 {% endfor %}
               {% else %}
                 <ul>
-                  <li><b>No recent actions</b></li>
+                  <li><strong>No recent actions</strong></li>
                 </ul>
               {% endif %}
             </div>
@@ -50,10 +51,10 @@
 
       {% endif %}
       <div class="footer">
-        <img class="logo-copernicus" src="{% static "/images/logo-copernicus.png"  %}" alt="Copernicus Logo" hspace="150">
+        <img class="logo-copernicus" src="{% static "/images/logo-copernicus.png"  %}" alt="Copernicus Logo">
         <img class="in-situ-logo" src="{% static "/images/in-situ-logo.png" %}" alt="In Situ Logo">
         <img class="european_commission-logo" src="{% static "/images/european_commission.png" %}"
-            alt="European Commission Logo" hspace="150">
+            alt="European Commission Logo">
       </div>
     </div>
   </body>

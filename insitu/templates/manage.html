@@ -44,7 +44,7 @@
               <option value="{{ u.id }}">{{ u.first_name }} {{ u.last_name }}</option>
             {% endfor %}
           </select>
-          
+
         </div>
         <br>
         <div>
@@ -61,12 +61,12 @@
           <p>Disable previous owner?</p>
           <div class="transferMargin">
             <div class="form-check form-check-inline">
-              
+
               <input type="radio" id="disable_old_user_yes" name="disable_old_user" value="yes">
               <label for="disable_old_user_yes">Yes</label>
             </div>
             <div class="form-check form-check-inline">
-              
+
               <input type="radio" id="disable_old_user_no" name="disable_old_user" value="no">
               <label for="disable_old_user_no">No</label>
             </div>
@@ -171,7 +171,7 @@
         <div class="form-group required">
           <label class="control-label" for="id_start_date">Start date</label>
           <input type="text" name="start_date" class="form-control datepicker"
-                autocomplete="off" placeholder="Start date" title="" required="" 
+                autocomplete="off" placeholder="Start date" title="" required=""
                 id="id_start_date" value="{{ form.start_date.value|default_if_none:'' }}">
         </div>
 
@@ -216,7 +216,7 @@
 
 {% block scripts %}
 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
-<script>
+<script nonce="{{request.csp_nonce}}">
   $(document).ready(function(){
     $('.datepicker').datepicker({
       maxDate: "+0d",
@@ -225,7 +225,7 @@
   });
 </script>
 
-<script>
+<script nonce="{{request.csp_nonce}}">
   $(document).ready(function () {
     $('.import-form').on('submit', function (e) {
       e.preventDefault();

@@ -7,7 +7,7 @@
         href="{% static 'css/jquery.dataTables.min.css' %}"/>
   <link rel="stylesheet" type="text/css"
         href="{% static 'css/buttons.dataTables.min.css' %}"/>
-  <style>
+  <style nonce="{{request.csp_nonce}}">
     .container {
       width: auto !important;
     }
@@ -151,8 +151,8 @@
       </div>
     </div>
     <div class="col-lg-12">
-      <table id="data" width="100%"
-             class="table table-condensed table-bordered table-hover">
+      <table id="data"
+             class="width-100 table table-condensed table-bordered table-hover">
         <thead>
         <tr>
           <th>Name</th>

@@ -4,7 +4,7 @@ function updateFilterOptions(filter, option_data) {
   var select = $('#' + filter);
   select.find('option').remove();
   select.append('<option value="All">All</option>');
-  $.each(option_data.options, function (i, option) {
+  $.each(option_data.options, function (_i, option) {
     var selected = '';
     if (option_data.selected == option) {
       selected = ' selected';
@@ -75,7 +75,7 @@ $(document).ready(function () {
       }
     },
     "stateSave": true,
-    "stateSaveParams": function (settings, data) {
+    "stateSaveParams": function (_settings, data) {
       data.update_frequency = $('#update_frequency').val();
       data.area = $('#area').val();
       data.timeliness = $('#timeliness').val();
@@ -88,7 +88,7 @@ $(document).ready(function () {
       data.state = $('#state').val();
       data.component = $('#component').val();
     },
-    "stateLoadParams": function (settings, data) {
+    "stateLoadParams": function (_settings, data) {
       $('#update_frequency').val(data.update_frequency);
       $('#area').val(data.area);
       $('#timeliness').val(data.timeliness);
@@ -101,7 +101,7 @@ $(document).ready(function () {
       $('#state').val(data.state);
       $('#component').val();
     },
-    "drawCallback": function (settings) {
+    "drawCallback": function (_settings) {
       var info = $(this).closest('.dataTables_wrapper').find('.dataTables_info');
       info.toggle(this.api().page.info().recordsDisplay > 9);
     },
@@ -110,7 +110,7 @@ $(document).ready(function () {
   $('#name,#update_frequency,#area,#timeliness,#data_policy,#data_type,\
       #data_format,#quality_control_procedure,#dissemination,#requirement,\
       #state,#component').on(
-    'change', function (event) {
+    'change', function (_event) {
       var table = $table.DataTable();
       table.ajax.reload();
     });

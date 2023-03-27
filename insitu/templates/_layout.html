@@ -1,8 +1,15 @@
 {% load static %}
 {% load hijack_tags %}
 
-<html>
+<!DOCTYPE html>
+<html lang="en">
   <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta
+      name="description"
+      content="CIS2 is an open database designed to record the requirements of the Copernicus services,
+              ESA, and EUMETSAT for in situ data."
+    >
     <link rel="stylesheet" type="text/css" href="{% static 'css/bootstrap-theme.min.css' %}"/>
     <link rel="stylesheet" type="text/css" href="{% static 'css/bootstrap.min.css' %}"/>
     <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}"/>
@@ -21,7 +28,7 @@
     </title>
     {% if sentry_dsn %}
     <script src="https://cdn.ravenjs.com/3.17.0/raven.min.js" crossorigin="anonymous"></script>
-    <script>
+    <script nonce="{{request.csp_nonce}}">
       Raven.config('{{ sentry_dsn }}', {
         tags: {
           site: '{{ sentry_tag_site }}',
@@ -47,7 +54,7 @@
     {% hijack_notification %}
     {% include 'nav.html' %}
 
-    <div id="to-print" class="container" style="min-height: 550px">
+    <div id="to-print" class="container min-height-550">
       {% block content %}
       {% endblock %}
 
@@ -61,7 +68,7 @@
     {% block scripts %}
     {% endblock %}
     <script src="{% static 'js/bootstrap-notify.min.js' %}"></script>
-    <script>
+    <script nonce="{{request.csp_nonce}}">
       {% if messages %}
         {% for message in messages %}
           $.notify({
@@ -85,7 +92,7 @@
   {% endblock %}
   {% if MATOMO %}
     <!-- Matomo -->
-    <script type="text/javascript">
+    <script type="text/javascript" nonce="{{request.csp_nonce}}">
       var _paq = _paq || [];
       /* tracker methods like "setCustomDimension" should be called before "trackPageView" */
       _paq.push(['trackPageView']);
@@ -98,25 +105,25 @@
         g.type='text/javascript'; g.async=true; g.defer=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
       })();
     </script>
-    <noscript><p><img src="https://matomo.eea.europa.eu/piwik.php?idsite=26&amp;rec=1" style="border:0;" alt="" /></p></noscript>
+    <noscript><p><img src="https://matomo.eea.europa.eu/piwik.php?idsite=26&amp;rec=1" class="border-0" alt="" /></p></noscript>
     <!-- End Matomo Code -->
   {% endif %}
-    <footer style="width: 100%;">
+    <footer class="width-100">
       <div  class="container footer-container">
         <div>
           <a href="http://ec.europa.eu/" target="_blank">
-            <img style="width: 200px;"
+            <img class="width-200-px"
             src="{% static '/images/programme_eu.png'  %}"
             alt="Programme of the European Union"
             >
           </a>
           <a href="http://copernicus.eu/" target="_blank">
-            <img style="width: 200px;" src="{% static '/images/copernicus_logo.png'  %}" alt="Copernicus Logo">
+            <img class="width-200-px" src="{% static '/images/copernicus_logo.png'  %}" alt="Copernicus Logo">
           </a>
         </div>
         <div >
           <a href="http://www.eea.europa.eu/" target="_blank">
-            <img style="width: 200px;" src="{% static '/images/implemented-by-eea.svg'  %}" alt="EEA Logo">
+            <img class="width-200-px" src="{% static '/images/implemented-by-eea.svg'  %}" alt="EEA Logo">
           </a>
         </div>
       </div>

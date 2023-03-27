@@ -237,7 +237,7 @@
             </div>
             {% if data.state.name != 'ready' and data.state.name != 'valid' %}
               {% if data.feedback %}
-                <div class="alert alert-danger" style="margin-top: 5%;" role="alert">
+                <div class="alert alert-danger margin-top-5" role="alert">
                   <h5>Feedback:</h5>
                   {{ data.feedback|linebreaksbr }}
                 </div>
@@ -258,7 +258,7 @@
         <tr class="row">
           <th class="col-md-4 col-sm-6">Created by</th>
           <td class="col-md-8 col-sm-6">{{ data.created_by.get_full_name }},
-            <i>{{ data.created_by.email }}</i>
+            <em>{{ data.created_by.email }}</em>
           </td>
         </tr>
         {% if data.owner_history %}
@@ -299,7 +299,7 @@
             <a target="_blank" href="/help#data_provider_roles"><span class="glyphicon glyphicon-question-sign"></span></a>
           </th>
           <th class="no-sort">Is network</th>
-          <th class="no-sort" width="10%"></th>
+          <th class="no-sort width-10"></th>
         </tr>
         </thead>
         <tbody>
@@ -394,7 +394,7 @@
   <script src="{% static 'js/jszip.min.js' %}"></script>
   <script src="{% static 'js/pdfmake.min.js' %}"></script>
   <script src="{% static 'js/vfs_fonts.js' %}"></script>
-  <script>
+  <script nonce="{{request.csp_nonce}}">
     $(function () {
       var data_name = '{{ data.name | escapejs }}'
       var data_title = data_name
@@ -473,7 +473,7 @@
     });
   </script>
 
-  <script>
+  <script nonce="{{request.csp_nonce}}">
     $(function () {
       var data_name = '{{ data.name | escapejs }}'
       var data_title = data_name

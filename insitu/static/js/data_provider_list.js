@@ -1,9 +1,9 @@
 function updateFilterOptions(filter, option_data) {
-  var select = $('#' + filter);
+  let select = $('#' + filter);
   select.find('option').remove();
   select.append('<option value="All">All</option>');
-  $.each(option_data.options, function (i, option) {
-    var selected = '';
+  $.each(option_data.options, function (_i, option) {
+    let selected = '';
     if (filter == 'is_network') {
       if (option_data.selected == 'true' || option_data.selected == 'false') {
         selected = ' selected';
@@ -22,7 +22,7 @@ $(document).ready(function () {
   var buttonCommon = {
     exportOptions: {
       format: {
-        body: function (data, row, column, node) {
+        body: function (data, row, _column, _node) {
           if (row === 7) {
             if (data.indexOf('glyphicon-ok-circle') != -1) {
               return 'Yes';
@@ -75,10 +75,10 @@ $(document).ready(function () {
         title: 'CIS2 Data Providers',
         orientation: 'landscape',
         customize: function (doc) {
-          var cols = [];
-          var created = new Date().toDateString();
+          let cols = [];
+          let created = new Date().toDateString();
           cols[0] = { text: 'https://cis2.eea.europa.eu , ' + created, alignment: 'right', margin: [50, 10], };
-          var objFooter = {};
+          let objFooter = {};
           objFooter.columns = cols;
           doc.footer = objFooter;
         }
@@ -94,25 +94,25 @@ $(document).ready(function () {
       "infoFiltered": "<span class='green-text'>(filtered from _MAX_ total records)<span>",
     },
     "stateSave": true,
-    "stateSaveParams": function (settings, data) {
+    "stateSaveParams": function (_settings, data) {
       data.is_network = $('#is_network').val();
       data.provider_type = $('#provider_type').val();
       data.state = $('#state').val();
       data.component = $('#component').val();
     },
-    "stateLoadParams": function (settings, data) {
+    "stateLoadParams": function (_settings, data) {
       $('#is_network').val(data.is_network);
       $('#provider_type').val(data.provider_type);
       $('#state').val(data.state);
       $('#component').val();
     },
-    "drawCallback": function (settings) {
-      var info = $(this).closest('.dataTables_wrapper').find('.dataTables_info');
+    "drawCallback": function (_settings) {
+      let info = $(this).closest('.dataTables_wrapper').find('.dataTables_info');
       info.toggle(this.api().page.info().recordsDisplay > 9);
     },
     "columnDefs": [
       {
-        "render": function (data, type, row) {
+        "render": function (data, _type, _row) {
           if (data) {
             return "<span class='glyphicon glyphicon-ok-circle " +
               "text-success'></span>";
@@ -128,14 +128,14 @@ $(document).ready(function () {
     ]
   }).fnFilterOnReturn();
 
-  $('#is_network,#provider_type,#state,#component').on('change', function (event) {
-    var table = $table.DataTable();
+  $('#is_network,#provider_type,#state,#component').on('change', function (_event) {
+    let table = $table.DataTable();
     table.ajax.reload();
   });
 
   $('#reset-btn').on('click', function () {
     $('#is_network,#provider_type,#state,#component').val('All');
-    var table = $table.DataTable();
+    let table = $table.DataTable();
     table.state.clear();
     table.ajax.reload();
     table.search('').draw();

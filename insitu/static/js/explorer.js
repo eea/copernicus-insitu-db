@@ -27,7 +27,7 @@ function ExplorerEditor(queryId) {
             "Cmd-/": function() { this.editor.toggleComment(); }.bind(this)
         }
     });
-    this.editor.on("change", function(cm, change) {
+    this.editor.on("change", function(_cm, _change) {
         document.getElementById('id_sql').classList.add('changed-input');
     });
     this.bind();
@@ -38,7 +38,7 @@ function ExplorerEditor(queryId) {
 }
 
 ExplorerEditor.prototype.getParams = function() {
-    var o = false;
+    let o = false;
     if(this.$paramFields.length) {
         o = {};
         this.$paramFields.each(function() {
@@ -49,8 +49,8 @@ ExplorerEditor.prototype.getParams = function() {
 };
 
 ExplorerEditor.prototype.serializeParams = function(params) {
-    var args = [];
-    for(var key in params) {
+    let args = [];
+    for(let key in params) {
         args.push(key + '%3A' + params[key]);
     }
     return args.join('%7C');
@@ -62,22 +62,22 @@ ExplorerEditor.prototype.doCodeMirrorSubmit = function() {
 };
 
 ExplorerEditor.prototype.savePivotState = function(state) {
-    bmark = btoa(JSON.stringify(_(state).pick('aggregatorName', 'rows', 'cols', 'rendererName', 'vals')));
-    $el = $('#pivot-bookmark');
+    let bmark = btoa(JSON.stringify(_(state).pick('aggregatorName', 'rows', 'cols', 'rendererName', 'vals')));
+    let $el = $('#pivot-bookmark');
     $el.attr('href', $el.data('baseurl') + '#' + bmark);
 };
 
 ExplorerEditor.prototype.updateQueryString = function(key, value, url) {
     // http://stackoverflow.com/a/11654596/221390
     if (!url) url = window.location.href;
-    var re = new RegExp("([?&])" + key + "=.*?(&|#|$)(.*)", "gi"),
+    let re = new RegExp("([?&])" + key + "=.*?(&|#|$)(.*)", "gi"),
         hash = url.split('#');
 
     if (re.test(url)) {
         if (typeof value !== 'undefined' && value !== null)
             return url.replace(re, '$1' + key + "=" + value + '$2$3');
         else {
-            url = hash[0].replace(re, '$1$3').replace(/(&|\?)$/, '');
+            url = hash[0].replace(re, '$1$3').replace(/[&?]$/, '');
             if (typeof hash[1] !== 'undefined' && hash[1] !== null)
                 url += '#' + hash[1];
             return url;
@@ -85,7 +85,7 @@ ExplorerEditor.prototype.updateQueryString = function(key, value, url) {
     }
     else {
         if (typeof value !== 'undefined' && value !== null) {
-            var separator = url.indexOf('?') !== -1 ? '&' : '?';
+            let separator = url.indexOf('?') !== -1 ? '&' : '?';
             url = hash[0] + separator + key + '=' + value;
             if (typeof hash[1] !== 'undefined' && hash[1] !== null)
                 url += '#' + hash[1];
@@ -103,7 +103,7 @@ ExplorerEditor.prototype.formatSql = function() {
 };
 
 ExplorerEditor.prototype.showRows = function() {
-    var rows = this.$rows.val(),
+    let rows = this.$rows.val(),
         $form = $("#editor");
     $form.attr('action', this.updateQueryString("rows", rows, window.location.href));
     $form.submit();
@@ -115,7 +115,7 @@ ExplorerEditor.prototype.showSchema = function(noAutofocus) {
         $("#schema_frame").addClass('no-autofocus');
     }
     $("#query_area").removeClass("col-md-12").addClass("col-md-9");
-    var schema$ = $("#schema");
+    let schema$ = $("#schema");
     schema$.addClass("col-md-3");
     schema$.show();
     $("#show_schema_button").hide();
@@ -126,7 +126,7 @@ ExplorerEditor.prototype.showSchema = function(noAutofocus) {
 
 ExplorerEditor.prototype.hideSchema = function() {
     $("#query_area").removeClass("col-md-9").addClass("col-md-12");
-    var schema$ = $("#schema");
+    let schema$ = $("#schema");
     schema$.removeClass("col-md-3");
     schema$.hide();
     $(this).hide();
@@ -145,13 +145,13 @@ ExplorerEditor.prototype.bind = function() {
     }.bind(this));
 
     $("#rows").keyup(function() {
-        var curUrl = $("#fullscreen").attr('href');
-        var newUrl = curUrl.replace(/rows=\d+/, 'rows=' + $("#rows").val());
+        let curUrl = $("#fullscreen").attr('href');
+        let newUrl = curUrl.replace(/rows=\d+/, 'rows=' + $("#rows").val());
         $("#fullscreen").attr('href', newUrl);
     }.bind(this));
 
     $("#save_button").click(function() {
-        var params = this.getParams(this);
+        let params = this.getParams(this);
         if(params) {
             this.$form.attr('action', '../' + this.queryId + '/?params=' + this.serializeParams(params));
         }
@@ -160,7 +160,7 @@ ExplorerEditor.prototype.bind = function() {
     }.bind(this));
 
     $("#save_only").click(function() {
-        var params = this.getParams(this);
+        let params = this.getParams(this);
         if(params) {
             this.$form.attr('action', '../' + this.queryId + '/?show=0&params=' + this.serializeParams(params));
         } else {
@@ -172,7 +172,7 @@ ExplorerEditor.prototype.bind = function() {
 
     $("#refresh_button").click(function(e) {
         e.preventDefault();
-        var params = this.getParams();
+        let params = this.getParams();
         if(params) {
             window.location.href = '../' + this.queryId + '/?params=' + this.serializeParams(params);
         } else {
@@ -195,8 +195,8 @@ ExplorerEditor.prototype.bind = function() {
     }.bind(this));
 
     $(".download-button").click(function(e) {
-        var url = '../download?format=' + $(e.target).data('format');
-        var params = this.getParams();
+        let url = '../download?format=' + $(e.target).data('format');
+        let params = this.getParams();
         if(params) {
             url = url + '&params=' + params;
         }
@@ -204,8 +204,8 @@ ExplorerEditor.prototype.bind = function() {
     }.bind(this));
 
     $(".download-query-button").click(function(e) {
-        var url = '../download?format=' + $(e.target).data('format');
-        var params = this.getParams();
+        let url = '../download?format=' + $(e.target).data('format');
+        let params = this.getParams();
         if(params) {
             url = url + '&params=' + params;
         }
@@ -226,8 +226,8 @@ ExplorerEditor.prototype.bind = function() {
     }.bind(this));
 
     $(".sort").click(function(e) {
-        var t = $(e.target).data('sort');
-        var dir = $(e.target).data('dir');
+        let t = $(e.target).data('sort');
+        let dir = $(e.target).data('dir');
         $('.sort').css('background-image', 'url(//cdn.datatables.net/1.10.0/images/sort_both.png)');
         if (dir == 'asc'){
             $(e.target).data('dir', 'desc');
@@ -236,15 +236,15 @@ ExplorerEditor.prototype.bind = function() {
             $(e.target).data('dir', 'asc');
             $(e.target).css('background-image', 'url(//cdn.datatables.net/1.10.0/images/sort_desc.png)');
         }
-        var vals = [];
-        var ct = 0;
+        let vals = [];
+        let ct = 0;
         while (ct < this.$table.find('th').length) {
            vals.push(ct++);
         }
-        var options = {
+        let options = {
             valueNames: vals
         };
-        var tableList = new List('preview', options);
+        let tableList = new List('preview', options);
         tableList.sort(t, { order: dir });
     }.bind(this));
 
@@ -252,8 +252,8 @@ ExplorerEditor.prototype.bind = function() {
         this.$table.floatThead('reflow');
     }.bind(this));
 
-    var pivotState = window.location.hash;
-    var navToPivot = false;
+    let pivotState = window.location.hash;
+    let navToPivot = false;
     if (!pivotState) {
         pivotState = {onRefresh: this.savePivotState};
     } else {
@@ -267,27 +267,27 @@ ExplorerEditor.prototype.bind = function() {
     }
 
     function filter_countries(event) {
-        var countriesEU = [
+        let countriesEU = [
             "Austria", "Belgium", "Bulgaria", "Czech Republic", "Cyprus", "Croatia", "Denmark", "Estonia", "Finland", "France",
             "Germany", "Greece", "Ireland", "Italy", "Latvia", "Lithuania", "Luxembourg", "Malta", "Poland", "Romania", "Slovakia",
             "Slovenia", "Spain", "Sweden", "Netherlands", "Hungary"
         ]
-        var countriesEEA = [
+        let countriesEEA = [
             "Belgium", "Bulgaria", "Czech Republic", "Denmark", "Cyprus", "Latvia", "Lithuania", "Luxembourg", "Spain", "France",
             "Croatia", "Italy", "Poland", "Portugal", "Romania", "Slovenia", "Hungary", "Malta", "Netherlands", "Austria", "Iceland",
             "Liechtenstein", "Norway", "Slovakia", "Finland", "Sweden", "Germany", "Estonia", "Ireland", "Greece"
         ]
-        var eumetnetMembers = [
+        let eumetnetMembers = [
             "Austria", "Belgium", "Croatia", "Cyprus", "Czech Republic", "Denmark", "Estonia", "Finland", "France", "Montenegro",
             "Germany", "Greece", "Hungary", "Iceland", "Ireland", "Italy", "Latvia", "Luxembourg", "Malta", "Netherlands", "Norway",
             "Poland", "Portugal", "Serbia", "Slovakia", "Slovenia", "Spain", "Sweden", "Switzerland", "Macedonia, The Former Yugoslav Republic Of", "United Kingdom"
         ]
-        var copernicusMembers = [
+        let copernicusMembers = [
             "Austria", "Belgium", "Bulgaria", "Czech Republic", "Cyprus", "Croatia", "Denmark", "Estonia", "Finland", "France", "Germany",
             "Greece", "Iceland", "Ireland", "Italy", "Latvia", "Lithuania", "Luxembourg", "Malta", "Norway", "Poland", "Romania", "Slovakia",
             "Slovenia", "Spain", "Sweden", "Netherlands", "Hungary"
         ]
-        var countries = []
+        let countries = []
         if ($(".eu-members").is(":checked")){
           countries = countriesEU
         } else if ($(".eea-members").is(":checked")){
@@ -297,22 +297,22 @@ ExplorerEditor.prototype.bind = function() {
         } else if ($(".copernicus-members").is(":checked")){
           countries = copernicusMembers
         }
-        var $selectNone = $("span:contains('"+event.data.param1 +"')").closest('.pvtFilterBox').first().find("button:contains('Select None')");
-        var $applyButton = $("span:contains('"+event.data.param1 +"')").closest('.pvtFilterBox').first().find("button:contains('Apply')");
+        let $selectNone = $("span:contains('"+event.data.param1 +"')").closest('.pvtFilterBox').first().find("button:contains('Select None')");
+        let $applyButton = $("span:contains('"+event.data.param1 +"')").closest('.pvtFilterBox').first().find("button:contains('Apply')");
         $selectNone.trigger("click");
-        $.each(countries, function( index, value ) {
-         var $checkboxCountry = $("span:contains('"+event.data.param1 +"')").closest('.pvtFilterBox').first().find("span:contains('"+ value +"')").parent().first().find('input');
+        $.each(countries, function( _index, value ) {
+         let $checkboxCountry = $("span:contains('"+event.data.param1 +"')").closest('.pvtFilterBox').first().find("span:contains('"+ value +"')").parent().first().find('input');
          $checkboxCountry.trigger('click');
          $checkboxCountry.prop( "checked", true );
        });
         $applyButton.trigger("click");
-      };
+      }
     $.ajax({
       dataType: "json",
       url: "/reports/" + this.queryId + "/json",
     }).success(function(results) {
         $(".pivot-table").pivotUI(results, pivotState);
-        tmpHTML = "<div><input class='radio-inline eea-members' type='radio' name='filter_members'>" +
+        let tmpHTML = "<div><input class='radio-inline eea-members' type='radio' name='filter_members'>" +
                   "<span style='font-size: 14px;'>EEA members</span></div>" +
                   "<div><input class='radio-inline eu-members' type='radio' name='filter_members'>" +
                   "<span style='font-size: 14px;'>EU members</span></div>" +
@@ -354,7 +354,7 @@ $(window).on('beforeunload', function () {
 });
 
 // Disable unsaved changes warning when submitting the editor form
-$(document).on("submit", "#editor", function(event){
+$(document).on("submit", "#editor", function(_event){
     // disable warning
     $(window).off('beforeunload');
 });

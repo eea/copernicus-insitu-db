@@ -95,7 +95,7 @@
   <script src="{% static 'js/select2.min.js' %}"></script>
   <script src="{% static 'js/bootstrap.min.js' %}"></script>
   <script src="{% static 'js/bootstrap-datetime-picker.min.js' %}"></script>
-  <script>
+  <script nonce="{{request.csp_nonce}}">
     $(document).ready(function () {
       $('select').select2();
     });
