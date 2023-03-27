@@ -171,6 +171,11 @@ a.extra-navbar-brand {
   color: white
 }
 
+.navbar-wrapper {
+  display: flex;
+  flex-direction: column;
+}
+
 .padding_user_log {
   padding: 0 16px 16px 0;
 }
@@ -344,6 +349,13 @@ width: 100%;
   width: 10%;
 }
 
+.width-200-px {
+  width: 200px;
+}
+
+table {
+  font-size: medium;
+}
 .min-height-550 {
   min-height: 550px;
 }
