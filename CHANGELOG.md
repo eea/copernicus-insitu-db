@@ -3,6 +3,10 @@ Changelog
 
 * In case of major changes, an email should be sent to all users with the modifications.
 
+2.7.8 (2023-03-27)
+------------------
+* Improve webscore
+
 2.7.7 (2023-01-11)
 ------------------
 * Remove Land use/Land cover from Country Report
