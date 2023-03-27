@@ -3,6 +3,10 @@ Changelog
 
 * In case of major changes, an email should be sent to all users with the modifications.
 
+2.7.9 (2023-03-27)
+------------------
+* Fix small bug
+
 2.7.8 (2023-03-27)
 ------------------
 * Improve webscore
