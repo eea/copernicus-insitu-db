@@ -3,6 +3,24 @@ Changelog
 
 * In case of major changes, an email should be sent to all users with the modifications.
 
+2.7.7 (2023-01-11)
+------------------
+* Remove Land use/Land cover from Country Report
+
+2.7.6 (2023-01-11)
+------------------
+* Change order of report display in reports listing
+
+2.7.5 (2023-01-11)
+------------------
+* Add acronym search for Data Provider listing
+* Add ID to Requirement listing and search
+* Add created/updated in admin
+* Add team model to admin and inline teammates to user
+* Add countries to Data Provider admin
+* Add Country Report
+* Styling updates
+
 2.7.4 (2022-12-16)
 ------------------
 * Exclude user id from `/user/records/` url

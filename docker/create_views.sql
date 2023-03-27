@@ -235,3 +235,35 @@ CREATE VIEW insitu_dataprovider_product_direct_view as
     INNER JOIN insitu_data d ON d.id = dr.data_id
     INNER JOIN insitu_dataproviderrelation dpr ON d.id = dpr.data_id
     WHERE p._deleted = FALSE and pr._deleted = FALSE and r._deleted = FALSE and dr._deleted = FALSE and d._deleted = FALSE and dpr._deleted = FALSE;
+
+-- used for report 7 to optimise the query
+CREATE VIEW insitu_dataprovider_product_direct_view_report_7 as
+    SELECT c.name as "product_component",
+           cs.name as "product_copernicus_service",
+           rp.name as "requirement_group",
+           d.id as "data_id",
+           d.name as "data_name",
+           a.name AS "data_area",
+           dp.name AS "data_policy",
+           co.name AS "data_geographical_coverage",
+              CASE
+                     WHEN dpr.role = 1 THEN 'Originator'
+                     WHEN dpr.role = 2 THEN 'Distributor'
+                     WHEN dpr.role IS NULL THEN '-'
+                     ELSE ''
+              END as "dataproviderrelation_role",
+           dpr.provider_id as "dataproviderrelation_provider_id"
+    FROM insitu_product p
+    INNER JOIN insitu_component c ON c.id = p.component_id
+    INNER JOIN insitu_copernicusservice cs ON cs.id = c.service_id
+    INNER JOIN insitu_productrequirement pr ON p.id = pr.product_id
+    INNER JOIN insitu_requirement r ON r.id = pr.requirement_id
+    INNER JOIN picklists_requirementgroup rp ON rp.id = r.group_id
+    INNER JOIN insitu_datarequirement dr ON r.id = dr.requirement_id
+    INNER JOIN insitu_data d ON d.id = dr.data_id
+    INNER JOIN insitu_dataproviderrelation dpr ON d.id = dpr.data_id
+    INNER JOIN picklists_area a ON a.id = d.area_id
+    INNER JOIN picklists_datapolicy dp ON dp.id = d.data_policy_id
+    RIGHT OUTER JOIN insitu_data_geographical_coverage dgc ON  d.id = dgc.data_id
+    RIGHT OUTER JOIN picklists_country co ON co.code = dgc.country_id
+    WHERE p._deleted = FALSE and pr._deleted = FALSE and r._deleted = FALSE and dr._deleted = FALSE and d._deleted = FALSE and dpr._deleted = FALSE;

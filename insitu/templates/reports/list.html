@@ -18,8 +18,8 @@
   </div>
 
   {% if user.is_authenticated %}
-  <div class="container margin-bottom-20">
-    <a href="{% url 'reports:standard_report' %}"><h3>Standard Report</h3></a>
+
+    <div class="container margin-bottom-20">
       <h3>Special reports:</h3>
       <p>Those reports are exported as spreadsheet files with unmerged cells that can be filtered afterwards with specialized tools.</p>
       <h4>1.This report contains all relevant columns from products, requirements, data and data requirements for the following services:</h4>
@@ -33,10 +33,13 @@
       <p>b) Copernicus Marine Environment Monitoring Service</p>
       <p>c) Copernicus Climate Change Service</p>
       <a id="" class="btn btn-primary" href="{% static 'sheets/Special_report_2.xlsx' %}">Download Excel</a>
+      <a href="{% url 'reports:standard_report' %}"><h3>Standard Report</h3></a>
+      <a href="{% url 'reports:country_report' %}"><h3>Country Report</h3></a>
     </div>
   {% else %}
     <div class="container margin-bottom-20">
       <a href="{% url 'reports:standard_report' %}"><h3>Standard Report</h3></a>
+      <a href="{% url 'reports:country_report' %}"><h3>Country Report</h3></a>
     </div>
   {% endif %}
 

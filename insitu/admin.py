@@ -15,8 +15,14 @@ from django.contrib.auth.forms import PasswordResetForm
 from django.contrib.auth.admin import UserAdmin
 
 
+class TeamInline(admin.TabularInline):
+    model = models.Team
+    fields = ("teammates",)
+
+
 class InsituUserAdmin(UserAdmin):
     form = UserEditAdminForm
+    inlines = [TeamInline]
     add_form = CreateUserForm
     add_fieldsets = [
         (
@@ -83,6 +89,9 @@ class InsituUserAdmin(UserAdmin):
                 html_email_template_name="mails/password_set_email.html",
             )
 
+    def get_inline_instances(self, request, obj=None):
+        return obj and super(UserAdmin, self).get_inline_instances(request, obj) or []
+
 
 def logs_export_as_excel(LoggedActionAdmin, request, queryset):
     return export_logs_excel(queryset)
@@ -132,7 +141,11 @@ class ComponentAdmin(admin.ModelAdmin):
 
 @admin.register(models.Requirement)
 class RequirementAdmin(GuardedModelAdmin):
-    readonly_fields = ("components",)
+    readonly_fields = (
+        "components",
+        "created_at",
+        "updated_at",
+    )
     search_fields = ["name"]
     list_display = ("id", "name")
 
@@ -151,14 +164,26 @@ class RequirementAdmin(GuardedModelAdmin):
 
 @admin.register(models.Data)
 class DataAdmin(GuardedModelAdmin):
+    readonly_fields = (
+        "created_at",
+        "updated_at",
+    )
     search_fields = ["name"]
     list_display = ("id", "name")
 
 
 @admin.register(models.DataProvider)
 class DataProviderAdmin(GuardedModelAdmin):
+    readonly_fields = (
+        "created_at",
+        "updated_at",
+    )
     search_fields = ["name"]
-    list_display = ("id", "name")
+    list_display = ("id", "name", "get_countries")
+    list_filter = ("countries",)
+
+    def get_countries(self, obj):
+        return ",\n".join([c.name for c in obj.countries.all()])
 
 
 class BaseDisplayDeleteAdminMixin:
@@ -173,25 +198,59 @@ class BaseDisplayDeleteAdminMixin:
         return self.filter_model.objects.really_all()
 
 
+@admin.register(models.Metric)
+class MetricAdmin(GuardedModelAdmin):
+    readonly_fields = (
+        "created_at",
+        "updated_at",
+    )
+
+
+@admin.register(models.Product)
+class ProductAdmin(GuardedModelAdmin):
+    readonly_fields = (
+        "created_at",
+        "updated_at",
+    )
+
+
 @admin.register(models.ProductRequirement)
 class ProductRequirementAdmin(BaseDisplayDeleteAdminMixin, admin.ModelAdmin):
+    readonly_fields = (
+        "created_at",
+        "updated_at",
+    )
     filter_model = models.ProductRequirement
 
 
 @admin.register(models.DataRequirement)
 class DataRequirementAdmin(BaseDisplayDeleteAdminMixin, admin.ModelAdmin):
+    readonly_fields = (
+        "created_at",
+        "updated_at",
+    )
     filter_model = models.DataRequirement
 
 
 @admin.register(models.DataProviderRelation)
 class DataProviderRelationAdmin(BaseDisplayDeleteAdminMixin, admin.ModelAdmin):
     filter_model = models.DataProviderRelation
+    readonly_fields = (
+        "created_at",
+        "updated_at",
+    )
     list_display = ("__str__", "data_id", "provider_id")
     list_filter = ("data_id", "provider_id")
 
 
+@admin.register(models.DataProviderDetails)
+class DataProviderDetailsAdmin(GuardedModelAdmin):
+    readonly_fields = (
+        "created_at",
+        "updated_at",
+    )
+
+
 admin.site.unregister(User)
 admin.site.register(User, InsituUserAdmin)
-admin.site.register(models.Product)
-admin.site.register(models.DataProviderDetails)
-admin.site.register(models.Metric)
+admin.site.register(models.Team)

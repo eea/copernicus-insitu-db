@@ -121,6 +121,7 @@ class RequirementList(ProtectedTemplateView):
 
 class RequirementListJson(ESDatatableView):
     columns = [
+        "id",
         "name",
         "dissemination",
         "quality_control_procedure",
