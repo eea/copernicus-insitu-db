@@ -3,6 +3,10 @@ Changelog
 
 * In case of major changes, an email should be sent to all users with the modifications.
 
+2.8.0 (2023-04-07)
+------------------
+* Release version 2.8.0
+
 2.7.9 (2023-03-27)
 ------------------
 * Fix small bug
