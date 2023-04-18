@@ -1918,7 +1918,7 @@ class CountryReportExcelMixin:
             rg = []
             for req_list in requirements:
                 rg.extend(req_list)
-            rg = [x.group.name for x in req_list]
+            rg = [x.group.name for x in rg]
             policies = (
                 Data.objects.exclude(id__in=data_only_with_na_compliance)
                 .filter(
@@ -1951,6 +1951,7 @@ class CountryReportExcelMixin:
 
     def generate_table_networks(self, workbook, worksheet, providers):
         worksheet.set_column("A1:A1", 30, self.dp_column_format)
+        worksheet.set_column("B1:B1", 30, self.dp_column_format)
         worksheet.set_column("C1:H1", 8, self.obs_column_format)
         worksheet.set_column("I1:K1", 20, self.additional_column_format)
         worksheet.merge_range(
@@ -2004,7 +2005,7 @@ class CountryReportExcelMixin:
             rg = []
             for req_list in requirements:
                 rg.extend(req_list)
-            rg = [x.group.name for x in req_list]
+            rg = [x.group.name for x in rg]
 
             policies = (
                 Data.objects.exclude(id__in=data_only_with_na_compliance)
@@ -2211,7 +2212,7 @@ class CountryReportPDFMixin:
             rg = []
             for req_list in requirements:
                 rg.extend(req_list)
-            rg = [x.group.name for x in req_list]
+            rg = [x.group.name for x in rg]
 
             policies = (
                 Data.objects.exclude(id__in=data_only_with_na_compliance)
@@ -2332,7 +2333,7 @@ class CountryReportPDFMixin:
             rg = []
             for req_list in requirements:
                 rg.extend(req_list)
-            rg = [x.group.name for x in req_list]
+            rg = [x.group.name for x in rg]
 
             policies = (
                 Data.objects.exclude(id__in=data_only_with_na_compliance)
