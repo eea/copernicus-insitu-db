@@ -32,3 +32,6 @@ docker-compose.override.yml
 docs/_build/
 docs/_templates/
 docs/guide.html
+
+docker/app.env
+insitu/static/sheets/

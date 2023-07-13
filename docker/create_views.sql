@@ -245,7 +245,6 @@ CREATE VIEW insitu_dataprovider_product_direct_view_report_7 as
            d.name as "data_name",
            a.name AS "data_area",
            dp.name AS "data_policy",
-           co.name AS "data_geographical_coverage",
               CASE
                      WHEN dpr.role = 1 THEN 'Originator'
                      WHEN dpr.role = 2 THEN 'Distributor'
@@ -264,6 +263,24 @@ CREATE VIEW insitu_dataprovider_product_direct_view_report_7 as
     INNER JOIN insitu_dataproviderrelation dpr ON d.id = dpr.data_id
     INNER JOIN picklists_area a ON a.id = d.area_id
     INNER JOIN picklists_datapolicy dp ON dp.id = d.data_policy_id
-    RIGHT OUTER JOIN insitu_data_geographical_coverage dgc ON  d.id = dgc.data_id
-    RIGHT OUTER JOIN picklists_country co ON co.code = dgc.country_id
     WHERE p._deleted = FALSE and pr._deleted = FALSE and r._deleted = FALSE and dr._deleted = FALSE and d._deleted = FALSE and dpr._deleted = FALSE;
+
+
+CREATE VIEW insitu_dataprovider_special_view as
+    SELECT dp.id AS "data_provider_id",
+           dp.name AS "data_provider_name",
+           dp.is_network AS "data_provider_is_network",
+           pt.name AS "data_provider_type",
+           c.name AS "data_provider_country",
+           dpnetwork.name AS "data_provider_network_name",
+           c_network.name AS "data_provider_network_country"
+    FROM insitu_dataprovider dp
+    LEFT OUTER JOIN insitu_dataproviderdetails dpd ON dp.id = dpd.data_provider_id
+    LEFT OUTER JOIN picklists_providertype pt ON pt.id = dpd.provider_type_id
+    LEFT OUTER JOIN insitu_dataprovider_countries dpc ON dp.id = dpc.dataprovider_id
+    LEFT OUTER JOIN picklists_country c ON c.code = dpc.country_id
+    LEFT OUTER JOIN insitu_dataprovider_networks dpn ON dp.id = dpn.from_dataprovider_id
+    LEFT OUTER JOIN insitu_dataprovider dpnetwork ON dpnetwork.id = dpn.to_dataprovider_id and dpnetwork._deleted = FALSE
+    LEFT OUTER JOIN insitu_dataprovider_countries dpcnetwork ON dpnetwork.id = dpcnetwork.dataprovider_id
+    LEFT OUTER JOIN picklists_country c_network ON c_network.code = dpcnetwork.country_id
+    WHERE dp._deleted = FALSE;

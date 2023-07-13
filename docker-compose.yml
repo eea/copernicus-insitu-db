@@ -2,10 +2,7 @@ version: '2'
 
 services:
   web:
-    build:
-      context: .
-      args:
-        REQFILE: requirements-dev.txt
+    image: eeacms/copernicus-insitu-db:latest
     container_name: insitu.app
     entrypoint: ["/usr/bin/tail", "-f", "/dev/null"]
     environment:
@@ -21,8 +18,9 @@ services:
       - logging:/var/local/copernicus/logging
 
   db:
-    image: postgres:10-alpine
+    image: postgres:15-alpine
     container_name: insitu.db
+    command: postgres -c log_temp_files=300000
     env_file:
       - docker/db.env
     volumes:

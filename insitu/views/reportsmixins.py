@@ -1,6 +1,6 @@
 from insitu.models import Data, Requirement, DataProvider
 from django.utils.html import strip_tags
-
+from picklists.models import Country
 import datetime
 
 from reportlab.platypus import (
@@ -1781,6 +1781,17 @@ class CountryReportExcelMixin:
             }
         )
 
+        self.merge_format_introduction = workbook.add_format(
+            {
+                "bold": 1,
+                "align": "center",
+                "valign": "vcenter",
+                "font_name": "Calibri",
+                "font_size": 14,
+                "text_wrap": 1,
+                "font_color": "#80B85F",
+            }
+        )
         self.merge_format = workbook.add_format(
             {
                 "bold": 1,
@@ -1868,6 +1879,15 @@ class CountryReportExcelMixin:
                 "border_color": "#808080",
             }
         )
+        self.format_rows_introduction = workbook.add_format(
+            {
+                "align": "justify",
+                "valign": "vcenter",
+                "font_name": "Calibri",
+                "font_size": 12,
+                "text_wrap": True,
+            }
+        )
         self.rotated_text.set_rotation(90)
 
     def generate_table(self, workbook, worksheet, providers):
@@ -1948,6 +1968,75 @@ class CountryReportExcelMixin:
                 index += 1
             except ValueError:
                 continue
+
+    def generate_header_sheet(self, workbook, worksheet):
+        country_name = Country.objects.get(code=self.country_code).name
+        worksheet.set_column("A1:D1", 50)
+        worksheet.set_row(0, 30)
+        worksheet.set_row(2, 20)
+        worksheet.set_row(3, 20)
+        worksheet.merge_range(
+            "A1:D1",
+            "Copernicus In Situ Component Information System - "
+            "managed by the European Environment Agency",
+            self.merge_format_introduction,
+        )
+        worksheet.merge_range(
+            "A2:D2",
+            "Country Report for {} - Observations".format(country_name),
+            self.merge_format_introduction,
+        )
+
+        worksheet.merge_range(
+            "A3:D3",
+            "Produced on {}".format(datetime.datetime.now().strftime("%d %B %Y")),
+            self.merge_format_introduction,
+        )
+        worksheet.merge_range("A5:D5", "", self.format_rows_introduction)
+        bold = workbook.add_format({"bold": True})
+        worksheet.set_row(5, 560)
+        superscript = workbook.add_format({"font_script": 1})
+        worksheet.write_rich_string(
+            "A5",
+            "The European Environment Agency (EEA) is entrusted with cross-cutting ",
+            "coordination of the Copernicus’ access to in situ data, in order to provide \n ",
+            "Entrusted Entities with harmonized and, in particular, cross-cutting ",
+            "information about in situ data requirements and gaps. \n\n",
+            "The Copernicus In Situ Information System CIS",
+            superscript,
+            "2 ",
+            "(https://cis2.eea.europa.eu) aims to provide a complete overview of requirements, ",
+            "gaps and data relevant to all Copernicus services. CIS² links the in situ requirements\n ",
+            "specified by the Entrusted Entities to Copernicus products, in situ datasets, ",
+            "and data providers in order to provide a clear picture of what data is already used\n ",
+            "and what would be needed to deliver improved and more reliable products and monitoring services. \n\n ",
+            "The Country Report provides an overview of national organisations which are providing ",
+            "in situ observations data to support Copernicus products. In-Situ observations are\n ",
+            "non-satellite measurements of physical parameters. Observations are either direct ",
+            "measurements of properties like temperature, wind, ozone, air quality, vegetation\n ",
+            "properties, ocean salinity or ground based remote sensing data like soundings of ",
+            "the atmospheric composition. Observations are provided to Copernicus either as\n ",
+            "individual datasets or aggregated into gridded 2- or 3- dimensional analysis fields. \n\n",
+            "Organisations are listed across two categories \n\n",
+            "    • ",
+            bold,
+            "Data Providers ",
+            "(listed in The report is based fully on the CIS2 database content. ",
+            "The CIS² database also contains similar information regarding geospatial data, but these",
+            "are not included in this country report.): these are organisations based in the Country",
+            "which provide in situ observations data to support Copernicus products\n\n",
+            "    • ",
+            bold,
+            "Data Provider Networks ",
+            "(listed in Table 2): these are international networks with ",
+            "members based in the Country, which provide in situ observations data to support Copernicus products.\n\n",
+            "The report is based fully on the CIS2 database content. The CIS",
+            superscript,
+            "2",
+            "database also contains similar information regarding geospatial data, but these are not",
+            "included in this country report. ",
+            self.format_rows_introduction,
+        )
 
     def generate_table_networks(self, workbook, worksheet, providers):
         worksheet.set_column("A1:A1", 30, self.dp_column_format)
@@ -2056,6 +2145,8 @@ class CountryReportExcelMixin:
 
     def generate_excel_file(self, workbook):
         self.set_formats(workbook)
+        worksheet = workbook.add_worksheet("Introduction")
+        self.generate_header_sheet(workbook, worksheet)
         worksheet = workbook.add_worksheet("Data provider organisations")
         self.generate_table(workbook, worksheet, self.dataproviders)
 
@@ -2092,6 +2183,43 @@ class VerticalParagraph(Paragraph):
 class CountryReportPDFMixin:
     def set_styles(self):
         styles = getSampleStyleSheet()
+        self.introduction_text_header = ParagraphStyle(
+            name="HeaderStyle",
+            fontName="Calibri-Bold",
+            parent=styles["Normal"],
+            fontSize=16,
+            textColor="#80B85F",
+            leading=20,
+            alignment=TA_CENTER,
+        )
+        self.introduction_text_subheader = ParagraphStyle(
+            name="SubHeaderStyle",
+            fontName="Calibri-Bold",
+            parent=styles["Normal"],
+            fontSize=14,
+            textColor="#80B85F",
+            leading=20,
+            alignment=TA_CENTER,
+            spaceAfter=60,
+        )
+        self.introduction_text_paragraph = ParagraphStyle(
+            name="RowStyle",
+            fontSize=12,
+            spaceAfter=10,
+            spaceBefore=0,
+            leftIndent=70,
+            rightIndent=70,
+            alignment=TA_JUSTIFY,
+        )
+        self.introduction_text_paragraph_bullet_list = ParagraphStyle(
+            name="RowStyle",
+            fontSize=12,
+            spaceAfter=10,
+            spaceBefore=0,
+            leftIndent=100,
+            rightIndent=70,
+            alignment=TA_JUSTIFY,
+        )
         self.dp_column = ParagraphStyle(
             name="HeaderStyle",
             fontName="Calibri-Bold",
@@ -2157,6 +2285,70 @@ class CountryReportPDFMixin:
             textColor=red,
             leading=20,
         )
+
+    def generate_text(self):
+        data = []
+        country_name = Country.objects.get(code=self.country_code).name
+        data.append(
+            Paragraph(
+                "Copernicus In Situ Component Information System - managed by the European Environment Agency",
+                self.introduction_text_header,
+            )
+        )
+        data.append(
+            Paragraph(
+                f"Country Report for {country_name} - Observations",
+                self.introduction_text_header,
+            )
+        )
+        current_date = datetime.datetime.now().strftime("%d %B %Y")
+        data.append(
+            Paragraph(f"Produced on {current_date}", self.introduction_text_subheader)
+        )
+        data.append(
+            Paragraph(
+                "The European Environment Agency (EEA) is entrusted with cross-cutting coordination of the Copernicus’ access to in situ data, in order to provide Entrusted Entities with harmonized and, in particular, cross-cutting information about in situ data requirements and gaps.",
+                self.introduction_text_paragraph,
+            )
+        )
+        data.append(
+            Paragraph(
+                "The Copernicus In Situ Information System CIS² (<link href='https://cis2.eea.europa.eu' color='blue'>https://cis2.eea.europa.eu</link>) aims to provide a complete overview of requirements, gaps and data relevant to all Copernicus services. CIS² links the in situ requirements specified by the Entrusted Entities to Copernicus products, in situ datasets, and data providers in order to provide a clear picture of what data is already used and what would be needed to deliver improved and more reliable products and monitoring services.",
+                self.introduction_text_paragraph,
+            )
+        )
+        data.append(
+            Paragraph(
+                "The Country Report provides an overview of national organisations which are providing in situ observations data to support Copernicus products. In-Situ observations are non-satellite measurements of physical parameters. Observations are either direct measurements of properties like temperature, wind, ozone, air quality, vegetation properties, ocean salinity or ground based remote sensing data like soundings of the atmospheric composition. Observations are provided to Copernicus either as individual datasets or aggregated into gridded 2- or 3- dimensional analysis fields.",
+                self.introduction_text_paragraph,
+            )
+        )
+        data.append(
+            Paragraph(
+                "Organisations are listed across two categories",
+                self.introduction_text_paragraph,
+            )
+        )
+        data.append(
+            Paragraph(
+                "- <strong>Data Providers</strong> (listed in The report is based fully on the CIS2 database content. The CIS² database also contains similar information regarding geospatial data, but these are not included in this country report.): these are organisations based in the Country which provide in situ observations data to support Copernicus products",
+                self.introduction_text_paragraph_bullet_list,
+            )
+        )
+        data.append(
+            Paragraph(
+                " - <strong>Data Provider Networks</strong> (listed in Table 2): these are international networks with members based in the Country, which provide in situ observations data to support Copernicus products.",
+                self.introduction_text_paragraph_bullet_list,
+            )
+        )
+
+        data.append(
+            Paragraph(
+                "The report is based fully on the CIS² database content. The CIS² database also contains similar information regarding geospatial data, but these are not included in this country report.",
+                self.introduction_text_paragraph,
+            )
+        )
+        return data
 
     def generate_table_pdf(self, providers):
         obs_headers = [
@@ -2426,6 +2618,9 @@ class CountryReportPDFMixin:
     def generate_pdf_file(self, menu_pdf):
         self.set_styles()
         elements = []
+        text = self.generate_text()
+        elements.extend(text)
+        elements.append(PageBreak())
         elements.extend(
             [
                 Paragraph(
