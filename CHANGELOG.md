@@ -3,6 +3,10 @@ Changelog
 
 * In case of major changes, an email should be sent to all users with the modifications.
 
+2.8.3 (2023-07-13)
+------------------
+* Add introduction for Country Report
+
 2.8.2 (2023-04-18)
 ------------------
 * Improve Country Report
