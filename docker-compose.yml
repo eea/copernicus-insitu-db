@@ -2,7 +2,10 @@ version: '2'
 
 services:
   web:
-    image: eeacms/copernicus-insitu-db:latest
+    build:
+      context: .
+      args:
+        REQFILE: requirements-dev.txt
     container_name: insitu.app
     entrypoint: ["/usr/bin/tail", "-f", "/dev/null"]
     environment:
