@@ -1999,42 +1999,50 @@ class CountryReportExcelMixin:
         worksheet.write_rich_string(
             "A5",
             "The European Environment Agency (EEA) is entrusted with cross-cutting ",
-            "coordination of the Copernicus’ access to in situ data, in order to provide \n ",
-            "Entrusted Entities with harmonized and, in particular, cross-cutting ",
-            "information about in situ data requirements and gaps. \n\n",
+            "coordination of the Copernicus’ access to in situ data, in order ",
+            "to provide \n Entrusted Entities with harmonized and, in ",
+            "particular, cross-cutting information about in situ data ",
+            "requirements and gaps. \n\n",
             "The Copernicus In Situ Information System CIS",
             superscript,
             "2 ",
-            "(https://cis2.eea.europa.eu) aims to provide a complete overview of requirements, ",
-            "gaps and data relevant to all Copernicus services. CIS² links the in situ requirements\n ",
-            "specified by the Entrusted Entities to Copernicus products, in situ datasets, ",
-            "and data providers in order to provide a clear picture of what data is already used\n ",
-            "and what would be needed to deliver improved and more reliable products and monitoring services. \n\n ",
-            "The Country Report provides an overview of national organisations which are providing ",
-            "in situ observations data to support Copernicus products. In-Situ observations are\n ",
-            "non-satellite measurements of physical parameters. Observations are either direct ",
-            "measurements of properties like temperature, wind, ozone, air quality, vegetation\n ",
-            "properties, ocean salinity or ground based remote sensing data like soundings of ",
-            "the atmospheric composition. Observations are provided to Copernicus either as\n ",
-            "individual datasets or aggregated into gridded 2- or 3- dimensional analysis fields. \n\n",
-            "Organisations are listed across two categories \n\n",
+            "(https://cis2.eea.europa.eu) aims to provide a complete ",
+            "overview of requirements, gaps and data relevant to all ",
+            "Copernicus services. CIS² links the in situ requirements\n "
+            "specified by the Entrusted Entities to Copernicus products, ",
+            "in situ datasets, and data providers in order to provide a clear "
+            "picture of what data is already used\n and what would be needed ",
+            "to deliver improved and more reliable products and monitoring ",
+            "services. \n\n The Country Report provides an overview of ",
+            "national organisations which are providing in situ observations ",
+            "data to support Copernicus products. In-Situ observations are\n ",
+            "non-satellite measurements of physical parameters.",
+            " Observations  are either direct measurements of properties ",
+            "like temperature, wind, ozone, air quality, vegetation\n",
+            " properties, ocean salinity or  ground based remote sensing data ",
+            "like soundings of the atmospheric composition. Observations are ",
+            "provided to Copernicus either as\n individual datasets ",
+            "or aggregated into gridded 2- or 3- dimensional analysis ",
+            "fields. \n\n Organisations are listed across two categories \n\n",
             "    • ",
             bold,
             "Data Providers ",
             "(listed in The report is based fully on the CIS2 database content. ",
-            "The CIS² database also contains similar information regarding geospatial data, but these",
-            "are not included in this country report.): these are organisations based in the Country",
-            "which provide in situ observations data to support Copernicus products\n\n",
+            "The CIS² database also contains similar information regarding ",
+            "geospatial data, but these are not included in this country report. ",
+            "): these are organisations based in the Country which provide ",
+            " in situ observations data to support Copernicus products\n\n",
             "    • ",
             bold,
             "Data Provider Networks ",
             "(listed in Table 2): these are international networks with ",
-            "members based in the Country, which provide in situ observations data to support Copernicus products.\n\n",
+            "members based in the Country, which provide in situ observations ",
+            "data to support Copernicus products.\n\n ",
             "The report is based fully on the CIS2 database content. The CIS",
             superscript,
             "2",
-            "database also contains similar information regarding geospatial data, but these are not",
-            "included in this country report. ",
+            "database also contains similar information regarding geospatial ",
+            "data, but these are not included in this country report. ",
             self.format_rows_introduction,
         )
 
@@ -2291,7 +2299,8 @@ class CountryReportPDFMixin:
         country_name = Country.objects.get(code=self.country_code).name
         data.append(
             Paragraph(
-                "Copernicus In Situ Component Information System - managed by the European Environment Agency",
+                "Copernicus In Situ Component Information System - managed by "
+                "the European Environment Agency",
                 self.introduction_text_header,
             )
         )
@@ -2307,19 +2316,38 @@ class CountryReportPDFMixin:
         )
         data.append(
             Paragraph(
-                "The European Environment Agency (EEA) is entrusted with cross-cutting coordination of the Copernicus’ access to in situ data, in order to provide Entrusted Entities with harmonized and, in particular, cross-cutting information about in situ data requirements and gaps.",
+                "The European Environment Agency (EEA) is entrusted with cross-cutting "
+                "coordination of the Copernicus’ access to in situ data, in order to "
+                "provide Entrusted Entities with harmonized and, in particular, "
+                "cross-cutting information about in situ data requirements and gaps.",
                 self.introduction_text_paragraph,
             )
         )
         data.append(
             Paragraph(
-                "The Copernicus In Situ Information System CIS² (<link href='https://cis2.eea.europa.eu' color='blue'>https://cis2.eea.europa.eu</link>) aims to provide a complete overview of requirements, gaps and data relevant to all Copernicus services. CIS² links the in situ requirements specified by the Entrusted Entities to Copernicus products, in situ datasets, and data providers in order to provide a clear picture of what data is already used and what would be needed to deliver improved and more reliable products and monitoring services.",
+                "The Copernicus In Situ Information System CIS² ("
+                "<link href='https://cis2.eea.europa.eu' color='blue'>"
+                "https://cis2.eea.europa.eu </link>) aims to provide a complete "
+                "overview of requirements, gaps and data relevant to all Copernicus "
+                "services. CIS² links the in situ requirements specified by the "
+                "Entrusted Entities to Copernicus products, in situ datasets, "
+                "and data providers in order to provide a clear picture of what "
+                "data is already used and what would be needed to deliver improved "
+                "and more reliable products and monitoring services.",
                 self.introduction_text_paragraph,
             )
         )
         data.append(
             Paragraph(
-                "The Country Report provides an overview of national organisations which are providing in situ observations data to support Copernicus products. In-Situ observations are non-satellite measurements of physical parameters. Observations are either direct measurements of properties like temperature, wind, ozone, air quality, vegetation properties, ocean salinity or ground based remote sensing data like soundings of the atmospheric composition. Observations are provided to Copernicus either as individual datasets or aggregated into gridded 2- or 3- dimensional analysis fields.",
+                "The Country Report provides an overview of national organisations "
+                "which are providing in situ observations data to support Copernicus "
+                "products. In-Situ observations are non-satellite measurements of "
+                "physical parameters. Observations are either direct measurements of "
+                "properties like temperature, wind, ozone, air quality, vegetation "
+                "properties, ocean salinity or ground based remote sensing data like "
+                "soundings of the atmospheric composition. Observations are provided "
+                "to Copernicus either as individual datasets or aggregated into "
+                "gridded 2- or 3- dimensional analysis fields.",
                 self.introduction_text_paragraph,
             )
         )
@@ -2331,20 +2359,30 @@ class CountryReportPDFMixin:
         )
         data.append(
             Paragraph(
-                "- <strong>Data Providers</strong> (listed in The report is based fully on the CIS2 database content. The CIS² database also contains similar information regarding geospatial data, but these are not included in this country report.): these are organisations based in the Country which provide in situ observations data to support Copernicus products",
+                "- <strong>Data Providers</strong> (listed in The report is "
+                "based fully on the CIS2 database content. The CIS² database "
+                "also contains similar information regarding geospatial data, "
+                "but these are not included in this country report.): these are "
+                "organisations based in the Country which provide in situ "
+                "observations data to support Copernicus products",
                 self.introduction_text_paragraph_bullet_list,
             )
         )
         data.append(
             Paragraph(
-                " - <strong>Data Provider Networks</strong> (listed in Table 2): these are international networks with members based in the Country, which provide in situ observations data to support Copernicus products.",
+                " - <strong>Data Provider Networks</strong> (listed in Table"
+                " 2): these are international networks with members based in "
+                "the Country, which provide in situ observations data to "
+                "support Copernicus products.",
                 self.introduction_text_paragraph_bullet_list,
             )
         )
 
         data.append(
             Paragraph(
-                "The report is based fully on the CIS² database content. The CIS² database also contains similar information regarding geospatial data, but these are not included in this country report.",
+                "The report is based fully on the CIS² database content. The CIS² "
+                "database also contains similar information regarding geospatial "
+                "data, but these are not included in this country report.",
                 self.introduction_text_paragraph,
             )
         )
