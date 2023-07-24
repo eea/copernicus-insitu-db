@@ -68,6 +68,7 @@ INSTALLED_APPS = [
     "wkhtmltopdf",
     "picklists",
     "insitu",
+    "use_cases",
 ]
 
 if not DEBUG:
