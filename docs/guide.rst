@@ -283,6 +283,24 @@ Another button must be clicked then to accept this change.
 
 Users
 =====
+
+-----------------
+User Registration
+-----------------
+A new user can be added to the application only by an administrator. The administrator uses the form in *Figure 12* to
+create a new user with the chosen username and email. After creation, the person receives on the given email their login
+information, including a password set URL.
+
+..  figure:: screenshots/user_registration.png
+    :width: 600px
+    :align: center
+    :target: _images/user_registration.png
+
+    *User Registration Form*
+
+----------
+User Roles
+----------
 There are multiple types of users in the application:
 
 **Administrator**
@@ -312,6 +330,15 @@ the object was created by that specific user.
 The read-only user is a user that is included in the Read-only Group. This type of user can only view the objects and create
 and download reports, but they cannot add, edit or delete any information in the application.
 
+**Unauthenticated User**
+
+A guest to the application can view the objects and download the reports, but they cannot add/edit/delete any information
+from the application.
+
+----------
+User Teams
+----------
+
 ..  figure:: screenshots/teammates.png
     :width: 600px
     :align: center
@@ -319,15 +346,11 @@ and download reports, but they cannot add, edit or delete any information in the
 
     *Teammates editing form*
 
-----------
-User Teams
-----------
-
 A user can add other users to his team. Adding a user to one’s team gives that user permission to edit or delete all
 objects created by that user. Once a user A adds another user B to his team, the user B will also have user A in their team.
 A user can edit their teammates by accessing the edit teammates form from the navigation menu. Once a user sends a teammate
 request, the other user will receive an email containing a link. Only after the link is clicked, the two users will become
-teammates. (*Figure 12*)
+teammates. (*Figure 13*)
 
 ----------------------
 Change Password Option
@@ -369,10 +392,10 @@ In this state the object and its relations cannot be edited. The owner or one of
 to the draft state.
 
 When an object's state is changed into "changes requested", the user requesting the changes can complete a feedback field in which they
-inform the owner of the object about the changes that should be made (*Figure 14*). The owner receives an e-mail
+inform the owner of the object about the changes that should be made (*Figure 15*). The owner receives an e-mail
 that their object has requests for changes, the user that made those requests and what changes the user requested (from the feedback field).
 The users in the application can see this feedback when the object is in state "Changes requested" or "Draft" on the detail page of the object
-(*Figure 15*)
+(*Figure 16*) . This feedback can be cleared by the owner or their teammates if the object is an editable state.
 
 ..  figure:: screenshots/feedback1.png
     :width: 600px
@@ -424,7 +447,7 @@ Reports list
 The reports' list can be accessed by clicking on the "Reports" tab from the navigation menu.
 This page consists from a list with all the reports defined in the application. Each report is defined
 by a name and contains a short description which describes what the report contains. An example of this page
-is available in *Figure 16* .
+is available in *Figure 17* .
 
 ..  figure:: screenshots/report_list.png
     :width: 600px
@@ -463,8 +486,8 @@ The columns will appear in the preview section in the order they were introduced
 They can be rearanged to fit the user's need.
 The data displayed in each column is arranged in alphabetical order.
 The preview shows the user how the exported PDF/Excel file will look like.
-The pivot table can be exported in HTML, PDF or Excel format. (*Figure 17* and
-*Figure 18*) .
+The pivot table can be exported in HTML, PDF or Excel format. (*Figure 18* and
+*Figure 19*) .
 
 ..  figure:: screenshots/report_pivot1.png
     :width: 600px
@@ -483,7 +506,7 @@ The pivot table can be exported in HTML, PDF or Excel format. (*Figure 17* and
 -----------------------
 Filtering data in Pivot
 -----------------------
-The data in the table can also filtered by clicking on the arrow next to the column name (*Figure 19*).
+The data in the table can also filtered by clicking on the arrow next to the column name (*Figure 20*).
 
 ..  figure:: screenshots/report_pivot3.png
     :width: 600px
@@ -520,7 +543,7 @@ on the link "Standard Report".
 
 The user can then select one or more Components from the second dropdown to filter the data against. The first
 dropdown, Service, is used to filter the Components in the second dropdown in order to better identify which component is part of which service.
-(*Figure 21*)
+(*Figure 22*)
 After setting the filters, the user has the option to either generate the Standard Report as a PDF or as an Excel file.
 The file will contain details regarding the component(s) that the data was filtered against and the date and time at which
 the report was generated.
@@ -531,6 +554,29 @@ the report was generated.
     :target: _images/report_standard.png
 
     *Standard report*
+
+---------------
+Country Report
+---------------
+The application also generates Country Reports. Those reports present data that is filtered against
+the data providers that are part of the selected country.
+
+The Country Report is available under the Reports tab from the navigation menu followed by clicking
+on the link "Country Report".
+
+The user can then select one Country from the dropdown to filter the data against.
+(*Figure 23*)
+
+After selecting the country, the user has the option to either generate the Country Report as a PDF or as an Excel file.
+
+
+..  figure:: screenshots/report_country.png
+    :width: 600px
+    :align: center
+    :target: _images/report_country.png
+
+    *Country report*
+
 
 Administration
 ==============
@@ -560,7 +606,7 @@ attached a question mark. By clicking on that question mark you will access the 
 
     *An example table from help page*
 
-For Example, in *Figure 23* is one of the tables available on the Help page. Under the table title there is a small
+For Example, in *Figure 25* is one of the tables available on the Help page. Under the table title there is a small
 description of that field’ s purpose. In the table there is the name of each value and the description of what that value
 represents.
 
@@ -584,11 +630,35 @@ how many objects were active, how many objects were created and how many objects
 The user has to select a start date for the period, an end date and the objects type they want the data to be
 shown for.
 
+------------------
+Ownership Transfer
+------------------
+
+When people are no longer working on the application data, their objects ownership needs to be transfered to a new
+active user. This can be easily done using a management feature. Using the form in *Figure 27*, an administrator should
+choose the previous user and the new user. All the objects, including the links between objects will be transfered to the
+new user. There is also an option to disable the previous user's account.
+
+..  figure:: screenshots/transfer_ownership.png
+    :width: 600px
+    :align: center
+    :target: _images/transfer_ownership.png
+
+    *Transfer ownership*
+
+
 Logging actions
 ===============
 
-All editing actions done by users are logged in a log file. That includes: editing, adding or deleting any object from the application
-will be stored. The log gives informations about the user, the action the user made and the object that was accessed.
+All editing actions done by users are logged in Admin. That includes: editing, adding or deleting any object from the application
+will be stored. The log gives informations about the user, the action the user made and the object that was accessed. *Figure 28*
+
+..  figure:: screenshots/logging.png
+    :width: 600px
+    :align: center
+    :target: _images/logging.png
+
+    *Loggging management*
 
 
 Soft deletion
