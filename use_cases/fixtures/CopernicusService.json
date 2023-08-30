@@ -1,0 +1,58 @@
+[
+{
+    "model": "use_cases.copernicusservice",
+    "pk": 1,
+    "fields": {
+        "name": "Copernicus Atmosphere Monitoring Service",
+        "created_at": "2017-11-06T10:30:32.240Z"
+    }
+},
+{
+    "model": "use_cases.copernicusservice",
+    "pk": 2,
+    "fields": {
+        "name": "Copernicus Emergency Management Service",
+        "created_at": "2017-11-06T10:30:32.245Z"
+    }
+},
+{
+    "model": "use_cases.copernicusservice",
+    "pk": 3,
+    "fields": {
+        "name": "Copernicus Land Monitoring Service",
+        "created_at": "2017-11-06T10:30:32.248Z"
+    }
+},
+{
+    "model": "use_cases.copernicusservice",
+    "pk": 4,
+    "fields": {
+        "name": "Copernicus Marine Service",
+        "created_at": "2017-11-06T10:30:32.251Z"
+    }
+},
+{
+    "model": "use_cases.copernicusservice",
+    "pk": 5,
+    "fields": {
+        "name": "Copernicus Climate Change Service",
+        "created_at": "2017-11-06T10:30:32.255Z"
+    }
+},
+{
+    "model": "use_cases.copernicusservice",
+    "pk": 6,
+    "fields": {
+        "name": "Copernicus Security Service",
+        "created_at": "2017-11-06T10:30:32.258Z"
+    }
+},
+{
+    "model": "use_cases.copernicusservice",
+    "pk": 7,
+    "fields": {
+        "name": "Copernicus Space Component",
+        "created_at": "2019-07-12T12:24:16.152Z"
+    }
+}
+]
