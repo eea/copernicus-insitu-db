@@ -19,7 +19,7 @@ from insitu.views.action_logging.base_logging import (
     CreateLoggingView,
     DeleteLoggingView,
     DetailLoggingView,
-    TrasitionLoggingView,
+    TransitionLoggingView,
 )
 
 
@@ -128,7 +128,7 @@ class LoggingProtectedDetailView(
     pass
 
 
-class LoggingTransitionProtectedDetailView(TrasitionLoggingView, ProtectedDetailView):
+class LoggingTransitionProtectedDetailView(TransitionLoggingView, ProtectedDetailView):
     """
     Convenience view adding permissions and logging
     support for transition view.

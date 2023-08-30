@@ -63,7 +63,9 @@ class ProductRequirementBaseForm(forms.ModelForm):
         ]
 
 
-class RequirementProductRequirementForm(CreatedByFormMixin, ProductRequirementBaseForm):
+class RequirementProductRequirementForm(
+    CreatedByFormMixin, ProductRequirementBaseForm
+):
     def clean(self):
         cleaned_data = super().clean()
         product = cleaned_data.get("product")
@@ -264,7 +266,9 @@ class RequirementForm(forms.ModelForm):
         ]
         self._clean_metric(metric_fields)
         self._clean_scale()
-        fields = {field: v for field, v in self.cleaned_data.items() if field != "name"}
+        fields = {
+            field: v for field, v in self.cleaned_data.items() if field != "name"
+        }
         if self.instance.id:
             exists = (
                 models.Requirement.objects.filter(**fields)
@@ -301,7 +305,9 @@ class RequirementForm(forms.ModelForm):
             "note": self.cleaned_data["note"],
             "owner": self.cleaned_data["owner"],
             "dissemination": self.cleaned_data["dissemination"],
-            "quality_control_procedure": self.cleaned_data["quality_control_procedure"],
+            "quality_control_procedure": self.cleaned_data[
+                "quality_control_procedure"
+            ],
             "group": self.cleaned_data["group"],
             "status": self.cleaned_data["status"],
         }
@@ -321,7 +327,9 @@ class RequirementForm(forms.ModelForm):
             return models.Requirement.objects.create(**data)
         else:
             self._update_metric(self.instance.uncertainty, **uncertainty_data)
-            self._update_metric(self.instance.update_frequency, **update_frequency_data)
+            self._update_metric(
+                self.instance.update_frequency, **update_frequency_data
+            )
             self._update_metric(self.instance.timeliness, **timeliness_data)
             self._update_metric(self.instance.scale, **scale_data)
             self._update_metric(
@@ -569,7 +577,14 @@ class DataProviderNonNetworkForm(CreatedByFormMixin, forms.ModelForm):
 
     class Meta:
         model = models.DataProvider
-        fields = ["name", "native_name", "edmo", "description", "countries", "networks"]
+        fields = [
+            "name",
+            "native_name",
+            "edmo",
+            "description",
+            "countries",
+            "networks",
+        ]
 
     def save(self, created_by="", commit=True):
         instance = super().save(created_by, commit)
@@ -658,7 +673,9 @@ class TeamForm(forms.ModelForm):
 
 class StandardReportForm(forms.Form):
     service = forms.ModelMultipleChoiceField(
-        required=False, queryset=models.CopernicusService.objects.all(), label="Service"
+        required=False,
+        queryset=models.CopernicusService.objects.all(),
+        label="Service",
     )
     component = forms.ModelMultipleChoiceField(
         required=False, queryset=models.Component.objects.all(), label="Component"
@@ -705,7 +722,9 @@ class CreateUserForm(UserCreationForm):
         widget=forms.PasswordInput(attrs={"placeholder": "Password"})
     )
     password2 = forms.CharField(
-        widget=forms.PasswordInput(attrs={"placeholder": "Please retype your password"})
+        widget=forms.PasswordInput(
+            attrs={"placeholder": "Please retype your password"}
+        )
     )
 
     class Meta:

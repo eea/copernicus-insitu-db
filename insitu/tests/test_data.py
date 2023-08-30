@@ -328,7 +328,9 @@ class DataTests(base.FormCheckTestCase):
         resp = self.client.post(reverse("data:add") + "?ready&pk=" + str(data.pk), {})
         self.assertEqual(resp.status_code, 200)
         self.check_required_errors(resp, self.errors)
-        self.check_logged_action("tried to clone data {pk} of".format(pk=data.pk), data)
+        self.check_logged_action(
+            "tried to clone data {pk} of".format(pk=data.pk), data
+        )
 
     def test_post_add_with_clone_ready(self):
         data = base.DataFactory(created_by=self.creator)
@@ -431,22 +433,62 @@ class DataTests(base.FormCheckTestCase):
         )
         items = [data, data_provider]
         for item in items:
-            self.assertEqual((getattr(item, "state")).name, "draft")
+            self.assertEqual(getattr(item, "state"), "draft")
 
         transitions = [
-            {"source": "draft", "target": "ready", "user": self.creator},
-            {"source": "ready", "target": "draft", "user": self.creator},
-            {"source": "draft", "target": "ready", "user": self.creator},
-            {"source": "ready", "target": "changes", "user": self.other_user},
-            {"source": "changes", "target": "draft", "user": self.creator},
-            {"source": "draft", "target": "ready", "user": self.creator},
-            {"source": "ready", "target": "valid", "user": self.other_user},
-            {"source": "ready", "target": "valid", "user": self.creator},
+            {
+                "source": "draft",
+                "target": "ready",
+                "transition": "mark_as_ready",
+                "user": self.creator,
+            },
+            {
+                "source": "ready",
+                "target": "draft",
+                "transition": "cancel",
+                "user": self.creator,
+            },
+            {
+                "source": "draft",
+                "target": "ready",
+                "transition": "mark_as_ready",
+                "user": self.creator,
+            },
+            {
+                "source": "ready",
+                "target": "changes",
+                "transition": "request_changes",
+                "user": self.other_user,
+            },
+            {
+                "source": "changes",
+                "target": "draft",
+                "transition": "make_changes",
+                "user": self.creator,
+            },
+            {
+                "source": "draft",
+                "target": "ready",
+                "transition": "mark_as_ready",
+                "user": self.creator,
+            },
+            {
+                "source": "ready",
+                "target": "valid",
+                "transition": "validate",
+                "user": self.other_user,
+            },
+            {
+                "source": "ready",
+                "target": "valid",
+                "transition": "validate",
+                "user": self.creator,
+            },
         ]
 
         for idx, transition in enumerate(transitions):
             for item in items:
-                self.assertEqual((getattr(item, "state")).name, transition["source"])
+                self.assertEqual(getattr(item, "state"), transition["source"])
             self.client.force_login(transition["user"])
             response = self.client.post(
                 reverse(
@@ -454,6 +496,7 @@ class DataTests(base.FormCheckTestCase):
                     kwargs={
                         "source": transition["source"],
                         "target": transition["target"],
+                        "transition": transition["transition"],
                         "pk": data.pk,
                     },
                 )
@@ -463,7 +506,7 @@ class DataTests(base.FormCheckTestCase):
             )
             for item in items:
                 getattr(item, "refresh_from_db")()
-                self.assertEqual((getattr(item, "state")).name, transition["target"])
+                self.assertEqual(getattr(item, "state"), transition["target"])
             if transition["target"] == "valid":
                 for item in items:
                     item.state = transition["source"]
@@ -490,12 +533,17 @@ class DataTests(base.FormCheckTestCase):
 
         items = [data, data_provider]
         for item in items:
-            self.assertEqual((getattr(item, "state")).name, "draft")
+            self.assertEqual(getattr(item, "state"), "draft")
         self.client.force_login(self.creator)
         response = self.client.get(
             reverse(
                 "data:transition",
-                kwargs={"source": "draft", "target": "ready", "pk": data.pk},
+                kwargs={
+                    "source": "draft",
+                    "target": "ready",
+                    "transition": "mark_as_ready",
+                    "pk": data.pk,
+                },
             )
         )
         self.assertTrue(response.status_code, 200)
@@ -514,16 +562,19 @@ class DataTests(base.FormCheckTestCase):
         response = self.client.post(
             reverse(
                 "data:transition",
-                kwargs={"source": "draft", "target": "nosuchstate", "pk": data.pk},
+                kwargs={
+                    "source": "draft",
+                    "target": "nosuchstate",
+                    "transition": "nosuchtransition",
+                    "pk": data.pk,
+                },
             )
         )
         self.assertEqual(response.status_code, 404)
 
-        self.check_logged_action("changed state from draft to nosuchstate for", data)
-
         for item in items:
             getattr(item, "refresh_from_db")()
-            self.assertEqual((getattr(item, "state")).name, "draft")
+            self.assertEqual(getattr(item, "state"), "draft")
 
     def test_transition_existent_state_no_transition(self):
         self.login_creator()
@@ -540,16 +591,19 @@ class DataTests(base.FormCheckTestCase):
         response = self.client.post(
             reverse(
                 "data:transition",
-                kwargs={"source": "draft", "target": "valid", "pk": data.pk},
+                kwargs={
+                    "source": "draft",
+                    "target": "valid",
+                    "transition": "notranstions",
+                    "pk": data.pk,
+                },
             )
         )
         self.assertEqual(response.status_code, 404)
 
-        self.check_logged_action("changed state from draft to valid for", data)
-
         for item in items:
             getattr(item, "refresh_from_db")()
-            self.assertEqual((getattr(item, "state")).name, "draft")
+            self.assertEqual(getattr(item, "state"), "draft")
 
     def test_transition_changes_requested_feedback(self):
         self.erase_logging_file()
@@ -565,13 +619,18 @@ class DataTests(base.FormCheckTestCase):
         )
         items = [data, data_provider]
         for item in items:
-            self.assertEqual((getattr(item, "state")).name, "ready")
+            self.assertEqual(getattr(item, "state"), "ready")
 
         self.client.force_login(self.other_user)
         self.client.post(
             reverse(
                 "data:transition",
-                kwargs={"source": "ready", "target": "changes", "pk": data.pk},
+                kwargs={
+                    "source": "ready",
+                    "target": "changes",
+                    "transition": "request_changes",
+                    "pk": data.pk,
+                },
             ),
             {"feedback": "this is a feedback test"},
         )

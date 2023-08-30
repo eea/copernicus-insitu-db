@@ -146,7 +146,8 @@ class ProductTests(base.FormCheckTestCase):
         )
 
         resp = self.client.get(
-            reverse("product:json"), {"entity": entity_1.acronym, "group": group_1.name}
+            reverse("product:json"),
+            {"entity": entity_1.acronym, "group": group_1.name},
         )
         self.assertEqual(resp.status_code, 200)
 

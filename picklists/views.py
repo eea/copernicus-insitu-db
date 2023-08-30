@@ -98,7 +98,9 @@ class ExportPicklistsView(protected.ProtectedView):
                     value = getattr(entry, col.name)
                     if col.related_model:
                         value = value.pk
-                    ws.cell(row=current_row, column=columns.index(col) + 1, value=value)
+                    ws.cell(
+                        row=current_row, column=columns.index(col) + 1, value=value
+                    )
             # if 'id' == columns[0]:
             #     ws.column_dimensions.group(start='A',
             #                                end='A',

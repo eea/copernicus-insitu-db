@@ -33,7 +33,9 @@ data_requirement_patterns = [
     url(r"^add/$", views.DataRequirementAdd.as_view(), name="add"),
     url(r"^(?P<pk>[0-9]+)/$", views.DataRequirementEdit.as_view(), name="edit"),
     url(
-        r"^(?P<pk>[0-9]+)/delete$", views.DataRequirementDelete.as_view(), name="delete"
+        r"^(?P<pk>[0-9]+)/delete$",
+        views.DataRequirementDelete.as_view(),
+        name="delete",
     ),
 ]
 
@@ -44,7 +46,7 @@ requirement_patterns = [
     url(r"^(?P<pk>[0-9]+)/edit$", views.RequirementEdit.as_view(), name="edit"),
     url(r"^(?P<pk>[0-9]+)/delete/$", views.RequirementDelete.as_view(), name="delete"),
     url(
-        r"^(?P<pk>[0-9]+)/transition/(?P<source>[a-z]+)-to-(?P<target>[a-z]+)/$",
+        r"^(?P<pk>[0-9]+)/transition/(?P<source>[a-z]+)-to-(?P<target>[a-z]+)/(?P<transition>[a-z\-\_]+)/$",
         views.RequirementTransition.as_view(),
         name="transition",
     ),
@@ -87,7 +89,7 @@ data_patterns = [
         include((data_data_provider_patterns, "insitu"), namespace="provider"),
     ),
     url(
-        r"^(?P<pk>[0-9]+)/transition/(?P<source>[a-z]+)-to-(?P<target>[a-z]+)/$",
+        r"^(?P<pk>[0-9]+)/transition/(?P<source>[a-z]+)-to-(?P<target>[a-z]+)/(?P<transition>[a-z\-\_]+)/$",
         views.DataTransition.as_view(),
         name="transition",
     ),
@@ -130,7 +132,7 @@ provider_patterns = [
         name="delete_non_network",
     ),
     url(
-        r"^(?P<pk>[0-9]+)/transition/(?P<source>[a-z]+)-to-(?P<target>[a-z]+)/$",
+        r"^(?P<pk>[0-9]+)/transition/(?P<source>[a-z]+)-to-(?P<target>[a-z]+)/(?P<transition>[a-z\-\_]+)/$",
         views.DataProviderTransition.as_view(),
         name="transition",
     ),
@@ -145,7 +147,9 @@ auth_patterns = [
     url(r"^login/", views.LoginView.as_view(), name="login"),
     url(r"^logout/", views.LogoutView.as_view(), name="logout"),
     url(
-        r"^change-password/", views.ChangePasswordView.as_view(), name="change_password"
+        r"^change-password/",
+        views.ChangePasswordView.as_view(),
+        name="change_password",
     ),
     url(r"^edit_teammates/", views.EditTeamMatesView.as_view(), name="edit_teammates"),
     url(

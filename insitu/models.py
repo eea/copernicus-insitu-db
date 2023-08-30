@@ -6,12 +6,9 @@ from django.contrib.auth import get_user_model
 from django.db import models
 from django.db.models.signals import post_save, post_delete
 from django.db.models.query import QuerySet
-from django_xworkflows.models import Workflow, WorkflowEnabled, StateField
-from xworkflows import (
-    transition_check,
-    transition,
-    ForbiddenTransition,
-)
+
+from django_fsm import FSMField, transition
+
 
 from insitu import signals
 from picklists import models as pickmodels
@@ -45,58 +42,6 @@ def delete_team_for_user(sender, instance, **kwargs):
 
 post_save.connect(create_team_for_user, sender=User)
 post_delete.connect(delete_team_for_user, sender=User)
-
-
-class ValidationWorkflow(Workflow):
-    name = "validation"
-
-    states = (
-        # name, title
-        ("draft", "Draft"),
-        ("ready", "Ready for validation"),
-        ("valid", "Valid"),
-        ("changes", "Changes requested"),
-    )
-
-    initial_state = "draft"
-
-    transitions = (
-        # name, source state, target state
-        ("mark_as_ready", "draft", "ready"),
-        ("validate", "ready", "valid"),
-        ("cancel", "ready", "draft"),
-        ("request_changes", "ready", "changes"),
-        ("make_changes", "changes", "draft"),
-        ("revalidate", "valid", "draft"),
-    )
-
-    @classmethod
-    def __check_state_exists(cls, state):
-        if state not in cls.states:
-            raise ForbiddenTransition()
-
-    @classmethod
-    def __check_transition_between_states_exist(cls, source_state, target_state):
-        for trans in cls.transitions:
-            for source in trans.source:
-                if source.name == source_state and trans.target.name == target_state:
-                    return
-        raise ForbiddenTransition()
-
-    @classmethod
-    def check_transition(cls, source_state, target_state):
-        cls.__check_state_exists(source_state)
-        cls.__check_state_exists(target_state)
-        cls.__check_transition_between_states_exist(source_state, target_state)
-
-    @classmethod
-    def get_transition(cls, source_state, target_state):
-        cls.check_transition(source_state, target_state)
-        for trans in cls.transitions:
-            for source in trans.source:
-                if source.name == source_state and trans.target.name == target_state:
-                    return trans.name
-        raise ForbiddenTransition()
 
 
 class SoftDeleteQuerySet(QuerySet):
@@ -179,70 +124,59 @@ class LoggedAction(models.Model):
     target_note = models.TextField(blank=True)
 
 
-class ValidationWorkflowModel(WorkflowEnabled, models.Model):
-    state = StateField(ValidationWorkflow)
+def check_owner_user(instance, user):
+    """
+    Check if the user is the creator or if the is user is in the creator's
+    team
+    """
+    return (
+        user == instance.created_by
+        or user in instance.created_by.team.teammates.all()
+        or instance.has_user_perm(user)
+    )
+
+
+def check_other_user(instance, user):
+    """
+    Check if the user is different from the  creator or if the is user is
+    not in the creator's team
+    """
+    return (
+        user != instance.created_by
+        and user not in instance.created_by.team.teammates.all()
+        and instance.has_user_perm(user) is not True
+    )
+
+
+class ValidationWorkflowModel(models.Model):
+    state = FSMField(default="draft")
 
     class Meta:
         abstract = True
 
-    @transition()
+    @transition(field=state, source="draft", target="ready")
     def mark_as_ready(self):
         pass
 
-    @transition()
+    @transition(field=state, source="ready", target="valid")
     def validate(self):
         pass
 
-    @transition()
+    @transition(field=state, source="ready", target="draft")
     def cancel(self):
         pass
 
-    @transition()
+    @transition(field=state, source="ready", target="changes")
     def request_changes(self):
         pass
 
-    @transition()
+    @transition(field=state, source="valid", target="draft")
     def revalidate(self):
         pass
 
-    @transition()
+    @transition(field=state, source="changes", target="draft")
     def make_changes(self):
         pass
-
-    @transition_check("mark_as_ready", "cancel", "make_changes", "revalidate")
-    def check_owner_user(self, *args, **kwargs):
-        """
-        Check if the user is the creator or if the is user is in the creator's
-        team
-        """
-        return (
-            self.requesting_user == self.created_by
-            or self.requesting_user in self.created_by.team.teammates.all()
-            or self.has_user_perm(self.requesting_user)
-        )
-
-    @transition_check(
-        "request_changes",
-    )
-    def check_other_user(self, *args, **kwargs):
-        """
-        Check if the user is different from the  creator or if the is user is
-        not in the creator's team
-        """
-        return (
-            self.requesting_user != self.created_by
-            and self.requesting_user not in self.created_by.team.teammates.all()
-            and self.has_user_perm(self.requesting_user) is not True
-        )
-
-    @transition_check(
-        "validate",
-    )
-    def check_validator_user(self, *args, **kwargs):
-        """
-        Check if the user is the creator
-        """
-        return True
 
 
 class Team(models.Model):
@@ -368,53 +302,69 @@ class Requirement(OwnerHistoryModel, ValidationWorkflowModel, SoftDeleteModel):
     def components(self):
         return Component.objects.filter(products__requirements=self)
 
-    @transition()
+    @transition(
+        field="state", source="draft", target="ready", permission=check_owner_user
+    )
     def mark_as_ready(self):
         for obj in self.get_related_objects():
-            if obj.state == ValidationWorkflow.states["ready"]:
+            if obj.state == "ready":
                 continue
             obj.requesting_user = self.requesting_user
             obj.mark_as_ready()
+            obj.save()
 
-    @transition()
+    @transition(field="state", source="ready", target="valid")
     def validate(self):
         for obj in self.get_related_objects():
-            if obj.state == ValidationWorkflow.states["valid"]:
+            if obj.state == "valid":
                 continue
             obj.requesting_user = self.requesting_user
             obj.validate()
+            obj.save()
 
-    @transition()
+    @transition(
+        field="state", source="ready", target="draft", permission=check_owner_user
+    )
     def cancel(self):
         for obj in self.get_related_objects():
-            if obj.state == ValidationWorkflow.states["draft"]:
+            if obj.state == "draft":
                 continue
             obj.requesting_user = self.requesting_user
             obj.cancel()
+            obj.save()
 
-    @transition()
+    @transition(
+        field="state", source="ready", target="changes", permission=check_other_user
+    )
     def request_changes(self):
         for obj in self.get_related_objects():
-            if obj.state == ValidationWorkflow.states["changes"]:
+            if obj.state == "changes":
                 continue
             obj.requesting_user = self.requesting_user
             obj.request_changes()
+            obj.save()
 
-    @transition()
+    @transition(
+        field="state", source="valid", target="draft", permission=check_owner_user
+    )
     def revalidate(self):
         for obj in self.get_related_objects():
-            if obj.state == ValidationWorkflow.states["draft"]:
+            if obj.state == "draft":
                 continue
             obj.requesting_user = self.requesting_user
             obj.revalidate()
+            obj.save()
 
-    @transition()
+    @transition(
+        field="state", source="changes", target="draft", permission=check_owner_user
+    )
     def make_changes(self):
         for obj in self.get_related_objects():
-            if obj.state == ValidationWorkflow.states["draft"]:
+            if obj.state == "draft":
                 continue
             obj.requesting_user = self.requesting_user
             obj.make_changes()
+            obj.save()
 
 
 class Product(SoftDeleteModel):
@@ -539,53 +489,69 @@ class DataProvider(OwnerHistoryModel, ValidationWorkflowModel, SoftDeleteModel):
             products___deleted=False,
         )
 
-    @transition()
+    @transition(
+        field="state", source="draft", target="ready", permission=check_owner_user
+    )
     def mark_as_ready(self):
         for obj in self.get_related_objects():
-            if obj.state == ValidationWorkflow.states["ready"]:
+            if obj.state == "ready":
                 continue
             obj.requesting_user = self.requesting_user
             obj.mark_as_ready()
+            obj.save()
 
-    @transition()
+    @transition(field="state", source="ready", target="valid")
     def validate(self):
         for obj in self.get_related_objects():
-            if obj.state == ValidationWorkflow.states["valid"]:
+            if obj.state == "valid":
                 continue
             obj.requesting_user = self.requesting_user
             obj.validate()
+            obj.save()
 
-    @transition()
+    @transition(
+        field="state", source="ready", target="draft", permission=check_owner_user
+    )
     def cancel(self):
         for obj in self.get_related_objects():
-            if obj.state == ValidationWorkflow.states["draft"]:
+            if obj.state == "draft":
                 continue
             obj.requesting_user = self.requesting_user
             obj.cancel()
+            obj.save()
 
-    @transition()
+    @transition(
+        field="state", source="ready", target="changes", permission=check_other_user
+    )
     def request_changes(self):
         for obj in self.get_related_objects():
-            if obj.state == ValidationWorkflow.states["changes"]:
+            if obj.state == "changes":
                 continue
             obj.requesting_user = self.requesting_user
             obj.request_changes()
+            obj.save()
 
-    @transition()
+    @transition(
+        field="state", source="valid", target="draft", permission=check_owner_user
+    )
     def revalidate(self):
         for obj in self.get_related_objects():
-            if obj.state == ValidationWorkflow.states["draft"]:
+            if obj.state == "draft":
                 continue
             obj.requesting_user = self.requesting_user
             obj.revalidate()
+            obj.save()
 
-    @transition()
+    @transition(
+        field="state", source="changes", target="draft", permission=check_owner_user
+    )
     def make_changes(self):
         for obj in self.get_related_objects():
-            if obj.state == ValidationWorkflow.states["draft"]:
+            if obj.state == "draft":
                 continue
             obj.requesting_user = self.requesting_user
             obj.make_changes()
+            obj.save()
 
 
 class DataProviderDetails(OwnerHistoryModel, ValidationWorkflowModel, SoftDeleteModel):
@@ -734,56 +700,74 @@ class Data(OwnerHistoryModel, ValidationWorkflowModel, SoftDeleteModel):
         objects += [obj for obj in self.dataproviderrelation_set.all()]
         return objects
 
-    @transition()
+    @transition(
+        field="state", source="draft", target="ready", permission=check_owner_user
+    )
     def mark_as_ready(self):
         for obj in self.get_related_objects():
-            if obj.state == ValidationWorkflow.states["ready"]:
+            if obj.state == "ready":
                 continue
             obj.requesting_user = self.requesting_user
             obj.mark_as_ready()
+            obj.save()
 
-    @transition()
+    @transition(field="state", source="ready", target="valid")
     def validate(self):
         for obj in self.get_related_objects():
-            if obj.state == ValidationWorkflow.states["valid"]:
+            if obj.state == "valid":
                 continue
             obj.requesting_user = self.requesting_user
             obj.validate()
+            obj.save()
 
-    @transition()
+    @transition(
+        field="state", source="ready", target="draft", permission=check_owner_user
+    )
     def cancel(self):
         for obj in self.get_related_objects():
-            if obj.state == ValidationWorkflow.states["draft"]:
+            if obj.state == "draft":
                 continue
             obj.requesting_user = self.requesting_user
             obj.cancel()
+            obj.save()
 
-    @transition()
+    @transition(
+        field="state", source="ready", target="changes", permission=check_other_user
+    )
     def request_changes(self):
         for obj in self.get_related_objects():
-            if obj.state == ValidationWorkflow.states["changes"]:
+            if obj.state == "changes":
                 continue
             obj.requesting_user = self.requesting_user
             obj.request_changes()
+            obj.save()
 
-    @transition()
+    @transition(
+        field="state", source="valid", target="draft", permission=check_owner_user
+    )
     def revalidate(self):
         for obj in self.get_related_objects():
-            if obj.state == ValidationWorkflow.states["draft"]:
+            if obj.state == "draft":
                 continue
             obj.requesting_user = self.requesting_user
             obj.revalidate()
+            obj.save()
 
-    @transition()
+    @transition(
+        field="state", source="changes", target="draft", permission=check_owner_user
+    )
     def make_changes(self):
         for obj in self.get_related_objects():
-            if obj.state == ValidationWorkflow.states["draft"]:
+            if obj.state == "draft":
                 continue
             obj.requesting_user = self.requesting_user
             obj.make_changes()
+            obj.save()
 
     def has_user_perm(self, user):
-        return user.has_perm("change_data", self) and user.has_perm("delete_data", self)
+        return user.has_perm("change_data", self) and user.has_perm(
+            "delete_data", self
+        )
 
 
 class DataRequirement(OwnerHistoryModel, ValidationWorkflowModel, SoftDeleteModel):
@@ -808,7 +792,9 @@ class DataRequirement(OwnerHistoryModel, ValidationWorkflowModel, SoftDeleteMode
         )
 
 
-class DataProviderRelation(OwnerHistoryModel, ValidationWorkflowModel, SoftDeleteModel):
+class DataProviderRelation(
+    OwnerHistoryModel, ValidationWorkflowModel, SoftDeleteModel
+):
     ORIGINATOR = 1
     DISTRIBUTOR = 2
     ROLE_CHOICES = (

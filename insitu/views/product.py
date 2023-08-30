@@ -169,7 +169,8 @@ class ExportProductView(ProtectedView):
         columns = [
             field
             for field in models.Product._meta.get_fields()
-            if not isinstance(field, ForeignObjectRel) and field.name not in SKIP_FIELDS
+            if not isinstance(field, ForeignObjectRel)
+            and field.name not in SKIP_FIELDS
         ]
         for col in columns:
             cell = ws.cell(

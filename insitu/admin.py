@@ -147,7 +147,7 @@ class RequirementAdmin(GuardedModelAdmin):
         "updated_at",
     )
     search_fields = ["name"]
-    list_display = ("id", "name")
+    list_display = ("id", "name", "state")
 
     def components(self, obj):
         links = [
@@ -169,7 +169,7 @@ class DataAdmin(GuardedModelAdmin):
         "updated_at",
     )
     search_fields = ["name"]
-    list_display = ("id", "name")
+    list_display = ("id", "name", "state")
 
 
 @admin.register(models.DataProvider)

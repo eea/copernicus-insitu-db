@@ -79,7 +79,9 @@ class Command(BaseCommand):
         for logged_datap in logged_dataps:
             if logged_datap.id_target:
                 try:
-                    datap = datap_ct.get_object_for_this_type(pk=logged_datap.id_target)
+                    datap = datap_ct.get_object_for_this_type(
+                        pk=logged_datap.id_target
+                    )
                 except ObjectDoesNotExist:
                     print(f"Data Provider not found for pk {logged_datap.id_target}")
                     continue
