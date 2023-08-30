@@ -6,26 +6,26 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('use_cases', '0001_initial'),
+        ("use_cases", "0001_initial"),
     ]
 
     operations = [
         migrations.RemoveField(
-            model_name='theme',
-            name='use_case',
+            model_name="theme",
+            name="use_case",
         ),
         migrations.AddField(
-            model_name='usecase',
-            name='themes',
-            field=models.ManyToManyField(blank=True, to='use_cases.Theme'),
+            model_name="usecase",
+            name="themes",
+            field=models.ManyToManyField(blank=True, to="use_cases.Theme"),
         ),
         migrations.RemoveField(
-            model_name='usecase',
-            name='copernicus_services',
+            model_name="usecase",
+            name="copernicus_services",
         ),
         migrations.AddField(
-            model_name='usecase',
-            name='copernicus_services',
-            field=models.ManyToManyField(to='use_cases.CopernicusService'),
+            model_name="usecase",
+            name="copernicus_services",
+            field=models.ManyToManyField(to="use_cases.CopernicusService"),
         ),
     ]

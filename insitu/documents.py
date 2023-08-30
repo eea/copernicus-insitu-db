@@ -325,8 +325,10 @@ class DataProviderDoc(Document):
             <span data-toggle="popover" title="Native name: {native_name}"
                   class="glyphicon glyphicon-info-sign small"
             </span>
-          """.format(text=text, native_name=self.native_name)
-        
+          """.format(
+                text=text, native_name=self.native_name
+            )
+
         return text
 
     def get_phone_display(self):

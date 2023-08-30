@@ -17,19 +17,21 @@ class UseCaseForm(forms.ModelForm):
             "country",
             "region",
             "locality",
-            "state"
+            "state",
         ]
 
 
 class ReferenceForm(forms.ModelForm):
     class Meta:
         model = models.Reference
-        fields=["source", "date"]
+        fields = ["source", "date"]
 
 
 ReferenceFormSet = forms.inlineformset_factory(
-    models.UseCase, models.Reference,
+    models.UseCase,
+    models.Reference,
     fields=["source", "date"],
     form=ReferenceForm,
-    extra=1, can_delete=True
+    extra=1,
+    can_delete=True,
 )

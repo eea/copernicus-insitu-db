@@ -7,13 +7,19 @@ import django.db.models.deletion
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('insitu', '0045_auto_20221128_1210'),
+        ("insitu", "0045_auto_20221128_1210"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='data',
-            name='data_policy',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, related_name='data', to='picklists.DataPolicy'),
+            model_name="data",
+            name="data_policy",
+            field=models.ForeignKey(
+                blank=True,
+                null=True,
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name="data",
+                to="picklists.DataPolicy",
+            ),
         ),
     ]

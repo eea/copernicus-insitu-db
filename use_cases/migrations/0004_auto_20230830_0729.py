@@ -6,13 +6,19 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('use_cases', '0003_auto_20230828_1359'),
+        ("use_cases", "0003_auto_20230828_1359"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='usecase',
-            name='image',
-            field=models.ImageField(blank=True, help_text='Image used for this use case.', null=True, upload_to='use-case-images/', verbose_name='Image'),
+            model_name="usecase",
+            name="image",
+            field=models.ImageField(
+                blank=True,
+                help_text="Image used for this use case.",
+                null=True,
+                upload_to="use-case-images/",
+                verbose_name="Image",
+            ),
         ),
     ]

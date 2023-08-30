@@ -10,7 +10,7 @@ from insitu.views.base import CreatedByMixin
 from insitu.views.protected import (
     LoggingProtectedCreateView,
     IsAuthenticated,
-    IsNotReadOnlyUser
+    IsNotReadOnlyUser,
 )
 from django.db import transaction
 
@@ -37,14 +37,14 @@ class UseCaseAddView(LoggingProtectedCreateView):
     def get_context_data(self, **kwargs):
         data = super(UseCaseAddView, self).get_context_data(**kwargs)
         if self.request.POST:
-            data['references'] = ReferenceFormSet(self.request.POST)
+            data["references"] = ReferenceFormSet(self.request.POST)
         else:
-            data['references'] = ReferenceFormSet()
+            data["references"] = ReferenceFormSet()
         return data
 
     def form_valid(self, form):
         context = self.get_context_data()
-        references = context['references']
+        references = context["references"]
         with transaction.atomic():
             self.object = form.save()
 
@@ -52,7 +52,6 @@ class UseCaseAddView(LoggingProtectedCreateView):
                 references.instance = self.object
                 references.save()
         return super(UseCaseAddView, self).form_valid(form)
-
 
     def get_success_url(self):
         return reverse("use_cases:detail", kwargs={"pk": self.object.pk})
