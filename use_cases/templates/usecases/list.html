@@ -1,0 +1,67 @@
+{% extends '_layout.html' %}
+{% load static %}
+{% load utils %}
+
+{% block style %}
+<style nonce="{{request.csp_nonce}}" type="text/css">
+  
+  .usecase-list li {
+    font-size: 20px;
+    font-weight: bold;
+    margin-bottom: 15px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #ddd;
+  }
+
+  .separator {
+    width: 100%;
+    min-width: 100px;
+    border-top: 1px solid #935239;
+
+    margin-top: 5px;
+    margin-bottom: 5px;
+  }
+
+  .header-wrapper {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+
+  .header {
+    margin: 10px;
+  }
+
+  .usecase-list {
+    margin-top: 30px;
+    list-style-type: square;
+  }
+
+  
+</style>
+{% endblock %}
+
+{% block title %}
+  Use cases
+{% endblock %}
+
+{% block content %}
+  <div class="separator"></div>
+
+  <div class="header-wrapper">
+    <h1 class="header">Use cases</h1>
+    <a class="btn btn-primary" href="{% url 'use_cases:add' %}">New use case</a>
+  </div>
+
+  <div class="separator"></div>
+
+  <ul class="usecase-list">
+    {% for usecase in object_list %}
+        <li><a href="{% url 'use_cases:detail' pk=usecase.pk %}">{{ usecase.title }}</a></li>
+    {% empty %}
+        <li>No usecases yet.</li>
+    {% endfor %}
+  </ul>
+{% endblock %}
