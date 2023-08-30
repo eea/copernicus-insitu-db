@@ -13,9 +13,9 @@ Including another URLconf
     1. Import the include() function: from django.conf.urls import url, include
     2. Add a URL to urlpatterns:  url(r'^blog/', include('blog.urls'))
 """
-from django.conf.urls import url, include
+from django.conf.urls import url, include, static
 from django.contrib import admin
-from .settings import DEBUG_TOOLBAR
+from django.conf import settings
 
 handler500 = "insitu.views.errors.handler500"
 
@@ -23,12 +23,17 @@ urlpatterns = [
     url(r"^admin/", admin.site.urls),
     url(r"^hijack/", include("hijack.urls")),
     url(r"^", include("insitu.urls")),
-    url(r"^use_cases/", include("use_cases.urls")),
+    url(
+        r"^use_cases/", include(("use_cases.urls", "use_cases"), namespace="use_cases")
+    ),
     url(r"^picklists/", include(("picklists.urls", "picklists"), namespace="pick")),
     url(r"^explorer/", include("explorer.urls")),
 ]
 
-if DEBUG_TOOLBAR:
+if settings.DEBUG:
+    urlpatterns += static.static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
+if settings.DEBUG_TOOLBAR:
     import debug_toolbar
 
     urlpatterns = [

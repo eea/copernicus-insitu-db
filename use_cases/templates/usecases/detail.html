@@ -1,0 +1,166 @@
+{% extends '_layout.html' %}
+{% load static %}
+{% load utils %}
+
+{% block style %}
+  <style nonce="{{request.csp_nonce}}" type="text/css">
+    .title {
+      font-weight: bold;
+      margin-bottom: 15px;
+    }
+    .img {
+      width: auto;
+      max-height: 600px;
+    }
+    .theme-text {
+      color: #935239;
+    }
+    .body {
+      font-size: 18px;
+      line-height: 1.3;
+      /* background-color: #f0f5f9; */
+      border-left: 1px solid #935239;
+      border-right: 1px solid #935239;
+      margin-top: 20px;
+      margin-bottom: 20px;
+      padding: 12px;
+      border-radius: 20px;
+    }
+    .img-section {
+
+      padding: 12px;
+    }
+
+    .separator {
+      width: 30%;
+      min-width: 100px;
+      /* border-top: 1px solid #bbb; */
+      border-top: 1px solid #935239;
+
+      margin-top: 10px;
+      margin-bottom: 10px;
+    }
+
+    .tags {
+      margin-top: 20px;
+      margin-bottom: 20px;
+      display: flex;
+      justify-content: flex-start;
+      align-items: flex-start;
+      gap: 10px;
+    }
+    .tags > div{
+      box-shadow: 1px 1px 3px #ddd;
+      border-radius: 12px;
+      border: 1px solid #eee;
+      padding: 12px;
+      
+    }
+    .sub-header {
+      display: flex;
+      flex-direction: column;
+    }
+    .services {
+      margin-top: 10px;
+    }
+    
+  </style>
+{% endblock %}
+
+{% block title %}
+  Use case details
+{% endblock %}
+
+{% block content %}
+
+  <h1 class="title">{{ object.title }}</h1>
+  <div class="separator"></div>
+  <div class="sub-header">
+
+    <i>
+      <b>Provider: </b>
+      {{ object.data_provider }}
+    </i>
+    <i>
+      <b>
+        Dataset: 
+      </b>
+      {{ object.data }}
+    </i>
+  </div>
+  <div class="separator"></div>
+
+  <div class="img-section"><img class="img" src="{{ object.image.url }}">
+    <div class="image-desc theme-text"><small><i>{{ object.image_description }}</i></small></div>
+  </div>
+
+  <div class="separator"></div>
+  
+  
+  <div class="body">
+    {{ object.description }}
+
+    <div class="services">
+      {% with object.copernicus_services.all as copernicus_services %}
+        {% if copernicus_services|length == 1 %}
+          <i class="theme-text"><b>Copernicus service:</b> {{ copernicus_services.0.name }}</i>
+        {% elif copernicus_services|length > 1 %}
+          <b><i class="theme-text">Copernicus services:</i></b>
+          <small>
+
+            <ul>
+              {% for cs in copernicus_services %}
+              <li>{{ cs.name }}</li>
+              {% endfor %}
+            </ul>
+          </small>
+        {% endif %}
+      {% endwith %}
+    </div>
+
+    <div class="themes">
+      {% with object.themes.all as themes %}
+        {% if themes|length == 1 %}
+          <i class="theme-text"><b>Theme:</b> {{ themes.0.name }}</i>
+        {% elif themes|length > 1 %}
+          <b><i class="theme-text">Themes:</i></b>
+          <small>
+            <ul>
+              {% for theme in themes %}
+              <li>{{ theme.name }}</li>
+              {% endfor %}
+            </ul>
+          </small>
+        {% endif %}
+      {% endwith %}
+    </div>
+
+    <div class="references">
+      {% with object.reference_set.all as references %}
+        {% if references|length == 1 %}
+          <i class="theme-text"><b>Reference:</b> {{ references.0.source }} ( {{references.0.date }} )</i>
+        {% elif references|length > 1 %}
+          <b><i class="theme-text">References:</i></b>
+          <small>
+            <ul>
+              {% for reference in references %}
+              <li>{{ reference.source }} ( {{reference.date }} )</li>
+              {% endfor %}
+            </ul>
+          </small>
+        {% endif %}
+      {% endwith %}
+    </div>
+
+
+  </div>
+
+
+  <div class="tags">
+    <div><b>Country</b>: {{ object.country }}</div>
+    <div><b>Region</b>: {{ object.region }}</div>
+    <div><b>Locality</b>: {{ object.locality }}</div>
+  </div>
+
+
+{% endblock %}

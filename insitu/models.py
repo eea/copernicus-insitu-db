@@ -517,6 +517,7 @@ class DataProvider(OwnerHistoryModel, ValidationWorkflowModel, SoftDeleteModel):
         data["provider_type"] = (
             getattr(details, "provider_type").name if details else "-"
         )
+        data["native_name"] = self.native_name
         return data
 
     def get_related_objects(self):

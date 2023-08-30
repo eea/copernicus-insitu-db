@@ -59,6 +59,12 @@
             <a href="{{ reports }}">Reports</a>
           </li>
 
+          {% url 'use_cases:list' as usecases %}
+          <li class="{% active usecases %}">
+            <a href="{{ usecases }}">Use cases</a>
+          </li>
+
+
         </ul>
         <ul class=" extra-navbar-brand pull-right nav navbar-nav extra-navbar-brand">
           {% if user.is_authenticated %}
