@@ -72,7 +72,7 @@ class UseCase(models.Model):
 
 class Reference(models.Model):
     source = models.CharField(max_length=256)
-    use_case = models.ForeignKey(UseCase, on_delete=models.SET_NULL, null=True)
+    use_case = models.ForeignKey(UseCase, on_delete=models.CASCADE)
     date = models.CharField(max_length=256)
     created_at = models.DateTimeField(auto_now_add=True)
 
