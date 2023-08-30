@@ -24,14 +24,6 @@ class CopernicusService(models.Model):
         return self.name
 
 
-class Theme(models.Model):
-    name = models.CharField(max_length=256)
-    created_at = models.DateTimeField(auto_now_add=True)
-
-    def __str__(self):
-        return self.name
-
-
 class Country(models.Model):
     code = models.CharField(max_length=2, primary_key=True)
     name = models.CharField(max_length=100)

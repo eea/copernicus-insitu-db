@@ -1,12 +1,9 @@
 # Create your views here.
-from django.http import HttpResponseRedirect
-from django.shortcuts import redirect
 from django.urls import reverse, reverse_lazy
 from django.views.generic.detail import DetailView
 from django.views.generic.list import ListView
 from use_cases.models import UseCase
 from use_cases.forms import ReferenceFormSet, UseCaseForm
-from insitu.views.base import CreatedByMixin
 from insitu.views.protected import (
     LoggingProtectedCreateView,
     IsAuthenticated,
