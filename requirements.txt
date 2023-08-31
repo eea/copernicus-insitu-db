@@ -1,6 +1,6 @@
 django-csp
 django-bootstrap3==15.0.0
-django-datatables-view==1.19.1
+django-datatables-view==1.20.0
 django-docs==0.3.2
 django-elasticsearch-dsl==6.5.0
 django-fsm==2.8.1

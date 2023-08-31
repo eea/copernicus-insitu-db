@@ -1,4 +1,4 @@
-from django.conf.urls import url, include
+from django.conf.urls import include
 from django.urls import path
 from django.contrib.auth import views as auth_views
 from django.views.generic.base import RedirectView
@@ -73,14 +73,18 @@ data_patterns = [
     path("<int:pk>/", views.DataDetail.as_view(), name="detail"),
     path("<int:pk>/edit", views.DataEdit.as_view(), name="edit"),
     path("<int:pk>/delete/", views.DataDelete.as_view(), name="delete"),
-    path("<int:group_pk>/provider/",
+    path(
+        "<int:group_pk>/provider/",
         include((data_data_provider_patterns, "insitu"), namespace="provider"),
     ),
-    path("<int:pk>/transition/<str:source>-to-<str:target>/<slug:transition>/",
+    path(
+        "<int:pk>/transition/<str:source>-to-<str:target>/<slug:transition>/",
         views.DataTransition.as_view(),
         name="transition",
     ),
-    path("<int:pk>/clear_feedback/", views.DataClearFeedback.as_view(),
+    path(
+        "<int:pk>/clear_feedback/",
+        views.DataClearFeedback.as_view(),
         name="clear_feedback",
     ),
 ]
@@ -90,32 +94,39 @@ provider_patterns = [
     path("data/", views.DataProviderListJson.as_view(), name="json"),
     path("<int:pk>/", views.DataProviderDetail.as_view(), name="detail"),
     path("add-network/", views.DataProviderAddNetwork.as_view(), name="add_network"),
-    path("<int:pk>/edit-network/",
+    path(
+        "<int:pk>/edit-network/",
         views.DataProviderEditNetwork.as_view(),
         name="edit_network",
     ),
-    path("<int:pk>/edit-network-members/",
+    path(
+        "<int:pk>/edit-network-members/",
         views.DataProviderEditNetworkMembers.as_view(),
         name="edit_network_members",
     ),
-    path("<int:pk>/delete-network/",
+    path(
+        "<int:pk>/delete-network/",
         views.DataProviderDeleteNetwork.as_view(),
         name="delete_network",
     ),
     path("add/", views.DataProviderAddNonNetwork.as_view(), name="add_non_network"),
-    path("<int:pk>//edit/",
+    path(
+        "<int:pk>//edit/",
         views.DataProviderEditNonNetwork.as_view(),
         name="edit_non_network",
     ),
-    path("<int:pk>/delete/",
+    path(
+        "<int:pk>/delete/",
         views.DataProviderDeleteNonNetwork.as_view(),
         name="delete_non_network",
     ),
-    path("<int:pk>/transition/<str:source>-to-<str:target>/<slug:transition>/",
+    path(
+        "<int:pk>/transition/<str:source>-to-<str:target>/<slug:transition>/",
         views.DataProviderTransition.as_view(),
         name="transition",
     ),
-    path("<int:pk>/clear_feedback/",
+    path(
+        "<int:pk>/clear_feedback/",
         views.DataProviderClearFeedback.as_view(),
         name="clear_feedback",
     ),
@@ -124,17 +135,22 @@ provider_patterns = [
 auth_patterns = [
     path("login/", views.LoginView.as_view(), name="login"),
     path("logout/", views.LogoutView.as_view(), name="logout"),
-    path("change-password/", views.ChangePasswordView.as_view(), name="change_password"),
+    path(
+        "change-password/", views.ChangePasswordView.as_view(), name="change_password"
+    ),
     path("edit_teammates/", views.EditTeamMatesView.as_view(), name="edit_teammates"),
-    path("transfer_ownership/",
+    path(
+        "transfer_ownership/",
         views.TransferOwnership.as_view(),
         name="transfer_ownership",
     ),
-    path("accept_teammate_request/<int:sender_user>",
+    path(
+        "accept_teammate_request/<int:sender_user>",
         views.AcceptTeammateRequestView.as_view(),
         name="accept_request",
     ),
-    path("delete_teammate/<int:teammate_id>",
+    path(
+        "delete_teammate/<int:teammate_id>",
         views.DeleteTeammateView.as_view(),
         name="delete_teammate",
     ),
@@ -142,7 +158,8 @@ auth_patterns = [
 
 reports_patterns = [
     path("list/", views.ReportsListView.as_view(), name="list"),
-    path("standard_report/",
+    path(
+        "standard_report/",
         views.ReportsStandardReportView.as_view(),
         name="standard_report",
     ),
@@ -151,7 +168,8 @@ reports_patterns = [
     path("<query_id>/json/", views.ReportDataJsonView.as_view(), name="json"),
     path("snapshot/", views.SnapshotView.as_view(), name="snapshot"),
     path("playground/", views.PlaygroundView.as_view(), name="playground"),
-    path("<query_id>/download/",
+    path(
+        "<query_id>/download/",
         views.DownloadReportsView.as_view(),
         name="download",
     ),
@@ -161,13 +179,15 @@ reports_patterns = [
 
 urlpatterns = [
     path("", RedirectView.as_view(url="/about")),
-    path("password/reset/",
+    path(
+        "password/reset/",
         auth_views.PasswordResetView.as_view(
             template_name="auth/password_reset_form.html"
         ),
         name="password_reset",
     ),
-    path("password_reset/done/",
+    path(
+        "password_reset/done/",
         auth_views.PasswordResetDoneView.as_view(
             template_name="auth/password_reset_done.html"
         ),
@@ -180,14 +200,16 @@ urlpatterns = [
         ),
         name="password_reset_confirm",
     ),
-    path("reset/done/",
+    path(
+        "reset/done/",
         auth_views.PasswordResetCompleteView.as_view(
             template_name="auth/password_reset_complete.html"
         ),
         name="password_reset_complete",
     ),
     path("product/", include((product_patterns, "insitu"), namespace="product")),
-    path("requirement/",
+    path(
+        "requirement/",
         include((requirement_patterns, "insitu"), namespace="requirement"),
     ),
     path("data/", include((data_patterns, "insitu"), namespace="data")),
@@ -198,21 +220,25 @@ urlpatterns = [
     path("help", views.HelpPage.as_view(), name="help"),
     path("about", views.AboutView.as_view(), name="about"),
     path("docs/<path>", serve, {"document_root": settings.DOCS_ROOT}),
-    path("docs/guide.html",
+    path(
+        "docs/guide.html",
         serve,
         {"document_root": settings.DOCS_ROOT},
         name="user_manual",
     ),
     path("crashme", views.Crashme.as_view(), name="crashme"),
-    path("user/records/",
+    path(
+        "user/records/",
         views.UserRecordsView.as_view(),
         name="user_records",
     ),
-    path("user/logs",
+    path(
+        "user/logs",
         views.ExportLogs.as_view(),
         name="export_logs",
     ),
-    path("user/change_name",
+    path(
+        "user/change_name",
         views.ChangeNameEmail.as_view(),
         name="change_name_email",
     ),
