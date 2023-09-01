@@ -126,8 +126,9 @@ class LoggedAction(models.Model):
 
 def check_owner_user(instance, user):
     """
-    Check if the user is the creator or if the is user is in the creator's
-    team
+    Check if the user is the creator or if the user is the creator's
+    teammate or if the user has specific permission to edit the object
+    (still unsure how the last one applies but we'll leave it there for now)
     """
     return (
         user == instance.created_by

@@ -148,6 +148,7 @@ class RequirementAdmin(GuardedModelAdmin):
     )
     search_fields = ["name"]
     list_display = ("id", "name", "state")
+    list_filter = ("state",)
 
     def components(self, obj):
         links = [
@@ -170,6 +171,7 @@ class DataAdmin(GuardedModelAdmin):
     )
     search_fields = ["name"]
     list_display = ("id", "name", "state")
+    list_filter = ("state",)
 
 
 @admin.register(models.DataProvider)
@@ -179,8 +181,8 @@ class DataProviderAdmin(GuardedModelAdmin):
         "updated_at",
     )
     search_fields = ["name"]
-    list_display = ("id", "name", "get_countries")
-    list_filter = ("countries",)
+    list_display = ("id", "name", "get_countries", "state")
+    list_filter = ("countries", "state")
 
     def get_countries(self, obj):
         return ",\n".join([c.name for c in obj.countries.all()])
