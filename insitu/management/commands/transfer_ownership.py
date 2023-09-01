@@ -4,7 +4,9 @@ from insitu.models import User
 
 
 class Command(BaseCommand):
-    help = "Use in case the relation state gets out of sync from the requirement state."
+    help = (
+        "Use in case the relation state gets out of sync from the requirement state."
+    )
 
     def add_arguments(self, parser):
         parser.add_argument("object_type", type=str)

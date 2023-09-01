@@ -313,7 +313,9 @@ class RequirementTests(base.FormCheckTestCase):
         requirement = base.RequirementFactory(
             name="Test requirement", created_by=self.creator, **metrics
         )
-        base.ProductRequirementFactory(requirement=requirement, created_by=self.creator)
+        base.ProductRequirementFactory(
+            requirement=requirement, created_by=self.creator
+        )
         data = base.DataFactory(created_by=self.creator)
         base.DataRequirementFactory(
             requirement=requirement, data=data, created_by=self.creator
@@ -337,22 +339,62 @@ class RequirementTests(base.FormCheckTestCase):
 
         items = [requirement, data_requirement]
         for item in items:
-            self.assertEqual((getattr(item, "state")).name, "draft")
+            self.assertEqual(getattr(item, "state"), "draft")
 
         transitions = [
-            {"source": "draft", "target": "ready", "user": self.creator},
-            {"source": "ready", "target": "draft", "user": self.creator},
-            {"source": "draft", "target": "ready", "user": self.creator},
-            {"source": "ready", "target": "changes", "user": self.other_user},
-            {"source": "changes", "target": "draft", "user": self.creator},
-            {"source": "draft", "target": "ready", "user": self.creator},
-            {"source": "ready", "target": "valid", "user": self.other_user},
-            {"source": "ready", "target": "valid", "user": self.creator},
+            {
+                "source": "draft",
+                "target": "ready",
+                "transition": "mark_as_ready",
+                "user": self.creator,
+            },
+            {
+                "source": "ready",
+                "target": "draft",
+                "transition": "cancel",
+                "user": self.creator,
+            },
+            {
+                "source": "draft",
+                "target": "ready",
+                "transition": "mark_as_ready",
+                "user": self.creator,
+            },
+            {
+                "source": "ready",
+                "target": "changes",
+                "transition": "request_changes",
+                "user": self.other_user,
+            },
+            {
+                "source": "changes",
+                "target": "draft",
+                "transition": "make_changes",
+                "user": self.creator,
+            },
+            {
+                "source": "draft",
+                "target": "ready",
+                "transition": "mark_as_ready",
+                "user": self.creator,
+            },
+            {
+                "source": "ready",
+                "target": "valid",
+                "transition": "validate",
+                "user": self.other_user,
+            },
+            {
+                "source": "ready",
+                "target": "valid",
+                "transition": "validate",
+                "user": self.creator,
+            },
         ]
 
         for idx, transition in enumerate(transitions):
             for item in items:
-                self.assertEqual((getattr(item, "state")).name, transition["source"])
+                self.assertEqual(getattr(item, "state"), transition["source"])
             self.client.force_login(transition["user"])
             response = self.client.post(
                 reverse(
@@ -360,6 +402,7 @@ class RequirementTests(base.FormCheckTestCase):
                     kwargs={
                         "source": transition["source"],
                         "target": transition["target"],
+                        "transition": transition["transition"],
                         "pk": requirement.pk,
                     },
                 )
@@ -369,7 +412,7 @@ class RequirementTests(base.FormCheckTestCase):
             )
             for item in items:
                 getattr(item, "refresh_from_db")()
-                self.assertEqual((getattr(item, "state")).name, transition["target"])
+                self.assertEqual(getattr(item, "state"), transition["target"])
             if transition["target"] == "valid":
                 for item in items:
                     item.state = transition["source"]
@@ -399,12 +442,17 @@ class RequirementTests(base.FormCheckTestCase):
 
         items = [requirement, data_requirement]
         for item in items:
-            self.assertEqual((getattr(item, "state")).name, "draft")
+            self.assertEqual(getattr(item, "state"), "draft")
         self.client.force_login(self.creator)
         response = self.client.get(
             reverse(
                 "requirement:transition",
-                kwargs={"source": "draft", "target": "ready", "pk": requirement.pk},
+                kwargs={
+                    "source": "draft",
+                    "target": "ready",
+                    "transition": "mark_as_ready",
+                    "pk": requirement.pk,
+                },
             )
         )
         self.assertTrue(response.status_code, 200)
@@ -434,19 +482,16 @@ class RequirementTests(base.FormCheckTestCase):
                 kwargs={
                     "source": "draft",
                     "target": "nosuchstate",
+                    "transition": "nosuchtransition",
                     "pk": requirement.pk,
                 },
             )
         )
         self.assertEqual(response.status_code, 404)
 
-        self.check_logged_action(
-            "changed state from draft to nosuchstate for", requirement
-        )
-
         for item in items:
             getattr(item, "refresh_from_db")()
-            self.assertEqual((getattr(item, "state")).name, "draft")
+            self.assertEqual(getattr(item, "state"), "draft")
 
     def test_transition_changes_requested_feedback(self):
         self.erase_logging_file()
@@ -462,19 +507,26 @@ class RequirementTests(base.FormCheckTestCase):
 
         items = [requirement, data_requirement]
         for item in items:
-            self.assertEqual((getattr(item, "state")).name, "ready")
+            self.assertEqual(getattr(item, "state"), "ready")
 
         self.client.force_login(self.other_user)
         self.client.post(
             reverse(
                 "requirement:transition",
-                kwargs={"source": "ready", "target": "changes", "pk": requirement.pk},
+                kwargs={
+                    "source": "ready",
+                    "target": "changes",
+                    "transition": "request_changes",
+                    "pk": requirement.pk,
+                },
             ),
             {"feedback": "this is a feedback test"},
         )
         getattr(requirement, "refresh_from_db")()
 
-        self.check_logged_action("changed state from ready to changes for", requirement)
+        self.check_logged_action(
+            "changed state from ready to changes for", requirement
+        )
 
         self.assertEqual(requirement.state, "changes")
         self.assertEqual(requirement.feedback, "this is a feedback test")
@@ -536,7 +588,8 @@ class RequirementPermissionTests(base.PermissionsCheckTestCase):
             name="Test requirement", created_by=self.creator, **metrics
         )
         self.check_permission_for_teammate(
-            method="GET", url=reverse("requirement:edit", kwargs={"pk": requirement.pk})
+            method="GET",
+            url=reverse("requirement:edit", kwargs={"pk": requirement.pk}),
         )
 
     def test_requirement_delete_not_auth(self):

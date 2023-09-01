@@ -142,7 +142,7 @@ class DetailLoggingView(GetMethodLoggingView):
         return self.get_object().id
 
 
-class TrasitionLoggingView(PostMethodLoggingView):
+class TransitionLoggingView(PostMethodLoggingView):
     get_action = "visited transition page of "
 
     def get_object_id(self):

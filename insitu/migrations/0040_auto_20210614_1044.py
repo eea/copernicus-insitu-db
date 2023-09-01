@@ -16,56 +16,64 @@ class Migration(migrations.Migration):
             model_name="data",
             name="created_by",
             field=models.ForeignKey(
-                on_delete=django.db.models.deletion.PROTECT, to=settings.AUTH_USER_MODEL
+                on_delete=django.db.models.deletion.PROTECT,
+                to=settings.AUTH_USER_MODEL,
             ),
         ),
         migrations.AlterField(
             model_name="dataprovider",
             name="created_by",
             field=models.ForeignKey(
-                on_delete=django.db.models.deletion.PROTECT, to=settings.AUTH_USER_MODEL
+                on_delete=django.db.models.deletion.PROTECT,
+                to=settings.AUTH_USER_MODEL,
             ),
         ),
         migrations.AlterField(
             model_name="dataproviderdetails",
             name="created_by",
             field=models.ForeignKey(
-                on_delete=django.db.models.deletion.PROTECT, to=settings.AUTH_USER_MODEL
+                on_delete=django.db.models.deletion.PROTECT,
+                to=settings.AUTH_USER_MODEL,
             ),
         ),
         migrations.AlterField(
             model_name="dataproviderrelation",
             name="created_by",
             field=models.ForeignKey(
-                on_delete=django.db.models.deletion.PROTECT, to=settings.AUTH_USER_MODEL
+                on_delete=django.db.models.deletion.PROTECT,
+                to=settings.AUTH_USER_MODEL,
             ),
         ),
         migrations.AlterField(
             model_name="datarequirement",
             name="created_by",
             field=models.ForeignKey(
-                on_delete=django.db.models.deletion.PROTECT, to=settings.AUTH_USER_MODEL
+                on_delete=django.db.models.deletion.PROTECT,
+                to=settings.AUTH_USER_MODEL,
             ),
         ),
         migrations.AlterField(
             model_name="metric",
             name="created_by",
             field=models.ForeignKey(
-                on_delete=django.db.models.deletion.PROTECT, to=settings.AUTH_USER_MODEL
+                on_delete=django.db.models.deletion.PROTECT,
+                to=settings.AUTH_USER_MODEL,
             ),
         ),
         migrations.AlterField(
             model_name="productrequirement",
             name="created_by",
             field=models.ForeignKey(
-                on_delete=django.db.models.deletion.PROTECT, to=settings.AUTH_USER_MODEL
+                on_delete=django.db.models.deletion.PROTECT,
+                to=settings.AUTH_USER_MODEL,
             ),
         ),
         migrations.AlterField(
             model_name="requirement",
             name="created_by",
             field=models.ForeignKey(
-                on_delete=django.db.models.deletion.PROTECT, to=settings.AUTH_USER_MODEL
+                on_delete=django.db.models.deletion.PROTECT,
+                to=settings.AUTH_USER_MODEL,
             ),
         ),
     ]

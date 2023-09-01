@@ -107,7 +107,8 @@ class Manager(ProtectedTemplateView):
         self.form = StatisticsDataForm(request.POST, initial=request.POST)
         if self.form.is_valid():
             model = apps.get_model(
-                app_label="insitu", model_name=self.form.cleaned_data["selected_object"]
+                app_label="insitu",
+                model_name=self.form.cleaned_data["selected_object"],
             )
             data = self.get_statistics(model, **self.form.cleaned_data)
             data["form"] = StatisticsDataForm(initial=request.POST)

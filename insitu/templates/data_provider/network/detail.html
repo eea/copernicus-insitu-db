@@ -22,7 +22,7 @@
     <h1 class="col-sm-12">
       <span>Data provider network</span>
       {% if not user|has_group:READ_ONLY_GROUP and user.is_authenticated %}
-        {% if provider.state.name == 'draft' %}
+        {% if provider.state == 'draft' %}
           {% if request.user == provider.created_by or request.user.is_superuser or request.user in provider.created_by.team.teammates.all %}
             <span class="pull-right margin-left-btn">
               <a class="btn btn-primary pull-right" href="{% url 'provider:delete_network' provider.pk %}">
@@ -148,50 +148,50 @@
           {{ provider.state.title }}
           {% if not user|has_group:READ_ONLY_GROUP and user.is_authenticated %}
             <div class="pull-right">
-              {% if provider.state.name == 'draft' %}
+              {% if provider.state == 'draft' %}
                 {% if provider.created_by == request.user or request.user in provider.created_by.team.teammates.all %}
                   <a class="btn btn-primary"
-                     href="{% url 'provider:transition' pk=provider.pk source='draft' target='ready' %}">
+                     href="{% url 'provider:transition' pk=provider.pk source='draft' target='ready' transition='mark_as_ready' %}">
                     Mark as ready
                   </a>
                 {% endif %}
               {% endif %}
-              {% if provider.state.name == 'ready' %}
+              {% if provider.state == 'ready' %}
                 {% if request.user not in provider.created_by.team.teammates.all %}
                   <a class="btn btn-primary"
-                     href="{% url 'provider:transition' pk=provider.pk source='ready' target='valid' %}">
+                     href="{% url 'provider:transition' pk=provider.pk source='ready' target='valid' transition='validate' %}">
                     Mark as valid
                   </a>
                 {% endif %}
                 {% if provider.created_by != request.user and request.user not in provider.created_by.team.teammates.all %}
                   <a class="btn btn-primary"
-                     href="{% url 'provider:transition' pk=provider.pk source='ready' target='changes' %}">
+                     href="{% url 'provider:transition' pk=provider.pk source='ready' target='changes' transition='make_changes' %}">
                     Request changes
                   </a>
                 {% elif provider.created_by == request.user or request.user in provider.created_by.team.teammates.all %}
                   <a class="btn btn-primary"
-                     href="{% url 'provider:transition' pk=provider.pk source='ready' target='draft' %}">
+                     href="{% url 'provider:transition' pk=provider.pk source='ready' target='draft' transition='cancel' %}">
                     Move back to draft
                   </a>
                 {% endif %}
               {% endif %}
-              {% if provider.state.name == 'changes' %}
+              {% if provider.state == 'changes' %}
                 {% if provider.created_by == request.user or request.user in provider.created_by.team.teammates.all %}
                   <a class="btn btn-primary"
-                     href="{% url 'provider:transition' pk=provider.pk source='changes' target='draft' %}">
+                     href="{% url 'provider:transition' pk=provider.pk source='changes' target='draft' transition='make_changes' %}">
                     Implement feedback
                   </a>
                 {% endif %}
               {% endif %}
-              {% if provider.state.name == 'valid' %}
+              {% if provider.state == 'valid' %}
                 {% if provider.created_by == request.user or request.user in provider.created_by.team.teammates.all %}
-                  <a class="btn btn-primary" href="{% url 'provider:transition' pk=provider.pk source='valid' target='draft' %}">
+                  <a class="btn btn-primary" href="{% url 'provider:transition' pk=provider.pk source='valid' target='draft' transition='revalidate' %}">
                     Move back to draft
                   </a>
                 {% endif %}
               {% endif %}
             </div>
-            {% if provider.state.name != 'ready' and provider.state.name != 'valid' %}
+            {% if provider.state != 'ready' and provider.state != 'valid' %}
               {% if provider.feedback %}
                 <div class="alert alert-danger margin-top-5" role="alert">
                   <h5>Feedback:</h5>

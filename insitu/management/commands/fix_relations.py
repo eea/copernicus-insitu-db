@@ -3,7 +3,9 @@ from insitu.models import Data, DataProvider, Requirement
 
 
 class Command(BaseCommand):
-    help = "Use in case the relation state gets out of sync from the requirement state."
+    help = (
+        "Use in case the relation state gets out of sync from the requirement state."
+    )
 
     def handle(self, *args, **options):
         requirements = Requirement.objects.all()

@@ -116,7 +116,7 @@ class RequirementDoc(Document):
     vertical_resolution = fields.KeywordField(
         attr="vertical_resolution.to_elastic_search_format"
     )
-    state = fields.KeywordField(attr="state.name")
+    state = fields.KeywordField(attr="state")
 
     products = fields.ObjectField(
         attr="product_requirements",
@@ -206,7 +206,7 @@ class DataDoc(Document):
             "requirement": fields.KeywordField(attr="name"),
         },
     )
-    state = fields.KeywordField(attr="state.name")
+    state = fields.KeywordField(attr="state")
     note = fields.TextField()
 
     components = fields.ObjectField(
@@ -293,7 +293,7 @@ class DataProviderDoc(Document):
     email = fields.KeywordField(attr="get_elastic_search_data.email")
     contact_person = fields.KeywordField(attr="get_elastic_search_data.contact_person")
     provider_type = fields.KeywordField(attr="get_elastic_search_data.provider_type")
-    state = fields.KeywordField(attr="state.name")
+    state = fields.KeywordField(attr="state")
 
     components = fields.ObjectField(
         attr="components",
