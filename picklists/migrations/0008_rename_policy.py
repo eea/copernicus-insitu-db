@@ -6,7 +6,6 @@ from django.db import migrations
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ("picklists", "0007_increse_product_status_link_size"),
     ]

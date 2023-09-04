@@ -15,7 +15,6 @@ def set_defaults(apps, schema_editor):
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ("picklists", "0009_rename_coverage"),
         ("insitu", "0024_add_user_log"),

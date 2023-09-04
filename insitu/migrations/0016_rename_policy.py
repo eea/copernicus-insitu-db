@@ -6,7 +6,6 @@ from django.db import migrations
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ("insitu", "0015_remove_duplicated_associative_relations"),
         ("picklists", "0008_rename_policy"),

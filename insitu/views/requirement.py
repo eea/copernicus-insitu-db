@@ -215,7 +215,6 @@ class RequirementEdit(GetInitialMixin, LoggingProtectedUpdateView):
 
 
 class RequirementDelete(LoggingProtectedDeleteView):
-
     template_name = "requirement/delete.html"
     form_class = forms.RequirementForm
     model = models.Requirement

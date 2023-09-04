@@ -154,7 +154,7 @@ class HelpPage(ProtectedTemplateView):
         ]
 
         for model in PICKLISTS:
-            if type(model) == str:
+            if type(model) is str:
                 data = {
                     "non_standard": True,
                     "nice_name": model.replace("_", " ").capitalize(),

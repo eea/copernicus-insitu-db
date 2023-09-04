@@ -8,7 +8,6 @@ from django_fsm import FSMField
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ("insitu", "0010_rename_responsible_to_provider"),
     ]

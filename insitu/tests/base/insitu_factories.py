@@ -13,7 +13,6 @@ class UserFactory(DjangoModelFactory):
 
 
 class TeamFactory(DjangoModelFactory):
-
     user = SubFactory(UserFactory)
     teammates = RelatedFactory(UserFactory)
     requirements = RelatedFactory(UserFactory)

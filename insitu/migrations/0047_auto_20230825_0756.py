@@ -5,7 +5,6 @@ import django_fsm
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ("insitu", "0046_auto_20230824_0911"),
     ]
