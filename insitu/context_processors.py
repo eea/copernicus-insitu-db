@@ -1,4 +1,3 @@
-from getenv import env
 from django.conf import settings
 
 
@@ -33,7 +32,7 @@ def sentry(request):
         sentry_id = request.sentry["id"]
     return {
         "sentry_id": sentry_id,
-        "sentry_dsn": env("SENTRY_DSN", ""),
+        "sentry_dsn": settings.SENTRY_DSN,
         "sentry_tag_server_name": request.get_host(),
         "sentry_tag_environment": settings.SENTRY_TAG_ENVIRONMENT,
         "sentry_tag_release": settings.SENTRY_TAG_RELEASE,

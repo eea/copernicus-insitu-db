@@ -243,7 +243,7 @@ class RequirementForm(forms.ModelForm):
             result[attr] = data.get("__".join([metric, attr]), "")
             if result[attr] is None:
                 result[attr] = ""
-            if type(result[attr]) == int:
+            if type(result[attr]) is int:
                 result[attr] = str(result[attr])
         return result
 

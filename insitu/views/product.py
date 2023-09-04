@@ -134,7 +134,6 @@ class ProductDetail(ProtectedDetailView):
 
 
 class ProductDelete(LoggingProtectedDeleteView):
-
     template_name = "product/delete.html"
     form_class = forms.ProductForm
     model = models.Product

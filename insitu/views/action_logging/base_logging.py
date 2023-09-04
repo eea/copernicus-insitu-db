@@ -5,7 +5,6 @@ from insitu.models import UserLog, LoggedAction
 
 
 class BaseLoggingView:
-
     target_type = ""
     extra = ""
 

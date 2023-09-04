@@ -6,7 +6,6 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ("picklists", "0006_change_esential_variable_choices_to_char"),
     ]

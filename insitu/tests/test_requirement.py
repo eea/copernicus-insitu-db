@@ -88,7 +88,6 @@ class RequirementTests(base.FormCheckTestCase):
         self.assertEqual(data["recordsTotal"], data["recordsFiltered"])
 
     def test_list_requirement_json_filter(self):
-
         metrics = base.RequirementFactory.create_metrics(self.creator)
         base.RequirementFactory(
             name="Test requirement", created_by=self.creator, **metrics
@@ -107,7 +106,6 @@ class RequirementTests(base.FormCheckTestCase):
         self.assertIs(data["recordsFiltered"], 1)
 
     def test_list_requirement_json_filter_id(self):
-
         metrics = base.RequirementFactory.create_metrics(self.creator)
         base.RequirementFactory(
             id=5, name="Test requirement", created_by=self.creator, **metrics
@@ -126,7 +124,6 @@ class RequirementTests(base.FormCheckTestCase):
         self.assertIs(data["recordsFiltered"], 1)
 
     def test_list_requirement_json_filter_component(self):
-
         metrics = base.RequirementFactory.create_metrics(self.creator)
         req1 = base.RequirementFactory(
             name="First requirement", created_by=self.creator, **metrics

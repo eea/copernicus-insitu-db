@@ -8,7 +8,6 @@ from django.core import mail
 
 
 class UserAuthenticationTests(TestCase):
-
     required_fields = ["username", "password"]
     REQUIRED_ERROR = ["This field is required."]
 

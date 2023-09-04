@@ -4,7 +4,6 @@ from django.db import migrations
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ("insitu", "0046_auto_20230816_0618"),
         ("insitu", "0047_auto_20230825_0756"),

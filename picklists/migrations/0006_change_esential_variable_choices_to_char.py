@@ -6,7 +6,6 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ("picklists", "0005_rename_responsible_to_provider"),
     ]

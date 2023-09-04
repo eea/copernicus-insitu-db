@@ -7,7 +7,6 @@ import django.db.models.deletion
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ("picklists", "0009_rename_coverage"),
         ("insitu", "0025_add_geographical_coverage"),

@@ -1,8 +1,8 @@
-from django.conf.urls import url
+from django.urls import path
 
 from picklists import views
 
 urlpatterns = [
-    url(r"^export$", views.ExportPicklistsView.as_view(), name="export"),
-    url(r"import$", views.ImportPicklistsView.as_view(), name="import"),
+    path("export", views.ExportPicklistsView.as_view(), name="export"),
+    path("import", views.ImportPicklistsView.as_view(), name="import"),
 ]
