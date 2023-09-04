@@ -58,8 +58,7 @@ INSTALLED_APPS = [
     "bootstrap3",
     "django_fsm",
     "hijack",
-    # TODO add hijack back in admin as soon as admin
-    # integration is available in the main hijack package
+    "hijack.contrib.admin",
     "docs",
     "guardian",
     "explorer",
@@ -95,6 +94,7 @@ MIDDLEWARE = [
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "insitu.middleware.sentry_middleware",
+    "hijack.middleware.HijackUserMiddleware",
 ]
 
 if DEBUG_TOOLBAR:
@@ -223,6 +223,9 @@ CRAZY_EGG = os.environ.get("CRAZY_EGG", "")
 HIJACK_LOGIN_REDIRECT_URL = "/"
 HIJACK_LOGOUT_REDIRECT_URL = "/"
 HIJACK_ALLOW_GET_REQUESTS = True
+HIJACK_INSERT_BEFORE = "</body>"
+
+LOGIN_REDIRECT_URL = "/"
 
 SUPPORT_EMAIL = os.environ.get("SUPPORT_EMAIL", "")
 
