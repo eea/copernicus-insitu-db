@@ -24,6 +24,7 @@ class FormCheckTestCase(TestCase):
         self.errors.update(self.custom_errors)
         self.creator = UserFactory(username="Creator")
         self.other_user = UserFactory(username="Other")
+        self.superuser = UserFactory(username="Superuser", is_superuser=True)
 
     def login_creator(self):
         self.client.force_login(self.creator)
