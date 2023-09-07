@@ -85,6 +85,10 @@ class UseCase(models.Model):
     state = FSMField(default="draft")
     feedback = models.TextField(blank=True)
 
+    @property
+    def get_state_title(self):
+        return self.state.title().replace("_", " ")
+
     @transition(
         field=state,
         source="draft",
