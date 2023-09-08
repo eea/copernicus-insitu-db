@@ -4,7 +4,8 @@
 
 from django.contrib.auth import get_user_model
 from django.db import models
-
+from django_fsm import FSMField, transition
+from django.conf import settings
 
 User = get_user_model()
 
@@ -44,6 +45,27 @@ class Theme(models.Model):
         return self.name
 
 
+def check_owner_user(instance, user):
+    return user == instance.created_by
+
+
+def check_user_is_publisher(instance, user):
+    return user.groups.filter(name=settings.USE_CASES_PUBLISHER_GROUP).exists()
+
+
+def check_can_return_to_draft(instance, user):
+    if (
+        instance.state == "published"
+        and user.groups.filter(name=settings.USE_CASES_PUBLISHER_GROUP).exists()
+    ):
+        return True
+    if (
+        instance.state in ["changes", "publication_requested"]
+        and user == instance.created_by
+    ):
+        return True
+
+
 class UseCase(models.Model):
     title = models.CharField(max_length=256)
     data_provider = models.CharField(max_length=256)
@@ -62,9 +84,50 @@ class UseCase(models.Model):
     country = models.ForeignKey(Country, on_delete=models.SET_NULL, null=True)
     region = models.CharField(max_length=256)
     locality = models.CharField(max_length=256)
-    submitted_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
+    created_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
-    state = models.CharField(max_length=128)
+    state = FSMField(default="draft")
+    feedback = models.TextField(blank=True)
+
+    @property
+    def get_state_title(self):
+        return self.state.title().replace("_", " ")
+
+    @transition(
+        field=state,
+        source="draft",
+        target="publication_requested",
+        permission=check_owner_user,
+    )
+    def request_publication(self):
+        pass
+
+    @transition(
+        field=state,
+        source="publication_requested",
+        target="published",
+        permission=check_user_is_publisher,
+    )
+    def publish(self):
+        pass
+
+    @transition(
+        field=state,
+        source=["publication_requested", "changes", "published"],
+        target="draft",
+        permission=check_can_return_to_draft,
+    )
+    def return_to_draft(self):
+        pass
+
+    @transition(
+        field=state,
+        source="publication_requested",
+        target="changes",
+        permission=check_user_is_publisher,
+    )
+    def request_changes(self):
+        pass
 
     def __str__(self):
         return self.title

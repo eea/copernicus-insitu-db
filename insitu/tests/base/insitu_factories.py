@@ -1,4 +1,4 @@
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, Group
 
 from factory import SubFactory, RelatedFactory
 from factory.django import DjangoModelFactory
@@ -10,6 +10,11 @@ from insitu.tests.base import picklist_factories as factories
 class UserFactory(DjangoModelFactory):
     class Meta:
         model = User
+
+
+class GroupFactory(DjangoModelFactory):
+    class Meta:
+        model = Group
 
 
 class TeamFactory(DjangoModelFactory):

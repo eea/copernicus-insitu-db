@@ -74,6 +74,104 @@
 {% block content %}
 
   <h1 class="title">{{ object.title }}</h1>
+  <div>
+    <i>
+      <b>State: </b>
+      {{ object.get_state_title }}
+    </i>
+  </div>
+  {% if object.feedback %}
+    <div>
+      <i>
+        <b>Feedback:</b>
+        {{ object.feedback }}
+      </i>
+    </div>
+  {% endif %}
+
+  <!-- Modal -->
+  <div class="modal" tabindex="-1" role="dialog" id="exampleModal" >
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title"></h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <form method="POST">
+          {% csrf_token %}
+          <div class="modal-body">
+            <p>Are you sure? This item will be moved in <i id="target-source-name"></i> state. </p>
+            <div id="changes-requested-feedback" class="form-group purple-border">
+              <label for="exampleFormControlTextarea4">Feedback
+                <small>*(use this field to inform the owner of the changes that should be made)</small>
+              </label>
+              <textarea class="form-control" id="feedback" rows="3" name="feedback"></textarea>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button class="btn btn-default" type="submit">Accept</button>
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <div>
+    {% if not user|has_group:READ_ONLY_GROUP and user.is_authenticated %}
+      {% if object.created_by == request.user %}
+        {% if object.state == 'draft' %}
+          <a class="btn btn-primary" data-toggle="modal" data-target="#exampleModal"
+            data-target-name="Publication requested" data-transition="Request publication"
+            data-href="{% url 'use_cases:transition' pk=object.pk source='draft' target='publication_requested' transition='request_publication' %}" >
+              Request publication
+          </a>
+        {% endif %}
+
+        {% if object.state == 'publication_requested' %}
+          <a class="btn btn-primary" data-toggle="modal" data-target="#exampleModal"
+            data-target-name="Draft"
+            data-href="{% url 'use_cases:transition' pk=object.pk source='publication_requested' target='draft' transition='return_to_draft' %}">
+              Return to draft
+          </a>
+        {% endif %}
+        {% if object.state == 'changes' %}
+          <a class="btn btn-primary"  data-toggle="modal" data-target="#exampleModal"
+            data-target-name="Draft"
+            data-href="{% url 'use_cases:transition' pk=object.pk source='changes' target='draft' transition='return_to_draft' %}">
+            Return to draft
+          </a>
+        {% endif %}
+      {% endif %}
+
+      {% if user|has_group:USE_CASES_PUBLISHER_GROUP %}
+        {% if object.state == 'publication_requested' %}
+          <a class="btn btn-primary" data-toggle="modal" data-target="#exampleModal"
+            data-target-name="Published"
+            data-href="{% url 'use_cases:transition' pk=object.pk source='publication_requested' target='published' transition='publish' %}">
+            Publish
+          </a>
+        {% endif %}
+        {% if object.state == 'publication_requested' %}
+          <a class="btn btn-primary" data-toggle="modal" data-target="#exampleModal"
+            data-target-name="Changes requested"
+            data-href="{% url 'use_cases:transition' pk=object.pk source='publication_requested' target='changes' transition='request_changes' %}">
+            Request changes
+          </a>
+        {% endif %}
+        {% if object.state == 'published' %}
+          <a class="btn btn-primary" data-toggle="modal" data-target="#exampleModal"
+            data-target-name="Draft"
+            data-href="{% url 'use_cases:transition' pk=object.pk source='published' target='draft' transition='return_to_draft' %}">
+            Return to draft
+          </a>
+        {% endif %}
+      {% endif %}
+    {% endif %}
+  </div>
+
   <div class="separator"></div>
   <div class="sub-header">
 
@@ -162,5 +260,9 @@
     <div><b>Locality</b>: {{ object.locality }}</div>
   </div>
 
+{% endblock %}
 
+{% block scripts %}
+  <script src="{% static 'js/bootstrap.min.js' %}"></script>
+  <script src="{% static 'js/use_cases_detail.js' %}"></script>
 {% endblock %}

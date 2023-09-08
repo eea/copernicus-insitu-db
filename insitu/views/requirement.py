@@ -295,8 +295,7 @@ class RequirementTransition(
             requirement.feedback = request.POST.get("feedback", "")
             requirement.save()
             feedback = request.POST.get("feedback", "")
-        if self.transition_name == transition_name:
-            self.send_mail(requirement, feedback)
+            self.send_mail(requirement, feedback, requirement.name)
         return HttpResponseRedirect(
             reverse("requirement:detail", kwargs={"pk": requirement.pk})
         )
