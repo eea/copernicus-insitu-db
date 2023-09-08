@@ -5,6 +5,7 @@
 from django.contrib.auth import get_user_model
 from django.db import models
 from django_fsm import FSMField, transition
+from django.conf import settings
 
 User = get_user_model()
 
@@ -48,12 +49,15 @@ def check_owner_user(instance, user):
     return user == instance.created_by
 
 
-def check_supervisor_user(instance, user):
-    return user.is_superuser
+def check_user_is_publisher(instance, user):
+    return user.groups.filter(name=settings.USE_CASES_PUBLISHER_GROUP).exists()
 
 
 def check_can_return_to_draft(instance, user):
-    if instance.state == "published" and user.is_superuser:
+    if (
+        instance.state == "published"
+        and user.groups.filter(name=settings.USE_CASES_PUBLISHER_GROUP).exists()
+    ):
         return True
     if (
         instance.state in ["changes", "publication_requested"]
@@ -102,7 +106,7 @@ class UseCase(models.Model):
         field=state,
         source="publication_requested",
         target="published",
-        permission=check_supervisor_user,
+        permission=check_user_is_publisher,
     )
     def publish(self):
         pass
@@ -120,7 +124,7 @@ class UseCase(models.Model):
         field=state,
         source="publication_requested",
         target="changes",
-        permission=check_supervisor_user,
+        permission=check_user_is_publisher,
     )
     def request_changes(self):
         pass

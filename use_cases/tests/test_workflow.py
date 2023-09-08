@@ -83,7 +83,7 @@ class UseCaseWorkflowTests(base.FormCheckTestCase):
                 "source": "publication_requested",
                 "target": "changes",
                 "transition": "request_changes",
-                "user": self.superuser,
+                "user": self.publisher,
             },
             {
                 "source": "changes",
@@ -101,13 +101,13 @@ class UseCaseWorkflowTests(base.FormCheckTestCase):
                 "source": "publication_requested",
                 "target": "published",
                 "transition": "publish",
-                "user": self.superuser,
+                "user": self.publisher,
             },
             {
                 "source": "published",
                 "target": "draft",
                 "transition": "return_to_draft",
-                "user": self.superuser,
+                "user": self.publisher,
             },
         ]
 
@@ -167,7 +167,7 @@ class UseCaseWorkflowTests(base.FormCheckTestCase):
         )
         self.assertEqual(getattr(use_case, "state"), "publication_requested")
 
-        self.client.force_login(self.superuser)
+        self.client.force_login(self.publisher)
         self.client.post(
             reverse(
                 "use_cases:transition",

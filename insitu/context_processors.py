@@ -7,6 +7,7 @@ def base(request):
         "READ_ONLY_GROUP": settings.READ_ONLY_GROUP,
         "PRODUCT_EDITOR_GROUP": settings.PRODUCT_EDITOR_GROUP,
         "PICKLISTS_EDITOR_GROUP": settings.PICKLISTS_EDITOR_GROUP,
+        "USE_CASES_PUBLISHER_GROUP": settings.USE_CASES_PUBLISHER_GROUP,
     }
 
 

@@ -171,6 +171,9 @@ AUTH_PASSWORD_VALIDATORS = [
 READ_ONLY_GROUP = os.environ.get("READ_ONLY_GROUP", "ReadOnly")
 PRODUCT_EDITOR_GROUP = os.environ.get("PRODUCT_EDITOR_GROUP", "ProductEditor")
 PICKLISTS_EDITOR_GROUP = os.environ.get("PICKLISTS_EDITOR_GROUP", "PicklistsEditor")
+USE_CASES_PUBLISHER_GROUP = os.environ.get(
+    "USE_CASES_PUBLISHER_GROUP", "UseCasesPublisher"
+)
 
 # Internationalization
 # https://docs.djangoproject.com/en/1.11/topics/i18n/

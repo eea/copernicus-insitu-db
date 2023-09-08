@@ -2,8 +2,9 @@ import csv
 import os
 
 from django.test import TestCase
+from django.conf import settings
 from copernicus.test_settings import LOGGING_CSV_FILENAME, LOGGING_CSV_PATH
-from insitu.tests.base import UserFactory
+from insitu.tests.base import UserFactory, GroupFactory
 from insitu.models import LoggedAction
 
 
@@ -24,7 +25,9 @@ class FormCheckTestCase(TestCase):
         self.errors.update(self.custom_errors)
         self.creator = UserFactory(username="Creator")
         self.other_user = UserFactory(username="Other")
-        self.superuser = UserFactory(username="Superuser", is_superuser=True)
+        group = GroupFactory(name=settings.USE_CASES_PUBLISHER_GROUP)
+        self.publisher = UserFactory(username="Superuser", is_superuser=True)
+        self.publisher.groups.add(group)
 
     def login_creator(self):
         self.client.force_login(self.creator)

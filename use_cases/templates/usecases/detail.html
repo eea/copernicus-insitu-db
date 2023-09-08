@@ -146,7 +146,7 @@
         {% endif %}
       {% endif %}
 
-      {% if user.is_superuser %}
+      {% if user|has_group:USE_CASES_PUBLISHER_GROUP %}
         {% if object.state == 'publication_requested' %}
           <a class="btn btn-primary" data-toggle="modal" data-target="#exampleModal"
             data-target-name="Published"
@@ -264,5 +264,5 @@
 
 {% block scripts %}
   <script src="{% static 'js/bootstrap.min.js' %}"></script>
-  <script src="{% static 'js/use-cases-detail.js' %}"></script>
+  <script src="{% static 'js/use_cases_detail.js' %}"></script>
 {% endblock %}
