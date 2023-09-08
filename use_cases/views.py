@@ -1,4 +1,5 @@
 # Create your views here.
+from django.contrib import messages
 from django.urls import reverse, reverse_lazy
 from django.views.generic.detail import DetailView
 from django.views.generic.list import ListView
@@ -10,17 +11,36 @@ from insitu.views.base import ChangesRequestedMailMixin
 from insitu.views.protected import (
     LoggingProtectedCreateView,
     LoggingTransitionProtectedDetailView,
+    LoggingProtectedUpdateView,
+    LoggingProtectedDeleteView,
     IsAuthenticated,
     IsNotReadOnlyUser,
 )
 from django_fsm import has_transition_perm
 from django.db import transaction
+from django_filters import FilterSet
+
+
+class UseCaseFilter(FilterSet):
+    class Meta:
+        model = UseCase
+        fields = ["country", "themes", "copernicus_services"]
 
 
 class UseCaseListView(ListView):
     model = UseCase
-    paginate_by = 100
+    paginate_by = 10
     template_name = "usecases/list.html"
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        self.filterset = UseCaseFilter(self.request.GET, queryset=queryset)
+        return self.filterset.qs.distinct()
+
+    def get_context_data(self, **kwargs):
+        context = super(UseCaseListView, self).get_context_data(**kwargs)
+        context["filterset"] = self.filterset
+        return context
 
 
 class UseCaseDetailView(DetailView):
@@ -48,15 +68,54 @@ class UseCaseAddView(LoggingProtectedCreateView):
         context = self.get_context_data()
         references = context["references"]
         with transaction.atomic():
-            self.object = form.save()
+            self.object = form.save(commit=False)
+            self.object.created_by = self.request.user
+            self.object.save()
 
             if references.is_valid():
                 references.instance = self.object
                 references.save()
+        messages.success(self.request, "The use case was created successfully!")
         return super(UseCaseAddView, self).form_valid(form)
 
     def get_success_url(self):
         return reverse("use_cases:detail", kwargs={"pk": self.object.pk})
+
+
+class UseCaseEditView(LoggingProtectedUpdateView):
+    model = UseCase
+    form_class = UseCaseForm
+    template_name = "usecases/edit.html"
+    permission_classes = (IsAuthenticated, IsNotReadOnlyUser)
+    permission_denied_redirect = reverse_lazy("use_cases:list")
+    target_type = "usecase"
+
+    def get_context_data(self, **kwargs):
+        data = super(UseCaseEditView, self).get_context_data(**kwargs)
+        if self.request.POST:
+            data["references"] = ReferenceFormSet(self.request.POST)
+        else:
+            data["references"] = ReferenceFormSet(instance=self.object)
+        return data
+
+    def form_valid(self, form):
+        response = super().form_valid(form)
+        messages.success(self.request, "The use case was updated successfully!")
+        return response
+
+    def get_success_url(self):
+        return reverse("use_cases:detail", kwargs={"pk": self.object.pk})
+
+
+class UseCaseDeleteView(LoggingProtectedDeleteView):
+    template_name = "usecases/delete.html"
+    model = UseCase
+    permission_classes = (IsAuthenticated, IsNotReadOnlyUser)
+    permission_denied_redirect = reverse_lazy("use_cases:list")
+
+    def get_success_url(self):
+        messages.success(self.request, "The use case was deleted successfully!")
+        return reverse("use_cases:list")
 
 
 class UseCaseTransition(
@@ -102,4 +161,3 @@ class UseCaseTransition(
         return HttpResponseRedirect(
             reverse("use_cases:detail", kwargs={"pk": use_case.pk})
         )
-        raise Http404()

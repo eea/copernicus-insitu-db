@@ -1,0 +1,125 @@
+{% extends '_layout.html' %}
+{% load bootstrap3 %}
+{% load static %}
+
+{% block style %}
+  <link rel="stylesheet" type="text/css"
+        href="{% static 'css/select2.min.css' %}"/>
+  <link rel="stylesheet" type="text/css"
+        href="{% static 'css/select2-bootstrap.min.css' %}"/>
+  <style nonce="{{request.csp_nonce}}" type="text/css">
+    .separator {
+      width: 100%;
+      min-width: 100px;
+      border-top: 1px solid #935239;
+  
+      margin-top: 5px;
+      margin-bottom: 45px;
+    }
+  </style>
+{% endblock %}
+
+
+{% block title %}
+  Edit use case
+{% endblock %}
+
+{% block content %}
+
+  <div class="row">
+    <h1 class="col-sm-12">
+      <span>Edit use case</span>
+      <p class="col-sm-12"><small>{{ object.name }}</small></p>
+    </h1>
+  </div>
+
+  {% include "bits/info_field_required.html" %}
+
+  <form enctype="multipart/form-data" action="" method="POST">
+    {% csrf_token %}
+
+    {% bootstrap_field form.title required_css_class='required' %}
+
+    {% bootstrap_field form.data_provider required_css_class='required' %}
+
+    {% bootstrap_field form.data required_css_class='required' %}
+
+    <!-- {% bootstrap_field form.image required_css_class='required' %} -->
+    {{ form.image }}
+
+    {% bootstrap_field form.image_description required_css_class='required' %}
+
+    {% bootstrap_field form.description required_css_class='required' %}
+
+    {% bootstrap_field form.copernicus_services required_css_class='required' %}
+
+    {% bootstrap_field form.themes required_css_class='required' %}
+        
+    {% bootstrap_field form.country required_css_class='required' %}
+    
+    {% bootstrap_field form.region required_css_class='required' %}
+    
+    {% bootstrap_field form.locality required_css_class='required' %}
+
+    {% bootstrap_field form.state %}
+
+  <div class="row">
+    <h1 class="col-sm-12">
+      <span>References</span>
+    </h1>
+  </div>
+  <div class="separator"></div>
+
+    <table class="table">
+      {{ references.management_form }}
+
+      {% for form in references.forms %}
+          {% if forloop.first %}
+              <thead>
+              <tr>
+                  {% for field in form.visible_fields %}
+                      <th>{{ field.label|capfirst }}</th>
+                  {% endfor %}
+              </tr>
+              </thead>
+          {% endif %}
+          <tr class="{% cycle row1 row2 %} formset_row">
+              {% for field in form.visible_fields %}
+                  <td>
+                      {# Include the hidden fields in the form #}
+                      {% if forloop.first %}
+                          {% for hidden in form.hidden_fields %}
+                              {{ hidden }}
+                          {% endfor %}
+                      {% endif %}
+                      {{ field.errors.as_ul }}
+                      {{ field }}
+                  </td>
+              {% endfor %}
+          </tr>
+      {% endfor %}
+    </table>
+
+    <input class="btn btn-primary" type="submit" value="Save" />
+    <a href="{% url 'use_cases:list' %}"
+       class="btn btn-default">Cancel</a>
+  </form>
+
+{% endblock %}
+
+{% block scripts %}
+  <script src="{% static 'js/select2.min.js' %}"></script>
+  <script src="{% static 'js/bootstrap.min.js' %}"></script>
+  <script src="{% static 'js/formset/jquery.formset.js' %}"></script>
+  <script nonce="{{request.csp_nonce}}">
+
+$(document).ready(function () {
+      $('select').select2();
+      $('.formset_row').formset({
+          addText: '<h4><b>Add reference</b></h4>',
+          deleteText: 'Remove',
+          prefix: 'reference_set'
+      });
+    });
+  </script>
+{% endblock %}
