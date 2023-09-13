@@ -4,6 +4,7 @@ django-datatables-view==1.20.0
 django-docs==0.3.3
 django-elasticsearch-dsl==6.5.0
 django-fsm==2.8.1
+django-filter==23.2
 django-guardian==2.4.0
 django-hijack==3.4.1
 django-sql-explorer==3.2.0

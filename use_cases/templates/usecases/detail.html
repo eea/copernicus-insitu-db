@@ -63,6 +63,11 @@
     .services {
       margin-top: 10px;
     }
+    .titleRow {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
     
   </style>
 {% endblock %}
@@ -72,8 +77,16 @@
 {% endblock %}
 
 {% block content %}
-
-  <h1 class="title">{{ object.title }}</h1>
+  <div class="titleRow">
+    <h1 class="title">{{ object.title }}</h1>
+    {% if user.is_authenticated %}
+      <div class="titleButtons">
+        <a class="btn btn-primary"
+        href="{% url 'use_cases:delete' object.pk %}">Delete use case</a>
+        <a class="btn btn-primary" href="{% url 'use_cases:edit' object.pk %}">Edit use case</a>
+      </div>
+    {% endif %}
+  </div>
   <div>
     <i>
       <b>State: </b>
