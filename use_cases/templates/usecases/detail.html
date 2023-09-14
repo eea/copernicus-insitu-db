@@ -79,7 +79,7 @@
 {% block content %}
   <div class="titleRow">
     <h1 class="title">{{ object.title }}</h1>
-    {% if user.is_authenticated %}
+    {% if user.is_authenticated and object.state == 'draft' %}
       <div class="titleButtons">
         <a class="btn btn-primary"
         href="{% url 'use_cases:delete' object.pk %}">Delete use case</a>

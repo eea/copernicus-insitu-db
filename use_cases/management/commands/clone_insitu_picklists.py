@@ -1,4 +1,3 @@
-from django.core.exceptions import ObjectDoesNotExist
 from django.core.management.base import BaseCommand
 from insitu.models import CopernicusService as InsituCoopernicusService
 from picklists.models import InspireTheme
@@ -24,7 +23,7 @@ class Command(BaseCommand):
         for original_country in original_countries:
             country, created = Country.objects.get_or_create(
                 code=original_country.code,
-                defaults={'name': original_country.name},
+                defaults={"name": original_country.name},
             )
             if created:
                 print(f"Created country: {country.code}/ {country.name}")

@@ -16,6 +16,7 @@ from insitu.views.protected import (
     IsAuthenticated,
     IsNotReadOnlyUser,
 )
+from use_cases.permissions import UseCaseIsEditable
 from django_fsm import has_transition_perm
 from django.db import transaction
 from django_filters import FilterSet
@@ -86,7 +87,7 @@ class UseCaseEditView(LoggingProtectedUpdateView):
     model = UseCase
     form_class = UseCaseForm
     template_name = "usecases/edit.html"
-    permission_classes = (IsAuthenticated, IsNotReadOnlyUser)
+    permission_classes = (IsAuthenticated, IsNotReadOnlyUser, UseCaseIsEditable)
     permission_denied_redirect = reverse_lazy("use_cases:list")
     target_type = "usecase"
 
@@ -110,7 +111,7 @@ class UseCaseEditView(LoggingProtectedUpdateView):
 class UseCaseDeleteView(LoggingProtectedDeleteView):
     template_name = "usecases/delete.html"
     model = UseCase
-    permission_classes = (IsAuthenticated, IsNotReadOnlyUser)
+    permission_classes = (IsAuthenticated, IsNotReadOnlyUser, UseCaseIsEditable)
     permission_denied_redirect = reverse_lazy("use_cases:list")
 
     def get_success_url(self):
