@@ -17,7 +17,6 @@ class UseCaseForm(forms.ModelForm):
             "country",
             "region",
             "locality",
-            "state",
         ]
 
 

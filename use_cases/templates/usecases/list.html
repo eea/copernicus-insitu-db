@@ -92,15 +92,16 @@
 {% endblock %}
 
 {% block content %}
+
+{% if user.is_authenticated %}
   <div class="header-wrapper">
     <h1 class="header">Use cases</h1>
     <a class="btn btn-primary" href="{% url 'use_cases:add' %}">New use case</a>
   </div>
-
   <div class="separator"></div>
+{% endif %}
   <br/> 
   <br/> 
-
 
   <form method="GET">
     <div class="formFields">
@@ -115,8 +116,6 @@
       </div>
     </div>
   </form>
-
-  
 
   <ul class="usecase-list">
     {% for usecase in object_list %}
