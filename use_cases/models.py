@@ -77,8 +77,8 @@ class UseCase(models.Model):
         null=True,
         help_text="Image used for this use case.",
     )
-    image_description = models.CharField(max_length=512)
-    description = models.CharField(max_length=512)
+    image_description = models.TextField(null=True)
+    description = models.TextField(null=True)
     copernicus_services = models.ManyToManyField(CopernicusService)
     themes = models.ManyToManyField(Theme, blank=True)
     country = models.ForeignKey(Country, on_delete=models.SET_NULL, null=True)

@@ -158,7 +158,7 @@ class UseCaseTransition(
             use_case.feedback = request.POST.get("feedback", "")
             use_case.save()
             feedback = request.POST.get("feedback", "")
-            self.send_mail(use_case, feedback, use_case.title)
+            self.send_mail(use_case, feedback, use_case.title, notify_teammates=False)
         return HttpResponseRedirect(
             reverse("use_cases:detail", kwargs={"pk": use_case.pk})
         )

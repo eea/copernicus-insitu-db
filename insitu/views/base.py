@@ -138,9 +138,16 @@ class CreatedByMixin:
 class ChangesRequestedMailMixin:
     transition_name = "request_changes"
 
-    def send_mail(self, target_object, object_name, feedback=""):
+    def send_mail(
+        self, target_object, object_name, feedback="", notify_teammates=True
+    ):
         sender = self.request.user
         receiver = target_object.created_by
+        recipient_list = [receiver.email]
+        if notify_teammates:
+            for teammate in receiver.team.teammates.all():
+                if teammate.email:
+                    recipient_list.append(teammate.email)
         subject = 'Changes requested for "{}" {}'.format(
             object_name,
             self.target_type,
@@ -148,7 +155,6 @@ class ChangesRequestedMailMixin:
         context = {
             "target": self.target_type,
             "feedback": feedback,
-            "receiver": receiver,
             "sender": sender,
             "object": target_object,
             "object_name": object_name,
@@ -160,6 +166,6 @@ class ChangesRequestedMailMixin:
             subject=subject,
             message=message,
             from_email=DEFAULT_FROM_EMAIL,
-            recipient_list=[receiver.email],
+            recipient_list=recipient_list,
             html_message=html_message,
         )
