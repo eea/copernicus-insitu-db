@@ -182,35 +182,6 @@ class HelpPage(ProtectedTemplateView):
 class AboutView(TemplateView):
     template_name = "about.html"
 
-    @staticmethod
-    def get_issues():
-        base_url = settings.SENTRY_API_URL
-        endpoint = "/issues/?query=&sort=date&statsPeriod=14d"
-
-        url = "".join((base_url, endpoint))
-        r = requests.get(
-            url, headers={"Authorization": f"Bearer {settings.SENTRY_AUTH_TOKEN}"}
-        )
-
-        issues = []
-
-        if r.status_code == 200:
-            response = json.loads(r.text)
-            for message in response:
-                parsed_date = re.sub("[A-Z]", "", message["lastSeen"])[0:18]
-                try:
-                    date = datetime.strptime(parsed_date, "%Y-%m-%d%H:%M:%S")
-                except Exception:
-                    date = parsed_date
-                issue = {
-                    "name": message["title"],
-                    "timestamp": date,
-                    "resolved": (message["status"] == "resolved"),
-                }
-                issues.append(issue)
-
-        return issues
-
     def statistics(self):
         return {
             "products": Product.objects.all().count(),
@@ -227,8 +198,4 @@ class AboutView(TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context.update(**self.statistics())
-
-        if settings.SENTRY_DSN and settings.SENTRY_API_URL:
-            context["issues"] = AboutView.get_issues()
-
         return context
