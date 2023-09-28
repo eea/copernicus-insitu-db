@@ -25,13 +25,14 @@ urlpatterns = [
     path("admin/", admin.site.urls),
     path("hijack/", include("hijack.urls")),
     path("", include("insitu.urls")),
-    path(
-        "use_cases/", include(("use_cases.urls", "use_cases"), namespace="use_cases")
-    ),
     path("picklists/", include(("picklists.urls", "picklists"), namespace="pick")),
     path("explorer/", include("explorer.urls")),
 ]
 
+if settings.USE_CASES_FEATURE_TOGGLE:
+    urlpatterns += [path(
+        "use_cases/", include(("use_cases.urls", "use_cases"), namespace="use_cases")
+    )]
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 

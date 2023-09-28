@@ -79,14 +79,14 @@
 {% block content %}
   <div class="titleRow">
     <h1 class="title">{{ object.title }}</h1>
-    {% if user.is_authenticated and object.state == 'draft' %}
-      <div class="titleButtons">
-        <a class="btn btn-primary"
-        href="{% url 'use_cases:delete' object.pk %}">Delete use case</a>
-        <a class="btn btn-primary" href="{% url 'use_cases:edit' object.pk %}">Edit use case</a>
-      </div>
-    {% endif %}
   </div>
+  {% if user.is_authenticated and object.state == 'draft' %}
+  <div class="titleButtons pull-right margin-left-btn">
+    <a class="btn btn-primary"
+    href="{% url 'use_cases:delete' object.pk %}">Delete use case</a>
+    <a class="btn btn-primary" href="{% url 'use_cases:edit' object.pk %}">Edit use case</a>
+  </div>
+{% endif %}
   <div>
     <i>
       <b>State: </b>

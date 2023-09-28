@@ -17,6 +17,8 @@ ELASTICSEARCH_DSL = {
     },
 }
 
+USE_CASES_FEATURE_TOGGLE = True
+
 SECRET_KEY = "app_tests_secret_key"
 
 

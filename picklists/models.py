@@ -201,7 +201,7 @@ class QualityControlProcedure(models.Model):
 
     class Meta:
         ordering = ["sort_order"]
-        verbose_name_plural = "quality_control_procedure"
+        verbose_name_plural = "Quality control procedures"
 
     def __str__(self):
         return self.name

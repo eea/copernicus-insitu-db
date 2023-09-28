@@ -28,7 +28,12 @@ SECRET_KEY = os.environ.get("SECRET_KEY", "secret")
 DEBUG = os.environ.get("DEBUG", False)
 DEBUG_TOOLBAR = os.environ.get("DEBUG_TOOLBAR", False)
 
-ALLOWED_HOSTS = ["localhost", "127.0.0.1", os.environ.get("ALLOWED_HOSTS", None)]
+ALLOWED_HOSTS = [
+    "localhost",
+    "127.0.0.1",
+    "0.0.0.0",
+    os.environ.get("ALLOWED_HOSTS", None),
+]
 CSRF_TRUSTED_ORIGINS = os.environ.get("ALLOWED_HOSTS", None)
 
 # Sentry
@@ -245,6 +250,8 @@ EXPLORER_SQL_WHITELIST = {
     "Data updated",
     "data_updated",
 }
+
+USE_CASES_FEATURE_TOGGLE = os.environ.get("USE_CASES_FEATURE_TOGGLE", False)
 
 
 def EXPLORER_PERMISSION_VIEW(request):

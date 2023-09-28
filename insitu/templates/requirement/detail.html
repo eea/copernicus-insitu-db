@@ -252,8 +252,9 @@
              href="{% url 'requirement:product:add' requirement.pk %}">Add requirement to product</a>
         </span>
           <span class="pull-right">
-          <a class="btn btn-primary pull-right margin-right-5"
-             href="{% url 'requirement:product:add_group' requirement.pk %}">Add requirement to product group</a>
+          <a class="btn btn-primary pull-right margin-right-5" data-toggle="tooltip" title="Associates requirement to a product group, creating links between the requirement and all the products from that group." data-placement="left"
+             href="{% url 'requirement:product:add_group' requirement.pk %}">
+             Add requirement to product group</a>
         </span>
           {% endif %}
         {% endif %}
