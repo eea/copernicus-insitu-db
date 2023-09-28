@@ -1,8 +1,3 @@
-import re
-import json
-import requests
-from datetime import datetime
-
 from django.apps import apps
 from django.urls import reverse_lazy
 from django.conf import settings
