@@ -2,7 +2,7 @@ Changes requested for {{ target }}
 
 Dear user,
 
-{{ sender.first_name }} {{ sender.last_name }} requested changes to your {{ target }} "{{ object.name }}".
+{{ sender.first_name }} {{ sender.last_name }} requested changes to your {{ target }} "{{ object_name }}".
 
 The user requested the following changes
 {{ feedback }}

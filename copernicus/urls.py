@@ -13,23 +13,35 @@ Including another URLconf
     1. Import the include() function: from django.conf.urls import url, include
     2. Add a URL to urlpatterns:  url(r'^blog/', include('blog.urls'))
 """
-from django.conf.urls import url, include
+from django.conf.urls.static import static
+from django.urls import include, path
+
 from django.contrib import admin
-from .settings import DEBUG_TOOLBAR
+from django.conf import settings
 
 handler500 = "insitu.views.errors.handler500"
 
 urlpatterns = [
-    url(r"^admin/", admin.site.urls),
-    url(r"^hijack/", include("hijack.urls")),
-    url(r"^", include("insitu.urls")),
-    url(r"^picklists/", include(("picklists.urls", "picklists"), namespace="pick")),
-    url(r"^explorer/", include("explorer.urls")),
+    path("admin/", admin.site.urls),
+    path("hijack/", include("hijack.urls")),
+    path("", include("insitu.urls")),
+    path("picklists/", include(("picklists.urls", "picklists"), namespace="pick")),
+    path("explorer/", include("explorer.urls")),
 ]
 
-if DEBUG_TOOLBAR:
+if settings.USE_CASES_FEATURE_TOGGLE:
+    urlpatterns += [
+        path(
+            "use_cases/",
+            include(("use_cases.urls", "use_cases"), namespace="use_cases"),
+        )
+    ]
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
+if settings.DEBUG_TOOLBAR:
     import debug_toolbar
 
     urlpatterns = [
-        url(r"^__debug__/", include(debug_toolbar.urls)),
+        path("^__debug__/", include(debug_toolbar.urls)),
     ] + urlpatterns

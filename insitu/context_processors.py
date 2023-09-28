@@ -1,4 +1,3 @@
-from getenv import env
 from django.conf import settings
 
 
@@ -8,6 +7,8 @@ def base(request):
         "READ_ONLY_GROUP": settings.READ_ONLY_GROUP,
         "PRODUCT_EDITOR_GROUP": settings.PRODUCT_EDITOR_GROUP,
         "PICKLISTS_EDITOR_GROUP": settings.PICKLISTS_EDITOR_GROUP,
+        "USE_CASES_PUBLISHER_GROUP": settings.USE_CASES_PUBLISHER_GROUP,
+        "USE_CASES_FEATURE_TOGGLE": settings.USE_CASES_FEATURE_TOGGLE,
     }
 
 
@@ -33,7 +34,7 @@ def sentry(request):
         sentry_id = request.sentry["id"]
     return {
         "sentry_id": sentry_id,
-        "sentry_dsn": env("SENTRY_DSN", ""),
+        "sentry_dsn": settings.SENTRY_DSN,
         "sentry_tag_server_name": request.get_host(),
         "sentry_tag_environment": settings.SENTRY_TAG_ENVIRONMENT,
         "sentry_tag_release": settings.SENTRY_TAG_RELEASE,

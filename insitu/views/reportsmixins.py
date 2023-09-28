@@ -481,7 +481,9 @@ class ReportExcelMixin:
                     data = [
                         product_requirement.requirement.name,
                         product_requirement.requirement.id,
-                        "\n".join([x.name for x in product_requirement.barriers.all()]),
+                        "\n".join(
+                            [x.name for x in product_requirement.barriers.all()]
+                        ),
                         product_requirement.relevance.name,
                         product_requirement.criticality.name,
                     ]
@@ -498,7 +500,9 @@ class ReportExcelMixin:
                         product.name,
                         product_requirement.requirement.name,
                         product_requirement.requirement.id,
-                        "\n".join([x.name for x in product_requirement.barriers.all()]),
+                        "\n".join(
+                            [x.name for x in product_requirement.barriers.all()]
+                        ),
                         product_requirement.relevance.name,
                         product_requirement.criticality.name,
                     ],
@@ -867,7 +871,13 @@ class PDFExcelMixin:
             count_after_merge += 1
             count_for_merge = count_after_merge
             span_for_merging.append(
-                ("LINEABOVE", (0, count_for_merge), (0, count_after_merge), 0.25, black)
+                (
+                    "LINEABOVE",
+                    (0, count_for_merge),
+                    (0, count_after_merge),
+                    0.25,
+                    black,
+                )
             )
         data.extend(table_data)
         style = []
@@ -995,10 +1005,22 @@ class PDFExcelMixin:
                 )
 
             span_for_merging.append(
-                ("LINEABOVE", (0, count_for_merge), (0, count_after_merge), 0.20, black)
+                (
+                    "LINEABOVE",
+                    (0, count_for_merge),
+                    (0, count_after_merge),
+                    0.20,
+                    black,
+                )
             )
             span_for_merging.append(
-                ("LINEABOVE", (1, count_for_merge), (1, count_after_merge), 0.20, black)
+                (
+                    "LINEABOVE",
+                    (1, count_for_merge),
+                    (1, count_after_merge),
+                    0.20,
+                    black,
+                )
             )
 
         data.extend(table_data)
@@ -1073,7 +1095,13 @@ class PDFExcelMixin:
             count_after_merge += 1
             count_for_merge = count_after_merge
             span_for_merging.append(
-                ("LINEABOVE", (0, count_for_merge), (0, count_after_merge), 0.25, black)
+                (
+                    "LINEABOVE",
+                    (0, count_for_merge),
+                    (0, count_after_merge),
+                    0.25,
+                    black,
+                )
             )
 
         data.extend(table_data)
@@ -1138,12 +1166,15 @@ class PDFExcelMixin:
                         [
                             Paragraph(product_name, self.rowstyle),
                             Paragraph(data_name, self.rowstyle),
-                            Paragraph(data_requirement.requirement.name, self.rowstyle),
+                            Paragraph(
+                                data_requirement.requirement.name, self.rowstyle
+                            ),
                             Paragraph(
                                 str(data_requirement.requirement.id), self.rowstyle
                             ),
                             Paragraph(
-                                data_requirement.level_of_compliance.name, self.rowstyle
+                                data_requirement.level_of_compliance.name,
+                                self.rowstyle,
                             ),
                             Paragraph(data_requirement.note, self.rowstyle),
                         ]
@@ -1200,7 +1231,13 @@ class PDFExcelMixin:
                 )
 
             span_for_merging.append(
-                ("LINEABOVE", (0, count_for_merge), (0, count_after_merge), 0.25, black)
+                (
+                    "LINEABOVE",
+                    (0, count_for_merge),
+                    (0, count_after_merge),
+                    0.25,
+                    black,
+                )
             )
         data.extend(table_data)
         style = []
@@ -1252,7 +1289,8 @@ class PDFExcelMixin:
                         getattr(data_object.data_format, "name", ""), self.rowstyle
                     ),
                     Paragraph(
-                        getattr(data_object.update_frequency, "name", ""), self.rowstyle
+                        getattr(data_object.update_frequency, "name", ""),
+                        self.rowstyle,
                     ),
                     Paragraph(getattr(data_object.area, "name", ""), self.rowstyle),
                     Paragraph(
@@ -1361,7 +1399,13 @@ class PDFExcelMixin:
             count_after_merge += 1
             count_for_merge = count_after_merge
             span_for_merging.append(
-                ("LINEABOVE", (0, count_for_merge), (0, count_after_merge), 0.25, black)
+                (
+                    "LINEABOVE",
+                    (0, count_for_merge),
+                    (0, count_after_merge),
+                    0.25,
+                    black,
+                )
             )
         if not table_data:
             table_data.append(
@@ -1900,7 +1944,9 @@ class CountryReportExcelMixin:
             self.merge_format_light,
         )
         worksheet.merge_range("B1:G1", "Observation Data Type", self.merge_format)
-        worksheet.merge_range("H1:J1", "Additional information", self.merge_format_dark)
+        worksheet.merge_range(
+            "H1:J1", "Additional information", self.merge_format_dark
+        )
         worksheet.set_row(1, 150)
         obs_headers = [
             "Meteorology",
@@ -1932,7 +1978,8 @@ class CountryReportExcelMixin:
                 for x in Data.objects.exclude(
                     id__in=data_only_with_na_compliance
                 ).filter(
-                    dataproviderrelation__provider=dp, dataproviderrelation___deleted=fl
+                    dataproviderrelation__provider=dp,
+                    dataproviderrelation___deleted=fl,
                 )
             ]
             rg = []
@@ -1999,42 +2046,50 @@ class CountryReportExcelMixin:
         worksheet.write_rich_string(
             "A5",
             "The European Environment Agency (EEA) is entrusted with cross-cutting ",
-            "coordination of the Copernicus’ access to in situ data, in order to provide \n ",
-            "Entrusted Entities with harmonized and, in particular, cross-cutting ",
-            "information about in situ data requirements and gaps. \n\n",
+            "coordination of the Copernicus’ access to in situ data, in order ",
+            "to provide \n Entrusted Entities with harmonized and, in ",
+            "particular, cross-cutting information about in situ data ",
+            "requirements and gaps. \n\n",
             "The Copernicus In Situ Information System CIS",
             superscript,
             "2 ",
-            "(https://cis2.eea.europa.eu) aims to provide a complete overview of requirements, ",
-            "gaps and data relevant to all Copernicus services. CIS² links the in situ requirements\n ",
-            "specified by the Entrusted Entities to Copernicus products, in situ datasets, ",
-            "and data providers in order to provide a clear picture of what data is already used\n ",
-            "and what would be needed to deliver improved and more reliable products and monitoring services. \n\n ",
-            "The Country Report provides an overview of national organisations which are providing ",
-            "in situ observations data to support Copernicus products. In-Situ observations are\n ",
-            "non-satellite measurements of physical parameters. Observations are either direct ",
-            "measurements of properties like temperature, wind, ozone, air quality, vegetation\n ",
-            "properties, ocean salinity or ground based remote sensing data like soundings of ",
-            "the atmospheric composition. Observations are provided to Copernicus either as\n ",
-            "individual datasets or aggregated into gridded 2- or 3- dimensional analysis fields. \n\n",
-            "Organisations are listed across two categories \n\n",
+            "(https://cis2.eea.europa.eu) aims to provide a complete ",
+            "overview of requirements, gaps and data relevant to all ",
+            "Copernicus services. CIS² links the in situ requirements\n "
+            "specified by the Entrusted Entities to Copernicus products, ",
+            "in situ datasets, and data providers in order to provide a clear "
+            "picture of what data is already used\n and what would be needed ",
+            "to deliver improved and more reliable products and monitoring ",
+            "services. \n\n The Country Report provides an overview of ",
+            "national organisations which are providing in situ observations ",
+            "data to support Copernicus products. In-Situ observations are\n ",
+            "non-satellite measurements of physical parameters.",
+            " Observations  are either direct measurements of properties ",
+            "like temperature, wind, ozone, air quality, vegetation\n",
+            " properties, ocean salinity or  ground based remote sensing data ",
+            "like soundings of the atmospheric composition. Observations are ",
+            "provided to Copernicus either as\n individual datasets ",
+            "or aggregated into gridded 2- or 3- dimensional analysis ",
+            "fields. \n\n Organisations are listed across two categories \n\n",
             "    • ",
             bold,
             "Data Providers ",
             "(listed in The report is based fully on the CIS2 database content. ",
-            "The CIS² database also contains similar information regarding geospatial data, but these",
-            "are not included in this country report.): these are organisations based in the Country",
-            "which provide in situ observations data to support Copernicus products\n\n",
+            "The CIS² database also contains similar information regarding ",
+            "geospatial data, but these are not included in this country report. ",
+            "): these are organisations based in the Country which provide ",
+            " in situ observations data to support Copernicus products\n\n",
             "    • ",
             bold,
             "Data Provider Networks ",
             "(listed in Table 2): these are international networks with ",
-            "members based in the Country, which provide in situ observations data to support Copernicus products.\n\n",
+            "members based in the Country, which provide in situ observations ",
+            "data to support Copernicus products.\n\n ",
             "The report is based fully on the CIS2 database content. The CIS",
             superscript,
             "2",
-            "database also contains similar information regarding geospatial data, but these are not",
-            "included in this country report. ",
+            "database also contains similar information regarding geospatial ",
+            "data, but these are not included in this country report. ",
             self.format_rows_introduction,
         )
 
@@ -2050,7 +2105,9 @@ class CountryReportExcelMixin:
         )
         worksheet.merge_range("B1:B2", "Members", self.merge_format_light)
         worksheet.merge_range("C1:H1", "Observation Data Type", self.merge_format)
-        worksheet.merge_range("I1:K1", "Additional information", self.merge_format_dark)
+        worksheet.merge_range(
+            "I1:K1", "Additional information", self.merge_format_dark
+        )
         worksheet.set_row(1, 150)
         obs_headers = [
             "Meteorology",
@@ -2088,7 +2145,8 @@ class CountryReportExcelMixin:
                 for x in Data.objects.exclude(
                     id__in=data_only_with_na_compliance
                 ).filter(
-                    dataproviderrelation__provider=dp, dataproviderrelation___deleted=fl
+                    dataproviderrelation__provider=dp,
+                    dataproviderrelation___deleted=fl,
                 )
             ]
             rg = []
@@ -2291,7 +2349,8 @@ class CountryReportPDFMixin:
         country_name = Country.objects.get(code=self.country_code).name
         data.append(
             Paragraph(
-                "Copernicus In Situ Component Information System - managed by the European Environment Agency",
+                "Copernicus In Situ Component Information System - managed by "
+                "the European Environment Agency",
                 self.introduction_text_header,
             )
         )
@@ -2307,19 +2366,38 @@ class CountryReportPDFMixin:
         )
         data.append(
             Paragraph(
-                "The European Environment Agency (EEA) is entrusted with cross-cutting coordination of the Copernicus’ access to in situ data, in order to provide Entrusted Entities with harmonized and, in particular, cross-cutting information about in situ data requirements and gaps.",
+                "The European Environment Agency (EEA) is entrusted with cross-cutting "
+                "coordination of the Copernicus’ access to in situ data, in order to "
+                "provide Entrusted Entities with harmonized and, in particular, "
+                "cross-cutting information about in situ data requirements and gaps.",
                 self.introduction_text_paragraph,
             )
         )
         data.append(
             Paragraph(
-                "The Copernicus In Situ Information System CIS² (<link href='https://cis2.eea.europa.eu' color='blue'>https://cis2.eea.europa.eu</link>) aims to provide a complete overview of requirements, gaps and data relevant to all Copernicus services. CIS² links the in situ requirements specified by the Entrusted Entities to Copernicus products, in situ datasets, and data providers in order to provide a clear picture of what data is already used and what would be needed to deliver improved and more reliable products and monitoring services.",
+                "The Copernicus In Situ Information System CIS² ("
+                "<link href='https://cis2.eea.europa.eu' color='blue'>"
+                "https://cis2.eea.europa.eu </link>) aims to provide a complete "
+                "overview of requirements, gaps and data relevant to all Copernicus "
+                "services. CIS² links the in situ requirements specified by the "
+                "Entrusted Entities to Copernicus products, in situ datasets, "
+                "and data providers in order to provide a clear picture of what "
+                "data is already used and what would be needed to deliver improved "
+                "and more reliable products and monitoring services.",
                 self.introduction_text_paragraph,
             )
         )
         data.append(
             Paragraph(
-                "The Country Report provides an overview of national organisations which are providing in situ observations data to support Copernicus products. In-Situ observations are non-satellite measurements of physical parameters. Observations are either direct measurements of properties like temperature, wind, ozone, air quality, vegetation properties, ocean salinity or ground based remote sensing data like soundings of the atmospheric composition. Observations are provided to Copernicus either as individual datasets or aggregated into gridded 2- or 3- dimensional analysis fields.",
+                "The Country Report provides an overview of national organisations "
+                "which are providing in situ observations data to support Copernicus "
+                "products. In-Situ observations are non-satellite measurements of "
+                "physical parameters. Observations are either direct measurements of "
+                "properties like temperature, wind, ozone, air quality, vegetation "
+                "properties, ocean salinity or ground based remote sensing data like "
+                "soundings of the atmospheric composition. Observations are provided "
+                "to Copernicus either as individual datasets or aggregated into "
+                "gridded 2- or 3- dimensional analysis fields.",
                 self.introduction_text_paragraph,
             )
         )
@@ -2331,20 +2409,30 @@ class CountryReportPDFMixin:
         )
         data.append(
             Paragraph(
-                "- <strong>Data Providers</strong> (listed in The report is based fully on the CIS2 database content. The CIS² database also contains similar information regarding geospatial data, but these are not included in this country report.): these are organisations based in the Country which provide in situ observations data to support Copernicus products",
+                "- <strong>Data Providers</strong> (listed in The report is "
+                "based fully on the CIS2 database content. The CIS² database "
+                "also contains similar information regarding geospatial data, "
+                "but these are not included in this country report.): these are "
+                "organisations based in the Country which provide in situ "
+                "observations data to support Copernicus products",
                 self.introduction_text_paragraph_bullet_list,
             )
         )
         data.append(
             Paragraph(
-                " - <strong>Data Provider Networks</strong> (listed in Table 2): these are international networks with members based in the Country, which provide in situ observations data to support Copernicus products.",
+                " - <strong>Data Provider Networks</strong> (listed in Table"
+                " 2): these are international networks with members based in "
+                "the Country, which provide in situ observations data to "
+                "support Copernicus products.",
                 self.introduction_text_paragraph_bullet_list,
             )
         )
 
         data.append(
             Paragraph(
-                "The report is based fully on the CIS² database content. The CIS² database also contains similar information regarding geospatial data, but these are not included in this country report.",
+                "The report is based fully on the CIS² database content. The CIS² "
+                "database also contains similar information regarding geospatial "
+                "data, but these are not included in this country report.",
                 self.introduction_text_paragraph,
             )
         )
@@ -2398,7 +2486,8 @@ class CountryReportPDFMixin:
                 for x in Data.objects.exclude(
                     id__in=data_only_with_na_compliance
                 ).filter(
-                    dataproviderrelation__provider=dp, dataproviderrelation___deleted=fl
+                    dataproviderrelation__provider=dp,
+                    dataproviderrelation___deleted=fl,
                 )
             ]
             rg = []
@@ -2456,7 +2545,9 @@ class CountryReportPDFMixin:
             ("SPAN", (7, 0), (8, 0)),
             ("VALIGN", (0, 0), (-1, -1), "MIDDLE"),
         ]
-        t = Table(data, colWidths=[200, 30, 30, 30, 30, 30, 30, 150, 200], repeatRows=1)
+        t = Table(
+            data, colWidths=[200, 30, 30, 30, 30, 30, 30, 150, 200], repeatRows=1
+        )
         t.setStyle(TableStyle(style))
         return t
 
@@ -2519,7 +2610,8 @@ class CountryReportPDFMixin:
                 for x in Data.objects.exclude(
                     id__in=data_only_with_na_compliance
                 ).filter(
-                    dataproviderrelation__provider=dp, dataproviderrelation___deleted=fl
+                    dataproviderrelation__provider=dp,
+                    dataproviderrelation___deleted=fl,
                 )
             ]
             rg = []

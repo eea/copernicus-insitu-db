@@ -353,7 +353,10 @@ class ProductRequirementPermissionsTests(base.PermissionsCheckTestCase):
             redirect_url=reverse("requirement:list"),
             url=reverse(
                 "requirement:product:edit",
-                kwargs={"requirement_pk": requirement.pk, "pk": product_requirement.pk},
+                kwargs={
+                    "requirement_pk": requirement.pk,
+                    "pk": product_requirement.pk,
+                },
             ),
         )
 
@@ -367,7 +370,10 @@ class ProductRequirementPermissionsTests(base.PermissionsCheckTestCase):
             redirect_url=reverse("requirement:list"),
             url=reverse(
                 "requirement:product:edit",
-                kwargs={"requirement_pk": requirement.pk, "pk": product_requirement.pk},
+                kwargs={
+                    "requirement_pk": requirement.pk,
+                    "pk": product_requirement.pk,
+                },
             ),
         )
 
@@ -381,7 +387,10 @@ class ProductRequirementPermissionsTests(base.PermissionsCheckTestCase):
             method="GET",
             url=reverse(
                 "requirement:product:edit",
-                kwargs={"requirement_pk": requirement.pk, "pk": product_requirement.pk},
+                kwargs={
+                    "requirement_pk": requirement.pk,
+                    "pk": product_requirement.pk,
+                },
             ),
         )
 
@@ -395,7 +404,10 @@ class ProductRequirementPermissionsTests(base.PermissionsCheckTestCase):
             redirect_url=reverse("requirement:list"),
             url=reverse(
                 "requirement:product:delete",
-                kwargs={"requirement_pk": requirement.pk, "pk": product_requirement.pk},
+                kwargs={
+                    "requirement_pk": requirement.pk,
+                    "pk": product_requirement.pk,
+                },
             ),
         )
 
@@ -409,7 +421,10 @@ class ProductRequirementPermissionsTests(base.PermissionsCheckTestCase):
             redirect_url=reverse("requirement:list"),
             url=reverse(
                 "requirement:product:delete",
-                kwargs={"requirement_pk": requirement.pk, "pk": product_requirement.pk},
+                kwargs={
+                    "requirement_pk": requirement.pk,
+                    "pk": product_requirement.pk,
+                },
             ),
         )
 
@@ -423,6 +438,9 @@ class ProductRequirementPermissionsTests(base.PermissionsCheckTestCase):
             method="GET",
             url=reverse(
                 "requirement:product:delete",
-                kwargs={"requirement_pk": requirement.pk, "pk": product_requirement.pk},
+                kwargs={
+                    "requirement_pk": requirement.pk,
+                    "pk": product_requirement.pk,
+                },
             ),
         )

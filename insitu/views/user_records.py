@@ -75,7 +75,9 @@ class UserRecordsView(ProtectedTemplateView):
         context["users_list"] = User.objects.all()
         current_user = self.request.user
         context["data_list"] = Data.objects.filter(created_by=current_user)
-        context["providers_list"] = DataProvider.objects.filter(created_by=current_user)
+        context["providers_list"] = DataProvider.objects.filter(
+            created_by=current_user
+        )
         context["provider_relations"] = DataProviderRelation.objects.filter(
             created_by=current_user
         )

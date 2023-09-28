@@ -11,7 +11,6 @@ from io import BytesIO
 
 from django.template.loader import get_template
 from openpyxl import load_workbook
-from openpyxl.writer.excel import save_virtual_workbook
 from django.http import HttpResponse, JsonResponse
 from django.urls import reverse_lazy
 from django.shortcuts import get_object_or_404
@@ -179,8 +178,9 @@ class DownloadReportsView(DownloadQueryView):
             for col, value in dims.items():
                 ws.column_dimensions[col].width = value
             wb.close()
-            virtual_wb = save_virtual_workbook(wb)
-            response.content = virtual_wb
+            with BytesIO() as buffer:
+                wb.save(buffer)
+            response.content = buffer.getvalue()
         return response
 
 
@@ -210,7 +210,9 @@ class Pdf(View):
         return self.render(context, request)
 
 
-class ReportsStandardReportView(ProtectedTemplateView, ReportExcelMixin, PDFExcelMixin):
+class ReportsStandardReportView(
+    ProtectedTemplateView, ReportExcelMixin, PDFExcelMixin
+):
     template_name = "reports/standard_report.html"
     permission_classes = ()
     permission_denied_redirect = reverse_lazy("auth:login")
@@ -250,7 +252,9 @@ class ReportsStandardReportView(ProtectedTemplateView, ReportExcelMixin, PDFExce
         services = "_".join([service.acronym for service in self.services])
         components = "_".join([component.acronym for component in self.components])
         date = datetime.datetime.now().strftime("%Y%m%d_%H%M")
-        filename = "_".join(["Standard_Report", services, components, date]) + extension
+        filename = (
+            "_".join(["Standard_Report", services, components, date]) + extension
+        )
         return filename
 
     def generate_pdf(self):

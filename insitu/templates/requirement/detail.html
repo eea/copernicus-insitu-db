@@ -24,7 +24,7 @@
       <span>Requirement details</span>
 
       {% if not user|has_group:READ_ONLY_GROUP %}
-        {% if requirement.state.name == 'draft' %}
+        {% if requirement.state == 'draft' %}
           {% if request.user == requirement.created_by or request.user.is_superuser or request.user in requirement.created_by.team.teammates.all or user_perm %}
             <span class="pull-right">
               <a class="btn btn-primary pull-right"
@@ -159,50 +159,50 @@
           {{ requirement.state.title }}
           {% if not user|has_group:READ_ONLY_GROUP and user.is_authenticated %}
             <div class="pull-right">
-              {% if requirement.state.name == 'draft' %}
+              {% if requirement.state == 'draft' %}
                 {% if requirement.created_by == request.user or request.user in requirement.created_by.team.teammates.all or user_perm %}
                   <a class="btn btn-primary"
-                     href="{% url 'requirement:transition' pk=requirement.pk source='draft' target='ready' %}">
+                     href="{% url 'requirement:transition' pk=requirement.pk source='draft' target='ready' transition='mark_as_ready' %}">
                     Mark as ready
                   </a>
                 {% endif %}
               {% endif %}
-              {% if requirement.state.name == 'ready' %}
+              {% if requirement.state == 'ready' %}
                 {% if request.user not in requirement.created_by.team.teammates.all %}
                   <a class="btn btn-primary"
-                     href="{% url 'requirement:transition' pk=requirement.pk source='ready' target='valid' %}">
+                     href="{% url 'requirement:transition' pk=requirement.pk source='ready' target='valid' transition='validate' %}">
                     Mark as valid
                   </a>
                 {% endif %}
                 {% if requirement.created_by != request.user and request.user not in requirement.created_by.team.teammates.all and not user_perm %}
                   <a class="btn btn-primary"
-                     href="{% url 'requirement:transition' pk=requirement.pk source='ready' target='changes' %}">
+                     href="{% url 'requirement:transition' pk=requirement.pk source='ready' target='changes' transition='request_changes' %}">
                     Request changes
                   </a>
                 {% elif requirement.created_by == request.user or request.user in requirement.created_by.team.teammates.all or user_perm %}
                   <a class="btn btn-primary"
-                     href="{% url 'requirement:transition' pk=requirement.pk source='ready' target='draft' %}">
+                     href="{% url 'requirement:transition' pk=requirement.pk source='ready' target='draft' transition='cancel' %}">
                     Move back to draft
                   </a>
                 {% endif %}
               {% endif %}
-              {% if requirement.state.name == 'changes' %}
+              {% if requirement.state == 'changes' %}
                 {% if requirement.created_by == request.user or request.user in requirement.created_by.team.teammates.all or user_perm %}
                   <a class="btn btn-primary"
-                     href="{% url 'requirement:transition' pk=requirement.pk source='changes' target='draft' %}">
+                     href="{% url 'requirement:transition' pk=requirement.pk source='changes' target='draft' transition='make_changes' %}">
                     Implement feedback
                   </a>
                 {% endif %}
               {% endif %}
-              {% if requirement.state.name == 'valid' %}
+              {% if requirement.state == 'valid' %}
                 {% if requirement.created_by == request.user or request.user in requirement.created_by.team.teammates.all or user_perm %}
-                  <a class="btn btn-primary" href="{% url 'requirement:transition' pk=requirement.pk source='valid' target='draft' %}">
+                  <a class="btn btn-primary" href="{% url 'requirement:transition' pk=requirement.pk source='valid' target='draft' transition='revalidate' %}">
                     Move back to draft
                   </a>
                 {% endif %}
               {% endif %}
             </div>
-            {% if requirement.state.name != 'ready' and requirement.state.name != 'valid' %}
+            {% if requirement.state != 'ready' and requirement.state != 'valid' %}
               {% if requirement.feedback %}
                 <div class="alert alert-danger margin-top-5" role="alert">
                   <h5>Feedback:</h5>
@@ -245,15 +245,16 @@
     <h3 class="col-sm-12">
       <span>Products</span>
       {% if not user|has_group:READ_ONLY_GROUP %}
-        {% if requirement.state.name == 'draft' %}
+        {% if requirement.state == 'draft' %}
           {% if requirement.created_by == request.user or request.user in requirement.created_by.team.teammates.all or request.user.is_superuser or user_perm %}
           <span class="pull-right">
           <a class="btn btn-primary pull-right"
              href="{% url 'requirement:product:add' requirement.pk %}">Add requirement to product</a>
         </span>
           <span class="pull-right">
-          <a class="btn btn-primary pull-right margin-right-5"
-             href="{% url 'requirement:product:add_group' requirement.pk %}">Add requirement to product group</a>
+          <a class="btn btn-primary pull-right margin-right-5" data-toggle="tooltip" title="Associates requirement to a product group, creating links between the requirement and all the products from that group." data-placement="left"
+             href="{% url 'requirement:product:add_group' requirement.pk %}">
+             Add requirement to product group</a>
         </span>
           {% endif %}
         {% endif %}
@@ -295,7 +296,7 @@
             <td>{{ rel.note }}</td>
             <td class="row">
               {% if not user|has_group:READ_ONLY_GROUP %}
-                {% if requirement.state.name == 'draft' %}
+                {% if requirement.state == 'draft' %}
                   {% if rel.created_by == request.user  or request.user == requirement.created_by or request.user in rel.created_by.team.teammates.all or request.user.is_superuser or user_perm %}
                     <a href="{% url 'requirement:product:edit' requirement_pk=requirement.pk pk=rel.pk %}"
                        class="col-sm-6">
@@ -320,7 +321,7 @@
     <h3 class="col-sm-12">
       <span>Data</span>
       {% if not user|has_group:READ_ONLY_GROUP %}
-        {% if requirement.state.name == 'draft' %}
+        {% if requirement.state == 'draft' %}
           {% if requirement.created_by == request.user or request.user in requirement.created_by.team.teammates.all or request.user.is_superuser or user_perm %}
             <span class="pull-right">
               <a class="btn btn-primary pull-right"
@@ -367,7 +368,7 @@
             </td>
             <td class="row">
               {% if not user|has_group:READ_ONLY_GROUP %}
-                {% if requirement.state.name == 'draft' %}
+                {% if requirement.state == 'draft' %}
                   {% if request.user == rel.created_by or request.user == requirement.created_by or request.user in rel.created_by.team.teammates.all or request.user.is_superuser or user_perm %}
                     <a href="{% url 'requirement:data:edit' requirement_pk=requirement.pk pk=rel.pk %}" class="col-sm-6">
                       <span class="glyphicon glyphicon-edit"></span>

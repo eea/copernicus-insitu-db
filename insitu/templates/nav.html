@@ -58,6 +58,12 @@
           <li class="{% active reports %}">
             <a href="{{ reports }}">Reports</a>
           </li>
+          {% if USE_CASES_FEATURE_TOGGLE %}
+            {% url 'use_cases:list' as usecases %}
+            <li class="{% active usecases %}">
+              <a href="{{ usecases }}">Use cases</a>
+            </li>
+          {% endif %}
 
         </ul>
         <ul class=" extra-navbar-brand pull-right nav navbar-nav extra-navbar-brand">

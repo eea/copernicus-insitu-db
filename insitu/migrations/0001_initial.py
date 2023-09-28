@@ -8,7 +8,6 @@ import django.db.models.deletion
 
 
 class Migration(migrations.Migration):
-
     initial = True
 
     dependencies = [
@@ -97,7 +96,10 @@ class Migration(migrations.Migration):
                         to="picklists.UpdateFrequency",
                     ),
                 ),
-                ("inspire_themes", models.ManyToManyField(to="picklists.InspireTheme")),
+                (
+                    "inspire_themes",
+                    models.ManyToManyField(to="picklists.InspireTheme"),
+                ),
                 (
                     "policy",
                     models.ForeignKey(
@@ -360,7 +362,8 @@ class Migration(migrations.Migration):
                 (
                     "product",
                     models.ForeignKey(
-                        on_delete=django.db.models.deletion.CASCADE, to="insitu.Product"
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="insitu.Product",
                     ),
                 ),
                 (
@@ -505,7 +508,8 @@ class Migration(migrations.Migration):
             model_name="component",
             name="entrusted_entity",
             field=models.ForeignKey(
-                on_delete=django.db.models.deletion.CASCADE, to="insitu.EntrustedEntity"
+                on_delete=django.db.models.deletion.CASCADE,
+                to="insitu.EntrustedEntity",
             ),
         ),
         migrations.AddField(

@@ -7,7 +7,6 @@ import django.db.models.deletion
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ("picklists", "0010_auto_20200305_1553"),
         ("insitu", "0036_alter_status_data"),

@@ -13,7 +13,6 @@ https://docs.djangoproject.com/en/1.11/ref/settings/
 import os
 import sentry_sdk
 from sentry_sdk.integrations.django import DjangoIntegration
-from getenv import env
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -23,29 +22,32 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/1.11/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = env("SECRET_KEY", "secret")
+SECRET_KEY = os.environ.get("SECRET_KEY", "secret")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = env("DEBUG", False)
-DEBUG_TOOLBAR = env("DEBUG_TOOLBAR", False)
+DEBUG = os.environ.get("DEBUG", False)
+DEBUG_TOOLBAR = os.environ.get("DEBUG_TOOLBAR", False)
 
-ALLOWED_HOSTS = ["localhost", "127.0.0.1", env("ALLOWED_HOSTS")]
-CSRF_TRUSTED_ORIGINS = env("ALLOWED_HOSTS")
+ALLOWED_HOSTS = [
+    "localhost",
+    "127.0.0.1",
+    os.environ.get("ALLOWED_HOSTS", None),
+]
+CSRF_TRUSTED_ORIGINS = os.environ.get("ALLOWED_HOSTS", None)
 
 # Sentry
-SENTRY_DSN = env("SENTRY_DSN", "")
-SENTRY_TAG_RELEASE = env("SENTRY_TAG_RELEASE", "")
-SENTRY_TAG_ENVIRONMENT = env("SENTRY_TAG_ENVIRONMENT", "")
-SENTRY_TAG_SITE = env("SENTRY_TAG_SITE", "")
+SENTRY_DSN = os.environ.get("SENTRY_DSN", "")
+SENTRY_TAG_RELEASE = os.environ.get("SENTRY_TAG_RELEASE", "")
+SENTRY_TAG_ENVIRONMENT = os.environ.get("SENTRY_TAG_ENVIRONMENT", "")
+SENTRY_TAG_SITE = os.environ.get("SENTRY_TAG_SITE", "")
 
 if SENTRY_DSN:
-
     sentry_sdk.init(
         dsn=SENTRY_DSN, release=SENTRY_TAG_RELEASE, integrations=[DjangoIntegration()]
     )
 
-    SENTRY_AUTH_TOKEN = env("SENTRY_AUTH_TOKEN", "")
-    SENTRY_API_URL = env("SENTRY_API_URL", "")
+    SENTRY_AUTH_TOKEN = os.environ.get("SENTRY_AUTH_TOKEN", "")
+    SENTRY_API_URL = os.environ.get("SENTRY_API_URL", "")
 
 # Application definition
 
@@ -57,17 +59,18 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "django_elasticsearch_dsl",
+    "django_filters",
     "bootstrap3",
-    "django_xworkflows",
+    "django_fsm",
     "hijack",
-    # TODO add hijack back in admin as soon as admin
-    # integration is available in the main hijack package
+    "hijack.contrib.admin",
     "docs",
     "guardian",
     "explorer",
     "wkhtmltopdf",
     "picklists",
     "insitu",
+    "use_cases",
 ]
 
 if not DEBUG:
@@ -78,7 +81,7 @@ if not DEBUG:
     ]
 
     RAVEN_CONFIG = {
-        "dsn": env("SENTRY_DSN"),
+        "dsn": os.environ.get("SENTRY_DSN", None),
     }
 
 if DEBUG_TOOLBAR:
@@ -96,6 +99,7 @@ MIDDLEWARE = [
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "insitu.middleware.sentry_middleware",
+    "hijack.middleware.HijackUserMiddleware",
 ]
 
 if DEBUG_TOOLBAR:
@@ -141,11 +145,13 @@ DATABASES = {
         "ENGINE": "django.db.backends.postgresql",
         "HOST": "db",
         "PORT": 5432,
-        "NAME": env("POSTGRES_DB", "insitu"),
-        "USER": env("POSTGRES_USER", "demo"),
-        "PASSWORD": env("POSTGRES_PASSWORD", "demo"),
+        "NAME": os.environ.get("POSTGRES_DB", "insitu"),
+        "USER": os.environ.get("POSTGRES_USER", "demo"),
+        "PASSWORD": os.environ.get("POSTGRES_PASSWORD", "demo"),
     }
 }
+
+DEFAULT_AUTO_FIELD = "django.db.models.AutoField"
 
 # Password validation
 # https://docs.djangoproject.com/en/1.11/ref/settings/#auth-password-validators
@@ -167,16 +173,19 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-READ_ONLY_GROUP = env("READ_ONLY_GROUP", "ReadOnly")
-PRODUCT_EDITOR_GROUP = env("PRODUCT_EDITOR_GROUP", "ProductEditor")
-PICKLISTS_EDITOR_GROUP = env("PICKLISTS_EDITOR_GROUP", "PicklistsEditor")
+READ_ONLY_GROUP = os.environ.get("READ_ONLY_GROUP", "ReadOnly")
+PRODUCT_EDITOR_GROUP = os.environ.get("PRODUCT_EDITOR_GROUP", "ProductEditor")
+PICKLISTS_EDITOR_GROUP = os.environ.get("PICKLISTS_EDITOR_GROUP", "PicklistsEditor")
+USE_CASES_PUBLISHER_GROUP = os.environ.get(
+    "USE_CASES_PUBLISHER_GROUP", "UseCasesPublisher"
+)
 
 # Internationalization
 # https://docs.djangoproject.com/en/1.11/topics/i18n/
 
 LANGUAGE_CODE = "en-us"
 
-TIME_ZONE = env("TZ", "Europe/Copenhagen")
+TIME_ZONE = os.environ.get("TZ", "Europe/Copenhagen")
 
 USE_I18N = True
 
@@ -190,12 +199,14 @@ USE_TZ = True
 
 STATIC_URL = "/static/"
 STATIC_ROOT = os.path.join(BASE_DIR, "..", "static/")
+MEDIA_URL = "/media/"
+MEDIA_ROOT = os.path.join(BASE_DIR, "..", "static/media/")
 
 ELASTICSEARCH_DSL = {
     "default": {
-        "hosts": env("ELASTICSEARCH_HOST", "elasticsearch"),
-        "http_auth": env("ELASTICSEARCH_AUTH", "user:password"),
-        "timeout": env("ELASTICSEARCH_TIMEOUT", 120),
+        "hosts": os.environ.get("ELASTICSEARCH_HOST", "elasticsearch"),
+        "http_auth": os.environ.get("ELASTICSEARCH_AUTH", "user:password"),
+        "timeout": os.environ.get("ELASTICSEARCH_TIMEOUT", 120),
     },
 }
 
@@ -207,12 +218,14 @@ AUTHENTICATION_BACKENDS = (
 MAX_RESULT_WINDOW = 10000  # This is ElasticSearch's default, but we define it
 # here explicitly to minimize refactoring in case we ever change it.
 
-LOGGING_CSV_FILENAME = env("LOGGING_CSV_FILENAME", "user-actions-logging.csv")
+LOGGING_CSV_FILENAME = os.environ.get(
+    "LOGGING_CSV_FILENAME", "user-actions-logging.csv"
+)
 LOGGING_CSV_PATH = os.path.join(BASE_DIR, "logging", LOGGING_CSV_FILENAME)
 
-MATOMO = env("MATOMO", False)
+MATOMO = os.environ.get("MATOMO", False)
 
-CRAZY_EGG = env("CRAZY_EGG", "")
+CRAZY_EGG = os.environ.get("CRAZY_EGG", "")
 
 
 # Hijack customization
@@ -220,8 +233,11 @@ CRAZY_EGG = env("CRAZY_EGG", "")
 HIJACK_LOGIN_REDIRECT_URL = "/"
 HIJACK_LOGOUT_REDIRECT_URL = "/"
 HIJACK_ALLOW_GET_REQUESTS = True
+HIJACK_INSERT_BEFORE = "</body>"
 
-SUPPORT_EMAIL = env("SUPPORT_EMAIL", "")
+LOGIN_REDIRECT_URL = "/"
+
+SUPPORT_EMAIL = os.environ.get("SUPPORT_EMAIL", "")
 
 EXPLORER_CONNECTIONS = {"Default": "default"}
 EXPLORER_DEFAULT_ROWS = 50000
@@ -233,6 +249,8 @@ EXPLORER_SQL_WHITELIST = {
     "Data updated",
     "data_updated",
 }
+
+USE_CASES_FEATURE_TOGGLE = os.environ.get("USE_CASES_FEATURE_TOGGLE", False)
 
 
 def EXPLORER_PERMISSION_VIEW(request):
@@ -259,12 +277,14 @@ DOCS_PDF_ROOT = os.path.join(BASE_DIR, "docs/_build/latex")
 
 DOCS_ACCESS = "login_required"
 
-EMAIL_BACKEND = env("EMAIL_BACKEND", "django.core.mail.backends.smtp.EmailBackend")
-EMAIL_HOST = env("EMAIL_HOST", "postfix")
-EMAIL_PORT = env("EMAIL_PORT", 25)
-DEFAULT_FROM_EMAIL = env("DEFAULT_FROM_EMAIL", "")
+EMAIL_BACKEND = os.environ.get(
+    "EMAIL_BACKEND", "django.core.mail.backends.smtp.EmailBackend"
+)
+EMAIL_HOST = os.environ.get("EMAIL_HOST", "postfix")
+EMAIL_PORT = os.environ.get("EMAIL_PORT", 25)
+DEFAULT_FROM_EMAIL = os.environ.get("DEFAULT_FROM_EMAIL", "")
 
-SITE_URL = env("SITE_URL", "")
+SITE_URL = os.environ.get("SITE_URL", "")
 
 if DEBUG_TOOLBAR:
 

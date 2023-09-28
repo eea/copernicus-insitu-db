@@ -3,11 +3,11 @@
 from __future__ import unicode_literals
 
 from django.db import migrations
-import django_xworkflows.models
+
+from django_fsm import FSMField
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ("insitu", "0010_rename_responsible_to_provider"),
     ]
@@ -16,97 +16,41 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name="data",
             name="state",
-            field=django_xworkflows.models.StateField(
-                max_length=16,
-                workflow=django_xworkflows.models._SerializedWorkflow(
-                    initial_state="draft",
-                    name="ValidationWorkflow",
-                    states=["draft", "ready", "valid", "changes"],
-                ),
-            ),
+            field=FSMField(default="draft", max_length=50),
         ),
         migrations.AddField(
             model_name="dataprovider",
             name="state",
-            field=django_xworkflows.models.StateField(
-                max_length=16,
-                workflow=django_xworkflows.models._SerializedWorkflow(
-                    initial_state="draft",
-                    name="ValidationWorkflow",
-                    states=["draft", "ready", "valid", "changes"],
-                ),
-            ),
+            field=FSMField(default="draft", max_length=50),
         ),
         migrations.AddField(
             model_name="dataproviderdetails",
             name="state",
-            field=django_xworkflows.models.StateField(
-                max_length=16,
-                workflow=django_xworkflows.models._SerializedWorkflow(
-                    initial_state="draft",
-                    name="ValidationWorkflow",
-                    states=["draft", "ready", "valid", "changes"],
-                ),
-            ),
+            field=FSMField(default="draft", max_length=50),
         ),
         migrations.AddField(
             model_name="dataproviderrelation",
             name="state",
-            field=django_xworkflows.models.StateField(
-                max_length=16,
-                workflow=django_xworkflows.models._SerializedWorkflow(
-                    initial_state="draft",
-                    name="ValidationWorkflow",
-                    states=["draft", "ready", "valid", "changes"],
-                ),
-            ),
+            field=FSMField(default="draft", max_length=50),
         ),
         migrations.AddField(
             model_name="datarequirement",
             name="state",
-            field=django_xworkflows.models.StateField(
-                max_length=16,
-                workflow=django_xworkflows.models._SerializedWorkflow(
-                    initial_state="draft",
-                    name="ValidationWorkflow",
-                    states=["draft", "ready", "valid", "changes"],
-                ),
-            ),
+            field=FSMField(default="draft", max_length=50),
         ),
         migrations.AddField(
             model_name="metric",
             name="state",
-            field=django_xworkflows.models.StateField(
-                max_length=16,
-                workflow=django_xworkflows.models._SerializedWorkflow(
-                    initial_state="draft",
-                    name="ValidationWorkflow",
-                    states=["draft", "ready", "valid", "changes"],
-                ),
-            ),
+            field=FSMField(default="draft", max_length=50),
         ),
         migrations.AddField(
             model_name="productrequirement",
             name="state",
-            field=django_xworkflows.models.StateField(
-                max_length=16,
-                workflow=django_xworkflows.models._SerializedWorkflow(
-                    initial_state="draft",
-                    name="ValidationWorkflow",
-                    states=["draft", "ready", "valid", "changes"],
-                ),
-            ),
+            field=FSMField(default="draft", max_length=50),
         ),
         migrations.AddField(
             model_name="requirement",
             name="state",
-            field=django_xworkflows.models.StateField(
-                max_length=16,
-                workflow=django_xworkflows.models._SerializedWorkflow(
-                    initial_state="draft",
-                    name="ValidationWorkflow",
-                    states=["draft", "ready", "valid", "changes"],
-                ),
-            ),
+            field=FSMField(default="draft", max_length=50),
         ),
     ]

@@ -5,7 +5,6 @@ from insitu.models import UserLog, LoggedAction
 
 
 class BaseLoggingView:
-
     target_type = ""
     extra = ""
 
@@ -142,7 +141,7 @@ class DetailLoggingView(GetMethodLoggingView):
         return self.get_object().id
 
 
-class TrasitionLoggingView(PostMethodLoggingView):
+class TransitionLoggingView(PostMethodLoggingView):
     get_action = "visited transition page of "
 
     def get_object_id(self):

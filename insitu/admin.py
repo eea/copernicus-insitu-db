@@ -147,7 +147,8 @@ class RequirementAdmin(GuardedModelAdmin):
         "updated_at",
     )
     search_fields = ["name"]
-    list_display = ("id", "name")
+    list_display = ("id", "name", "state")
+    list_filter = ("state",)
 
     def components(self, obj):
         links = [
@@ -169,7 +170,8 @@ class DataAdmin(GuardedModelAdmin):
         "updated_at",
     )
     search_fields = ["name"]
-    list_display = ("id", "name")
+    list_display = ("id", "name", "state")
+    list_filter = ("state",)
 
 
 @admin.register(models.DataProvider)
@@ -179,8 +181,8 @@ class DataProviderAdmin(GuardedModelAdmin):
         "updated_at",
     )
     search_fields = ["name"]
-    list_display = ("id", "name", "get_countries")
-    list_filter = ("countries",)
+    list_display = ("id", "name", "get_countries", "state")
+    list_filter = ("state", "countries")
 
     def get_countries(self, obj):
         return ",\n".join([c.name for c in obj.countries.all()])
@@ -213,6 +215,9 @@ class ProductAdmin(GuardedModelAdmin):
         "updated_at",
     )
 
+    search_fields = ["name"]
+    list_display = ("id", "name")
+
 
 @admin.register(models.ProductRequirement)
 class ProductRequirementAdmin(BaseDisplayDeleteAdminMixin, admin.ModelAdmin):
@@ -221,6 +226,23 @@ class ProductRequirementAdmin(BaseDisplayDeleteAdminMixin, admin.ModelAdmin):
         "updated_at",
     )
     filter_model = models.ProductRequirement
+    list_display = (
+        "__str__",
+        "product_id",
+        "requirement_id",
+        "product__name",
+        "requirement__name",
+        "state",
+    )
+    list_filter = ("state", "product_id", "requirement_id")
+
+    @admin.display(ordering="product__name", description="Product")
+    def product__name(self, obj):
+        return obj.product.name
+
+    @admin.display(ordering="requirement__name", description="Requirement")
+    def requirement__name(self, obj):
+        return obj.requirement.name
 
 
 @admin.register(models.DataRequirement)
@@ -230,6 +252,23 @@ class DataRequirementAdmin(BaseDisplayDeleteAdminMixin, admin.ModelAdmin):
         "updated_at",
     )
     filter_model = models.DataRequirement
+    list_display = (
+        "__str__",
+        "requirement_id",
+        "data_id",
+        "data__name",
+        "requirement__name",
+        "state",
+    )
+    list_filter = ("state", "data_id", "requirement_id")
+
+    @admin.display(ordering="data__name", description="Data")
+    def data__name(self, obj):
+        return obj.data.name
+
+    @admin.display(ordering="requirement__name", description="Requirement")
+    def requirement__name(self, obj):
+        return obj.requirement.name
 
 
 @admin.register(models.DataProviderRelation)
@@ -239,8 +278,23 @@ class DataProviderRelationAdmin(BaseDisplayDeleteAdminMixin, admin.ModelAdmin):
         "created_at",
         "updated_at",
     )
-    list_display = ("__str__", "data_id", "provider_id")
+    list_display = (
+        "__str__",
+        "data_id",
+        "provider_id",
+        "provider__name",
+        "data__name",
+        "role",
+    )
     list_filter = ("data_id", "provider_id")
+
+    @admin.display(ordering="provider__name", description="Data Provider")
+    def provider__name(self, obj):
+        return obj.provider.name
+
+    @admin.display(ordering="data__name", description="Data")
+    def data__name(self, obj):
+        return obj.data.name
 
 
 @admin.register(models.DataProviderDetails)
@@ -249,8 +303,23 @@ class DataProviderDetailsAdmin(GuardedModelAdmin):
         "created_at",
         "updated_at",
     )
+    list_display = (
+        "__str__",
+        "data_provider_id",
+        "data_provider__name",
+        "provider_type",
+    )
+    list_filter = ("data_provider_id",)
+
+    @admin.display(ordering="data_provider__name", description="Data Provider")
+    def data_provider__name(self, obj):
+        return obj.data_provider.name
+
+
+@admin.register(models.Team)
+class Team(admin.ModelAdmin):
+    list_display = ("user",)
 
 
 admin.site.unregister(User)
 admin.site.register(User, InsituUserAdmin)
-admin.site.register(models.Team)

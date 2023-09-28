@@ -6,7 +6,6 @@ from django.db import migrations
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ("picklists", "0003_responsibletype"),
         ("insitu", "0008_set_optional_fields"),

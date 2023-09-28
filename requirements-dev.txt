@@ -1,5 +1,5 @@
 -r requirements-dep.txt
-django-debug-toolbar==3.2.1
-factory-boy==3.2.0
-coverage==5.5
-coveralls==3.1.0
+django-debug-toolbar==4.2.0
+factory-boy==3.3.0
+coverage==6.5.0
+coveralls==3.3.1

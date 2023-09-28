@@ -7,6 +7,15 @@ from insitu.models import Data, DataProvider, Product, Requirement
 
 ALL_OPTIONS_LABEL = "All"
 
+WORKFLOW_STATES = (
+    # name, title
+    ("draft", "Draft"),
+    ("ready", "Ready for validation"),
+    ("valid", "Valid"),
+    ("changes", "Changes requested"),
+)
+
+
 PICKLISTS_DESCRIPTION = {
     "Barrier": (
         "High level barriers used to illustrate the main reasons why a given in "

@@ -2,12 +2,11 @@ from django.contrib import messages
 from django.urls import reverse, reverse_lazy
 from django.http import Http404
 from django.http.response import HttpResponseRedirect
-from xworkflows import ForbiddenTransition
-
+from django_fsm import has_transition_perm
 from insitu import documents
 from insitu import forms
 from insitu import models
-from insitu.utils import get_choices
+from insitu.utils import get_choices, WORKFLOW_STATES
 from insitu.views.base import (
     ESDatatableView,
     CreatedByMixin,
@@ -50,7 +49,7 @@ class DataList(ProtectedTemplateView):
         requirements = get_choices("name", model_cls=models.Requirement)
         disseminations = get_choices("name", model_cls=pickmodels.Dissemination)
         states = [{"title": "All", "name": "All"}] + [
-            state for state in models.ValidationWorkflow.states
+            state for state in WORKFLOW_STATES
         ]
         components = get_choices("name", model_cls=models.Component)
         context.update(
@@ -169,7 +168,9 @@ class DataAdd(CreatedByMixin, LoggingProtectedCreateView):
         ]:
             initial_data[field] = getattr(data, field)
         initial_data["inspire_themes"] = getattr(data, "inspire_themes").all()
-        initial_data["essential_variables"] = getattr(data, "essential_variables").all()
+        initial_data["essential_variables"] = getattr(
+            data, "essential_variables"
+        ).all()
         initial_data["geographical_coverage"] = getattr(
             data, "geographical_coverage"
         ).all()
@@ -307,8 +308,12 @@ class DataTransition(ChangesRequestedMailMixin, LoggingTransitionProtectedDetail
         context = super().get_context_data(**kwargs)
         source = self.kwargs.get("source")
         target = self.kwargs.get("target")
-        transition = models.ValidationWorkflow.get_transition(source, target)
-        if not transition:
+        transition = self.kwargs.get("transition")
+        transition = getattr(self.object, transition, None)
+        try:
+            if not has_transition_perm(transition, self.request.user):
+                raise Http404()
+        except AttributeError:
             raise Http404()
         objects = [
             {"obj": item, "type": item.__class__.__name__}
@@ -331,30 +336,30 @@ class DataTransition(ChangesRequestedMailMixin, LoggingTransitionProtectedDetail
         data = self.get_object(self.get_queryset())
         source = self.kwargs.get("source")
         target = self.kwargs.get("target")
+        transition_name = self.kwargs.get("transition")
+
+        transition = getattr(data, transition_name, None)
+        try:
+            if not has_transition_perm(transition, self.request.user):
+                raise Http404()
+        except AttributeError:
+            raise Http404()
         self.post_action = "changed state from {source} to {target} for".format(
             source=source, target=target
         )
         id = self.get_object_id()
         self.log_action(request, self.post_action, id)
-        try:
-            transition_name = models.ValidationWorkflow.get_transition(source, target)
-            transition = getattr(data, transition_name)
-            data.requesting_user = self.request.user
-            if transition.is_available():
-                transition()
-                feedback = ""
-                if transition_name == "request_changes":
-                    data.feedback = ""
-                    data.feedback = request.POST.get("feedback", "")
-                    data.save()
-                    feedback = request.POST.get("feedback", "")
-                if self.transition_name == transition_name:
-                    self.send_mail(data, feedback)
-                return HttpResponseRedirect(
-                    reverse("data:detail", kwargs={"pk": data.pk})
-                )
-        except ForbiddenTransition:
-            pass
+        data.requesting_user = self.request.user
+        transition()
+        data.save()
+        feedback = ""
+        if transition_name == "request_changes":
+            data.feedback = ""
+            data.feedback = request.POST.get("feedback", "")
+            data.save()
+            feedback = request.POST.get("feedback", "")
+            self.send_mail(data, feedback, data.name)
+        return HttpResponseRedirect(reverse("data:detail", kwargs={"pk": data.pk}))
         raise Http404()
 
 

@@ -1,4 +1,4 @@
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, Group
 
 from factory import SubFactory, RelatedFactory
 from factory.django import DjangoModelFactory
@@ -12,8 +12,12 @@ class UserFactory(DjangoModelFactory):
         model = User
 
 
-class TeamFactory(DjangoModelFactory):
+class GroupFactory(DjangoModelFactory):
+    class Meta:
+        model = Group
 
+
+class TeamFactory(DjangoModelFactory):
     user = SubFactory(UserFactory)
     teammates = RelatedFactory(UserFactory)
     requirements = RelatedFactory(UserFactory)

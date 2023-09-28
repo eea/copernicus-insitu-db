@@ -6,7 +6,6 @@ from django.db import migrations
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ("picklists", "0009_rename_coverage"),
         ("insitu", "0035_add_owner_history"),

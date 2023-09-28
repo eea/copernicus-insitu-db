@@ -2,7 +2,7 @@
 from django.contrib import messages
 from django.http import HttpResponseRedirect, Http404
 from django.urls import reverse, reverse_lazy
-from xworkflows import ForbiddenTransition
+from django_fsm import has_transition_perm
 
 from insitu import documents
 from insitu import models
@@ -23,7 +23,7 @@ from insitu.views.protected import (
 )
 from insitu.views.protected import IsAuthenticated, IsNotReadOnlyUser
 from insitu.views.protected.permissions import IsOwnerUser, IsDraftObject
-from insitu.utils import get_choices
+from insitu.utils import get_choices, WORKFLOW_STATES
 
 from picklists import models as pickmodels
 
@@ -38,7 +38,7 @@ class DataProviderList(ProtectedTemplateView):
         context = super().get_context_data()
         provider_types = get_choices("name", model_cls=pickmodels.ProviderType)
         states = [{"title": "All", "name": "All"}] + [
-            state for state in models.ValidationWorkflow.states
+            state for state in WORKFLOW_STATES
         ]
         components = get_choices("name", model_cls=models.Component)
         context.update(
@@ -318,8 +318,12 @@ class DataProviderTransition(
         context = super().get_context_data(**kwargs)
         source = self.kwargs.get("source")
         target = self.kwargs.get("target")
-        transition = models.ValidationWorkflow.get_transition(source, target)
-        if not transition:
+        transition = self.kwargs.get("transition")
+        transition = getattr(self.object, transition, None)
+        try:
+            if not has_transition_perm(transition, self.request.user):
+                raise Http404()
+        except AttributeError:
             raise Http404()
         objects = [
             {"obj": item, "type": item.__class__.__name__}
@@ -342,30 +346,31 @@ class DataProviderTransition(
         data_provider = self.get_object(self.get_queryset())
         source = self.kwargs.get("source")
         target = self.kwargs.get("target")
+        transition_name = self.kwargs.get("transition")
+        transition = getattr(data_provider, transition_name, None)
+        try:
+            if not has_transition_perm(transition, self.request.user):
+                raise Http404()
+        except AttributeError:
+            raise Http404()
         self.post_action = "changed state from {source} to {target} for".format(
             source=source, target=target
         )
         id = self.get_object_id()
         self.log_action(request, self.post_action, id)
-        try:
-            transition_name = models.ValidationWorkflow.get_transition(source, target)
-            transition = getattr(data_provider, transition_name)
-            data_provider.requesting_user = self.request.user
-            if transition.is_available():
-                transition()
-                feedback = ""
-                if transition_name == "request_changes":
-                    data_provider.feedback = ""
-                    data_provider.feedback = request.POST.get("feedback", "")
-                    data_provider.save()
-                    feedback = request.POST.get("feedback", "")
-                if self.transition_name == transition_name:
-                    self.send_mail(data_provider, feedback)
-                return HttpResponseRedirect(
-                    reverse("provider:detail", kwargs={"pk": data_provider.pk})
-                )
-        except ForbiddenTransition:
-            pass
+        data_provider.requesting_user = self.request.user
+        transition()
+        data_provider.save()
+        feedback = ""
+        if transition_name == "request_changes":
+            data_provider.feedback = ""
+            data_provider.feedback = request.POST.get("feedback", "")
+            data_provider.save()
+            feedback = request.POST.get("feedback", "")
+            self.send_mail(data_provider, feedback, data_provider.name)
+        return HttpResponseRedirect(
+            reverse("provider:detail", kwargs={"pk": data_provider.pk})
+        )
         raise Http404()
 
 

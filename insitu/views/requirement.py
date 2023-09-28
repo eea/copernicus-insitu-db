@@ -4,12 +4,13 @@ from django.urls import reverse
 from django.http import Http404
 from django.http.response import HttpResponseRedirect
 from django.urls import reverse_lazy
-from xworkflows import ForbiddenTransition
+
+from django_fsm import has_transition_perm
 
 from insitu import documents
 from insitu import forms
 from insitu import models
-from insitu.utils import get_choices
+from insitu.utils import get_choices, WORKFLOW_STATES
 from insitu.views.base import (
     ESDatatableView,
     CreatedByMixin,
@@ -103,7 +104,7 @@ class RequirementList(ProtectedTemplateView):
         )
         groups = get_choices("name", model_cls=pickmodels.RequirementGroup)
         states = [{"title": "All", "name": "All"}] + [
-            state for state in models.ValidationWorkflow.states
+            state for state in WORKFLOW_STATES
         ]
         components = get_choices("name", model_cls=models.Component)
         context.update(
@@ -214,7 +215,6 @@ class RequirementEdit(GetInitialMixin, LoggingProtectedUpdateView):
 
 
 class RequirementDelete(LoggingProtectedDeleteView):
-
     template_name = "requirement/delete.html"
     form_class = forms.RequirementForm
     model = models.Requirement
@@ -244,13 +244,17 @@ class RequirementTransition(
         context = super().get_context_data(**kwargs)
         source = self.kwargs.get("source")
         target = self.kwargs.get("target")
-        transition = models.ValidationWorkflow.get_transition(source, target)
-        if not transition:
+        transition_name = self.kwargs.get("transition")
+
+        transition = getattr(self.object, transition_name, None)
+        try:
+            if not has_transition_perm(transition, self.request.user):
+                raise Http404()
+        except AttributeError:
             raise Http404()
         objects = [
             {"obj": item, "type": item.__class__.__name__}
             for item in self.object.get_related_objects()
-            if item.state != target
         ]
         context.update(
             {
@@ -269,30 +273,32 @@ class RequirementTransition(
         requirement = self.get_object(self.get_queryset())
         source = self.kwargs.get("source")
         target = self.kwargs.get("target")
+        transition_name = self.kwargs.get("transition")
+
+        transition = getattr(requirement, transition_name, None)
+        try:
+            if not has_transition_perm(transition, self.request.user):
+                raise Http404()
+        except AttributeError:
+            raise Http404()
         self.post_action = "changed state from {source} to {target} for".format(
             source=source, target=target
         )
         id = self.get_object_id()
         self.log_action(request, self.post_action, id)
-        try:
-            transition_name = models.ValidationWorkflow.get_transition(source, target)
-            transition = getattr(requirement, transition_name)
-            requirement.requesting_user = self.request.user
-            if transition.is_available():
-                transition()
-                feedback = ""
-                if transition_name == "request_changes":
-                    requirement.feedback = ""
-                    requirement.feedback = request.POST.get("feedback", "")
-                    requirement.save()
-                    feedback = request.POST.get("feedback", "")
-                if self.transition_name == transition_name:
-                    self.send_mail(requirement, feedback)
-                return HttpResponseRedirect(
-                    reverse("requirement:detail", kwargs={"pk": requirement.pk})
-                )
-        except ForbiddenTransition:
-            pass
+        requirement.requesting_user = self.request.user
+        transition()
+        requirement.save()
+        feedback = ""
+        if transition_name == "request_changes":
+            requirement.feedback = ""
+            requirement.feedback = request.POST.get("feedback", "")
+            requirement.save()
+            feedback = request.POST.get("feedback", "")
+            self.send_mail(requirement, feedback, requirement.name)
+        return HttpResponseRedirect(
+            reverse("requirement:detail", kwargs={"pk": requirement.pk})
+        )
         raise Http404()
 
 

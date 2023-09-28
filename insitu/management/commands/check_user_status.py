@@ -11,7 +11,7 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         print(
-            f"Transfering data from {options['old_username']} to {options['new_username']}"
+            f"Transfer data from {options['old_username']} to {options['new_username']}"
         )
         old_user = User.objects.get(username=options["old_username"])
         new_user = User.objects.get(username=options["new_username"])

@@ -8,7 +8,6 @@ from django.core import mail
 
 
 class UserAuthenticationTests(TestCase):
-
     required_fields = ["username", "password"]
     REQUIRED_ERROR = ["This field is required."]
 
@@ -55,7 +54,9 @@ class UserAuthenticationTests(TestCase):
             "new_password1": "new_password1",
             "new_password2": "new_password1",
         }
-        resp = self.client.post(reverse("auth:change_password"), self.data, follow=True)
+        resp = self.client.post(
+            reverse("auth:change_password"), self.data, follow=True
+        )
         self.assertEqual(resp.status_code, 200)
         self.assertRedirects(resp, reverse("about"))
 

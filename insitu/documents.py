@@ -116,7 +116,7 @@ class RequirementDoc(Document):
     vertical_resolution = fields.KeywordField(
         attr="vertical_resolution.to_elastic_search_format"
     )
-    state = fields.KeywordField(attr="state.name")
+    state = fields.KeywordField(attr="state")
 
     products = fields.ObjectField(
         attr="product_requirements",
@@ -206,7 +206,7 @@ class DataDoc(Document):
             "requirement": fields.KeywordField(attr="name"),
         },
     )
-    state = fields.KeywordField(attr="state.name")
+    state = fields.KeywordField(attr="state")
     note = fields.TextField()
 
     components = fields.ObjectField(
@@ -284,6 +284,7 @@ class DataProviderDoc(Document):
             )
         },
     )
+    native_name = fields.KeywordField(attr="get_elastic_search_data.native_name")
     description = fields.TextField()
     is_network = fields.BooleanField()
     acronym = fields.KeywordField(attr="get_elastic_search_data.acronym")
@@ -292,7 +293,7 @@ class DataProviderDoc(Document):
     email = fields.KeywordField(attr="get_elastic_search_data.email")
     contact_person = fields.KeywordField(attr="get_elastic_search_data.contact_person")
     provider_type = fields.KeywordField(attr="get_elastic_search_data.provider_type")
-    state = fields.KeywordField(attr="state.name")
+    state = fields.KeywordField(attr="state")
 
     components = fields.ObjectField(
         attr="components",
@@ -316,7 +317,19 @@ class DataProviderDoc(Document):
 
     def get_name_display(self):
         url = reverse("provider:detail", kwargs={"pk": self.id})
-        return '<a href="{url}">{name}</a>'.format(url=url, name=self.name)
+        text = "<a href='{url}'>{name}</a>".format(url=url, name=self.name)
+
+        if self.native_name:
+            return """
+            {text}
+            <span data-toggle="popover" title="Native name: {native_name}"
+                  class="glyphicon glyphicon-info-sign small"
+            </span>
+          """.format(
+                text=text, native_name=self.native_name
+            )
+
+        return text
 
     def get_phone_display(self):
         return '<a href="tel:{phone}">{phone}</a>'.format(phone=self.phone)

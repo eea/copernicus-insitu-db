@@ -1,5 +1,5 @@
 {% load static %}
-{% load hijack_tags %}
+{% load hijack %}
 
 <!DOCTYPE html>
 <html lang="en">
@@ -51,7 +51,6 @@
     {% endif %}
   </head>
   <body>
-    {% hijack_notification %}
     {% include 'nav.html' %}
 
     <div id="to-print" class="container min-height-550">
