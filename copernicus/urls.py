@@ -30,9 +30,12 @@ urlpatterns = [
 ]
 
 if settings.USE_CASES_FEATURE_TOGGLE:
-    urlpatterns += [path(
-        "use_cases/", include(("use_cases.urls", "use_cases"), namespace="use_cases")
-    )]
+    urlpatterns += [
+        path(
+            "use_cases/",
+            include(("use_cases.urls", "use_cases"), namespace="use_cases"),
+        )
+    ]
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 

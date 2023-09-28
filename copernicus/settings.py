@@ -31,7 +31,6 @@ DEBUG_TOOLBAR = os.environ.get("DEBUG_TOOLBAR", False)
 ALLOWED_HOSTS = [
     "localhost",
     "127.0.0.1",
-    "0.0.0.0",
     os.environ.get("ALLOWED_HOSTS", None),
 ]
 CSRF_TRUSTED_ORIGINS = os.environ.get("ALLOWED_HOSTS", None)
