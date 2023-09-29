@@ -206,7 +206,7 @@ ELASTICSEARCH_DSL = {
     "default": {
         "hosts": os.environ.get("ELASTICSEARCH_HOST", "elasticsearch"),
         "http_auth": os.environ.get("ELASTICSEARCH_AUTH", "user:password"),
-        "timeout": os.environ.get("ELASTICSEARCH_TIMEOUT", 120),
+        "timeout": int(os.environ.get("ELASTICSEARCH_TIMEOUT", 120)),
     },
 }
 
