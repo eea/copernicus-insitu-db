@@ -3,9 +3,14 @@ Changelog
 
 * In case of major changes, an email should be sent to all users with the modifications.
 
+2.9.1 (2023-09-29)
+------------------
+* Add product group to report #9
+
 2.9.0 (2023-09-28)
 ------------------
-* Release 2.9.0
+* upgrade Django 2.0 to Django 3.2
+* add use case feature
 
 2.8.3 (2023-07-13)
 ------------------
