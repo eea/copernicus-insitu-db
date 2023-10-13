@@ -245,6 +245,7 @@ CREATE VIEW insitu_dataprovider_product_direct_view_report_7 as
            d.name as "data_name",
            a.name AS "data_area",
            dp.name AS "data_policy",
+           co.name AS "data_geographical_coverage",
               CASE
                      WHEN dpr.role = 1 THEN 'Originator'
                      WHEN dpr.role = 2 THEN 'Distributor'
@@ -263,4 +264,6 @@ CREATE VIEW insitu_dataprovider_product_direct_view_report_7 as
     INNER JOIN insitu_dataproviderrelation dpr ON d.id = dpr.data_id
     INNER JOIN picklists_area a ON a.id = d.area_id
     INNER JOIN picklists_datapolicy dp ON dp.id = d.data_policy_id
+    INNER JOIN insitu_data_geographical_coverage dgc ON  d.id = dgc.data_id
+    INNER JOIN picklists_country co ON co.code = dgc.country_id
     WHERE p._deleted = FALSE and pr._deleted = FALSE and r._deleted = FALSE and dr._deleted = FALSE and d._deleted = FALSE and dpr._deleted = FALSE;
