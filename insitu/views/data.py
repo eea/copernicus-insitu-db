@@ -358,7 +358,7 @@ class DataTransition(ChangesRequestedMailMixin, LoggingTransitionProtectedDetail
             data.feedback = request.POST.get("feedback", "")
             data.save()
             feedback = request.POST.get("feedback", "")
-            self.send_mail(data, feedback, data.name)
+            self.send_mail(data, data.name, feedback)
         return HttpResponseRedirect(reverse("data:detail", kwargs={"pk": data.pk}))
         raise Http404()
 

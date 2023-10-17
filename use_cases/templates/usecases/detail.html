@@ -86,22 +86,8 @@
     href="{% url 'use_cases:delete' object.pk %}">Delete use case</a>
     <a class="btn btn-primary" href="{% url 'use_cases:edit' object.pk %}">Edit use case</a>
   </div>
+  <div class="separator"></div>
 {% endif %}
-  <div>
-    <i>
-      <b>State: </b>
-      {{ object.get_state_title }}
-    </i>
-  </div>
-  {% if object.feedback %}
-    <div>
-      <i>
-        <b>Feedback:</b>
-        {{ object.feedback }}
-      </i>
-    </div>
-  {% endif %}
-
   <!-- Modal -->
   <div class="modal" tabindex="-1" role="dialog" id="exampleModal" >
     <div class="modal-dialog" role="document">
@@ -185,7 +171,29 @@
     {% endif %}
   </div>
 
+  <div>
+    <i>
+      <b>State: </b>
+      {{ object.get_state_title }}
+    </i>
+  </div>
+  {% if object.feedback %}
+    <div>
+      <i>
+        <b>Feedback:</b>
+        {{ object.feedback }}
+      </i>
+      {%if object.created_by == user %}
+      <a class="btn btn-primary" 
+      href="{% url 'use_cases:clear_feedback' pk=object.pk %}" >
+        Clear feedback
+    </a>
+    {% endif %}
+    </div>
+ 
+  {% endif %}
   <div class="separator"></div>
+
   <div class="sub-header">
 
     <i>

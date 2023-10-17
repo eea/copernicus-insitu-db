@@ -1,7 +1,6 @@
 # Create your views here.
 from django.contrib import messages
 from django.urls import reverse, reverse_lazy
-from django.views.generic.detail import DetailView
 from django.views.generic.list import ListView
 from django.http import Http404
 from django.http.response import HttpResponseRedirect
@@ -13,8 +12,10 @@ from insitu.views.protected import (
     LoggingTransitionProtectedDetailView,
     LoggingProtectedUpdateView,
     LoggingProtectedDeleteView,
+    ProtectedDetailView,
     IsAuthenticated,
     IsNotReadOnlyUser,
+    IsPublicbyPublishment,
 )
 from use_cases.permissions import UseCaseIsEditable
 from django_fsm import has_transition_perm
@@ -44,9 +45,11 @@ class UseCaseListView(ListView):
         return context
 
 
-class UseCaseDetailView(DetailView):
+class UseCaseDetailView(ProtectedDetailView):
     model = UseCase
     template_name = "usecases/detail.html"
+    permission_classes = (IsPublicbyPublishment,)
+    permission_denied_redirect = reverse_lazy("use_cases:list")
 
 
 class UseCaseAddView(LoggingProtectedCreateView):
@@ -119,6 +122,20 @@ class UseCaseDeleteView(LoggingProtectedDeleteView):
         return reverse("use_cases:list")
 
 
+class UseCaseClearFeedbackView(ProtectedDetailView):
+    model = UseCase
+    permission_classes = (IsAuthenticated, IsNotReadOnlyUser)
+    permission_denied_redirect = reverse_lazy("use_cases:list")
+
+    def get(self, request, *args, **kwargs):
+        use_case = self.get_object()
+        use_case.feedback = ""
+        use_case.save()
+        return HttpResponseRedirect(
+            reverse("use_cases:detail", kwargs={"pk": use_case.pk})
+        )
+
+
 class UseCaseTransition(
     ChangesRequestedMailMixin, LoggingTransitionProtectedDetailView
 ):
@@ -158,7 +175,7 @@ class UseCaseTransition(
             use_case.feedback = request.POST.get("feedback", "")
             use_case.save()
             feedback = request.POST.get("feedback", "")
-            self.send_mail(use_case, feedback, use_case.title, notify_teammates=False)
+            self.send_mail(use_case, use_case.title, feedback, notify_teammates=False)
         return HttpResponseRedirect(
             reverse("use_cases:detail", kwargs={"pk": use_case.pk})
         )
