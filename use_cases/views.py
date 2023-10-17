@@ -17,7 +17,7 @@ from insitu.views.protected import (
     IsNotReadOnlyUser,
     IsPublicbyPublishment,
 )
-from use_cases.permissions import UseCaseIsEditable
+from use_cases.permissions import UseCaseIsEditable, UseCaseIsCreator
 from django_fsm import has_transition_perm
 from django.db import transaction
 from django_filters import FilterSet
@@ -36,7 +36,10 @@ class UseCaseListView(ListView):
 
     def get_queryset(self):
         queryset = super().get_queryset()
+        if not self.request.user.is_authenticated:
+            queryset = queryset.filter(state="published")
         self.filterset = UseCaseFilter(self.request.GET, queryset=queryset)
+
         return self.filterset.qs.distinct()
 
     def get_context_data(self, **kwargs):
@@ -90,7 +93,12 @@ class UseCaseEditView(LoggingProtectedUpdateView):
     model = UseCase
     form_class = UseCaseForm
     template_name = "usecases/edit.html"
-    permission_classes = (IsAuthenticated, IsNotReadOnlyUser, UseCaseIsEditable)
+    permission_classes = (
+        IsAuthenticated,
+        IsNotReadOnlyUser,
+        UseCaseIsEditable,
+        UseCaseIsCreator,
+    )
     permission_denied_redirect = reverse_lazy("use_cases:list")
     target_type = "usecase"
 
@@ -114,7 +122,12 @@ class UseCaseEditView(LoggingProtectedUpdateView):
 class UseCaseDeleteView(LoggingProtectedDeleteView):
     template_name = "usecases/delete.html"
     model = UseCase
-    permission_classes = (IsAuthenticated, IsNotReadOnlyUser, UseCaseIsEditable)
+    permission_classes = (
+        IsAuthenticated,
+        IsNotReadOnlyUser,
+        UseCaseIsEditable,
+        UseCaseIsCreator,
+    )
     permission_denied_redirect = reverse_lazy("use_cases:list")
 
     def get_success_url(self):

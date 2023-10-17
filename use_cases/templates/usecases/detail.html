@@ -80,7 +80,7 @@
   <div class="titleRow">
     <h1 class="title">{{ object.title }}</h1>
   </div>
-  {% if user.is_authenticated and object.state == 'draft' %}
+  {% if user == object.created_by and object.state == 'draft' %}
   <div class="titleButtons pull-right margin-left-btn">
     <a class="btn btn-primary"
     href="{% url 'use_cases:delete' object.pk %}">Delete use case</a>
@@ -177,6 +177,16 @@
       {{ object.get_state_title }}
     </i>
   </div>
+
+  {% if user.is_authenticated %}
+  <div>
+    <i>
+      <b>Created by: </b>
+      {{ object.created_by }}
+    </i>
+  </div>
+  {% endif %}
+
   {% if object.feedback %}
     <div>
       <i>
