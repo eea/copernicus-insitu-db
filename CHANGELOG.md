@@ -3,6 +3,10 @@ Changelog
 
 * In case of major changes, an email should be sent to all users with the modifications.
 
+2.9.2 (2023-10-17)
+------------------
+* Fix use cases
+
 2.9.1 (2023-09-29)
 ------------------
 * Add product group to report #9
