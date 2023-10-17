@@ -35,7 +35,7 @@ class UseCaseListView(ListView):
     template_name = "usecases/list.html"
 
     def get_queryset(self):
-        queryset = super().get_queryset()
+        queryset = super().get_queryset().order_by("id")
         if not self.request.user.is_authenticated:
             queryset = queryset.filter(state="published")
         self.filterset = UseCaseFilter(self.request.GET, queryset=queryset)
