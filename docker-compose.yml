@@ -12,6 +12,9 @@ services:
       - DJANGO_MIGRATE=yes
       - DJANGO_COLLECT_STATIC=yes
       - DJANGO_INDEX_CONTENT=no
+      - ELASTICSEARCH_TIMEOUT=60
+      - ALLOWED_HOSTS=0.0.0.0
+      - USE_CASES_FEATURE_TOGGLE=True
       - UWSGI_PORT=8000
       - TIMEOUT=60
     depends_on:

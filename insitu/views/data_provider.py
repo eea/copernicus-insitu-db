@@ -367,7 +367,7 @@ class DataProviderTransition(
             data_provider.feedback = request.POST.get("feedback", "")
             data_provider.save()
             feedback = request.POST.get("feedback", "")
-            self.send_mail(data_provider, feedback, data_provider.name)
+            self.send_mail(data_provider, data_provider.name, feedback)
         return HttpResponseRedirect(
             reverse("provider:detail", kwargs={"pk": data_provider.pk})
         )

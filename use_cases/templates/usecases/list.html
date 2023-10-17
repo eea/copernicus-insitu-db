@@ -119,7 +119,9 @@
 
   <ul class="usecase-list">
     {% for usecase in object_list %}
+      {% if usecase.state == 'published' or user.is_authenticated %}
         <li><a href="{% url 'use_cases:detail' pk=usecase.pk %}">{{ usecase.title }}</a></li>
+      {% endif %}
     {% empty %}
         <li>No use cases yet.</li>
     {% endfor %}
