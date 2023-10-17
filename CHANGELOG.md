@@ -3,7 +3,11 @@ Changelog
 
 * In case of major changes, an email should be sent to all users with the modifications.
 
-2.9.3 (2023-10-18)
+2.9.4 (2023-10-17)
+------------------
+* Fix listing for Use cases
+
+2.9.3 (2023-10-17)
 ------------------
 * Improvements for use cases
 
