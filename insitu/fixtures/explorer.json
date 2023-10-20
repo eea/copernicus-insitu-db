@@ -92,7 +92,7 @@
             "description": "Use cases:\r\n1.  List Data Providers for a given Country or Network\r\n2.  List all commercial Data Providers for a given Country or Network (filter by provider type)\r\n\r\nFiltering done on the objects of the report:\r\n- All Data Providers are shown in this report\r\n- Data sets which have a link to a component and service through  a product and a requirement",
             "created_by_user": 1,
             "created_at": "2018-11-01T13:49:26.768Z",
-            "last_run_date": "2023-03-27T11:23:41.858Z",
+            "last_run_date": "2023-10-19T15:12:59.170Z",
             "snapshot": false,
             "connection": "default"
         }
@@ -106,7 +106,7 @@
             "description": "Use cases:\r\n1. List Data Providers per given Product, Component, or Service\r\n2. List all commercial Data Providers contributing to Copernicus per Service (filter by provider type)\r\n3. List Data providers (networks) contributing to Copernicus per Entrusted Entity\r\n4.  List of Service, Product and Component to which a selected Data provider contribute.\r\n5.  List  Data Providers per Product, Component or Service\r\n6.  List Networks and DataProviders delivering data to the selected service/entrusted Entities\r\n7.  List Data Providers deliver essential data to us  (filter by Level of Compliance)\r\n\r\nFiltering done on the objects of the report:\r\n- All Products are shown in this report (some exceptions might appear for duplicated names)\r\n- Requirements which have at least one link to a product\r\n- Data objects which have at least one link to a requirement\r\n- Data providers which have at least one link to a data object",
             "created_by_user": 1,
             "created_at": "2018-11-01T15:17:56.402Z",
-            "last_run_date": "2023-02-24T11:14:02.926Z",
+            "last_run_date": "2023-10-19T15:11:52.469Z",
             "snapshot": false,
             "connection": "default"
         }
@@ -120,7 +120,7 @@
             "description": "Use cases:\r\n1.  List Data fully compliant with Requirements ( filter by Level of compliance)\r\n\r\nFiltering done on the objects of the report: \r\n- Products that have a link to at least one requirement which has at least one link to a data set.\r\n- Requirements with at least one link to a data set and at least one link to a product\r\n- Data with at least one link to a requirement linked to a product",
             "created_by_user": 1,
             "created_at": "2018-11-01T15:40:37.236Z",
-            "last_run_date": "2023-09-29T11:56:00.013Z",
+            "last_run_date": "2023-09-29T12:41:59.871Z",
             "snapshot": false,
             "connection": "default"
         }
@@ -134,7 +134,7 @@
             "description": "Use cases:\r\n1. List INSPIRE themes covered by Data\r\n\r\nFiltering done on the objects of the report:\r\n- All Data sets are shown in this report",
             "created_by_user": 1,
             "created_at": "2018-11-01T16:27:53.396Z",
-            "last_run_date": "2022-10-03T12:20:13.820Z",
+            "last_run_date": "2023-10-19T15:11:40.949Z",
             "snapshot": false,
             "connection": "default"
         }
@@ -191,6 +191,20 @@
             "created_by_user": 1,
             "created_at": "2021-12-17T11:28:00.382Z",
             "last_run_date": "2022-11-08T10:16:11.923Z",
+            "snapshot": false,
+            "connection": "default"
+        }
+    },
+    {
+        "model": "explorer.query",
+        "pk": 16,
+        "fields": {
+            "title": "Data providers per Countries and Components and No of Data per data providers",
+            "sql": "SELECT dp.data_provider_id AS \"Data provider UID\",\r\n       dp.data_provider_name AS \"Data provider name\",\r\n       coalesce(dpd.product_component, '') AS \"Product component\",\r\n       coalesce(dp.data_provider_network_name, '') AS \"Data provider network name\",\r\n       data_provider_country AS \"Data provider country\",\r\n       dp.data_id_count AS \"Number of Data per DP\"\r\nFROM insitu_dataprovider_special_view_for_report_7_bis dp\r\nINNER JOIN insitu_dataprovider_product_direct_view_report_7 dpd ON dpd.dataproviderrelation_provider_id = dp.data_provider_id;",
+            "description": "Use cases:\r\n1.Filter per ‘Data Provider Country’\r\n2. Filter per ‘Product component’\r\n3. List data providers networks and data count per data provider",
+            "created_by_user": 1,
+            "created_at": "2023-10-19T15:14:29.605Z",
+            "last_run_date": "2023-10-20T09:28:30.773Z",
             "snapshot": false,
             "connection": "default"
         }

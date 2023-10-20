@@ -267,3 +267,20 @@ CREATE VIEW insitu_dataprovider_product_direct_view_report_7 as
     INNER JOIN insitu_data_geographical_coverage dgc ON  d.id = dgc.data_id
     INNER JOIN picklists_country co ON co.code = dgc.country_id
     WHERE p._deleted = FALSE and pr._deleted = FALSE and r._deleted = FALSE and dr._deleted = FALSE and d._deleted = FALSE and dpr._deleted = FALSE;
+
+
+CREATE VIEW insitu_dataprovider_special_view_for_report_7_bis as
+    SELECT dp.id AS "data_provider_id",
+           dp.name AS "data_provider_name",
+           c.name AS "data_provider_country",
+           dpnetwork.name AS "data_provider_network_name",
+           count(dpr.id) AS "data_id_count"
+    FROM insitu_dataprovider dp
+    LEFT OUTER JOIN insitu_dataproviderdetails dpd ON dp.id = dpd.data_provider_id
+    LEFT OUTER JOIN insitu_dataproviderrelation dpr ON dp.id = dpr.provider_id
+    LEFT OUTER JOIN insitu_dataprovider_countries dpc ON dp.id = dpc.dataprovider_id
+    LEFT OUTER JOIN picklists_country c ON c.code = dpc.country_id
+    LEFT OUTER JOIN insitu_dataprovider_networks dpn ON dp.id = dpn.from_dataprovider_id
+    LEFT OUTER JOIN insitu_dataprovider dpnetwork ON dpnetwork.id = dpn.to_dataprovider_id and dpnetwork._deleted = FALSE
+    WHERE dp._deleted = FALSE and dpr._deleted = FALSE and dpnetwork._deleted = FALSE
+    GROUP BY dp.id, dp.name, c.name, dpnetwork.name;
