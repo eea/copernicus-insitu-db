@@ -9,10 +9,12 @@ https://docs.djangoproject.com/en/1.11/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/1.11/ref/settings/
 """
-
+import environ
 import os
 import sentry_sdk
 from sentry_sdk.integrations.django import DjangoIntegration
+
+env = environ.Env()
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -22,32 +24,29 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/1.11/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.environ.get("SECRET_KEY", "secret")
+SECRET_KEY = env("SECRET_KEY", default="secret")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.environ.get("DEBUG", False)
-DEBUG_TOOLBAR = os.environ.get("DEBUG_TOOLBAR", False)
+DEBUG = env("DEBUG", default=False)
+DEBUG_TOOLBAR = env("DEBUG_TOOLBAR", default=False)
 
-ALLOWED_HOSTS = [
-    "localhost",
-    "127.0.0.1",
-    os.environ.get("ALLOWED_HOSTS", None),
-]
-CSRF_TRUSTED_ORIGINS = os.environ.get("ALLOWED_HOSTS", None)
+ALLOWED_HOSTS = env.list("ALLOWED_HOSTS", default="localhost,127.0.0.1")
+
+CSRF_TRUSTED_ORIGINS = env.list("CSRF_TRUSTED_ORIGINS", default=[])
 
 # Sentry
-SENTRY_DSN = os.environ.get("SENTRY_DSN", "")
-SENTRY_TAG_RELEASE = os.environ.get("SENTRY_TAG_RELEASE", "")
-SENTRY_TAG_ENVIRONMENT = os.environ.get("SENTRY_TAG_ENVIRONMENT", "")
-SENTRY_TAG_SITE = os.environ.get("SENTRY_TAG_SITE", "")
+SENTRY_DSN = env("SENTRY_DSN", default="")
+SENTRY_TAG_RELEASE = env("SENTRY_TAG_RELEASE", default="")
+SENTRY_TAG_ENVIRONMENT = env("SENTRY_TAG_ENVIRONMENT", default="")
+SENTRY_TAG_SITE = env("SENTRY_TAG_SITE", default="")
 
 if SENTRY_DSN:
     sentry_sdk.init(
         dsn=SENTRY_DSN, release=SENTRY_TAG_RELEASE, integrations=[DjangoIntegration()]
     )
 
-    SENTRY_AUTH_TOKEN = os.environ.get("SENTRY_AUTH_TOKEN", "")
-    SENTRY_API_URL = os.environ.get("SENTRY_API_URL", "")
+    SENTRY_AUTH_TOKEN = env("SENTRY_AUTH_TOKEN", default="")
+    SENTRY_API_URL = env("SENTRY_API_URL", default="")
 
 # Application definition
 
@@ -81,7 +80,7 @@ if not DEBUG:
     ]
 
     RAVEN_CONFIG = {
-        "dsn": os.environ.get("SENTRY_DSN", None),
+        "dsn": env("SENTRY_DSN", default=None),
     }
 
 if DEBUG_TOOLBAR:
@@ -145,9 +144,9 @@ DATABASES = {
         "ENGINE": "django.db.backends.postgresql",
         "HOST": "db",
         "PORT": 5432,
-        "NAME": os.environ.get("POSTGRES_DB", "insitu"),
-        "USER": os.environ.get("POSTGRES_USER", "demo"),
-        "PASSWORD": os.environ.get("POSTGRES_PASSWORD", "demo"),
+        "NAME": env("POSTGRES_DB", default="insitu"),
+        "USER": env("POSTGRES_USER", default="demo"),
+        "PASSWORD": env("POSTGRES_PASSWORD", default="demo"),
     }
 }
 
@@ -173,11 +172,11 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-READ_ONLY_GROUP = os.environ.get("READ_ONLY_GROUP", "ReadOnly")
-PRODUCT_EDITOR_GROUP = os.environ.get("PRODUCT_EDITOR_GROUP", "ProductEditor")
-PICKLISTS_EDITOR_GROUP = os.environ.get("PICKLISTS_EDITOR_GROUP", "PicklistsEditor")
-USE_CASES_PUBLISHER_GROUP = os.environ.get(
-    "USE_CASES_PUBLISHER_GROUP", "UseCasesPublisher"
+READ_ONLY_GROUP = env("READ_ONLY_GROUP", default="ReadOnly")
+PRODUCT_EDITOR_GROUP = env("PRODUCT_EDITOR_GROUP", default="ProductEditor")
+PICKLISTS_EDITOR_GROUP = env("PICKLISTS_EDITOR_GROUP", default="PicklistsEditor")
+USE_CASES_PUBLISHER_GROUP = env(
+    "USE_CASES_PUBLISHER_GROUP", default="UseCasesPublisher"
 )
 
 # Internationalization
@@ -185,7 +184,7 @@ USE_CASES_PUBLISHER_GROUP = os.environ.get(
 
 LANGUAGE_CODE = "en-us"
 
-TIME_ZONE = os.environ.get("TZ", "Europe/Copenhagen")
+TIME_ZONE = env("TZ", default="Europe/Copenhagen")
 
 USE_I18N = True
 
@@ -204,7 +203,7 @@ MEDIA_ROOT = os.path.join(BASE_DIR, "..", "static/media/")
 
 ELASTICSEARCH_DSL = {
     "default": {
-        "hosts": os.environ.get("ELASTICSEARCH_HOST", "elasticsearch"),
+        "hosts": env("ELASTICSEARCH_HOST", default="elasticsearch"),
         "http_auth": os.environ.get("ELASTICSEARCH_AUTH", "user:password"),
         "timeout": int(os.environ.get("ELASTICSEARCH_TIMEOUT", 120)),
     },
