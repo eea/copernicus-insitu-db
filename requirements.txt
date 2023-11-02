@@ -10,7 +10,7 @@ django-guardian==2.4.0
 django-hijack==3.4.1
 django-sql-explorer==3.2.0
 django-wkhtmltopdf==3.4.0
-Django==3.2.20
+Django==3.2.23
 reportlab==4.0.4
 elasticsearch-dsl==6.4.0
 openpyxl==3.1.2
