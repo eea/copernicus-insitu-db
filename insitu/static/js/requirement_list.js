@@ -43,6 +43,27 @@ $(document).ready(function () {
       }
     }
   };
+
+  var filters = {};
+
+  var queryString = window.location.search.substring(1);
+
+  queryString.split('&').forEach(function(param) {
+    if(!param) {
+      return
+    }
+      var parts = param.split('=');
+      filters[parts[0]] = decodeURIComponent(parts[1]);
+  });
+
+  var isOk = function(value) {
+    return value && value !== 'All'
+  }
+
+  Object.keys(filters).forEach(function(key) {
+    $('#' + key).val(filters[key])
+  })
+
   var $table = $('#requirements').dataTable({
     "processing": true,
     "serverSide": true,
@@ -54,8 +75,7 @@ $(document).ready(function () {
       [10, 25, 50, -1],
       ['10 rows', '25 rows', '50 rows', 'Show all']
     ],
-    "buttons": [
-      $.extend(true, {}, buttonCommon, {
+    "buttons": [{
         extend: 'pdf',
         exportOptions: { orthogonal: 'export' },
         text: 'Save as PDF',
@@ -70,14 +90,13 @@ $(document).ready(function () {
           objFooter.columns = cols;
           doc.footer = objFooter;
         }
-      }),
-      $.extend(true, {}, buttonCommon,
+      },
         {
           extend: 'excel',
           filename: 'CIS2_Requirements.',
           title: 'CIS2 Requirements',
           text: 'Save as Excel',
-        }),
+        },
     ],
     "language": {
       "infoFiltered": "<span class='green-text'>(filtered from _MAX_ total records)<span>",
@@ -107,14 +126,33 @@ $(document).ready(function () {
       data.product = $('#product').val();
       data.state = $('#state').val();
       data.component = $('#component').val();
+
+      var keys = ['dissemination', 'quality_control_procedure', 'group', 'product', 'state', 'component']
+      var queryString = ''
+      for(var key of keys) {
+        if(isOk(data[key])) {
+          queryString += `${queryString.length ? "&" : ""}${key}=${encodeURIComponent(data[key])}`
+        }
+      }
+
+      if(queryString.length) {
+        window.history.pushState({}, '', '?' + queryString);
+      } else {
+        window.history.pushState({}, '', window.location.pathname);
+      }
+
     },
     "stateLoadParams": function (_settings, data) {
+      Object.keys(filters).forEach(function(key) {
+        data[key] = filters[key]
+      })
+    
       $('#dissemination').val(data.dissemination);
-      $('#quality_control_procedure').val(data.quality_control_procedure);
+      $('#quality_control_procedure').val( data.quality_control_procedure);
       $('#group').val(data.group);
       $('#product').val(data.product);
       $('#state').val(data.state);
-      $('#component').val();
+      $('#component').val(data.component);
     },
     "drawCallback": function (_settings) {
       let info = $(this).closest('.dataTables_wrapper').find('.dataTables_info');
