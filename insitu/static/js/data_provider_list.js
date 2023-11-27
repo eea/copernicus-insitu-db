@@ -61,7 +61,6 @@ $(document).ready(function () {
     $('#' + key).val(filters[key])
   })
 
-
   var $table = $('#providers').dataTable({
     "processing": true,
     "serverSide": true,

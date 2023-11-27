@@ -12,8 +12,6 @@ function updateFilterOptions(filter, option_data) {
   });
 }
 $(document).ready(function () {
-
-
   var filters = {};
 
   var queryString = window.location.search.substring(1);
@@ -80,8 +78,6 @@ $(document).ready(function () {
       data.status = $('#status').val();
       data.area = $('#area').val();
 
-
-
       var keys = ['service', 'component', 'entity', 'group', 'status', 'area']
       var queryString = ''
       for(var key of keys) {
@@ -96,13 +92,12 @@ $(document).ready(function () {
         window.history.pushState({}, '', window.location.pathname);
       }
 
-
     },
     "stateLoadParams": function (_settings, data) {
       Object.keys(filters).forEach(function(key) {
         data[key] = filters[key]
       })
-    
+
       $('#service').val(data.service);
       $('#component').val(data.component);
       $('#entity').val(data.entity);

@@ -14,8 +14,6 @@ function updateFilterOptions(filter, option_data) {
   });
 }
 $(document).ready(function () {
-
-
   var filters = {};
 
   var queryString = window.location.search.substring(1);
@@ -35,8 +33,6 @@ $(document).ready(function () {
   Object.keys(filters).forEach(function(key) {
     $('#' + key).val(filters[key])
   })
-
-
 
   var $table = $('#data').dataTable({
     "processing": true,
@@ -111,7 +107,6 @@ $(document).ready(function () {
       data.requirement = $('#requirement').val();
       data.state = $('#state').val();
       data.component = $('#component').val();
-
 
       var keys = ['update_frequency', 'area', 'timeliness', 'data_policy', 'data_type', 'data_format', 'quality_control_procedure', 'dissemination', 'requirement', 'state', 'component']
       var queryString = ''

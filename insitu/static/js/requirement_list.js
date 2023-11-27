@@ -44,7 +44,6 @@ $(document).ready(function () {
     }
   };
 
-
   var filters = {};
 
   var queryString = window.location.search.substring(1);
@@ -64,8 +63,6 @@ $(document).ready(function () {
   Object.keys(filters).forEach(function(key) {
     $('#' + key).val(filters[key])
   })
-
-
 
   var $table = $('#requirements').dataTable({
     "processing": true,
@@ -182,11 +179,6 @@ $(document).ready(function () {
       }
     ]
   }).fnFilterOnReturn();
-
-
-
-
-
 
   $('#dissemination,#quality_control_procedure,#group,#product,#state,#component').on(
     'change', function (_event) {
