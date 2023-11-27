@@ -12,6 +12,28 @@ function updateFilterOptions(filter, option_data) {
   });
 }
 $(document).ready(function () {
+
+
+  var filters = {};
+
+  var queryString = window.location.search.substring(1);
+
+  queryString.split('&').forEach(function(param) {
+    if(!param) {
+      return
+    }
+      var parts = param.split('=');
+      filters[parts[0]] = decodeURIComponent(parts[1]);
+  });
+
+  var isOk = function(value) {
+    return value && value !== 'All'
+  }
+
+  Object.keys(filters).forEach(function(key) {
+    $('#' + key).val(filters[key])
+  })
+
   var $table = $('#products').dataTable({
     "processing": true,
     "serverSide": true,
@@ -57,8 +79,30 @@ $(document).ready(function () {
       data.group = $('#group').val();
       data.status = $('#status').val();
       data.area = $('#area').val();
+
+
+
+      var keys = ['service', 'component', 'entity', 'group', 'status', 'area']
+      var queryString = ''
+      for(var key of keys) {
+        if(isOk(data[key])) {
+          queryString += `${queryString.length ? "&" : ""}${key}=${encodeURIComponent(data[key])}`
+        }
+      }
+
+      if(queryString.length) {
+        window.history.pushState({}, '', '?' + queryString);
+      } else {
+        window.history.pushState({}, '', window.location.pathname);
+      }
+
+
     },
     "stateLoadParams": function (_settings, data) {
+      Object.keys(filters).forEach(function(key) {
+        data[key] = filters[key]
+      })
+    
       $('#service').val(data.service);
       $('#component').val(data.component);
       $('#entity').val(data.entity);

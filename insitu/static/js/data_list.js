@@ -14,6 +14,30 @@ function updateFilterOptions(filter, option_data) {
   });
 }
 $(document).ready(function () {
+
+
+  var filters = {};
+
+  var queryString = window.location.search.substring(1);
+
+  queryString.split('&').forEach(function(param) {
+    if(!param) {
+      return
+    }
+      var parts = param.split('=');
+      filters[parts[0]] = decodeURIComponent(parts[1]);
+  });
+
+  var isOk = function(value) {
+    return value && value !== 'All'
+  }
+
+  Object.keys(filters).forEach(function(key) {
+    $('#' + key).val(filters[key])
+  })
+
+
+
   var $table = $('#data').dataTable({
     "processing": true,
     "serverSide": true,
@@ -87,8 +111,28 @@ $(document).ready(function () {
       data.requirement = $('#requirement').val();
       data.state = $('#state').val();
       data.component = $('#component').val();
+
+
+      var keys = ['update_frequency', 'area', 'timeliness', 'data_policy', 'data_type', 'data_format', 'quality_control_procedure', 'dissemination', 'requirement', 'state', 'component']
+      var queryString = ''
+      for(var key of keys) {
+        if(isOk(data[key])) {
+          queryString += `${queryString.length ? "&" : ""}${key}=${encodeURIComponent(data[key])}`
+        }
+      }
+
+      if(queryString.length) {
+        window.history.pushState({}, '', '?' + queryString);
+      } else {
+        window.history.pushState({}, '', window.location.pathname);
+      }
+
     },
     "stateLoadParams": function (_settings, data) {
+      Object.keys(filters).forEach(function(key) {
+        data[key] = filters[key]
+      })
+
       $('#update_frequency').val(data.update_frequency);
       $('#area').val(data.area);
       $('#timeliness').val(data.timeliness);
