@@ -3,6 +3,11 @@ Changelog
 
 * In case of major changes, an email should be sent to all users with the modifications.
 
+2.9.6 (2023-11-27)
+------------------
+* Fix export in listing pages
+* Add query params to listing filters
+
 2.9.5 (2023-10-20)
 ------------------
 * add new report
