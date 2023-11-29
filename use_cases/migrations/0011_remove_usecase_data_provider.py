@@ -4,14 +4,13 @@ from django.db import migrations
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('use_cases', '0010_auto_20231128_1818'),
+        ("use_cases", "0010_auto_20231128_1818"),
     ]
 
     operations = [
         migrations.RemoveField(
-            model_name='usecase',
-            name='data_provider',
+            model_name="usecase",
+            name="data_provider",
         ),
     ]

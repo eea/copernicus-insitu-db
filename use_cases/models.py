@@ -70,7 +70,9 @@ def check_can_return_to_draft(instance, user):
 
 class UseCase(models.Model):
     title = models.CharField(max_length=256)
-    data_provider = models.ForeignKey(copernicus_models.DataProvider, on_delete=models.SET_NULL, null=True)
+    data_provider = models.ForeignKey(
+        copernicus_models.DataProvider, on_delete=models.SET_NULL, null=True
+    )
     data = models.CharField(max_length=128)
     image = models.ImageField(
         upload_to="use-case-images/",

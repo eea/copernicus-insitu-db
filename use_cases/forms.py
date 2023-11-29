@@ -26,7 +26,7 @@ class ReferenceForm(forms.ModelForm):
         model = models.Reference
         fields = ["source", "link", "date"]
         widgets = {
-          'source': forms.Textarea(attrs={'rows':2, 'cols':30}),
+            "source": forms.Textarea(attrs={"rows": 2, "cols": 30}),
         }
 
 

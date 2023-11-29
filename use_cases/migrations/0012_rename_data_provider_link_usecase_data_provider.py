@@ -4,15 +4,14 @@ from django.db import migrations
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('use_cases', '0011_remove_usecase_data_provider'),
+        ("use_cases", "0011_remove_usecase_data_provider"),
     ]
 
     operations = [
         migrations.RenameField(
-            model_name='usecase',
-            old_name='data_provider_link',
-            new_name='data_provider',
+            model_name="usecase",
+            old_name="data_provider_link",
+            new_name="data_provider",
         ),
     ]
