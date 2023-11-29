@@ -51,13 +51,15 @@
 
     {% bootstrap_field form.copernicus_services required_css_class='required' %}
 
+    {% bootstrap_field form.components required_css_class='required' %}
+
     {% bootstrap_field form.themes required_css_class='required' %}
         
     {% bootstrap_field form.country required_css_class='required' %}
     
-    {% bootstrap_field form.region required_css_class='required' %}
+    {% bootstrap_field form.region %}
     
-    {% bootstrap_field form.locality required_css_class='required' %}
+    {% bootstrap_field form.locality %}
 
 
   <div class="row">

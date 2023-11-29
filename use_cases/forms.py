@@ -13,6 +13,7 @@ class UseCaseForm(forms.ModelForm):
             "image_description",
             "description",
             "copernicus_services",
+            "components",
             "themes",
             "country",
             "region",
@@ -23,13 +24,16 @@ class UseCaseForm(forms.ModelForm):
 class ReferenceForm(forms.ModelForm):
     class Meta:
         model = models.Reference
-        fields = ["source", "date"]
+        fields = ["source", "link", "date"]
+        widgets = {
+          'source': forms.Textarea(attrs={'rows':2, 'cols':30}),
+        }
 
 
 ReferenceFormSet = forms.inlineformset_factory(
     models.UseCase,
     models.Reference,
-    fields=["source", "date"],
+    fields=["source", "link", "date"],
     form=ReferenceForm,
     extra=1,
     can_delete=True,
