@@ -3,6 +3,10 @@ Changelog
 
 * In case of major changes, an email should be sent to all users with the modifications.
 
+2.9.8 (2023-11-29)
+------------------
+* Fix uwsgi timeout
+
 2.9.7 (2023-11-27)
 ------------------
 * Fix export in listing pages
