@@ -49,7 +49,7 @@ class DataList(ProtectedTemplateView):
         requirements = get_choices("name", model_cls=models.Requirement)
         disseminations = get_choices("name", model_cls=pickmodels.Dissemination)
         states = [{"title": "All", "name": "All"}] + [
-            state for state in WORKFLOW_STATES
+            {"title": title, "name": name} for name, title in WORKFLOW_STATES
         ]
         components = get_choices("name", model_cls=models.Component)
         context.update(

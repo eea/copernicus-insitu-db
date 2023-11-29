@@ -38,7 +38,7 @@ class DataProviderList(ProtectedTemplateView):
         context = super().get_context_data()
         provider_types = get_choices("name", model_cls=pickmodels.ProviderType)
         states = [{"title": "All", "name": "All"}] + [
-            state for state in WORKFLOW_STATES
+            {"title": title, "name": name} for name, title in WORKFLOW_STATES
         ]
         components = get_choices("name", model_cls=models.Component)
         context.update(

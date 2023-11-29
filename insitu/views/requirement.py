@@ -104,7 +104,7 @@ class RequirementList(ProtectedTemplateView):
         )
         groups = get_choices("name", model_cls=pickmodels.RequirementGroup)
         states = [{"title": "All", "name": "All"}] + [
-            state for state in WORKFLOW_STATES
+            {"title": title, "name": name} for name, title in WORKFLOW_STATES
         ]
         components = get_choices("name", model_cls=models.Component)
         context.update(
