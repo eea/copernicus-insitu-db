@@ -3,6 +3,11 @@ Changelog
 
 * In case of major changes, an email should be sent to all users with the modifications.
 
+2.9.9 (2023-12-12)
+------------------
+* Add report for data provider statistics
+  [diaanboiangiu]
+
 2.9.8 (2023-11-29)
 ------------------
 * Fix uwsgi timeout
