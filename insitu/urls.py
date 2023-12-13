@@ -162,6 +162,7 @@ reports_patterns = [
         views.ReportsStandardReportView.as_view(),
         name="standard_report",
     ),
+    path("data_providers_network, ", views.DataProvidersNetwortReportkView.as_view(), name="data_providers_network_report"),
     path("country_report/", views.CountryReportView.as_view(), name="country_report"),
     path("<query_id>/", views.ReportsDetailView.as_view(), name="detail"),
     path("<query_id>/json/", views.ReportDataJsonView.as_view(), name="json"),

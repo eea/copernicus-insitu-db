@@ -3,10 +3,23 @@ Changelog
 
 * In case of major changes, an email should be sent to all users with the modifications.
 
-2.9.6 (2023-11-27)
+2.9.9 (2023-12-12)
+------------------
+* Add report for data provider statistics
+  [diaanboiangiu]
+
+2.9.8 (2023-11-29)
+------------------
+* Fix uwsgi timeout
+
+2.9.7 (2023-11-27)
 ------------------
 * Fix export in listing pages
 * Add query params to listing filters
+
+2.9.6 (2023-11-27)
+------------------
+
 
 2.9.5 (2023-10-20)
 ------------------

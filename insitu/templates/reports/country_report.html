@@ -30,6 +30,30 @@
        class="btn btn-default">Cancel</a>
   </form>
 
+  <div class="row">
+    <h1 class="col-sm-12">
+      <span>Data provider network report</span>
+    </h1>
+  </div>
+  <div class="container" style="margin-bottom:20px;">
+  </div>
+  <form action="{% url 'reports:data_providers_network_report' %}" method="POST" style="width: 50%">
+    {% csrf_token %}
+    {{ countries.0.id }}
+    <div class="form-group">
+      <label class="control-label" for="id_country">Countries</label>
+      <select name="country" class="form-control" required id="id_country">
+        <option value="all">All countries</option>
+        {% for country in countries %}
+          <option value="{{ country.code }}">{{ country.name }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <input class="btn btn-primary" type="submit" name="action" value="Generate Excel" />
+    <a href="{% url 'about' %}"
+       class="btn btn-default">Cancel</a>
+  </form>
+
 {% endblock %}
 
 {% block scripts %}
