@@ -1,7 +1,7 @@
 from factory import SubFactory, RelatedFactory
 from factory.django import DjangoModelFactory
 
-from insitu.tests.base.insitu_factories import UserFactory
+from insitu.tests.base.insitu_factories import UserFactory, DataProviderFactory
 from use_cases import models
 
 from factory import Sequence
@@ -32,7 +32,7 @@ class ThemeFactory(DjangoModelFactory):
 
 class UseCaseFactory(DjangoModelFactory):
     title = Sequence(lambda n: f"Use case #{n}")
-    data_provider = Sequence(lambda n: f"Data Provider #{n}")
+    data_provider = SubFactory(DataProviderFactory)
     data = Sequence(lambda n: f"Data #{n}")
     image = ImageField(color="blue")
     image_description = Sequence(lambda n: f"Image description #{n}")
