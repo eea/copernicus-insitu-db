@@ -3,6 +3,12 @@ Changelog
 
 * In case of major changes, an email should be sent to all users with the modifications.
 
+2.9.10 (2023-12-19)
+-------------------
+* Optimize queries
+* Updates to Usecases
+  [dianaboiangiu]
+
 2.9.9 (2023-12-12)
 ------------------
 * Add report for data provider statistics
