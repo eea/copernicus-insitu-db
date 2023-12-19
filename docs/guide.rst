@@ -462,13 +462,6 @@ Database download
 A database dump can be downloaded from the Reports' list page by clicking on the "Database download" button.
 This dump can than be used to manipulate the data with specialized tools.
 
------------------
-Playground
------------------
-This can be accessed by clicking on the "Playground" button from the Reports' detail page.
-The playground can be used by specialized users to write SQL queries to obtain their own reports.
-A request must be made to the developers to access this part of the application.
-
 ------------------
 Report detail page
 ------------------

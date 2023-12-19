@@ -11,7 +11,6 @@
       {% if not user|has_group:READ_ONLY_GROUP and user.is_authenticated %}
         <span class="pull-right">
           <a class="btn btn-primary pull-right margin-left-5" href="{% url 'reports:snapshot' %}">Download database</a>
-          <a class="btn btn-primary pull-right margin-left-5" href="{% url 'reports:playground' %}">Playground</a>
         </span>
       {% endif %}
     </h1>
