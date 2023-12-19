@@ -107,7 +107,8 @@
     <div class="formFields">
       {% bootstrap_field filterset.form.country %}
       {% bootstrap_field filterset.form.themes %}
-      {% bootstrap_field filterset.form.copernicus_services %}
+      {% bootstrap_field filterset.form.copernicus_service %}
+      {% bootstrap_field filterset.form.search %}
       <div class="form-group small">
 
         <button type="button" class="btn btn-default btn-md" id="reset-btn"><span class="glyphicon glyphicon-trash"></span>
@@ -118,11 +119,24 @@
   </form>
 
   <ul class="usecase-list">
-    {% for usecase in object_list %}
-        <li><a href="{% url 'use_cases:detail' pk=usecase.pk %}">{{ usecase.title }}</a></li>
-    {% empty %}
+
+    <div class="row">
+      {% for usecase in object_list %}
+        <a href="{% url 'use_cases:detail' pk=usecase.pk %}">
+        <div class="col-sm-6 col-md-4">
+          <div class="thumbnail">
+            <img src="{% if usecase.image %}{{ usecase.image.url }}{% endif %}">
+            <div class="caption">
+              <h3>{{ usecase.title }}</h3>
+              <p>{{ usecase.description|slice:":150" }}...</p>
+            </div>
+          </div>
+        </div>
+        </a>
+      {% empty %}
         <li>No use cases yet.</li>
-    {% endfor %}
+      {% endfor %}
+  </div>
   </ul>
   <div class="pagination">
     <span class="step-links">

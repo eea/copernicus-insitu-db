@@ -286,16 +286,17 @@ DEFAULT_FROM_EMAIL = os.environ.get("DEFAULT_FROM_EMAIL", "")
 SITE_URL = os.environ.get("SITE_URL", "")
 
 if DEBUG_TOOLBAR:
-
-    def show_toolbar(request):
-        return request.user.is_authenticated and request.user.is_superuser
-
-    INTERNAL_IPS = ALLOWED_HOSTS
-
     DEBUG_TOOLBAR_CONFIG = {
         "SHOW_TOOLBAR_CALLBACK": "copernicus.settings.show_toolbar",
         # Rest of config
     }
+    DEBUG_TOOLBAR_CONFIG = {"SHOW_TOOLBAR_CALLBACK": lambda _request: True}
+    INTERNAL_IPS = [
+        # ...
+        "127.0.0.1",
+        # ...
+    ]
+
 
 # Content Security Policy
 CSP_IMG_SRC = "'self'"

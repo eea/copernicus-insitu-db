@@ -37,7 +37,7 @@ class UseCaseFactory(DjangoModelFactory):
     image = ImageField(color="blue")
     image_description = Sequence(lambda n: f"Image description #{n}")
     description = Sequence(lambda n: f"Description #{n}")
-    copernicus_services = RelatedFactory(CopernicusServiceFactory)
+    copernicus_service = RelatedFactory(CopernicusServiceFactory)
     themes = RelatedFactory(ThemeFactory)
     country = SubFactory(CountryFactory)
     region = Sequence(lambda n: f"Region #{n}")

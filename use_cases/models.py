@@ -83,8 +83,12 @@ class UseCase(models.Model):
     )
     image_description = models.TextField(null=True)
     description = models.TextField(null=True)
-    copernicus_services = models.ManyToManyField(copernicus_models.CopernicusService)
-    components = models.ManyToManyField(copernicus_models.Component)
+    copernicus_service = models.ForeignKey(
+        copernicus_models.CopernicusService, on_delete=models.SET_NULL, null=True
+    )
+    components = models.ManyToManyField(
+        copernicus_models.Component, blank=True, null=True
+    )
     themes = models.ManyToManyField(Theme, blank=True)
     country = models.ForeignKey(Country, on_delete=models.SET_NULL, null=True)
     region = models.CharField(max_length=256, blank=True)

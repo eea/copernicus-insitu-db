@@ -50,7 +50,31 @@
 
     {% bootstrap_field form.description required_css_class='required' %}
 
-    {% bootstrap_field form.copernicus_services required_css_class='required' %}
+    <div class="form-group">
+      <label class="control-label" for="id_copernicus_service">Service</label>
+      <select name="copernicus_service" class="form-control" title="" id="id_copernicus_service">
+        {% for service in copernicus_services %}
+          {% if object.copernicus_service.id == service.id %}
+            <option value="{{ service.id }}" class="{{ service.id }}" selected>{{ service.name }}</option>
+          {% else %}
+            <option value="{{ service.id }}" class="{{ service.id }}">{{ service.name }}</option>
+          {% endif %}
+        {% endfor %}
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label class="control-label" for="id_components">Component</label>
+      <select name="components" class="form-control" title="" id="id_component" multiple="multiple">
+        {% for component in components %}
+          {% if component in  object.components.all %}
+            <option value="{{ component.id }}" class="{{ component.service.id }}" selected>{{ component.name }}</option>
+          {% else %}
+            <option value="{{ component.id }}" class="{{ component.service.id }}">{{ component.name }}</option>
+          {% endif %}
+        {% endfor %}
+      </select>
+    </div>
 
     {% bootstrap_field form.themes required_css_class='required' %}
         
@@ -110,13 +134,47 @@
   <script src="{% static 'js/formset/jquery.formset.js' %}"></script>
   <script nonce="{{request.csp_nonce}}">
 
-$(document).ready(function () {
+    $(document).ready(function () {
+      // reference
       $('select').select2();
       $('.formset_row').formset({
-          addText: '<h4><b>Add reference</b></h4>',
-          deleteText: 'Remove',
-          prefix: 'reference_set'
+        addText: '<h4><b>Add reference</b></h4>',
+        deleteText: 'Remove',
+        prefix: 'reference_set'
+      });
+
+      // service and components dependant select
+      var allOptions = $('#id_component option')
+      $('#id_copernicus_service').change(function () {
+        $('#id_component option').remove();
+        var classes = [];
+        $('#id_copernicus_service option:selected').each(function( index ) {
+          classes.push($(this).prop('class'));
+        });
+        var opts = allOptions.filter( function(index) {
+          return $.inArray($(this).prop('class'), classes) > -1;
+        });
+        $.each(opts, function (i, j) {
+          $(j).appendTo('#id_component');
+        });
       });
     });
+
+    document.onreadystatechange = function () {
+      if (document.readyState === "complete") {
+        var allOptions = $('#id_component option')
+        var classes = [];
+        $('#id_component option').remove();
+        $('#id_copernicus_service option:selected').each(function( index ) {
+          classes.push($(this).prop('class'));
+        });
+        var opts = allOptions.filter( function(index) {
+          return $.inArray($(this).prop('class'), classes) > -1;
+        });
+        $.each(opts, function (i, j) {
+          $(j).appendTo('#id_component');
+        });
+      }
+    }
   </script>
 {% endblock %}

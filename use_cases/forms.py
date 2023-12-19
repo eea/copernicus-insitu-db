@@ -12,7 +12,7 @@ class UseCaseForm(forms.ModelForm):
             "image",
             "image_description",
             "description",
-            "copernicus_services",
+            "copernicus_service",
             "components",
             "themes",
             "country",
