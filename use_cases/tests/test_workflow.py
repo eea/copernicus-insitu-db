@@ -172,7 +172,9 @@ class UseCaseWorkflowTests(base.FormCheckTestCase):
             is_network=True, name="Test provider", created_by=self.creator
         )
         use_case = UseCaseFactory(
-            created_by=self.creator, state="publication_requested", data_provider=provider
+            created_by=self.creator,
+            state="publication_requested",
+            data_provider=provider,
         )
         self.assertEqual(getattr(use_case, "state"), "publication_requested")
 
