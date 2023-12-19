@@ -187,6 +187,11 @@ class DataProviderAdmin(GuardedModelAdmin):
     def get_countries(self, obj):
         return ",\n".join([c.name for c in obj.countries.all()])
 
+    def get_queryset(self, request):
+        queryset = super(DataProviderAdmin, self).get_queryset(request)
+        queryset = queryset.prefetch_related("countries")
+        return queryset
+
 
 class BaseDisplayDeleteAdminMixin:
     list_display = (
@@ -244,6 +249,11 @@ class ProductRequirementAdmin(BaseDisplayDeleteAdminMixin, admin.ModelAdmin):
     def requirement__name(self, obj):
         return obj.requirement.name
 
+    def get_queryset(self, request):
+        queryset = super(ProductRequirementAdmin, self).get_queryset(request)
+        queryset = queryset.select_related("requirement", "product")
+        return queryset
+
 
 @admin.register(models.DataRequirement)
 class DataRequirementAdmin(BaseDisplayDeleteAdminMixin, admin.ModelAdmin):
@@ -270,6 +280,11 @@ class DataRequirementAdmin(BaseDisplayDeleteAdminMixin, admin.ModelAdmin):
     def requirement__name(self, obj):
         return obj.requirement.name
 
+    def get_queryset(self, request):
+        queryset = super(DataRequirementAdmin, self).get_queryset(request)
+        queryset = queryset.select_related("requirement", "data")
+        return queryset
+
 
 @admin.register(models.DataProviderRelation)
 class DataProviderRelationAdmin(BaseDisplayDeleteAdminMixin, admin.ModelAdmin):
@@ -295,6 +310,11 @@ class DataProviderRelationAdmin(BaseDisplayDeleteAdminMixin, admin.ModelAdmin):
     @admin.display(ordering="data__name", description="Data")
     def data__name(self, obj):
         return obj.data.name
+
+    def get_queryset(self, request):
+        queryset = super(DataProviderRelationAdmin, self).get_queryset(request)
+        queryset = queryset.select_related("data", "provider")
+        return queryset
 
 
 @admin.register(models.DataProviderDetails)

@@ -18,19 +18,18 @@ from django.views import View
 
 from explorer.app_settings import UNSAFE_RENDERING
 from explorer.exporters import get_exporter_class
-from explorer.forms import QueryForm
 from explorer.models import Query
-from explorer.views import DownloadQueryView, PlayQueryView
+from explorer.views import DownloadQueryView
 from explorer.views.export import _export
-from explorer.views.utils import query_viewmodel
 from explorer.utils import extract_params
-from explorer.utils import url_get_rows
 
 from wkhtmltopdf.views import PDFTemplateResponse
 
 from insitu.models import Component, CopernicusService, Product, DataProvider
 from insitu.forms import StandardReportForm, CountryReportForm
-from insitu.views.data_provider_network_report_mixin import DataProviderNetworkReportExcelMixin
+from insitu.views.data_provider_network_report_mixin import (
+    DataProviderNetworkReportExcelMixin,
+)
 from insitu.views.reportsmixins import (
     ReportExcelMixin,
     PDFExcelMixin,
@@ -122,27 +121,6 @@ class ReportDataJsonView(ProtectedView):
             data.append(row_data)
 
         return JsonResponse(data, safe=False)
-
-
-class PlaygroundView(PlayQueryView):
-    def render(self):
-        return self.render_template(
-            "reports/playground.html",
-            {"title": "Playground", "form": QueryForm(), "no_jquery": True},
-        )
-
-    def render_with_sql(self, request, query, run_query=True, error=None):
-        rows = url_get_rows(request)
-        context = query_viewmodel(
-            request.user,
-            query,
-            title="Playground",
-            run_query=run_query,
-            error=error,
-            rows=rows,
-        )
-        context.update({"no_jquery": True})
-        return self.render_template("reports/playground.html", context)
 
 
 class SnapshotView(ProtectedTemplateView):
@@ -392,7 +370,8 @@ class CountryReportView(
         return response
 
 
-class DataProvidersNetwortReportkView(ProtectedTemplateView, DataProviderNetworkReportExcelMixin, CountryReportPDFMixin
+class DataProvidersNetwortReportkView(
+    ProtectedTemplateView, DataProviderNetworkReportExcelMixin, CountryReportPDFMixin
 ):
     template_name = "reports/country_report.html"
     permission_classes = ()
@@ -413,11 +392,31 @@ class DataProvidersNetwortReportkView(ProtectedTemplateView, DataProviderNetwork
 
     def post(self, request, *args, **kwargs):
         self.ACCEPTED_NETWORKS_IDS = [
-            802, 21, 122, 23, 134, 811, 828, 358, 839, 2, 827, 180, 890, 16, 20, 891, 182, 18, 123, 10, 889
+            802,
+            21,
+            122,
+            23,
+            134,
+            811,
+            828,
+            358,
+            839,
+            2,
+            827,
+            180,
+            890,
+            16,
+            20,
+            891,
+            182,
+            18,
+            123,
+            10,
+            889,
         ]
         country_code = self.request.POST.getlist("country")[0]
         self.country_code = None
-        if country_code != 'all':
+        if country_code != "all":
             self.country_code = country_code
         if request.POST["action"] == "Generate PDF":
             return self.generate_pdf()

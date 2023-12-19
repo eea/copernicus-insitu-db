@@ -7,6 +7,8 @@ from django.db import models
 from django_fsm import FSMField, transition
 from django.conf import settings
 
+from insitu import models as copernicus_models
+
 User = get_user_model()
 
 
@@ -68,7 +70,9 @@ def check_can_return_to_draft(instance, user):
 
 class UseCase(models.Model):
     title = models.CharField(max_length=256)
-    data_provider = models.CharField(max_length=256)
+    data_provider = models.ForeignKey(
+        copernicus_models.DataProvider, on_delete=models.SET_NULL, null=True
+    )
     data = models.CharField(max_length=128)
     image = models.ImageField(
         upload_to="use-case-images/",
@@ -79,11 +83,16 @@ class UseCase(models.Model):
     )
     image_description = models.TextField(null=True)
     description = models.TextField(null=True)
-    copernicus_services = models.ManyToManyField(CopernicusService)
+    copernicus_service = models.ForeignKey(
+        copernicus_models.CopernicusService, on_delete=models.SET_NULL, null=True
+    )
+    components = models.ManyToManyField(
+        copernicus_models.Component, blank=True, null=True
+    )
     themes = models.ManyToManyField(Theme, blank=True)
     country = models.ForeignKey(Country, on_delete=models.SET_NULL, null=True)
-    region = models.CharField(max_length=256)
-    locality = models.CharField(max_length=256)
+    region = models.CharField(max_length=256, blank=True)
+    locality = models.CharField(max_length=256, blank=True)
     created_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     state = FSMField(default="draft")
@@ -134,7 +143,8 @@ class UseCase(models.Model):
 
 
 class Reference(models.Model):
-    source = models.CharField(max_length=256)
+    source = models.TextField(max_length=256)
+    link = models.URLField(max_length=512, blank=True)
     use_case = models.ForeignKey(UseCase, on_delete=models.CASCADE)
     date = models.CharField(max_length=256)
     created_at = models.DateTimeField(auto_now_add=True)

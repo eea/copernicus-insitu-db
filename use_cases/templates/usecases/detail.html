@@ -228,25 +228,17 @@
   
   <div class="body">
     {{ object.description }}
-
     <div class="services">
-      {% with object.copernicus_services.all as copernicus_services %}
-        {% if copernicus_services|length == 1 %}
-          <i class="theme-text"><b>Copernicus service:</b> {{ copernicus_services.0.name }}</i>
-        {% elif copernicus_services|length > 1 %}
-          <b><i class="theme-text">Copernicus services:</i></b>
-          <small>
-
-            <ul>
-              {% for cs in copernicus_services %}
-              <li>{{ cs.name }}</li>
-              {% endfor %}
-            </ul>
-          </small>
-        {% endif %}
-      {% endwith %}
+      <i class="theme-text"><b>Copernicus service:</b> {{ object.copernicus_service.name }}</i>
     </div>
-
+    <div class="components">
+      <i class="theme-text">
+      <b>Components:</b>
+      {% for component in object.components.all %}
+        <a href="{% url 'product:list'  %}?component={{ component.name }}">{{ component }}</a>
+      {% endfor %}
+    </i>
+    </div>
     <div class="themes">
       {% with object.themes.all as themes %}
         {% if themes|length == 1 %}
@@ -267,7 +259,7 @@
     <div class="references">
       {% with object.reference_set.all as references %}
         {% if references|length == 1 %}
-          <i class="theme-text"><b>Reference:</b> {{ references.0.source }} ( {{references.0.date }} )</i>
+            <i class="theme-text"><b>Reference:</b> <a href="{{ references.0.link }}" target="_blank">{{ references.0.source }} ( {{references.0.date }} )</a></i>
         {% elif references|length > 1 %}
           <b><i class="theme-text">References:</i></b>
           <small>

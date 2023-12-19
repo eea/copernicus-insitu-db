@@ -38,7 +38,7 @@ class DataProviderList(ProtectedTemplateView):
         context = super().get_context_data()
         provider_types = get_choices("name", model_cls=pickmodels.ProviderType)
         states = [{"title": "All", "name": "All"}] + [
-            state for state in WORKFLOW_STATES
+            {"title": title, "name": name} for name, title in WORKFLOW_STATES
         ]
         components = get_choices("name", model_cls=models.Component)
         context.update(
@@ -86,11 +86,35 @@ class DataProviderDetail(ProtectedDetailView):
     permission_denied_redirect = reverse_lazy("provider:list")
     target_type = "data provider"
 
+    def get_object(self):
+        if hasattr(self, "object"):
+            return self.object
+        else:
+            self.object = (
+                self.model.objects.select_related("created_by")
+                .prefetch_related(
+                    "details",
+                    "details__provider_type",
+                    "created_by__team",
+                    "dataproviderrelation_set",
+                    "dataproviderrelation_set__data",
+                )
+                .get(pk=self.kwargs["pk"])
+            )
+            return self.object
+
     def get_template_names(self):
         provider = self.object
         if provider.is_network:
             return ["data_provider/network/detail.html"]
         return ["data_provider/non_network/detail.html"]
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["user_groups"] = self.request.user.groups.values_list(
+            "name", flat=True
+        )
+        return context
 
 
 class DataProviderAddNetwork(CreatedByMixin, LoggingProtectedCreateView):

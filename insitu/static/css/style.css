@@ -423,3 +423,13 @@ table {
 .green-bg {
   background:#007B2B;
 }
+
+.thumbnail {
+  height:500px;
+  overflow: hidden;
+}
+
+.thumbnail img {
+  width: auto;
+  height: 240px;
+}

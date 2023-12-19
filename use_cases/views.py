@@ -6,6 +6,7 @@ from django.http import Http404
 from django.http.response import HttpResponseRedirect
 from use_cases.models import UseCase
 from use_cases.forms import ReferenceFormSet, UseCaseForm
+from insitu import models as copernicus_models
 from insitu.views.base import ChangesRequestedMailMixin
 from insitu.views.protected import (
     LoggingProtectedCreateView,
@@ -20,13 +21,23 @@ from insitu.views.protected import (
 from use_cases.permissions import UseCaseIsEditable, UseCaseIsCreator
 from django_fsm import has_transition_perm
 from django.db import transaction
-from django_filters import FilterSet
+from django.db.models import Q
+from django_filters import FilterSet, CharFilter
+
+
+def multiple_search(queryset, name, value):
+    queryset = queryset.filter(
+        Q(title__icontains=value) | Q(description__icontains=value)
+    )
+    return queryset
 
 
 class UseCaseFilter(FilterSet):
+    search = CharFilter(label="Search", method=multiple_search)
+
     class Meta:
         model = UseCase
-        fields = ["country", "themes", "copernicus_services"]
+        fields = ["country", "themes", "copernicus_service"]
 
 
 class UseCaseListView(ListView):
@@ -69,6 +80,8 @@ class UseCaseAddView(LoggingProtectedCreateView):
             data["references"] = ReferenceFormSet(self.request.POST)
         else:
             data["references"] = ReferenceFormSet()
+        data["components"] = copernicus_models.Component.objects.all()
+        data["copernicus_services"] = copernicus_models.CopernicusService.objects.all()
         return data
 
     def form_valid(self, form):
@@ -104,15 +117,30 @@ class UseCaseEditView(LoggingProtectedUpdateView):
 
     def get_context_data(self, **kwargs):
         data = super(UseCaseEditView, self).get_context_data(**kwargs)
+        data["components"] = copernicus_models.Component.objects.all()
+        data["copernicus_services"] = copernicus_models.CopernicusService.objects.all()
         if self.request.POST:
-            data["references"] = ReferenceFormSet(self.request.POST)
+            data["references"] = ReferenceFormSet(
+                self.request.POST, instance=self.object
+            )
         else:
             data["references"] = ReferenceFormSet(instance=self.object)
         return data
 
     def form_valid(self, form):
-        response = super().form_valid(form)
+        context = self.get_context_data()
+        references = context["references"]
+        with transaction.atomic():
+            self.object = form.save(commit=True)
+            if references.is_valid():
+                references.save()
+
         messages.success(self.request, "The use case was updated successfully!")
+        return super(UseCaseEditView, self).form_valid(form)
+
+    def form_invalid(self, form):
+        response = super().form_invalid(form)
+        messages.error(self.request, "The use case was not updated!")
         return response
 
     def get_success_url(self):

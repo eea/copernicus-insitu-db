@@ -22,7 +22,7 @@
     </span>
     <h1 class="col-sm-12">
       <span>Data provider</span>
-      {% if not user|has_group:READ_ONLY_GROUP and user.is_authenticated %}
+      {% if not user_groups|check_group:READ_ONLY_GROUP and user.is_authenticated %}
         {% if provider.state == 'draft' %}
           {% if request.user == provider.created_by or request.user.is_superuser or request.user in provider.created_by.team.teammates.all or user_perm %}
             <span class="pull-right margin-left-btn">
@@ -97,40 +97,40 @@
       </tr>
       <tr class="row">
         <th class="col-md-4 col-sm-6">Acronym</th>
-        <td class="col-md-8 col-sm-6">{{ provider.details.first.acronym }}</td>
+        <td class="col-md-8 col-sm-6">{{ provider.details.0.acronym }}</td>
       </tr>
       <tr class="row">
         <th class="col-md-4 col-sm-6">Website</th>
         <td class="col-md-8 col-sm-6">
-          <a href="{{ provider.details.first.website }}" target="_blank">
-            {{ provider.details.first.website }}
+          <a href="{{ provider.details.0.website }}" target="_blank">
+            {{ provider.details.0.website }}
           </a>
         </td>
       </tr>
       <tr class="row">
         <th class="col-md-4 col-sm-6">Address</th>
-        <td class="col-md-8 col-sm-6">{{ provider.details.first.address }}</td>
+        <td class="col-md-8 col-sm-6">{{ provider.details.0.address }}</td>
       </tr>
       <tr class="row">
         <th class="col-md-4 col-sm-6">Phone</th>
         <td class="col-md-8 col-sm-6">
-          <a href="tel:{{ provider.details.first.phone }}">
-            {{ provider.details.first.phone }}
+          <a href="tel:{{ provider.details.0.phone }}">
+            {{ provider.details.0.phone }}
           </a>
         </td>
       </tr>
       <tr class="row">
         <th class="col-md-4 col-sm-6">Email</th>
         <td class="col-md-8 col-sm-6">
-          <a href="mailto:{{ provider.details.first.email }}" target="_top">
-            {{ provider.details.first.email }}
+          <a href="mailto:{{ provider.details.0.email }}" target="_top">
+            {{ provider.details.0.email }}
           </a>
         </td>
       </tr>
       <tr class="row">
         <th class="col-md-4 col-sm-6">Contact person</th>
         <td class="col-md-8 col-sm-6">
-          {{ provider.details.first.contact_person }}</td>
+          {{ provider.details.0.contact_person }}</td>
       </tr>
       <tr class="row">
         <th class="col-md-4 col-sm-6">
@@ -138,7 +138,7 @@
           <a target="_blank" href="/help#providertype"><span class="glyphicon glyphicon-question-sign"></span></a>
         </th>
         <td class="col-md-8 col-sm-6">
-          {{ provider.details.first.provider_type }}</td>
+          {{ provider.details.0.provider_type }}</td>
       </tr>
       <tr class="row">
         <th class="col-md-4 col-sm-6">
@@ -147,7 +147,7 @@
         </th>
         <td class="col-md-8 col-sm-6">
           {{ provider.state.title }}
-          {% if not user|has_group:READ_ONLY_GROUP and user.is_authenticated %}
+          {% if not user_groups|check_group:READ_ONLY_GROUP and user.is_authenticated %}
             <div class="pull-right">
               {% if provider.state == 'draft' %}
                 {% if provider.created_by == request.user or request.user in provider.created_by.team.teammates.all or user_perm %}

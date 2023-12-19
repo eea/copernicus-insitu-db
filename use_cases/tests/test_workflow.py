@@ -57,7 +57,10 @@ class UseCaseWorkflowTests(base.FormCheckTestCase):
     def test_transition(self):
         self.erase_logging_file()
         self.login_creator()
-        use_case = UseCaseFactory(created_by=self.creator)
+        provider = base.DataProviderFactory(
+            is_network=True, name="Test provider", created_by=self.creator
+        )
+        use_case = UseCaseFactory(created_by=self.creator, data_provider=provider)
         self.assertEqual(getattr(use_case, "state"), "draft")
 
         transitions = [
@@ -144,7 +147,10 @@ class UseCaseWorkflowTests(base.FormCheckTestCase):
 
     def test_transition_inexistent_state(self):
         self.login_creator()
-        use_case = UseCaseFactory(created_by=self.creator)
+        provider = base.DataProviderFactory(
+            is_network=True, name="Test provider", created_by=self.creator
+        )
+        use_case = UseCaseFactory(created_by=self.creator, data_provider=provider)
         self.assertEqual(getattr(use_case, "state"), "draft")
 
         response = self.client.post(
@@ -162,8 +168,13 @@ class UseCaseWorkflowTests(base.FormCheckTestCase):
 
     def test_transition_changes_requested_feedback(self):
         self.login_creator()
+        provider = base.DataProviderFactory(
+            is_network=True, name="Test provider", created_by=self.creator
+        )
         use_case = UseCaseFactory(
-            created_by=self.creator, state="publication_requested"
+            created_by=self.creator,
+            state="publication_requested",
+            data_provider=provider,
         )
         self.assertEqual(getattr(use_case, "state"), "publication_requested")
 
