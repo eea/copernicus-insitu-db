@@ -1,18 +1,6 @@
-from insitu.models import Data, Requirement, DataProvider
-from django.utils.html import strip_tags
-from picklists.models import Country
-import datetime
 from django.urls import reverse
-from reportlab.platypus import (
-    Paragraph,
-    PageBreak,
-    Table,
-    TableStyle,
-)
 
-from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
-from reportlab.lib.colors import Color, HexColor, red, black
-from reportlab.lib.enums import TA_CENTER, TA_LEFT, TA_JUSTIFY
+from insitu.models import DataProvider
 
 
 class DataProviderNetworkReportExcelMixin:
@@ -84,9 +72,7 @@ class DataProviderNetworkReportExcelMixin:
         worksheet.set_column("G1:G1", 50)
         worksheet.set_row(0, 50)
         worksheet.set_row(1, 40)
-        worksheet.merge_range(
-            "A1:G1", "Data Networks report", self.format_header
-        )
+        worksheet.merge_range("A1:G1", "Data Networks report", self.format_header)
         headers = [
             "Network Arconym",
             "Network Name",
@@ -102,10 +88,14 @@ class DataProviderNetworkReportExcelMixin:
 
         network_index = 2
         for network in self.networks:
-            network_url = self.request.build_absolute_uri(reverse("provider:detail", kwargs={"pk": network.id}))
+            network_url = self.request.build_absolute_uri(
+                reverse("provider:detail", kwargs={"pk": network.id})
+            )
             country_index = network_index
             if self.country_code:
-                country_objects = network.countries.filter(code=self.country_code).order_by("name")
+                country_objects = network.countries.filter(
+                    code=self.country_code
+                ).order_by("name")
             else:
                 country_objects = network.countries.order_by("name")
             for country_object in country_objects:
@@ -151,7 +141,15 @@ class DataProviderNetworkReportExcelMixin:
                 worksheet.write_row(
                     network_index,
                     0,
-                    [network.details.first().acronym, network.name, network_url, "", "", "", ""],
+                    [
+                        network.details.first().acronym,
+                        network.name,
+                        network_url,
+                        "",
+                        "",
+                        "",
+                        "",
+                    ],
                     self.format_rows,
                 )
                 network_index = country_index
@@ -188,7 +186,7 @@ class DataProviderNetworkReportExcelMixin:
                     network_url,
                     self.format_rows,
                 )
-                network_index = country_index 
+                network_index = country_index
 
     def generate_excel_file(self, workbook):
         self.set_formats(workbook)

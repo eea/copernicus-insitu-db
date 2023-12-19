@@ -27,6 +27,11 @@ def has_group(user, group_name):
     return user.groups.filter(name=group_name).exists()
 
 
+@register.filter(name="check_group")
+def check_group(groups, group_name):
+    return group_name in groups
+
+
 @register.simple_tag
 def has_user_perm(obj, user):
     return obj.has_user_perm(user)

@@ -278,9 +278,45 @@ class DataDetail(ProtectedDetailView):
             ],
         }
         form = forms.DataReadyForm(data)
+        context["user_groups"] = self.request.user.groups.values_list(
+            "name", flat=True
+        )
         if not form.is_valid():
             context["failed_validation"] = True
         return context
+
+    def get_object(self):
+        if hasattr(self, "object"):
+            return self.object
+        else:
+            self.object = (
+                self.model.objects.select_related(
+                    "update_frequency",
+                    "area",
+                    "timeliness",
+                    "data_policy",
+                    "data_type",
+                    "data_format",
+                    "quality_control_procedure",
+                    "dissemination",
+                    "status",
+                    "created_by",
+                )
+                .prefetch_related(
+                    "inspire_themes",
+                    "essential_variables",
+                    "geographical_coverage",
+                    "datarequirement_set",
+                    "datarequirement_set__requirement",
+                    "datarequirement_set__level_of_compliance",
+                    "datarequirement_set__created_by",
+                    "dataproviderrelation_set",
+                    "dataproviderrelation_set__provider",
+                    "dataproviderrelation_set__created_by",
+                )
+                .get(pk=self.kwargs["pk"])
+            )
+            return self.object
 
 
 class DataDelete(LoggingProtectedDeleteView):

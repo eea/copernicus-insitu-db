@@ -21,7 +21,7 @@
     </span>
     <h1 class="col-sm-12">
       <span>Product details</span>
-      {% if user.is_superuser or user|has_group:PRODUCT_EDITOR_GROUP %}
+      {% if user.is_superuser or user_groups|check_group:PRODUCT_EDITOR_GROUP %}
           {% if user.is_superuser %}
             <span class="pull-right margin-left-btn">
             <a class="btn btn-primary pull-right"

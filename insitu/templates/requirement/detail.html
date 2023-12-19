@@ -23,7 +23,7 @@
     <h1 class="col-sm-12">
       <span>Requirement details</span>
 
-      {% if not user|has_group:READ_ONLY_GROUP %}
+      {% if not user_groups|check_group:READ_ONLY_GROUP %}
         {% if requirement.state == 'draft' %}
           {% if request.user == requirement.created_by or request.user.is_superuser or request.user in requirement.created_by.team.teammates.all or user_perm %}
             <span class="pull-right">
@@ -157,7 +157,7 @@
         </th>
         <td class="col-md-8 col-sm-6">
           {{ requirement.state.title }}
-          {% if not user|has_group:READ_ONLY_GROUP and user.is_authenticated %}
+          {% if not user_groups|check_group:READ_ONLY_GROUP and user.is_authenticated %}
             <div class="pull-right">
               {% if requirement.state == 'draft' %}
                 {% if requirement.created_by == request.user or request.user in requirement.created_by.team.teammates.all or user_perm %}
@@ -244,7 +244,7 @@
   <div class="row">
     <h3 class="col-sm-12">
       <span>Products</span>
-      {% if not user|has_group:READ_ONLY_GROUP %}
+      {% if not user_groups|check_group:READ_ONLY_GROUP %}
         {% if requirement.state == 'draft' %}
           {% if requirement.created_by == request.user or request.user in requirement.created_by.team.teammates.all or request.user.is_superuser or user_perm %}
           <span class="pull-right">
@@ -295,7 +295,7 @@
             </td>
             <td>{{ rel.note }}</td>
             <td class="row">
-              {% if not user|has_group:READ_ONLY_GROUP %}
+              {% if not user_groups|check_group:READ_ONLY_GROUP %}
                 {% if requirement.state == 'draft' %}
                   {% if rel.created_by == request.user  or request.user == requirement.created_by or request.user in rel.created_by.team.teammates.all or request.user.is_superuser or user_perm %}
                     <a href="{% url 'requirement:product:edit' requirement_pk=requirement.pk pk=rel.pk %}"
@@ -320,7 +320,7 @@
   <div class="row">
     <h3 class="col-sm-12">
       <span>Data</span>
-      {% if not user|has_group:READ_ONLY_GROUP %}
+      {% if not user_groups|check_group:READ_ONLY_GROUP %}
         {% if requirement.state == 'draft' %}
           {% if requirement.created_by == request.user or request.user in requirement.created_by.team.teammates.all or request.user.is_superuser or user_perm %}
             <span class="pull-right">
@@ -367,7 +367,7 @@
               {% endif %}
             </td>
             <td class="row">
-              {% if not user|has_group:READ_ONLY_GROUP %}
+              {% if not user_groups|check_group:READ_ONLY_GROUP %}
                 {% if requirement.state == 'draft' %}
                   {% if request.user == rel.created_by or request.user == requirement.created_by or request.user in rel.created_by.team.teammates.all or request.user.is_superuser or user_perm %}
                     <a href="{% url 'requirement:data:edit' requirement_pk=requirement.pk pk=rel.pk %}" class="col-sm-6">

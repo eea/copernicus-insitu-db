@@ -132,6 +132,38 @@ class ProductDetail(ProtectedDetailView):
         self.permission_denied_redirect = reverse("auth:login")
         return super().permission_denied(request)
 
+    def get_object(self):
+        if hasattr(self, "object"):
+            return self.object
+        else:
+            self.object = (
+                self.model.objects.select_related(
+                    "group",
+                    "area",
+                    "component",
+                )
+                .prefetch_related(
+                    "product_requirements",
+                    "product_requirements__requirement",
+                    "product_requirements__level_of_definition",
+                    "product_requirements__relevance",
+                    "product_requirements__criticality",
+                    "product_requirements__barriers",
+                    "product_requirements__created_by",
+                    "component__service",
+                    "component__entrusted_entity",
+                )
+                .get(pk=self.kwargs["pk"])
+            )
+            return self.object
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["user_groups"] = self.request.user.groups.values_list(
+            "name", flat=True
+        )
+        return context
+
 
 class ProductDelete(LoggingProtectedDeleteView):
     template_name = "product/delete.html"
