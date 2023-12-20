@@ -2,10 +2,12 @@
 
 # Create your models here.
 
+from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.db import models
+
+from django_advance_thumbnail import AdvanceThumbnailField
 from django_fsm import FSMField, transition
-from django.conf import settings
 
 from insitu import models as copernicus_models
 
@@ -80,6 +82,13 @@ class UseCase(models.Model):
         blank=True,
         null=True,
         help_text="Image used for this use case.",
+    )
+    thumbnail = AdvanceThumbnailField(
+        source_field="image",
+        upload_to="use-case-images/",
+        null=True,
+        blank=True,
+        size=(500, 500),
     )
     image_description = models.TextField(null=True)
     description = models.TextField(null=True)

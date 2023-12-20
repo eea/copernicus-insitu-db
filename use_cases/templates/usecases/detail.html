@@ -219,7 +219,10 @@
   </div>
   <div class="separator"></div>
 
-  <div class="img-section"><img class="img" src="{{ object.image.url }}">
+  <div class="img-section">
+    <a href="{% if usecase.image %}{{ usecase.image.url }}{% endif %}" target="_blank">
+      <img class="img" src="{% if usecase.thumbnail %}{{ usecase.thumbnail.url }}{% endif %}">
+    </a>
     <div class="image-desc theme-text"><small><i>{{ object.image_description }}</i></small></div>
   </div>
 

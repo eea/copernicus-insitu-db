@@ -125,10 +125,35 @@
         <a href="{% url 'use_cases:detail' pk=usecase.pk %}">
         <div class="col-sm-6 col-md-4">
           <div class="thumbnail">
-            <img src="{% if usecase.image %}{{ usecase.image.url }}{% endif %}">
+            <img src="{% if usecase.thumbnail %}{{ usecase.thumbnail.url }}{% endif %}">
             <div class="caption">
-              <h3>{{ usecase.title }}</h3>
+              <h4>{{ usecase.title }}</h4>
               <p>{{ usecase.description|slice:":150" }}...</p>
+              <div>
+                <small><b>Service:</b> {{ usecase.copernicus_service }}</small>
+                <br>
+                {% if usecase.components.all %}
+                <small>
+                  <b>Components:</b>
+                  {% for component in usecase.components.all %}
+                    <span>{{ component.name }}</span>
+                    {% if not forloop.last %} / {% endif %}
+                  {% endfor %}
+                </small>
+                <br>
+                {% endif %}
+                {% if usecase.themes.all %}
+                <small>
+                  <b>Themes:</b>
+                  {% for theme in usecase.themes.all %}
+                    <span>{{ theme.name }}</span>
+                    {% if not forloop.last %} / {% endif %}
+                  {% endfor %}
+                </small>
+                <br>
+                {% endif %}
+                <small><b>Country:</b> {{ usecase.country }}</small>
+              </div>
             </div>
           </div>
         </div>

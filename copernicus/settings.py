@@ -60,6 +60,7 @@ INSTALLED_APPS = [
     "django_elasticsearch_dsl",
     "django_filters",
     "bootstrap3",
+    "django_advance_thumbnail",
     "django_fsm",
     "hijack",
     "hijack.contrib.admin",
