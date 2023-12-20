@@ -3,6 +3,14 @@ Changelog
 
 * In case of major changes, an email should be sent to all users with the modifications.
 
+2.9.11 (2023-12-20)
+-------------------
+* Fix images in docs
+* Add component/service/entrusted entity to help
+* Index _deleted field
+* Exclude unused components from Standard Report
+  [dianaboiangiu]
+
 2.9.10 (2023-12-19)
 -------------------
 * Optimize queries
