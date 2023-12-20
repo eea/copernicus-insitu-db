@@ -367,6 +367,11 @@ class Requirement(OwnerHistoryModel, ValidationWorkflowModel, SoftDeleteModel):
             obj.make_changes()
             obj.save()
 
+    class Meta:
+        indexes = [
+            models.Index(fields=["_deleted"]),
+        ]
+
 
 class Product(SoftDeleteModel):
     related_objects = [
@@ -399,6 +404,11 @@ class Product(SoftDeleteModel):
     def __str__(self):
         return self.name
 
+    class Meta:
+        indexes = [
+            models.Index(fields=["_deleted", "area"]),
+        ]
+
 
 class ProductRequirement(OwnerHistoryModel, ValidationWorkflowModel, SoftDeleteModel):
     product = models.ForeignKey(
@@ -430,6 +440,11 @@ class ProductRequirement(OwnerHistoryModel, ValidationWorkflowModel, SoftDeleteM
             "delete_requirement", self.requirement
         )
 
+    class Meta:
+        indexes = [
+            models.Index(fields=["_deleted"]),
+        ]
+
 
 class DataProvider(OwnerHistoryModel, ValidationWorkflowModel, SoftDeleteModel):
     related_objects = [
@@ -451,6 +466,11 @@ class DataProvider(OwnerHistoryModel, ValidationWorkflowModel, SoftDeleteModel):
     created_by = models.ForeignKey(User, on_delete=models.PROTECT)
     created_at = models.DateTimeField(auto_now_add=True, null=True)
     updated_at = models.DateTimeField(auto_now=True, null=True)
+
+    class Meta:
+        indexes = [
+            models.Index(fields=["_deleted"]),
+        ]
 
     def __str__(self):
         return self.name
@@ -574,6 +594,9 @@ class DataProviderDetails(OwnerHistoryModel, ValidationWorkflowModel, SoftDelete
 
     class Meta:
         verbose_name_plural = "data provider details"
+        indexes = [
+            models.Index(fields=["_deleted"]),
+        ]
 
     def __str__(self):
         return "Details for {}".format(self.data_provider.name)
@@ -676,6 +699,11 @@ class Data(OwnerHistoryModel, ValidationWorkflowModel, SoftDeleteModel):
     created_by = models.ForeignKey(User, on_delete=models.PROTECT)
     created_at = models.DateTimeField(auto_now_add=True, null=True)
     updated_at = models.DateTimeField(auto_now=True, null=True)
+
+    class Meta:
+        indexes = [
+            models.Index(fields=["_deleted"]),
+        ]
 
     @property
     def components(self):
@@ -784,6 +812,11 @@ class DataRequirement(OwnerHistoryModel, ValidationWorkflowModel, SoftDeleteMode
     created_at = models.DateTimeField(auto_now_add=True, null=True)
     updated_at = models.DateTimeField(auto_now=True, null=True)
 
+    class Meta:
+        indexes = [
+            models.Index(fields=["_deleted"]),
+        ]
+
     def __str__(self):
         return "{} - {}".format(self.data.name, self.requirement.name)
 
@@ -816,6 +849,11 @@ class DataProviderRelation(
         return user.has_perm("change_data", self.data) and user.has_perm(
             "delete_data", self.data
         )
+
+    class Meta:
+        indexes = [
+            models.Index(fields=["_deleted"]),
+        ]
 
 
 class UserLog(models.Model):

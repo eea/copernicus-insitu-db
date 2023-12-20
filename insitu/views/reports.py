@@ -203,12 +203,16 @@ class ReportsStandardReportView(
         )
         return services
 
+    def get_filtered_components(self, services):
+        components = Component.objects.filter(service__in=services).exclude(
+            acronym__in=["MWR", "SRAL", "OLCI", "SLSTR", "SLSTR/OLCI", "TROPOMI"]
+        )
+        return components
+
     def get_context_data(self, **kwargs):
         context = super(ReportsStandardReportView, self).get_context_data(**kwargs)
         context["services"] = self.get_filtered_services()
-        context["components"] = Component.objects.filter(
-            service__in=context["services"]
-        )
+        context["components"] = self.get_filtered_components(context["services"])
         context["form"] = StandardReportForm()
         return context
 

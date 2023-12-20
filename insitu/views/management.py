@@ -18,6 +18,7 @@ from insitu.views.protected.views import ProtectedTemplateView
 from insitu.utils import PICKLISTS_DESCRIPTION
 from picklists import models
 from insitu.models import Product, Requirement, Data, DataProvider, ChangeLog
+from insitu.models import Component, CopernicusService, EntrustedEntity
 
 
 class TransferOwnership(ProtectedTemplateView):
@@ -125,6 +126,8 @@ class HelpPage(ProtectedTemplateView):
             models.Area,
             models.Barrier,
             models.ComplianceLevel,
+            Component,
+            CopernicusService,
             models.Criticality,
             models.Country,
             models.DataFormat,
@@ -134,6 +137,7 @@ class HelpPage(ProtectedTemplateView):
             models.DataType,
             models.DefinitionLevel,
             models.Dissemination,
+            EntrustedEntity,
             models.EssentialVariable,
             models.InspireTheme,
             "metrics",

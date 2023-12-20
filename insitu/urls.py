@@ -1,4 +1,4 @@
-from django.urls import include, path
+from django.urls import include, path, re_path
 from django.contrib.auth import views as auth_views
 from django.views.generic.base import RedirectView
 from django.views.static import serve
@@ -222,7 +222,7 @@ urlpatterns = [
     path("manage", views.Manager.as_view(), name="manage"),
     path("help", views.HelpPage.as_view(), name="help"),
     path("about", views.AboutView.as_view(), name="about"),
-    path("docs/<path>", serve, {"document_root": settings.DOCS_ROOT}),
+    re_path("docs/(?P<path>.*)", serve, {"document_root": settings.DOCS_ROOT}),
     path(
         "docs/guide.html",
         serve,
