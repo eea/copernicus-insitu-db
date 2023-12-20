@@ -3,6 +3,13 @@ Changelog
 
 * In case of major changes, an email should be sent to all users with the modifications.
 
+2.9.12 (2023-12-20)
+-------------------
+* Add thumbnails for the use case images
+* Include themes/components/service/country in use cases listing
+* Update packages
+  [dianaboiangiu]
+
 2.9.11 (2023-12-20)
 -------------------
 * Fix images in docs
