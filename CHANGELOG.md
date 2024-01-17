@@ -3,6 +3,12 @@ Changelog
 
 * In case of major changes, an email should be sent to all users with the modifications.
 
+2.9.13 (2024-01-17)
+-------------------
+*  Fix data provider details not showing
+* Add Deliveries in About page
+  [dianaboiangiu]
+
 2.9.12 (2023-12-20)
 -------------------
 * Add thumbnails for the use case images
