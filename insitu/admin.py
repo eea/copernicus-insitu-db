@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 from django.contrib import admin
+from django.conf import settings
 from django.urls import reverse
 from django.utils.safestring import mark_safe
 from django.utils.crypto import get_random_string
@@ -13,6 +14,7 @@ from insitu.forms import CreateUserForm, UserEditAdminForm
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import PasswordResetForm
 from django.contrib.auth.admin import UserAdmin
+from markdownx.admin import MarkdownxModelAdmin
 
 
 class TeamInline(admin.TabularInline):
@@ -113,6 +115,12 @@ class EntrustedEntityAdmin(admin.ModelAdmin):
 class ChangeLogAdmin(admin.ModelAdmin):
     search_fields = ["version", "current"]
     list_display = ("version", "description", "created_at", "current")
+
+if settings.DELIVERIES_FEATURE_TOGGLE:
+    @admin.register(models.Delivery)
+    class DeliveryAdmin(MarkdownxModelAdmin):
+        search_fields = ["version", "current"]
+        list_display = ("version", "description", "created_at", "current")
 
 
 @admin.register(models.LoggedAction)

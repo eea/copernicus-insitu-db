@@ -9,6 +9,7 @@ django-fsm==2.8.1
 django-filter==23.5
 django-guardian==2.4.0
 django-hijack==3.4.5
+django-markdownx==4.0.7
 django-sql-explorer==3.2.1
 django-wkhtmltopdf==3.4.0
 Django==3.2.23

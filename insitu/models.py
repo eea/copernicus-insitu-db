@@ -9,6 +9,9 @@ from django.db.models.query import QuerySet
 
 from django_fsm import FSMField, transition
 
+from markdownx.models import MarkdownxField
+from markdownfield.models import MarkdownField, RenderedMarkdownField
+from markdownfield.validators import VALIDATOR_STANDARD
 
 from insitu import signals
 from picklists import models as pickmodels
@@ -109,6 +112,19 @@ class ChangeLog(models.Model):
     current = models.BooleanField(default=False)
     created_at = models.DateField(null=True)
     updated_at = models.DateField(auto_now=True, null=True)
+
+    def __str__(self):
+        return self.version
+
+class Delivery(models.Model):
+    version = models.CharField(max_length=50, null=True)
+    description = MarkdownxField()
+    current = models.BooleanField(default=False)
+    created_at = models.DateField(null=True)
+    updated_at = models.DateField(auto_now=True, null=True)
+
+    class Meta:
+        verbose_name_plural = "deliveries"
 
     def __str__(self):
         return self.version

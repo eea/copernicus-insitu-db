@@ -220,7 +220,7 @@ font-size: 18px;
 }
 .pannel-body{
 padding: 10px;
-background: #FBFBFB !important;
+background: #FBFBFB;
 }
 
 .pannel-body-overflow {
@@ -432,4 +432,8 @@ table {
 .thumbnail img {
   width: auto;
   height: 240px;
+}
+
+.pannel-body > .current {
+  color:#94523a;
 }

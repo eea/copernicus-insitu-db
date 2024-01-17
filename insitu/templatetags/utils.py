@@ -1,5 +1,7 @@
 from django import template
 
+from markdownx.utils import markdownify
+
 
 register = template.Library()
 
@@ -31,6 +33,9 @@ def has_group(user, group_name):
 def check_group(groups, group_name):
     return group_name in groups
 
+@register.filter
+def show_markdown(text):
+    return markdownify(text)
 
 @register.simple_tag
 def has_user_perm(obj, user):
