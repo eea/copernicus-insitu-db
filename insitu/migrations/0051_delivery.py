@@ -5,24 +5,31 @@ import markdownx.models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('insitu', '0050_auto_20231220_0954'),
+        ("insitu", "0050_auto_20231220_0954"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='Delivery',
+            name="Delivery",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('version', models.CharField(max_length=50, null=True)),
-                ('description', markdownx.models.MarkdownxField()),
-                ('current', models.BooleanField(default=False)),
-                ('created_at', models.DateField(null=True)),
-                ('updated_at', models.DateField(auto_now=True, null=True)),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("version", models.CharField(max_length=50, null=True)),
+                ("description", markdownx.models.MarkdownxField()),
+                ("current", models.BooleanField(default=False)),
+                ("created_at", models.DateField(null=True)),
+                ("updated_at", models.DateField(auto_now=True, null=True)),
             ],
             options={
-                'verbose_name_plural': 'deliveries',
+                "verbose_name_plural": "deliveries",
             },
         ),
     ]

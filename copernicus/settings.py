@@ -254,6 +254,7 @@ EXPLORER_SQL_WHITELIST = {
 USE_CASES_FEATURE_TOGGLE = os.environ.get("USE_CASES_FEATURE_TOGGLE", False)
 DELIVERIES_FEATURE_TOGGLE = os.environ.get("DELIVERIES_FEATURE_TOGGLE", False)
 
+
 def EXPLORER_PERMISSION_VIEW(request):
     return request.user.is_authenticated
 

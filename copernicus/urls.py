@@ -27,7 +27,7 @@ urlpatterns = [
     path("", include("insitu.urls")),
     path("picklists/", include(("picklists.urls", "picklists"), namespace="pick")),
     path("explorer/", include("explorer.urls")),
-    path('markdownx/', include('markdownx.urls')),
+    path("markdownx/", include("markdownx.urls")),
 ]
 
 if settings.USE_CASES_FEATURE_TOGGLE:

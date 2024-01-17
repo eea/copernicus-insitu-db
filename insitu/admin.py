@@ -116,7 +116,9 @@ class ChangeLogAdmin(admin.ModelAdmin):
     search_fields = ["version", "current"]
     list_display = ("version", "description", "created_at", "current")
 
+
 if settings.DELIVERIES_FEATURE_TOGGLE:
+
     @admin.register(models.Delivery)
     class DeliveryAdmin(MarkdownxModelAdmin):
         search_fields = ["version", "current"]
