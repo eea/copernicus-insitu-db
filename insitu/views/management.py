@@ -17,7 +17,7 @@ from insitu.views.protected.views import ProtectedTemplateView
 
 from insitu.utils import PICKLISTS_DESCRIPTION
 from picklists import models
-from insitu.models import Product, Requirement, Data, DataProvider, ChangeLog, Delivery
+from insitu.models import Product, Requirement, Data, DataProvider, ChangeLog, Release
 from insitu.models import Component, CopernicusService, EntrustedEntity
 
 
@@ -192,7 +192,7 @@ class AboutView(TemplateView):
                 expire_date__gte=timezone.now()
             ).count(),
             "change_logs": ChangeLog.objects.all().order_by("-created_at"),
-            "deliveries": Delivery.objects.all().order_by("-current", "-created_at"),
+            "releases": Release.objects.all().order_by("-current", "-created_at"),
             "registered_users": User.objects.all().count(),
         }
 

@@ -41,17 +41,16 @@
     </div>
   </div>
 
-  {% if DELIVERIES_FEATURE_TOGGLE %}
   <div class="panel panel-default">
     <div class="panel-heading">
       <i class="fa fa-newspaper" aria-hidden="true"></i>
-      DELIVERIES
+      RELEASES
     </div>
     <div class="pannel-body pannel-body-overflow">
-      {% for delivery in deliveries %}
-        <div {% if delivery.current %}class="current"{% endif %}>
-          <h4 class="font-weight-bold">{{ delivery.version }}</h4>
-            {{ delivery.description|show_markdown|safe }}
+      {% for release in releases %}
+        <div {% if release.current %}class="current"{% endif %}>
+          <h4 class="font-weight-bold">{{ release.version }}</h4>
+            {{ release.description|show_markdown|safe }}
         </div>
         {% if not forloop.last %}
           <hr>
@@ -59,7 +58,6 @@
       {% endfor %}
     </div>
   </div>
-  {% endif %}
 
   {% if request.user.is_authenticated %}
   <div class="panel panel-default">

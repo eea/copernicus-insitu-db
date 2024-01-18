@@ -115,7 +115,7 @@ class ChangeLog(models.Model):
         return self.version
 
 
-class Delivery(models.Model):
+class Release(models.Model):
     version = models.CharField(max_length=50, null=True)
     description = MarkdownxField()
     current = models.BooleanField(default=False)
@@ -123,7 +123,7 @@ class Delivery(models.Model):
     updated_at = models.DateField(auto_now=True, null=True)
 
     class Meta:
-        verbose_name_plural = "deliveries"
+        verbose_name_plural = "releases"
 
     def __str__(self):
         return self.version

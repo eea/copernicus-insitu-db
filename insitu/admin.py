@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 from django.contrib import admin
-from django.conf import settings
 from django.urls import reverse
 from django.utils.safestring import mark_safe
 from django.utils.crypto import get_random_string
@@ -117,12 +116,11 @@ class ChangeLogAdmin(admin.ModelAdmin):
     list_display = ("version", "description", "created_at", "current")
 
 
-if settings.DELIVERIES_FEATURE_TOGGLE:
-
-    @admin.register(models.Delivery)
-    class DeliveryAdmin(MarkdownxModelAdmin):
-        search_fields = ["version", "current"]
-        list_display = ("version", "description", "created_at", "current")
+@admin.register(models.Release)
+class ReleaseAdmin(MarkdownxModelAdmin):
+    search_fields = ["version", "current"]
+    list_display = ("version", "description", "created_at", "current")
+    ordering = ["-created_at"]
 
 
 @admin.register(models.LoggedAction)
