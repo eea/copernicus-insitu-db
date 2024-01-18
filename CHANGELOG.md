@@ -3,9 +3,14 @@ Changelog
 
 * In case of major changes, an email should be sent to all users with the modifications.
 
+2.9.14 (2024-01-18)
+-------------------
+* Prepare Releases (Deliveries) for production deploy
+  [dianaboiangiu]
+
 2.9.13 (2024-01-17)
 -------------------
-*  Fix data provider details not showing
+* Fix data provider details not showing
 * Add Deliveries in About page
   [dianaboiangiu]
 
