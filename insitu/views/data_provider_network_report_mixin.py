@@ -66,20 +66,28 @@ class DataProviderNetworkReportExcelMixin:
         worksheet.set_column("A1:A1", 20)
         worksheet.set_column("B1:B1", 35)
         worksheet.set_column("C1:C1", 35)
-        worksheet.set_column("D1:D1", 20)
-        worksheet.set_column("E1:E1", 15)
-        worksheet.set_column("F1:F1", 60)
-        worksheet.set_column("G1:G1", 50)
+        worksheet.set_column("D1:D1", 35)
+        worksheet.set_column("E1:E1", 35)
+        worksheet.set_column("F1:F1", 10)
+        worksheet.set_column("G1:G1", 10)
+        worksheet.set_column("H1:H1", 60)
+        worksheet.set_column("I1:I1", 60)
+        worksheet.set_column("J1:J1", 35)
+        worksheet.set_column("K1:K1", 35)
         worksheet.set_row(0, 50)
         worksheet.set_row(1, 40)
         worksheet.merge_range("A1:G1", "Data Networks report", self.format_header)
         headers = [
             "Network Arconym",
             "Network Name",
+            "Network native name",
+            "Network website",
             "CIS² Data Provider record link",
             "Country",
             "Member ID",
             "Member Name",
+            "Member Native name",
+            "Member website",
             "Member record link",
         ]
         worksheet.write_row("A2", headers, self.format_cols_headers)
@@ -88,6 +96,7 @@ class DataProviderNetworkReportExcelMixin:
 
         network_index = 2
         for network in self.networks:
+            network_details = network.details.first()
             network_url = self.request.build_absolute_uri(
                 reverse("provider:detail", kwargs={"pk": network.id})
             )
@@ -101,12 +110,15 @@ class DataProviderNetworkReportExcelMixin:
             for country_object in country_objects:
                 member_index = country_index
                 for member in network.members.filter(countries__in=[country_object]):
+                    member_details = member.details.first()
                     worksheet.write_row(
                         member_index,
-                        4,
+                        6,
                         [
                             member.id,
                             member.name,
+                            member.native_name,
+                            member_details.website,
                             self.request.build_absolute_uri(
                                 reverse("provider:detail", kwargs={"pk": member.id})
                             ),
@@ -117,22 +129,22 @@ class DataProviderNetworkReportExcelMixin:
                 if member_index == country_index:
                     worksheet.write_row(
                         country_index,
-                        3,
-                        [country_object.name, "", "", ""],
+                        5,
+                        [country_object.name, "", "", "", "", ""],
                         self.format_rows,
                     )
 
                 elif member_index == country_index + 1:
                     worksheet.write_row(
-                        country_index, 3, [country_object.name], self.format_rows
+                        country_index, 5, [country_object.name], self.format_rows
                     )
                     country_index = member_index
                 else:
                     worksheet.merge_range(
                         country_index,
-                        3,
+                        5,
                         member_index - 1,
-                        3,
+                        5,
                         country_object.name,
                         self.format_rows,
                     )
@@ -142,8 +154,10 @@ class DataProviderNetworkReportExcelMixin:
                     network_index,
                     0,
                     [
-                        network.details.first().acronym,
+                        network_details.acronym,
                         network.name,
+                        network.native_name,
+                        network_details.website,
                         network_url,
                         "",
                         "",
@@ -157,7 +171,13 @@ class DataProviderNetworkReportExcelMixin:
                 worksheet.write_row(
                     network_index,
                     0,
-                    [network.details.first().acronym, network.name, network_url],
+                    [
+                        network_details.acronym,
+                        network.name,
+                        network.native_name,
+                        network_details.website,
+                        network_url,
+                    ],
                     self.format_rows,
                 )
                 network_index = country_index
@@ -167,7 +187,7 @@ class DataProviderNetworkReportExcelMixin:
                     0,
                     country_index - 1,
                     0,
-                    network.details.first().acronym,
+                    network_details.acronym,
                     self.format_rows,
                 )
                 worksheet.merge_range(
@@ -183,6 +203,22 @@ class DataProviderNetworkReportExcelMixin:
                     2,
                     country_index - 1,
                     2,
+                    network.native_name,
+                    self.format_rows,
+                )
+                worksheet.merge_range(
+                    network_index,
+                    3,
+                    country_index - 1,
+                    3,
+                    network_details.website,
+                    self.format_rows,
+                )
+                worksheet.merge_range(
+                    network_index,
+                    4,
+                    country_index - 1,
+                    4,
                     network_url,
                     self.format_rows,
                 )

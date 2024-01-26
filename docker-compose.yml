@@ -27,7 +27,6 @@ services:
   db:
     image: postgres:15-alpine
     container_name: insitu.db
-    command: postgres -c log_temp_files=300000
     env_file:
       - docker/db.env
     volumes:
