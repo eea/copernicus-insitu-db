@@ -144,7 +144,7 @@ WSGI_APPLICATION = "copernicus.wsgi.application"
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",
-        "HOST": "db",
+        "HOST": env("POSTGRES_HOST", default="db"),
         "PORT": 5432,
         "NAME": env("POSTGRES_DB", default="insitu"),
         "USER": env("POSTGRES_USER", default="demo"),
