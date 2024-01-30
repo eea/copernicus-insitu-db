@@ -3,6 +3,13 @@ Changelog
 
 * In case of major changes, an email should be sent to all users with the modifications.
 
+2.9.15 (2024-01-30)
+-------------------
+* Add new fields to data provider report
+* Add database host to env
+* Upgrade database version
+  [dianaboiangiu]
+
 2.9.14 (2024-01-18)
 -------------------
 * Prepare Releases (Deliveries) for production deploy
