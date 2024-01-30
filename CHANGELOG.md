@@ -3,6 +3,11 @@ Changelog
 
 * In case of major changes, an email should be sent to all users with the modifications.
 
+2.9.16 (2024-01-30)
+-------------------
+* Fix docker-entrypoint.sh
+  [dianaboiangiu]
+
 2.9.15 (2024-01-30)
 -------------------
 * Add new fields to data provider report
