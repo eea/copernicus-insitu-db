@@ -42,7 +42,7 @@ class UseCaseFilter(FilterSet):
 
 class UseCaseListView(ListView):
     model = UseCase
-    paginate_by = 10
+    paginate_by = 12
     template_name = "usecases/list.html"
 
     def get_queryset(self):

@@ -133,6 +133,7 @@
   <script src="{% static 'js/bootstrap.min.js' %}"></script>
   <script src="{% static 'js/formset/jquery.formset.js' %}"></script>
   <script nonce="{{request.csp_nonce}}">
+    var  allOptions = [];
     $(document).ready(function () {
       $('select').select2();
       $('.formset_row').formset({
@@ -142,37 +143,36 @@
       });
 
       // service and components dependant select
-      var allOptions = $('#id_component option')
+
       $('#id_copernicus_service').change(function () {
+        var options = allOptions;
         $('#id_component option').remove();
         var classes = [];
         $('#id_copernicus_service option:selected').each(function( index ) {
           classes.push($(this).prop('class'));
         });
-        var opts = allOptions.filter( function(index) {
+        var opts = options.filter( function(index) {
           return $.inArray($(this).prop('class'), classes) > -1;
         });
         $.each(opts, function (i, j) {
           $(j).appendTo('#id_component');
         });
       });
-    });
 
-    document.onreadystatechange = function () {
-      if (document.readyState === "complete") {
-        var allOptions = $('#id_component option')
+
+    allOptions = $('#id_component option');
+    var options = allOptions;
         var classes = [];
         $('#id_component option').remove();
         $('#id_copernicus_service option:selected').each(function( index ) {
           classes.push($(this).prop('class'));
         });
-        var opts = allOptions.filter( function(index) {
+        var opts = options.filter( function(index) {
           return $.inArray($(this).prop('class'), classes) > -1;
         });
         $.each(opts, function (i, j) {
           $(j).appendTo('#id_component');
         });
-      }
-    }
+    });
   </script>
 {% endblock %}
