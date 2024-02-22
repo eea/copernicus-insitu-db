@@ -3,6 +3,11 @@ Changelog
 
 * In case of major changes, an email should be sent to all users with the modifications.
 
+2.9.18 (2024-02-22)
+-------------------
+* Extend country code
+  [dianaboiangiu]
+
 2.9.17 (2024-02-16)
 -------------------
 * Fix select in usecases and set pagination number
