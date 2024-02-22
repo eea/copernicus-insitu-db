@@ -10,7 +10,7 @@ class SortedManager(models.Manager):
 
 
 class Country(models.Model):
-    code = models.CharField(max_length=2, primary_key=True)
+    code = models.CharField(max_length=3, primary_key=True)
     name = models.CharField(max_length=100)
 
     class Meta:
