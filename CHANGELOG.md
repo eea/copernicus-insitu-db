@@ -3,6 +3,12 @@ Changelog
 
 * In case of major changes, an email should be sent to all users with the modifications.
 
+2.9.19 (2024-03-04)
+-------------------
+* Add essential variables to requirements
+* Extend list of networks used in data provider network report
+  [dianaboiangiu]
+
 2.9.18 (2024-02-22)
 -------------------
 * Extend country code
