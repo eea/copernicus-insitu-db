@@ -61,7 +61,7 @@ class ReportsListView(ProtectedTemplateView):
             )
         else:
             context["queries"] = (
-                Query.objects.exclude(id__in=[1, 8, 11, 12])
+                Query.objects.exclude(id__in=[1, 8, 11, 12, 17])
                 .order_by("id")
                 .values("id", "title", "description")
             )
@@ -74,6 +74,11 @@ class ReportsDetailView(ProtectedTemplateView):
     permission_denied_redirect = reverse_lazy("auth:login")
 
     def get(self, request, *args, **kwargs):
+        if not request.user.is_authenticated:
+            if kwargs["query_id"] in ["1", "8", "11", "12", "17"]:
+                return HttpResponse(
+                    "You don't have permission to access this page", status=403
+                )
         self.report = get_object_or_404(Query, pk=kwargs["query_id"])
         return super(ReportsDetailView, self).get(request, *args, **kwargs)
 
@@ -417,6 +422,9 @@ class DataProvidersNetwortReportkView(
             123,
             10,
             889,
+            796,
+            602,
+            600,
         ]
         country_code = self.request.POST.getlist("country")[0]
         self.country_code = None

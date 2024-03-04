@@ -67,7 +67,8 @@ CREATE VIEW insitu_requirement_view as
            vertical_resolution.goal as "requirement_vertical_resolution_goal",
            rp.name as "requirement_group",
            u.first_name || ' ' || u.last_name as "requirement_author",
-           r.state as "requirement_state"
+           r.state as "requirement_state",
+           ev.domain || ' - ' ||  ev.component || ' - ' || ev.parameter AS "requirement_essential_variable"
     FROM insitu_requirement r
     INNER JOIN picklists_dissemination d ON d.id = r.dissemination_id
     INNER JOIN insitu_metric uf ON uf.id = r.update_frequency_id 
@@ -78,6 +79,8 @@ CREATE VIEW insitu_requirement_view as
     INNER JOIN insitu_metric uncertainty ON uncertainty.id = r.uncertainty_id
     INNER JOIN insitu_metric vertical_resolution ON vertical_resolution.id = r.vertical_resolution_id
     INNER JOIN picklists_requirementgroup rp ON rp.id = r.group_id
+    FULL OUTER JOIN insitu_requirement_essential_variables rev ON  r.id = rev.requirement_id
+    FULL OUTER JOIN picklists_essentialvariable ev ON ev.id = rev.essentialvariable_id
     INNER JOIN auth_user u ON u.id = r.created_by_id
     WHERE r._deleted = FALSE;
 

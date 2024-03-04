@@ -284,6 +284,10 @@ class Requirement(OwnerHistoryModel, ValidationWorkflowModel, SoftDeleteModel):
     vertical_resolution = models.ForeignKey(
         Metric, on_delete=models.CASCADE, related_name="+"
     )
+    essential_variables = models.ManyToManyField(
+        pickmodels.EssentialVariable,
+        blank=True,
+    )
     status = models.ForeignKey(
         pickmodels.Status,
         null=True,

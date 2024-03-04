@@ -188,6 +188,7 @@ class RequirementForm(forms.ModelForm):
             "note",
             "dissemination",
             "quality_control_procedure",
+            "essential_variables",
             "group",
             "status",
             "owner",
@@ -267,7 +268,9 @@ class RequirementForm(forms.ModelForm):
         self._clean_metric(metric_fields)
         self._clean_scale()
         fields = {
-            field: v for field, v in self.cleaned_data.items() if field != "name"
+            field: v
+            for field, v in self.cleaned_data.items()
+            if field != "name" and field != "essential_variables"
         }
         if self.instance.id:
             exists = (
@@ -311,6 +314,7 @@ class RequirementForm(forms.ModelForm):
             "group": self.cleaned_data["group"],
             "status": self.cleaned_data["status"],
         }
+        essential_variables = self.cleaned_data.pop("essential_variables")
 
         if not self.initial:
             data["uncertainty"] = self._create_metric(**uncertainty_data)
@@ -324,7 +328,7 @@ class RequirementForm(forms.ModelForm):
                 **vertical_resolution_data
             )
             data["created_by"] = self.instance.created_by
-            return models.Requirement.objects.create(**data)
+            requirement = models.Requirement.objects.create(**data)
         else:
             self._update_metric(self.instance.uncertainty, **uncertainty_data)
             self._update_metric(
@@ -339,11 +343,15 @@ class RequirementForm(forms.ModelForm):
                 self.instance.vertical_resolution, **vertical_resolution_data
             )
 
-            reqs = models.Requirement.objects.filter(pk=self.instance.pk)
-            result = reqs.update(**data)
-            for requirement in reqs:
-                signals.requirement_updated.send(sender=requirement)
-            return result
+            requirement = models.Requirement.objects.filter(pk=self.instance.pk)
+            requirement.update(**data)
+            requirement = requirement.first()
+            for essential_variable in requirement.essential_variables.all():
+                requirement.essential_variables.remove(essential_variable)
+            signals.requirement_updated.send(sender=requirement)
+        for essential_variable in essential_variables:
+            requirement.essential_variables.add(essential_variable.id)
+        return requirement
 
 
 class RequirementCloneForm(RequirementForm):

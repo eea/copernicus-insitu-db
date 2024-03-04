@@ -71,6 +71,7 @@ class RequirementFactory(DjangoModelFactory):
     timeliness = SubFactory(MetricFactory)
     horizontal_resolution = SubFactory(MetricFactory)
     vertical_resolution = SubFactory(MetricFactory)
+    essential_variables = RelatedFactory(factories.EssentialVariableFactory)
 
     @staticmethod
     def create_metrics(creator, state="draft"):

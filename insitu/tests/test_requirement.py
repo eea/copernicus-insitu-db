@@ -19,6 +19,9 @@ class RequirementTests(base.FormCheckTestCase):
         "horizontal_resolution",
         "vertical_resolution",
     ]
+    many_to_many_fields = [
+        "essential_variables",
+    ]
     related_entities_updated_int = ["scale"]
     related_entities_fields = ["threshold", "breakthrough", "goal"]
     target_type = "requirement"
@@ -28,6 +31,11 @@ class RequirementTests(base.FormCheckTestCase):
         dissemination = base.DisseminationFactory()
         quality_control_procedure = base.QualityControlProcedureFactory()
         group = base.RequirementGroupFactory()
+        essential_variables = [
+            base.EssentialVariableFactory(),
+            base.EssentialVariableFactory(),
+            base.EssentialVariableFactory(),
+        ]
         self.creator = base.UserFactory(username="New User 1")
         self.client.force_login(self.creator)
         self._DATA = {
@@ -36,6 +44,9 @@ class RequirementTests(base.FormCheckTestCase):
             "owner": "TEST owner",
             "dissemination": dissemination.pk,
             "quality_control_procedure": quality_control_procedure.pk,
+            "essential_variables": [
+                essential_variable.pk for essential_variable in essential_variables
+            ],
             "group": group.pk,
         }
 
@@ -64,6 +75,7 @@ class RequirementTests(base.FormCheckTestCase):
             "note": requirement.note,
             "quality_control_procedure": requirement.quality_control_procedure.pk,
             "group": requirement.group.pk,
+            "essential_variables": [],
         }
         for entity in self.related_entities_updated:
             for field in self.related_entities_fields:
@@ -199,8 +211,11 @@ class RequirementTests(base.FormCheckTestCase):
         self.erase_logging_file()
         metrics = base.RequirementFactory.create_metrics(self.creator)
         requirement = base.RequirementFactory(
-            name="Test requirement", created_by=self.creator, **metrics
+            name="Test requirement", created_by=self.creator,
+            **metrics
         )
+        requirement.essential_variables.add(base.EssentialVariableFactory().id)
+        requirement.save()
         resp = self.client.get(reverse("requirement:add"), {"pk": requirement.pk})
         self.assertEqual(resp.status_code, 200)
         form_data = [value for field, value in resp.context["form"].initial.items()]

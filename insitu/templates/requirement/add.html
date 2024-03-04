@@ -64,6 +64,8 @@
   <label class="control-label">Vertical resolution</label>
   {% include 'bits/metric_field.html' with name='vertical_resolution' initial=form %}
 
+  {% bootstrap_field form.essential_variables addon_after='<a target="_blank" href="/help#essentialvariable"><span class="glyphicon glyphicon-question-sign"></span></a>' %}
+
   <input class="btn btn-primary" type="submit" value="Save" />
   <a href="{% url 'requirement:list' %}" class="btn btn-default">Cancel</a>
 </form>
