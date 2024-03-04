@@ -211,8 +211,7 @@ class RequirementTests(base.FormCheckTestCase):
         self.erase_logging_file()
         metrics = base.RequirementFactory.create_metrics(self.creator)
         requirement = base.RequirementFactory(
-            name="Test requirement", created_by=self.creator,
-            **metrics
+            name="Test requirement", created_by=self.creator, **metrics
         )
         requirement.essential_variables.add(base.EssentialVariableFactory().id)
         requirement.save()
