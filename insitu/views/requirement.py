@@ -71,9 +71,6 @@ class GetInitialMixin:
                 initial_data["__".join([field, attr])] = getattr(
                     getattr(requirement, field), attr
                 )
-        initial_data["essential_variables"] = getattr(
-            requirement, "essential_variables"
-        ).all()
         return initial_data.copy()
 
 

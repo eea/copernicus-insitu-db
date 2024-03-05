@@ -378,7 +378,6 @@ class DataForm(CreatedByFormMixin, forms.ModelForm):
             "quality_control_procedure",
             "dissemination",
             "inspire_themes",
-            "essential_variables",
             "geographical_coverage",
             "status",
         ]
@@ -389,7 +388,6 @@ class DataForm(CreatedByFormMixin, forms.ModelForm):
         else:
             created_by = self.instance.created_by
         inspire_themes = self.cleaned_data.pop("inspire_themes")
-        essential_variables = self.cleaned_data.pop("essential_variables")
         geographical_coverages = self.cleaned_data.pop("geographical_coverage")
         if not self.initial:
             data = models.Data.objects.create(
@@ -402,15 +400,11 @@ class DataForm(CreatedByFormMixin, forms.ModelForm):
             data = data.first()
             for inspire_theme in data.inspire_themes.all():
                 data.inspire_themes.remove(inspire_theme)
-            for essential_variable in data.essential_variables.all():
-                data.essential_variables.remove(essential_variable)
             for geographical_coverage in data.geographical_coverage.all():
                 data.geographical_coverage.remove(geographical_coverage)
 
         for inspire_theme in inspire_themes:
             data.inspire_themes.add(inspire_theme.id)
-        for essential_variable in essential_variables:
-            data.essential_variables.add(essential_variable.id)
         for geographical_coverage in geographical_coverages:
             data.geographical_coverage.add(geographical_coverage.code)
         return data
@@ -441,7 +435,6 @@ class DataReadyForm(RequiredFieldsMixin, DataForm):
             "quality_control_procedure",
             "dissemination",
             "inspire_themes",
-            "essential_variables",
             "geographical_coverage",
         ]
         fields_required = [
@@ -459,11 +452,9 @@ class DataReadyForm(RequiredFieldsMixin, DataForm):
     def clean(self):
         cleaned_data = super(DataReadyForm, self).clean()
         inspire_themes = cleaned_data.get("inspire_themes", [])
-        essential_variables = cleaned_data.get("essential_variables", [])
-        if not inspire_themes and not essential_variables:
-            error = "At least one Inspire Theme or Essential Variable is required."
-            self.add_error("inspire_themes", "")
-            self.add_error("essential_variables", error)
+        if not inspire_themes:
+            error = "At least one Inspire Theme is required."
+            self.add_error("inspire_themes", error)
 
 
 class DataReadyCloneForm(DataReadyForm):

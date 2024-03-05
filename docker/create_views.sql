@@ -116,7 +116,6 @@ CREATE VIEW insitu_data_view as
            u.first_name || ' ' ||  u.last_name AS "data_author",
            d.state AS "data_state",
            ps.name AS "data_status",
-           ev.domain || ' - ' ||  ev.component || ' - ' || ev.parameter AS "data_essential_variable",
            it.annex || ' ' || it.name AS "data_inspiretheme",
            c.name AS "data_geographical_coverage",
            d.created_at AS "data_created_at",
@@ -132,8 +131,6 @@ CREATE VIEW insitu_data_view as
     FULL OUTER JOIN picklists_timeliness t ON t.id = d.timeliness_id
     FULL OUTER JOIN picklists_dissemination di ON di.id = d.dissemination_id
     FULL OUTER JOIN auth_user u ON u.id = d.created_by_id
-    FULL OUTER JOIN insitu_data_essential_variables dev ON  d.id = dev.data_id
-    FULL OUTER JOIN picklists_essentialvariable ev ON ev.id = dev.essentialvariable_id
     FULL OUTER JOIN insitu_data_geographical_coverage dgc ON  d.id = dgc.data_id
     FULL OUTER JOIN picklists_country c ON c.code = dgc.country_id
     FULL OUTER JOIN insitu_data_inspire_themes dit ON d.id = dit.data_id

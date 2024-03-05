@@ -25,7 +25,6 @@ class DataTests(base.FormCheckTestCase):
     ]
     many_to_many_fields = [
         "inspire_themes",
-        "essential_variables",
         "geographical_coverage",
     ]
     required_fields = [
@@ -42,10 +41,7 @@ class DataTests(base.FormCheckTestCase):
     ]
     target_type = "data"
     custom_errors = {
-        "inspire_themes": [""],
-        "essential_variables": [
-            "At least one Inspire Theme or Essential Variable is required."
-        ],
+        "inspire_themes": ["At least one Inspire Theme is required."],
     }
 
     def setUp(self):
@@ -59,11 +55,6 @@ class DataTests(base.FormCheckTestCase):
         data_format = base.DataFormatFactory()
         quality_control_procedure = base.QualityControlProcedureFactory()
         inspire_themes = [base.InspireThemeFactory(), base.InspireThemeFactory()]
-        essential_variables = [
-            base.EssentialVariableFactory(),
-            base.EssentialVariableFactory(),
-            base.EssentialVariableFactory(),
-        ]
         geographical_coverages = [base.CountryFactory(code="T3")]
         dissemination = base.DisseminationFactory()
 
@@ -81,9 +72,6 @@ class DataTests(base.FormCheckTestCase):
             "inspire_themes": [inspire_theme.pk for inspire_theme in inspire_themes],
             "start_time_coverage": datetime.date(day=1, month=1, year=2000),
             "end_time_coverage": datetime.date(day=1, month=1, year=2000),
-            "essential_variables": [
-                essential_variable.pk for essential_variable in essential_variables
-            ],
             "geographical_coverage": [
                 geographical_coverage.code
                 for geographical_coverage in geographical_coverages
@@ -119,7 +107,6 @@ class DataTests(base.FormCheckTestCase):
                 geographical_coverage.code
                 for geographical_coverage in geographical_coverages
             ],
-            "essential_variables": [],
         }
         return DATA_FOR_CLONE
 
@@ -282,7 +269,6 @@ class DataTests(base.FormCheckTestCase):
     def test_add_data_either_essential_variable_or_inspire_theme_required(self):
         self.erase_logging_file()
         data = self._DATA
-        essential_variables = data.pop("essential_variables")
         inspire_themes = data.pop("inspire_themes")
         resp = self.client.post(reverse("data:add") + "?ready", data)
 
@@ -291,7 +277,6 @@ class DataTests(base.FormCheckTestCase):
         self.assertDictEqual(resp.context["form"].errors, self.custom_errors)
         self.check_logged_action("tried to create")
 
-        data["essential_variables"] = essential_variables
         data["inspire_themes"] = []
         resp = self.client.post(reverse("data:add"), data)
         self.assertEqual(resp.status_code, 302)
@@ -299,7 +284,6 @@ class DataTests(base.FormCheckTestCase):
         self.check_object(data_1, data)
         self.check_logged_action("created", data_1, 2)
 
-        data["essential_variables"] = []
         data["inspire_themes"] = inspire_themes
         resp = self.client.post(reverse("data:add"), data)
         self.assertEqual(resp.status_code, 302)

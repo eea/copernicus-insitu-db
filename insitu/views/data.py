@@ -168,9 +168,6 @@ class DataAdd(CreatedByMixin, LoggingProtectedCreateView):
         ]:
             initial_data[field] = getattr(data, field)
         initial_data["inspire_themes"] = getattr(data, "inspire_themes").all()
-        initial_data["essential_variables"] = getattr(
-            data, "essential_variables"
-        ).all()
         initial_data["geographical_coverage"] = getattr(
             data, "geographical_coverage"
         ).all()
@@ -268,10 +265,6 @@ class DataDetail(ProtectedDetailView):
             "inspire_themes": [
                 inspire_theme.id for inspire_theme in self.object.inspire_themes.all()
             ],
-            "essential_variables": [
-                essential_variable
-                for essential_variable in self.object.essential_variables.all()
-            ],
             "geographical_coverage": [
                 geographical_coverage
                 for geographical_coverage in self.object.geographical_coverage.all()
@@ -304,7 +297,6 @@ class DataDetail(ProtectedDetailView):
                 )
                 .prefetch_related(
                     "inspire_themes",
-                    "essential_variables",
                     "geographical_coverage",
                     "datarequirement_set",
                     "datarequirement_set__requirement",

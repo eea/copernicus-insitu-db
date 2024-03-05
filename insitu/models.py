@@ -701,10 +701,6 @@ class Data(OwnerHistoryModel, ValidationWorkflowModel, SoftDeleteModel):
         related_name="+",
     )
     inspire_themes = models.ManyToManyField(pickmodels.InspireTheme, blank=True)
-    essential_variables = models.ManyToManyField(
-        pickmodels.EssentialVariable,
-        blank=True,
-    )
     status = models.ForeignKey(
         pickmodels.Status,
         null=True,

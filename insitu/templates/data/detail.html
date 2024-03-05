@@ -155,20 +155,6 @@
         </tr>
       {% endif %}
 
-      {% if data.essential_variables.all|length %}
-        <tr class="row">
-          <th class="col-md-4 col-sm-6">
-            Essential variables
-            <a target="_blank" href="/help#essentialvariable"><span class="glyphicon glyphicon-question-sign"></span></a>
-          </th>
-          <td class="col-md-8 col-sm-6">
-            {% for essential_variable in data.essential_variables.all %}
-              <p>{{ essential_variable }}</p>
-            {% endfor %}
-          </td>
-        </tr>
-      {% endif %}
-
       <tr class="row">
         <th class="col-md-4 col-sm-6">
           Geographical Coverage
