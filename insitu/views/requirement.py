@@ -89,38 +89,41 @@ class RequirementDetail(ProtectedDetailView):
         if hasattr(self, "object"):
             return self.object
         else:
-            self.object = (
-                self.model.objects.select_related(
-                    "dissemination",
-                    "quality_control_procedure",
-                    "group",
-                    "uncertainty",
-                    "update_frequency",
-                    "timeliness",
-                    "horizontal_resolution",
-                    "scale",
-                    "vertical_resolution",
-                    "status",
-                    "created_by",
+            try:
+                self.object = (
+                    self.model.objects.select_related(
+                        "dissemination",
+                        "quality_control_procedure",
+                        "group",
+                        "uncertainty",
+                        "update_frequency",
+                        "timeliness",
+                        "horizontal_resolution",
+                        "scale",
+                        "vertical_resolution",
+                        "status",
+                        "created_by",
+                    )
+                    .prefetch_related(
+                        "product_requirements",
+                        "product_requirements__product",
+                        "product_requirements__level_of_definition",
+                        "product_requirements__relevance",
+                        "product_requirements__criticality",
+                        "product_requirements__barriers",
+                        "product_requirements__created_by",
+                        "datarequirement_set",
+                        "datarequirement_set__data",
+                        "datarequirement_set__level_of_compliance",
+                        "datarequirement_set__created_by",
+                        "datarequirement_set__created_by__team__teammates",
+                        "product_requirements__created_by__team__teammates",
+                        "created_by__team__teammates",
+                    )
+                    .get(pk=self.kwargs["pk"])
                 )
-                .prefetch_related(
-                    "product_requirements",
-                    "product_requirements__product",
-                    "product_requirements__level_of_definition",
-                    "product_requirements__relevance",
-                    "product_requirements__criticality",
-                    "product_requirements__barriers",
-                    "product_requirements__created_by",
-                    "datarequirement_set",
-                    "datarequirement_set__data",
-                    "datarequirement_set__level_of_compliance",
-                    "datarequirement_set__created_by",
-                    "datarequirement_set__created_by__team__teammates",
-                    "product_requirements__created_by__team__teammates",
-                    "created_by__team__teammates",
-                )
-                .get(pk=self.kwargs["pk"])
-            )
+            except self.model.DoesNotExist:
+                raise Http404()
             return self.object
 
     def get_context_data(self, **kwargs):

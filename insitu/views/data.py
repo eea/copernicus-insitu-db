@@ -282,32 +282,35 @@ class DataDetail(ProtectedDetailView):
         if hasattr(self, "object"):
             return self.object
         else:
-            self.object = (
-                self.model.objects.select_related(
-                    "update_frequency",
-                    "area",
-                    "timeliness",
-                    "data_policy",
-                    "data_type",
-                    "data_format",
-                    "quality_control_procedure",
-                    "dissemination",
-                    "status",
-                    "created_by",
+            try:
+                self.object = (
+                    self.model.objects.select_related(
+                        "update_frequency",
+                        "area",
+                        "timeliness",
+                        "data_policy",
+                        "data_type",
+                        "data_format",
+                        "quality_control_procedure",
+                        "dissemination",
+                        "status",
+                        "created_by",
+                    )
+                    .prefetch_related(
+                        "inspire_themes",
+                        "geographical_coverage",
+                        "datarequirement_set",
+                        "datarequirement_set__requirement",
+                        "datarequirement_set__level_of_compliance",
+                        "datarequirement_set__created_by",
+                        "dataproviderrelation_set",
+                        "dataproviderrelation_set__provider",
+                        "dataproviderrelation_set__created_by",
+                    )
+                    .get(pk=self.kwargs["pk"])
                 )
-                .prefetch_related(
-                    "inspire_themes",
-                    "geographical_coverage",
-                    "datarequirement_set",
-                    "datarequirement_set__requirement",
-                    "datarequirement_set__level_of_compliance",
-                    "datarequirement_set__created_by",
-                    "dataproviderrelation_set",
-                    "dataproviderrelation_set__provider",
-                    "dataproviderrelation_set__created_by",
-                )
-                .get(pk=self.kwargs["pk"])
-            )
+            except self.model.DoesNotExist:
+                raise Http404
             return self.object
 
 

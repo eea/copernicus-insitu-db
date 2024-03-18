@@ -11,7 +11,7 @@ from io import BytesIO
 
 from django.template.loader import get_template
 from openpyxl import load_workbook
-from django.http import HttpResponse, JsonResponse
+from django.http import HttpResponse, JsonResponse, Http404
 from django.urls import reverse_lazy
 from django.shortcuts import get_object_or_404
 from django.views import View
@@ -79,8 +79,12 @@ class ReportsDetailView(ProtectedTemplateView):
                 return HttpResponse(
                     "You don't have permission to access this page", status=403
                 )
-        self.report = get_object_or_404(Query, pk=kwargs["query_id"])
-        return super(ReportsDetailView, self).get(request, *args, **kwargs)
+        try:
+            pk = int(kwargs["query_id"])
+            self.report = get_object_or_404(Query, pk=pk)
+            return super(ReportsDetailView, self).get(request, *args, **kwargs)
+        except ValueError:
+            return HttpResponse("Invalid query id", status=400)
 
     def get_filename(self, title):
         valid_chars = "-_.() %s%s" % (string.ascii_letters, string.digits)
@@ -281,15 +285,26 @@ class ReportsStandardReportView(
 
     def post(self, request, *args, **kwargs):
         services = self.request.POST.getlist("service")
+        for service in services:
+            try:
+                int(service)
+            except ValueError:
+                raise Http404("Invalid service selected")
         components = self.request.POST.getlist("component")
+        for component in components:
+            try:
+                int(component)
+            except ValueError:
+                raise Http404("Invalid component selected")
         self.services = CopernicusService.objects.filter(id__in=services)
         self.components = Component.objects.filter(id__in=components)
         self.products = Product.objects.filter(component_id__in=components).order_by(
             "name"
         )
-        if request.POST["action"] == "Generate PDF":
+        action = request.POST.get("action", "")
+        if action == "Generate PDF":
             return self.generate_pdf()
-        elif request.POST["action"] == "Generate Excel":
+        elif action == "Generate Excel":
             return self.generate_excel()
         else:
             return HttpResponse("Inccorect value selected")
@@ -322,9 +337,10 @@ class CountryReportView(
         self.dataproviders_networks = DataProvider.objects.filter(
             countries__code=self.country_code, is_network=True, _deleted=False
         ).order_by("name")
-        if request.POST["action"] == "Generate PDF":
+        action = request.POST.get("action", "")
+        if action == "Generate PDF":
             return self.generate_pdf()
-        elif request.POST["action"] == "Generate Excel":
+        elif action == "Generate Excel":
             return self.generate_excel()
         else:
             return HttpResponse("Inccorect value selected")
@@ -415,27 +431,32 @@ class DataProvidersNetwortReportkView(
             180,
             890,
             16,
-            20,
-            891,
-            182,
-            18,
-            123,
-            10,
-            889,
             796,
             602,
             600,
         ]
+
+        self.ACCEPTED_RESEARCH_INFRASTRUCTURES_IDS = [
+            960,
+            891,
+            182,
+            18,
+            1083,
+            10,
+            889,
+        ]
+
         country_code = self.request.POST.getlist("country")[0]
         self.country_code = None
         if country_code != "all":
             self.country_code = country_code
-        if request.POST["action"] == "Generate PDF":
+        action = request.POST.get("action", "")
+        if action == "Generate PDF":
             return self.generate_pdf()
-        elif request.POST["action"] == "Generate Excel":
+        elif action == "Generate Excel":
             return self.generate_excel()
         else:
-            return HttpResponse("Inccorect value selected")
+            return HttpResponse("Incorect value selected")
 
     def generate_excel(self):
         output = BytesIO()

@@ -62,54 +62,22 @@ class DataProviderNetworkReportExcelMixin:
             }
         )
 
-    def generate_table_1(self, workbook, worksheet):
-        worksheet.set_column("A1:A1", 20)
-        worksheet.set_column("B1:B1", 35)
-        worksheet.set_column("C1:C1", 35)
-        worksheet.set_column("D1:D1", 35)
-        worksheet.set_column("E1:E1", 35)
-        worksheet.set_column("F1:F1", 10)
-        worksheet.set_column("G1:G1", 10)
-        worksheet.set_column("H1:H1", 60)
-        worksheet.set_column("I1:I1", 60)
-        worksheet.set_column("J1:J1", 35)
-        worksheet.set_column("K1:K1", 35)
-        worksheet.set_row(0, 50)
-        worksheet.set_row(1, 40)
-        worksheet.merge_range("A1:G1", "Data Networks report", self.format_header)
-        headers = [
-            "Network Arconym",
-            "Network Name",
-            "Network native name",
-            "Network website",
-            "CIS² Data Provider record link",
-            "Country",
-            "Member ID",
-            "Member Name",
-            "Member Native name",
-            "Member website",
-            "Member record link",
-        ]
-        worksheet.write_row("A2", headers, self.format_cols_headers)
-
-        self.networks = DataProvider.objects.filter(id__in=self.ACCEPTED_NETWORKS_IDS)
-
-        network_index = 2
-        for network in self.networks:
-            network_details = network.details.first()
-            network_url = self.request.build_absolute_uri(
-                reverse("provider:detail", kwargs={"pk": network.id})
+    def generate_rows_for_root_entries(self, worksheet, entries, entries_index):
+        for entry in entries:
+            entry_details = entry.details.first()
+            entry_url = self.request.build_absolute_uri(
+                reverse("provider:detail", kwargs={"pk": entry.id})
             )
-            country_index = network_index
+            country_index = entries_index
             if self.country_code:
-                country_objects = network.countries.filter(
+                country_objects = entry.countries.filter(
                     code=self.country_code
                 ).order_by("name")
             else:
-                country_objects = network.countries.order_by("name")
+                country_objects = entry.countries.order_by("name")
             for country_object in country_objects:
                 member_index = country_index
-                for member in network.members.filter(countries__in=[country_object]):
+                for member in entry.members.filter(countries__in=[country_object]):
                     member_details = member.details.first()
                     worksheet.write_row(
                         member_index,
@@ -149,16 +117,16 @@ class DataProviderNetworkReportExcelMixin:
                         self.format_rows,
                     )
                     country_index = member_index
-            if country_index == network_index:
+            if country_index == entries_index:
                 worksheet.write_row(
-                    network_index,
+                    entries_index,
                     0,
                     [
-                        network_details.acronym,
-                        network.name,
-                        network.native_name,
-                        network_details.website,
-                        network_url,
+                        entry_details.acronym,
+                        entry.name,
+                        entry.native_name,
+                        entry_details.website,
+                        entry_url,
                         "",
                         "",
                         "",
@@ -166,63 +134,110 @@ class DataProviderNetworkReportExcelMixin:
                     ],
                     self.format_rows,
                 )
-                network_index = country_index
-            elif country_index == network_index + 1:
+                entries_index = country_index
+            elif country_index == entries_index + 1:
                 worksheet.write_row(
-                    network_index,
+                    entries_index,
                     0,
                     [
-                        network_details.acronym,
-                        network.name,
-                        network.native_name,
-                        network_details.website,
-                        network_url,
+                        entry_details.acronym,
+                        entry.name,
+                        entry.native_name,
+                        entry_details.website,
+                        entry_url,
                     ],
                     self.format_rows,
                 )
-                network_index = country_index
+                entries_index = country_index
             else:
                 worksheet.merge_range(
-                    network_index,
+                    entries_index,
                     0,
                     country_index - 1,
                     0,
-                    network_details.acronym,
+                    entry_details.acronym,
                     self.format_rows,
                 )
                 worksheet.merge_range(
-                    network_index,
+                    entries_index,
                     1,
                     country_index - 1,
                     1,
-                    network.name,
+                    entry.name,
                     self.format_rows,
                 )
                 worksheet.merge_range(
-                    network_index,
+                    entries_index,
                     2,
                     country_index - 1,
                     2,
-                    network.native_name,
+                    entry.native_name,
                     self.format_rows,
                 )
                 worksheet.merge_range(
-                    network_index,
+                    entries_index,
                     3,
                     country_index - 1,
                     3,
-                    network_details.website,
+                    entry_details.website,
                     self.format_rows,
                 )
                 worksheet.merge_range(
-                    network_index,
+                    entries_index,
                     4,
                     country_index - 1,
                     4,
-                    network_url,
+                    entry_url,
                     self.format_rows,
                 )
-                network_index = country_index
+                entries_index = country_index
+        return entries_index
+
+    def generate_table_1(self, workbook, worksheet):
+        worksheet.set_column("A1:A1", 30)
+        worksheet.set_column("B1:B1", 35)
+        worksheet.set_column("C1:C1", 35)
+        worksheet.set_column("D1:D1", 35)
+        worksheet.set_column("E1:E1", 35)
+        worksheet.set_column("F1:F1", 10)
+        worksheet.set_column("G1:G1", 10)
+        worksheet.set_column("H1:H1", 60)
+        worksheet.set_column("I1:I1", 60)
+        worksheet.set_column("J1:J1", 35)
+        worksheet.set_column("K1:K1", 35)
+        worksheet.set_row(0, 50)
+        worksheet.set_row(1, 40)
+        worksheet.write_row("A1", ["Networks"], self.format_header)
+        # worksheet.merge_range("A1:G1", "Networks", self.format_header)
+        headers = [
+            "Network Arconym",
+            "Network Name",
+            "Network native name",
+            "Network website",
+            "CIS² Data Provider record link",
+            "Country",
+            "Member ID",
+            "Member Name",
+            "Member Native name",
+            "Member website",
+            "Member record link",
+        ]
+        worksheet.write_row("A2", headers, self.format_cols_headers)
+
+        networks = DataProvider.objects.filter(id__in=self.ACCEPTED_NETWORKS_IDS)
+        entries_index = self.generate_rows_for_root_entries(worksheet, networks, 2)
+        research_infrastructures = DataProvider.objects.filter(
+            id__in=self.ACCEPTED_RESEARCH_INFRASTRUCTURES_IDS
+        )
+        worksheet.set_row(entries_index, 40)
+        worksheet.write_row(
+            entries_index, 0, ["Research Infrastructures"], self.format_header
+        )
+        entries_index += 1
+        worksheet.write_row(entries_index, 0, headers, self.format_cols_headers)
+        self.generate_rows_for_root_entries(
+            worksheet, research_infrastructures, entries_index + 1
+        )
 
     def generate_excel_file(self, workbook):
         self.set_formats(workbook)

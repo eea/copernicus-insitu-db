@@ -3,6 +3,7 @@ from django.contrib import messages
 from django.urls import reverse
 from django.db import transaction
 from django.db.models.fields.reverse_related import ForeignObjectRel
+from django.http import Http404
 from django.http.response import HttpResponse
 from django.utils.safestring import mark_safe
 from django.template import Library
@@ -135,7 +136,7 @@ class ProductDetail(ProtectedDetailView):
     def get_object(self):
         if hasattr(self, "object"):
             return self.object
-        else:
+        try:
             self.object = (
                 self.model.objects.select_related(
                     "group",
@@ -155,7 +156,9 @@ class ProductDetail(ProtectedDetailView):
                 )
                 .get(pk=self.kwargs["pk"])
             )
-            return self.object
+        except self.model.DoesNotExist:
+            raise Http404()
+        return self.object
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)

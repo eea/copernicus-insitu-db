@@ -90,17 +90,20 @@ class DataProviderDetail(ProtectedDetailView):
         if hasattr(self, "object"):
             return self.object
         else:
-            self.object = (
-                self.model.objects.select_related("created_by")
-                .prefetch_related(
-                    "details",
-                    "details__provider_type",
-                    "created_by__team",
-                    "dataproviderrelation_set",
-                    "dataproviderrelation_set__data",
+            try:
+                self.object = (
+                    self.model.objects.select_related("created_by")
+                    .prefetch_related(
+                        "details",
+                        "details__provider_type",
+                        "created_by__team",
+                        "dataproviderrelation_set",
+                        "dataproviderrelation_set__data",
+                    )
+                    .get(pk=self.kwargs["pk"])
                 )
-                .get(pk=self.kwargs["pk"])
-            )
+            except self.model.DoesNotExist:
+                raise Http404()
             return self.object
 
     def get_template_names(self):
