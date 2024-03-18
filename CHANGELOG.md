@@ -3,6 +3,12 @@ Changelog
 
 * In case of major changes, an email should be sent to all users with the modifications.
 
+2.10.1 (2024-03-18)
+-------------------
+* Fix sentry issues
+* Modify data provider network report
+  [dianaboiangiu]
+
 2.10.0 (2024-03-05)
 ---------------------
 * Remove essential variable from data
