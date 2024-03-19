@@ -101,6 +101,7 @@ class DataProviderNetworkReportExcelMixin:
                         [country_object.name, "", "", "", "", ""],
                         self.format_rows,
                     )
+                    country_index += 1
 
                 elif member_index == country_index + 1:
                     worksheet.write_row(

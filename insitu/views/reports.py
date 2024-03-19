@@ -192,7 +192,7 @@ class Pdf(View):
     def post(self, request, *args, **kwargs):
         context = {
             "data": request.POST["data"],
-            "title": request.POST["title"],
+            "title": request.POST.get("title", ""),
             "date": datetime.datetime.now().strftime("%Y %m %d"),
         }
         return self.render(context, request)
@@ -395,8 +395,8 @@ class CountryReportView(
         return response
 
 
-class DataProvidersNetwortReportkView(
-    ProtectedTemplateView, DataProviderNetworkReportExcelMixin, CountryReportPDFMixin
+class DataProvidersNetwortReportView(
+    ProtectedTemplateView, DataProviderNetworkReportExcelMixin
 ):
     template_name = "reports/country_report.html"
     permission_classes = ()
@@ -450,13 +450,7 @@ class DataProvidersNetwortReportkView(
         self.country_code = None
         if country_code != "all":
             self.country_code = country_code
-        action = request.POST.get("action", "")
-        if action == "Generate PDF":
-            return self.generate_pdf()
-        elif action == "Generate Excel":
-            return self.generate_excel()
-        else:
-            return HttpResponse("Incorect value selected")
+        return self.generate_excel()
 
     def generate_excel(self):
         output = BytesIO()
@@ -471,38 +465,4 @@ class DataProvidersNetwortReportkView(
             content_type=cont_type,
         )
         response["Content-Disposition"] = "attachment; filename=%s" % filename
-        return response
-
-    def generate_pdf(self):
-        response = HttpResponse(content_type="application/pdf")
-        pdf_name = self.generate_filename(".pdf")
-        response["Content-Disposition"] = "attachment; filename=%s" % pdf_name
-
-        buff = BytesIO()
-        pdfmetrics.registerFont(
-            TTFont(
-                "Calibri",
-                "/var/local/copernicus/insitu/static/fonts/CalibriRegular.ttf",
-            )
-        )
-        pdfmetrics.registerFont(
-            TTFont(
-                "Calibri-Bold",
-                "/var/local/copernicus/insitu/static/fonts/CalibriBold.ttf",
-            )
-        )
-        pdfmetrics.registerFontFamily("Calibri", normal="Calibri", bold="CalibriBold")
-
-        menu_pdf = SimpleDocTemplate(
-            buff,
-            rightMargin=10,
-            pagesize=landscape(A4),
-            leftMargin=10,
-            topMargin=30,
-            bottomMargin=10,
-        )
-
-        self.generate_pdf_file(menu_pdf)
-        response.write(buff.getvalue())
-        buff.close()
         return response

@@ -17,6 +17,32 @@ class ESDatatableView(BaseDatatableView, ProtectedView):
     def get_initial_queryset(self):
         return self.document.search()
 
+    def _render_column(self, row, column):
+        """Renders a column on a row. column can be given in a module notation eg. document.invoice.type"""
+        # try to find rightmost object
+        if column not in self._columns:
+            return None
+        obj = row
+        parts = column.split(".")
+        for part in parts[:-1]:
+            if obj is None:
+                break
+            obj = getattr(obj, part)
+
+        # try using get_OBJECT_display for choice fields
+        if hasattr(obj, "get_%s_display" % parts[-1]):
+            value = getattr(obj, "get_%s_display" % parts[-1])()
+        else:
+            value = self._column_value(obj, parts[-1])
+
+        if value is None:
+            value = self.none_string
+
+        if self.escape_values:
+            value = escape(value)
+
+        return value
+
     def ordering(self, qs):
         sorting_cols = 0
         if self.pre_camel_case_notation:
@@ -79,7 +105,6 @@ class ESDatatableView(BaseDatatableView, ProtectedView):
             if filter_ in self.filter_translation.keys():
                 filter_ = self.filter_translation[filter_]
             search = search.query("term", **{filter_: value})
-
         search_text = self.request.GET.get("search[value]", "")
         if search_text:
             search = search.query(

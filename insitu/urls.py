@@ -164,7 +164,7 @@ reports_patterns = [
     ),
     path(
         "data_providers_network, ",
-        views.DataProvidersNetwortReportkView.as_view(),
+        views.DataProvidersNetwortReportView.as_view(),
         name="data_providers_network_report",
     ),
     path("country_report/", views.CountryReportView.as_view(), name="country_report"),

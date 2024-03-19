@@ -39,7 +39,6 @@
   </div>
   <form action="{% url 'reports:data_providers_network_report' %}" method="POST" style="width: 50%">
     {% csrf_token %}
-    {{ countries.0.id }}
     <div class="form-group">
       <label class="control-label" for="id_country">Countries</label>
       <select name="country" class="form-control" required id="id_country">
