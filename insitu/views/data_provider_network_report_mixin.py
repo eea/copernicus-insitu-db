@@ -211,7 +211,7 @@ class DataProviderNetworkReportExcelMixin:
         worksheet.write_row("A1", ["Networks"], self.format_header)
         # worksheet.merge_range("A1:G1", "Networks", self.format_header)
         headers = [
-            "Network Arconym",
+            "Network Acronym",
             "Network Name",
             "Network native name",
             "Network website",

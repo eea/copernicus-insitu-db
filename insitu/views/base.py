@@ -18,7 +18,10 @@ class ESDatatableView(BaseDatatableView, ProtectedView):
         return self.document.search()
 
     def _render_column(self, row, column):
-        """Renders a column on a row. column can be given in a module notation eg. document.invoice.type"""
+        """
+        Renders a column on a row. column can be given in a
+        module notation eg. document.invoice.type
+        """
         # try to find rightmost object
         if column not in self._columns:
             return None
