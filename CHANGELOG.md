@@ -3,6 +3,11 @@ Changelog
 
 * In case of major changes, an email should be sent to all users with the modifications.
 
+2.10.4 (2024-03-26)
+-------------------
+* Add copernicus_service_product field to Data
+  [dianaboiangiu]
+
 2.10.3 (2024-03-20)
 -------------------
 * Fix typo in data provider network report
