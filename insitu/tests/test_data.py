@@ -12,7 +12,13 @@ import datetime
 
 
 class DataTests(base.FormCheckTestCase):
-    fields = ["name", "note", "start_time_coverage", "end_time_coverage", "copernicus_service_product"]
+    fields = [
+        "name",
+        "note",
+        "start_time_coverage",
+        "end_time_coverage",
+        "copernicus_service_product",
+    ]
     related_fields = [
         "update_frequency",
         "area",

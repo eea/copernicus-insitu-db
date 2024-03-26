@@ -30,7 +30,7 @@ from picklists import models as pickmodels
 
 class DataProviderList(ProtectedTemplateView):
     template_name = "data_provider/list.html"
-    permission_classes = (IsPublicUser, )
+    permission_classes = (IsPublicUser,)
     permission_denied_redirect = reverse_lazy("auth:login")
     target_type = "data providers"
 

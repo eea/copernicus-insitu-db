@@ -4,15 +4,14 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('insitu', '0054_remove_data_essential_variables'),
+        ("insitu", "0054_remove_data_essential_variables"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='data',
-            name='copernicus_service_product',
+            model_name="data",
+            name="copernicus_service_product",
             field=models.BooleanField(default=False),
         ),
     ]
