@@ -28,6 +28,7 @@ from insitu.views.protected.permissions import (
     IsAuthenticated,
     IsDraftObject,
     IsOwnerUser,
+    IsPublicUser,
     IsNotReadOnlyUser,
 )
 from picklists import models as pickmodels
@@ -78,7 +79,7 @@ class RequirementDetail(ProtectedDetailView):
     template_name = "requirement/detail.html"
     model = models.Requirement
     context_object_name = "requirement"
-    permission_classes = ()
+    permission_classes = (IsPublicUser,)
     target_type = "requirement"
 
     def permission_denied(self, request):
@@ -136,7 +137,7 @@ class RequirementDetail(ProtectedDetailView):
 
 class RequirementList(ProtectedTemplateView):
     template_name = "requirement/list.html"
-    permission_classes = ()
+    permission_classes = (IsPublicUser,)
     target_type = "requirements"
 
     def permission_denied(self, request):
@@ -207,7 +208,7 @@ class RequirementListJson(ESDatatableView):
         "products__component__name",
     ]  # These are the corresponding model fields, in the same order.
     document = documents.RequirementDoc
-    permission_classes = ()
+    permission_classes = (IsPublicUser,)
 
 
 class RequirementAdd(GetInitialMixin, CreatedByMixin, LoggingProtectedCreateView):

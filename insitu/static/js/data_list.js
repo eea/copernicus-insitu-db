@@ -5,12 +5,31 @@ function updateFilterOptions(filter, option_data) {
   select.find('option').remove();
   select.append('<option value="All">All</option>');
   $.each(option_data.options, function (_i, option) {
-    var selected = '';
-    if (option_data.selected == option) {
-      selected = ' selected';
+    let selected = '';
+    let option_label = option;
+    if (option == "true" || option == "Yes" || option == true) {
+      option_label = "Yes";
+    } else if (option == "false" || option == "No" || option == false) {
+      option_label = "No";
+    }
+
+    if (filter == 'copernicus_service_product') {
+      debugger;
+      if (option_data.selected == 'true'){
+        selected = ' selected';
+        option_label = "Yes";
+
+      } else if (option_data.selected == 'false'){
+        selected = ' selected';
+        option_label = 'No';
+      } else {
+        if (option_data.selected == option) {
+          selected = ' selected';
+        }
+      }
     }
     select.append(
-      '<option value="' + option + '"' + selected + '>' + option + '</option>');
+      '<option value="' + option + '"' + selected + '>' + option_label + '</option>');
   });
 }
 $(document).ready(function () {
@@ -80,6 +99,7 @@ $(document).ready(function () {
         d.timeliness = $('#timeliness').val();
         d.data_policy = $('#data_policy').val();
         d.data_type = $('#data_type').val();
+        d.copernicus_service_product = $('#copernicus_service_product').val();
         d.data_format = $('#data_format').val();
         d.quality_control_procedure = $('#quality_control_procedure').val();
         d.dissemination = $('#dissemination').val();
@@ -101,6 +121,7 @@ $(document).ready(function () {
       data.timeliness = $('#timeliness').val();
       data.data_policy = $('#data_policy').val();
       data.data_type = $('#data_type').val();
+      data.copernicus_service_product = $('#copernicus_service_product').val();
       data.data_format = $('#data_format').val();
       data.quality_control_procedure = $('#quality_control_procedure').val();
       data.dissemination = $('#dissemination').val();
@@ -108,7 +129,7 @@ $(document).ready(function () {
       data.state = $('#state').val();
       data.component = $('#component').val();
 
-      var keys = ['update_frequency', 'area', 'timeliness', 'data_policy', 'data_type', 'data_format', 'quality_control_procedure', 'dissemination', 'requirement', 'state', 'component']
+      var keys = ['update_frequency', 'area', 'timeliness', 'data_policy', 'data_type',  "copernicus_service_product", 'data_format', 'quality_control_procedure', 'dissemination', 'requirement', 'state', 'component']
       var queryString = ''
       for(var key of keys) {
         if(isOk(data[key])) {
@@ -133,6 +154,7 @@ $(document).ready(function () {
       $('#timeliness').val(data.timeliness);
       $('#data_policy').val(data.data_policy);
       $('#data_type').val(data.data_type);
+      $('#copernicus_service_product').val(data.copernicus_service_product);
       $('#data_format').val(data.data_format);
       $('#quality_control_procedure').val(data.quality_control_procedure);
       $('#dissemination').val(data.dissemination);
@@ -146,7 +168,7 @@ $(document).ready(function () {
     },
   }).fnFilterOnReturn();
 
-  $('#name,#update_frequency,#area,#timeliness,#data_policy,#data_type,\
+  $('#name,#update_frequency,#area,#timeliness,#data_policy,#data_type,#copernicus_service_product,\
       #data_format,#quality_control_procedure,#dissemination,#requirement,\
       #state,#component').on(
     'change', function (_event) {
@@ -155,7 +177,7 @@ $(document).ready(function () {
     });
 
   $('#reset-btn').on('click', function () {
-    $('#name,#update_frequency,#area,#timeliness,#data_policy,#data_type,\
+    $('#name,#update_frequency,#area,#timeliness,#data_policy,#data_type,#copernicus_service_product,\
       #data_format,#quality_control_procedure,#dissemination,#requirement,\
       #state,#component').val('All');
     var table = $table.DataTable();

@@ -11,6 +11,7 @@ from django.utils import timezone
 
 from insitu.forms import StatisticsDataForm
 from insitu.views.protected import (
+    IsPublicUser,
     IsSuperuser,
 )
 from insitu.views.protected.views import ProtectedTemplateView
@@ -115,7 +116,7 @@ class Manager(ProtectedTemplateView):
 
 class HelpPage(ProtectedTemplateView):
     template_name = "help.html"
-    permission_classes = ()
+    permission_classes = (IsPublicUser, )
     permission_denied_redirect = reverse_lazy("auth:login")
 
     def get_context_data(self, **kwargs):

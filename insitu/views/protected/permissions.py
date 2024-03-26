@@ -29,6 +29,9 @@ class IsNotReadOnlyUser(IsAuthenticated):
     def has_permission(self, request, view):
         return not request.user.groups.filter(name=READ_ONLY_GROUP).exists()
 
+class IsPublicUser(IsAuthenticated):
+    def has_permission(self, request, view):
+        return True
 
 class IsSuperuser(IsAuthenticated):
     def has_permission(self, request, view):

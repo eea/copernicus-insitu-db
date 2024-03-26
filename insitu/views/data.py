@@ -24,6 +24,7 @@ from insitu.views.protected import (
     IsAuthenticated,
     IsNotReadOnlyUser,
     IsOwnerUser,
+    IsPublicUser,
 )
 from insitu.views.protected.permissions import IsDraftObject
 from picklists import models as pickmodels
@@ -31,7 +32,7 @@ from picklists import models as pickmodels
 
 class DataList(ProtectedTemplateView):
     template_name = "data/list.html"
-    permission_classes = ()
+    permission_classes = (IsPublicUser,)
     permission_denied_redirect = reverse_lazy("auth:login")
     target_type = "data"
 
@@ -94,6 +95,7 @@ class DataListJson(ESDatatableView):
         "timeliness",
         "data_policy",
         "data_type",
+        "copernicus_service_product",
         "data_format",
         "quality_control_procedure",
         "dissemination",
@@ -107,6 +109,7 @@ class DataListJson(ESDatatableView):
         "timeliness__name",
         "data_policy__name",
         "data_type__name",
+        "copernicus_service_product",
         "data_format__name",
         "quality_control_procedure__name",
         "dissemination__name",
@@ -121,7 +124,7 @@ class DataListJson(ESDatatableView):
     }
 
     document = documents.DataDoc
-    permission_classes = ()
+    permission_classes = (IsPublicUser,)
 
 
 class DataAdd(CreatedByMixin, LoggingProtectedCreateView):
@@ -161,6 +164,7 @@ class DataAdd(CreatedByMixin, LoggingProtectedCreateView):
             "timeliness",
             "data_policy",
             "data_type",
+            "copernicus_service_product",
             "data_format",
             "quality_control_procedure",
             "status",
@@ -241,7 +245,7 @@ class DataDetail(ProtectedDetailView):
     template_name = "data/detail.html"
     model = models.Data
     context_object_name = "data"
-    permission_classes = ()
+    permission_classes = (IsPublicUser,)
     permission_denied_redirect = reverse_lazy("auth:login")
     target_type = "data"
 
@@ -258,6 +262,7 @@ class DataDetail(ProtectedDetailView):
             "timeliness": self.object.timeliness_id,
             "data_policy": self.object.data_policy_id,
             "data_type": self.object.data_type_id,
+            "copernicus_service_product": self.object.copernicus_service_product,
             "data_format": self.object.data_format_id,
             "feedback": self.object.feedback,
             "quality_control_procedure": self.object.quality_control_procedure_id,

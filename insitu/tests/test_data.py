@@ -12,7 +12,7 @@ import datetime
 
 
 class DataTests(base.FormCheckTestCase):
-    fields = ["name", "note", "start_time_coverage", "end_time_coverage"]
+    fields = ["name", "note", "start_time_coverage", "end_time_coverage", "copernicus_service_product"]
     related_fields = [
         "update_frequency",
         "area",
@@ -67,6 +67,7 @@ class DataTests(base.FormCheckTestCase):
             "timeliness": timeliness.pk,
             "data_policy": data_policy.pk,
             "data_type": data_type.pk,
+            "copernicus_service_product": True,
             "data_format": data_format.pk,
             "quality_control_procedure": quality_control_procedure.pk,
             "inspire_themes": [inspire_theme.pk for inspire_theme in inspire_themes],
@@ -98,6 +99,7 @@ class DataTests(base.FormCheckTestCase):
             "timeliness": data.timeliness.pk,
             "data_policy": data.data_policy.pk,
             "data_type": data.data_type.pk,
+            "copernicus_service_product": False,
             "data_format": data.data_format.pk,
             "start_time_coverage": datetime.date(day=1, month=1, year=2000),
             "end_time_coverage": datetime.date(day=1, month=1, year=2000),

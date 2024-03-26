@@ -25,6 +25,7 @@ from insitu.views.protected import (
     LoggingProtectedDeleteView,
 )
 from insitu.views.protected.permissions import (
+    IsPublicUser,
     IsProductEditorUserOrIsSuperUser,
     IsSuperuser,
 )
@@ -36,7 +37,7 @@ import json
 
 class ProductList(ProtectedTemplateView):
     template_name = "product/list.html"
-    permission_classes = ()
+    permission_classes = (IsPublicUser,)
     permission_denied_redirect = None
     target_type = "products"
 
@@ -78,7 +79,7 @@ class ProductListJson(ESDatatableView):
         "area__name",
     ]  # This must be in the same order as `filters`
     document = documents.ProductDoc
-    permission_classes = ()
+    permission_classes = (IsPublicUser, )
 
 
 class ProductAdd(LoggingProtectedCreateView):
@@ -126,7 +127,7 @@ class ProductDetail(ProtectedDetailView):
     template_name = "product/detail.html"
     model = models.Product
     context_object_name = "product"
-    permission_classes = ()
+    permission_classes = (IsPublicUser, )
     target_type = "product"
 
     def permission_denied(self, request):

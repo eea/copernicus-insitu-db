@@ -88,6 +88,15 @@
           </div>
 
           <div class="form-group filters-style">
+            <label for="copernicus_service_product">Copernicus service product:</label>
+            <select id="copernicus_service_product" class="form-control">
+              <option value="All">All</option>
+              <option value="true">Yes</option>
+              <option value="false">No</option>
+            </select>
+          </div>
+
+          <div class="form-group filters-style">
             <label for="data_format">Data format:</label>
             <select id="data_format" class="form-control">
               {% for data_format in data_formats %}

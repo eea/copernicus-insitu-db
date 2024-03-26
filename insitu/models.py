@@ -679,6 +679,7 @@ class Data(OwnerHistoryModel, ValidationWorkflowModel, SoftDeleteModel):
         on_delete=models.CASCADE,
         related_name="+",
     )
+    copernicus_service_product = models.BooleanField(default=False)
     data_format = models.ForeignKey(
         pickmodels.DataFormat,
         null=True,

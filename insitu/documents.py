@@ -195,6 +195,7 @@ class DataDoc(Document):
     timeliness = fields.KeywordField(attr="timeliness.name")
     data_policy = fields.KeywordField(attr="data_policy.name")
     data_type = fields.KeywordField(attr="data_type.name")
+    copernicus_service_product = fields.BooleanField()
     data_format = fields.KeywordField(attr="data_format.name")
     quality_control_procedure = fields.KeywordField(
         attr="quality_control_procedure.name"

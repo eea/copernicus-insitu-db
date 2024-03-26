@@ -119,6 +119,19 @@
 
       <tr class="row">
         <th class="col-md-4 col-sm-6">
+          Copernicus service product
+        </th>
+        <td class="col-md-8 col-sm-6">
+          {% if data.copernicus_service_product %}
+            <span class='glyphicon glyphicon-ok-circle text-success'></span>
+          {% else %}
+            <span class='glyphicon glyphicon-remove-circle text-danger'></span>
+          {% endif %}
+        </td>
+      </tr>
+
+      <tr class="row">
+        <th class="col-md-4 col-sm-6">
           Data format
           <a target="_blank" href="/help#dataformat"><span class="glyphicon glyphicon-question-sign"></span></a>
         </th>
