@@ -132,10 +132,12 @@ class DataProviderNetworkReportExcelMixin:
                         "",
                         "",
                         "",
+                        "",
+                        "",
                     ],
                     self.format_rows,
                 )
-                entries_index = country_index
+                entries_index += 1
             elif country_index == entries_index + 1:
                 worksheet.write_row(
                     entries_index,
