@@ -3,6 +3,11 @@ Changelog
 
 * In case of major changes, an email should be sent to all users with the modifications.
 
+2.10.6 (2024-03-28)
+-------------------
+* Modify component/entrusted entity structure
+  [dianaboiangiu]
+
 2.10.5 (2024-03-27)
 -------------------
 * Show all networks/research infrastructures in data provider network report
