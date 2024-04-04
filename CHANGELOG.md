@@ -3,7 +3,12 @@ Changelog
 
 * In case of major changes, an email should be sent to all users with the modifications.
 
-2.10.6 (2024-03-28)
+2.10.7 (2024-04-04)
+-------------------
+* Fix component admin view
+  [dianaboiangiu]
+
+2.10.6 (2024-04-04)
 -------------------
 * Modify component/entrusted entity structure
   [dianaboiangiu]
