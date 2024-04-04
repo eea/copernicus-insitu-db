@@ -127,7 +127,7 @@ class HelpPage(ProtectedTemplateView):
             models.Area,
             models.Barrier,
             models.ComplianceLevel,
-            Component,
+            "component",
             CopernicusService,
             models.Criticality,
             models.Country,
@@ -177,6 +177,7 @@ class HelpPage(ProtectedTemplateView):
                 }
                 context["models"][model._meta.model_name] = data
         context["email"] = settings.SUPPORT_EMAIL
+        context["components"] = Component.objects.all()
         return context
 
 

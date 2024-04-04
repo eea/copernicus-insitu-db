@@ -36,7 +36,9 @@
 
   {% for model, data in models.items %}
     {% if data.non_standard %}
-      {% if model == 'data_provider_definitions' %}
+      {% if model == 'component' %}
+        {% include "bits/help_component.html" %}
+      {% elif model == 'data_provider_definitions' %}
         {% include "bits/help_data_provider_definitions.html" %}
       {% elif model == 'data_provider_roles' %}
         {% include "bits/help_data_provider_roles.html" %}

@@ -1,0 +1,30 @@
+<div class="row" id="component">
+    <a href="#component"><h1>Component</h1></a>
+    <table class="table table-bordered">
+      <thead>
+        <tr>
+          <td><strong>acronym</strong></td>
+          <td><strong>name</strong></td>
+          <td><strong>service</strong></td>
+          <td><strong>entrusted entities</strong></td>
+        </tr>
+      </thead>
+      <tbody>
+        {% for component in components %}
+          <tr>
+            <td><strong>{{ component.acronym }}</strong></td>
+            <td>{{ component.name }}</td>
+            <td>{{ component.service }}</td>
+            <td>
+                <ul>
+                {% for entity in component.entrusted_entities.all %}
+                    <li>{{ entity.name }}</li>
+                {% endfor %}
+                </ul>
+            </td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  
