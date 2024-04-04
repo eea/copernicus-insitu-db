@@ -46,7 +46,7 @@ PICKLISTS = [
 SKIP_FIELDS = ["created_at", "updated_at"]
 
 RELATED_FIELDS = {
-    "entrusted_entity": insitu_models.EntrustedEntity,
+    "entrusted_entities": insitu_models.EntrustedEntity,
     "service": insitu_models.CopernicusService,
 }
 

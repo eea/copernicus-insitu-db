@@ -143,8 +143,13 @@ class LoggedActionAdmin(GuardedModelAdmin):
 @admin.register(models.Component)
 class ComponentAdmin(admin.ModelAdmin):
     search_fields = ["acronym", "name"]
-    list_display = ("acronym", "name", "service", "entrusted_entity")
-    list_filter = ("service", "entrusted_entity")
+    list_display = ("acronym", "name", "service", "get_entrusted_entities")
+    list_filter = ("service", "entrusted_entities")
+
+    def get_entrusted_entities(self, obj):
+        return ",\n".join([e.name for e in obj.entrusted_entities.all()])
+
+    get_entrusted_entities.short_description = "Entrusted Entities"
 
 
 @admin.register(models.Requirement)

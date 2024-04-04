@@ -67,12 +67,15 @@ class ProductList(ProtectedTemplateView):
 
 
 class ProductListJson(ESDatatableView):
-    columns = ["name", "service", "entity", "component", "group", "status", "area"]
-    order_columns = columns
+    columns = ["name", "service", "entities", "component", "group", "status", "area"]
+    order_columns = ["name", "service", "component", "group", "status", "area"]
     filters = ["service", "entity", "component", "group", "status", "area"]
+    filter_translation = {
+        "entity": "entities.entity",
+    }
     filter_fields = [
         "component__service__name",
-        "component__entrusted_entity__acronym",
+        "component__entrusted_entities__acronym",
         "component__name",
         "group__name",
         "status__name",
@@ -153,7 +156,7 @@ class ProductDetail(ProtectedDetailView):
                     "product_requirements__barriers",
                     "product_requirements__created_by",
                     "component__service",
-                    "component__entrusted_entity",
+                    "component__entrusted_entities",
                 )
                 .get(pk=self.kwargs["pk"])
             )

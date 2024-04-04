@@ -12,7 +12,9 @@
     <span class='col-sm-8 col-lg-10'>{{ component.service }}</span>
   </div>
   <div class='row'>
-    <label class='col-sm-4 col-lg-2'>Entrusted Entity: </label>
-    <span class='col-sm-8 col-lg-10'>{{ component.entrusted_entity }}</span>
+    <label class='col-sm-4 col-lg-2'>Entrusted Entities: </label>
+    {% for entity in component.entrusted_entities.all %}
+      <span class='col-sm-8 col-lg-10'>{{ entity }}</span>
+    {% endfor %}
   </div>
 </div>

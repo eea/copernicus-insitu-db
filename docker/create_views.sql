@@ -17,7 +17,8 @@ CREATE VIEW insitu_product_view as
     INNER JOIN picklists_area a ON a.id = p.area_id
     INNER JOIN picklists_productgroup pg ON pg.id = p.group_id
     INNER JOIN picklists_status ps ON ps.id = p.status_id
-    INNER JOIN insitu_entrustedentity ee ON ee.id = c.entrusted_entity_id
+    FULL OUTER JOIN insitu_component_entrusted_entities cee ON c.id = cee.component_id
+    FULL OUTER JOIN insitu_entrustedentity ee ON ee.id = cee.entrustedentity_id
     INNER JOIN insitu_copernicusservice cs ON cs.id = c.service_id
     WHERE p._deleted = FALSE;
 

@@ -67,7 +67,12 @@ class ProductDoc(Document):
     group = fields.KeywordField(attr="group.name")
     status = fields.KeywordField(attr="status.name")
     service = fields.KeywordField(attr="component.service.name")
-    entity = fields.KeywordField(attr="component.entrusted_entity.acronym")
+    entities = fields.ObjectField(
+        attr="component.entrusted_entities",
+        properties={
+            "entity": fields.KeywordField(attr="acronym"),
+        },
+    )
     component = fields.KeywordField(attr="component.name")
     area = fields.KeywordField(attr="area.name")
     note = fields.TextField()
@@ -75,6 +80,9 @@ class ProductDoc(Document):
     def get_name_display(self):
         url = reverse("product:detail", kwargs={"pk": self.id})
         return '<a href="{url}">{name}</a>'.format(url=url, name=self.name)
+
+    def get_entities_display(self):
+        return ", ".join([entry["entity"] for entry in self.entities])
 
     @staticmethod
     def delete_index(sender, **kwargs):

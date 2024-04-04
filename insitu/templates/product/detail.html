@@ -106,14 +106,16 @@
       </tr>
 
       <tr class="row">
-        <th class="col-md-4 col-sm-6">Entrusted Entity</th>
+        <th class="col-md-4 col-sm-6">Entrusted Entities</th>
         <td class="col-md-8 col-sm-6">
-          <span data-toggle="popover"
-                title="{{ product.component.entrusted_entity }}"
-                data-content="{% include 'popovers/entity.html' with entity=product.component.entrusted_entity %}">
-            {{ product.component.entrusted_entity }}
-            <span class="glyphicon glyphicon-info-sign small"></span>
-          </span>
+          {% for entity in product.component.entrusted_entities.all %}
+            <span data-toggle="popover"
+                  title="{{ entity }}"
+                  data-content="{% include 'popovers/entity.html' with entity=entity %}">
+              {{ entity }}
+              <span class="glyphicon glyphicon-info-sign small"></span>
+            </span>
+          {% endfor %}
         </td>
       </tr>
       </tbody>

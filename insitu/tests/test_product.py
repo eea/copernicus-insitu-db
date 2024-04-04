@@ -115,15 +115,12 @@ class ProductTests(base.FormCheckTestCase):
         entity_1 = base.EntrustedEntityFactory(acronym="Entity 1")
         entity_2 = base.EntrustedEntityFactory(acronym="Entity 2")
 
-        component_1 = base.ComponentFactory(
-            name="Component 1", service=service_1, entrusted_entity=entity_1
-        )
-        component_2 = base.ComponentFactory(
-            name="Component 2", service=service_1, entrusted_entity=entity_2
-        )
-        component_3 = base.ComponentFactory(
-            name="Component 3", service=service_2, entrusted_entity=entity_1
-        )
+        component_1 = base.ComponentFactory(name="Component 1", service=service_1)
+        component_1.entrusted_entities.add(entity_1)
+        component_2 = base.ComponentFactory(name="Component 2", service=service_1)
+        component_2.entrusted_entities.add(entity_2)
+        component_3 = base.ComponentFactory(name="Component 3", service=service_2)
+        component_3.entrusted_entities.add(entity_1)
 
         group_1 = base.ProductGroupFactory(name="Group 1")
         group_2 = base.ProductGroupFactory(name="Group 2")

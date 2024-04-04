@@ -52,7 +52,7 @@ class EntrustedEntityFactory(DjangoModelFactory):
 class ComponentFactory(DjangoModelFactory):
     name = "Test component"
     service = SubFactory(CopernicusServiceFactory)
-    entrusted_entity = SubFactory(EntrustedEntityFactory)
+    entrusted_entities = RelatedFactory(EntrustedEntityFactory)
 
     class Meta:
         model = models.Component

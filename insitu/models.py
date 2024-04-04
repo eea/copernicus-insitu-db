@@ -248,7 +248,9 @@ class Component(models.Model):
     acronym = models.CharField(max_length=10, blank=True)
     name = models.CharField(max_length=100)
     service = models.ForeignKey(CopernicusService, on_delete=models.CASCADE)
-    entrusted_entity = models.ForeignKey(EntrustedEntity, on_delete=models.CASCADE)
+    entrusted_entities = models.ManyToManyField(
+        EntrustedEntity, related_name="components", blank=True
+    )
     created_at = models.DateTimeField(auto_now_add=True, null=True)
     updated_at = models.DateTimeField(auto_now=True, null=True)
 
