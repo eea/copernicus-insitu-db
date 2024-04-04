@@ -3,6 +3,11 @@ Changelog
 
 * In case of major changes, an email should be sent to all users with the modifications.
 
+2.10.8 (2024-04-04)
+-------------------
+* Improve Component description in Help page
+  [dianaboiangiu]
+
 2.10.7 (2024-04-04)
 -------------------
 * Fix component admin view
