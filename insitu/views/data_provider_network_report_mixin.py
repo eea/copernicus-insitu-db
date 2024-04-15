@@ -69,9 +69,9 @@ class DataProviderNetworkReportExcelMixin:
                 reverse("provider:detail", kwargs={"pk": entry.id})
             )
             country_index = entries_index
-            if self.country_code:
+            if self.country_codes:
                 country_objects = entry.countries.filter(
-                    code=self.country_code
+                    code__in=self.country_codes
                 ).order_by("name")
             else:
                 country_objects = entry.countries.order_by("name")

@@ -26,7 +26,7 @@ from explorer.utils import extract_params
 from wkhtmltopdf.views import PDFTemplateResponse
 
 from insitu.models import Component, CopernicusService, Product, DataProvider
-from insitu.forms import StandardReportForm, CountryReportForm
+from insitu.forms import CountryReportForm, DataNetworkReportForm, StandardReportForm
 from insitu.views.data_provider_network_report_mixin import (
     DataProviderNetworkReportExcelMixin,
 )
@@ -320,7 +320,8 @@ class CountryReportView(
     def get_context_data(self, **kwargs):
         context = super(CountryReportView, self).get_context_data(**kwargs)
         context["countries"] = Country.objects.all()
-        context["form"] = CountryReportForm()
+        context["country_form"] = CountryReportForm()
+        context["data_networks_report_form"] = DataNetworkReportForm()
         return context
 
     def generate_filename(self, extension):
@@ -405,7 +406,8 @@ class DataProvidersNetwortReportView(
     def get_context_data(self, **kwargs):
         context = super(CountryReportView, self).get_context_data(**kwargs)
         context["countries"] = Country.objects.all()
-        context["form"] = CountryReportForm()
+        context["country_form"] = CountryReportForm()
+        context["data_networks_report_form"] = DataNetworkReportForm()
         return context
 
     def generate_filename(self, extension):
@@ -445,11 +447,10 @@ class DataProvidersNetwortReportView(
             10,
             889,
         ]
-
-        country_code = self.request.POST.getlist("country")[0]
-        self.country_code = None
-        if country_code != "all":
-            self.country_code = country_code
+        country_codes = self.request.POST.getlist("countries")
+        self.country_codes = None
+        if not "all" in country_codes:
+            self.country_codes = country_codes
         return self.generate_excel()
 
     def generate_excel(self):

@@ -268,14 +268,15 @@ ExplorerEditor.prototype.bind = function() {
 
     function filter_countries(event) {
         let countriesEU = [
-            "Austria", "Belgium", "Bulgaria", "Czech Republic", "Cyprus", "Croatia", "Denmark", "Estonia", "Finland", "France",
-            "Germany", "Greece", "Ireland", "Italy", "Latvia", "Lithuania", "Luxembourg", "Malta", "Poland", "Romania", "Slovakia",
-            "Slovenia", "Spain", "Sweden", "Netherlands", "Hungary"
+            "Austria", "Belgium", "Bulgaria", "Croatia", "Cyprus", "Czech Republic", "Denmark", "Estonia", "Finland", "France",
+            "Germany", "Greece", "Hungary", "Ireland", "Italy", "Latvia", "Lithuania", "Luxembourg", "Malta", "Netherlands", "Poland",
+            "Portugal", "Romania", "Slovakia", "Slovenia", "Spain", "Sweden",
         ]
         let countriesEEA = [
-            "Belgium", "Bulgaria", "Czech Republic", "Denmark", "Cyprus", "Latvia", "Lithuania", "Luxembourg", "Spain", "France",
-            "Croatia", "Italy", "Poland", "Portugal", "Romania", "Slovenia", "Hungary", "Malta", "Netherlands", "Austria", "Iceland",
-            "Liechtenstein", "Norway", "Slovakia", "Finland", "Sweden", "Germany", "Estonia", "Ireland", "Greece"
+            "Austria", "Belgium", "Bulgaria", "Croatia", "Cyprus", "Czech Republic", "Denmark", "Estonia", "Finland", "France",
+            "Germany", "Greece", "Hungary", "Iceland", "Ireland", "Italy", "Latvia", "Liechtenstein", "Lithuania", "Luxembourg",
+            "Malta", "Netherlands", "Norway", "Poland", "Portugal", "Romania", "Slovakia", "Slovenia", "Spain", "Sweden", "Switzerland",
+            "Turkey"
         ]
         let eumetnetMembers = [
             "Austria", "Belgium", "Croatia", "Cyprus", "Czech Republic", "Denmark", "Estonia", "Finland", "France", "Montenegro",
@@ -283,9 +284,9 @@ ExplorerEditor.prototype.bind = function() {
             "Poland", "Portugal", "Serbia", "Slovakia", "Slovenia", "Spain", "Sweden", "Switzerland", "Macedonia, The Former Yugoslav Republic Of", "United Kingdom"
         ]
         let copernicusMembers = [
-            "Austria", "Belgium", "Bulgaria", "Czech Republic", "Cyprus", "Croatia", "Denmark", "Estonia", "Finland", "France", "Germany",
-            "Greece", "Iceland", "Ireland", "Italy", "Latvia", "Lithuania", "Luxembourg", "Malta", "Norway", "Poland", "Romania", "Slovakia",
-            "Slovenia", "Spain", "Sweden", "Netherlands", "Hungary"
+            "Austria", "Belgium", "Bulgaria", "Croatia", "Cyprus", "Czech Republic", "Denmark", "Estonia", "Finland", "France", "Germany",
+            "Greece", "Hungary", "Iceland", "Ireland", "Italy", "Latvia", "Lithuania", "Luxembourg", "Malta", "Netherlands", "Norway",
+            "Poland", "Romania", "Slovakia", "Slovenia", "Spain", "Sweden", "United Kingdom"
         ]
         let countries = []
         if ($(".eu-members").is(":checked")){

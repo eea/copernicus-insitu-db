@@ -316,3 +316,11 @@ CSP_SCRIPT_SRC = (
     "cdn.ravenjs.com",
 )
 CSP_INCLUDE_NONCE_IN = ["script-src", "style-src"]
+
+COUNTRY_GROUPS = [
+    ("-", "-"),
+    ("EEA", "EEA"),
+    ("EU", "EU"),
+    ("Copernicus", "Copernicus"),
+    ("EUMETNET", "EUMETNET"),
+]

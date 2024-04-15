@@ -1,7 +1,13 @@
 {% extends '_layout.html' %}
 {% load bootstrap3 %}
 {% load static %}
-{% load utils %}
+
+{% block style %}
+  <link rel="stylesheet" type="text/css"
+        href="{% static 'css/select2.min.css' %}"/>
+  <link rel="stylesheet" type="text/css"
+        href="{% static 'css/select2-bootstrap.min.css' %}"/>
+{% endblock %}
 
 {% block title %}Reports{% endblock %}
 
@@ -39,15 +45,10 @@
   </div>
   <form action="{% url 'reports:data_providers_network_report' %}" method="POST" style="width: 50%">
     {% csrf_token %}
-    <div class="form-group">
-      <label class="control-label" for="id_country">Countries</label>
-      <select name="country" class="form-control" required id="id_country">
-        <option value="all">All countries</option>
-        {% for country in countries %}
-          <option value="{{ country.code }}">{{ country.name }}</option>
-        {% endfor %}
-      </select>
-    </div>
+
+    {% bootstrap_field data_networks_report_form.country_groups required_css_class='required' %}
+    {% bootstrap_field data_networks_report_form.countries required_css_class='required' addon_after='<a target="_blank" href="/help#country"><span class="glyphicon glyphicon-question-sign"></span></a>' %}
+
     <input class="btn btn-primary" type="submit" name="action" value="Generate Excel" />
     <a href="{% url 'about' %}"
        class="btn btn-default">Cancel</a>
@@ -56,21 +57,51 @@
 {% endblock %}
 
 {% block scripts %}
-  <script>
+  <script src="{% static 'js/select2.min.js' %}"></script>
+  <script nonce="{{request.csp_nonce}}">
     $(document).ready(function () {
-      var allOptions = $('#id_component option')
-      $('#id_service').change(function () {
-        $('#id_component option').remove();
-        var classes = [];
-        $('#id_service option:selected').each(function( index ) {
-          classes.push($(this).prop('class'));
-        });
-        var opts = allOptions.filter( function(index) {
-          return $.inArray($(this).prop('class'), classes) > -1;
-        });
-        $.each(opts, function (i, j) {
-          $(j).appendTo('#id_component');
-        });
+      $('select').select2();
+      var data = { id: "all", text: 'All countries' };
+      var newOption = new Option(data.text, data.id, false, false);
+      $('#id_countries').append(newOption).trigger('change');
+      $('#id_countries').trigger('change');
+
+      const country_groups = {
+        "EUMETNET": [
+          'AT', 'BE', 'HR', 'CY', 'CZ', 'DK', 'EE', 'FI', 'FR', 'ME', 'DE', 'GR',
+          'HU', 'IS', 'IE', 'IT', 'LV', 'LU', 'MT', 'NT', 'NO', 'PL', 'PR', 'RS',
+          'SK', 'SI', 'ES', 'SE', 'CH', 'MK', 'GB'
+        ],
+        "EU": [
+          "AT", "BE", "BG", "CZ", "HR","CY", "DK", "EE", "FI", "FR", "DE", "GR",
+          "IE", "IT", "HU", "LV", "LT", "LU", "MT", "NL", "PL", "PT", "RO", "SK", "SI",
+          "ES", "SE",
+        ],
+        "EEA": [
+          "AT", "BE", "BG", "HR", "CY", "CZ", "DK", "EE", "FI", "FR", "DE", "GR", "HU", "IS",
+          "IE", "IT", "LV", "LI", "LT", "LU", "MT", "NL", "NO", "PL", "PT", "RO", "SK", "SI",
+          "ES", "SE", "CH", "TR",
+        ],
+        "Copernicus": [
+          "AT", "BE", "BG", "CZ", "CY", "HR", "DK", "EE", "FI", "FR", "DE", "GR",
+          "HU", "IS", "IE", "IT", "LV", "LT", "LU", "MT", "NL", "NO", "PL", "RO", "SK",
+          "SI", "ES", "SE", "GB"
+
+        ]
+      };
+      const country_groups_input =   $('#id_country_groups');
+      country_groups_input.on( "change", function() {
+        const country_group_value = country_groups_input.val();
+        if (country_group_value === "-"){
+          var selected = $('#id_countries')
+          selected.val(null).trigger('change');
+          return;
+        }
+        var selected = $('#id_countries')
+        selected.val(null).trigger('change');
+        selected.push.apply(selected, country_groups[country_group_value]);
+        $('#id_countries').val(selected);
+        $('#id_countries').trigger('change');
       });
     });
   </script>
