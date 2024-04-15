@@ -7,7 +7,7 @@ from django.db import transaction
 from django.template.loader import render_to_string
 from django.utils.translation import ugettext_lazy as _
 
-from copernicus.settings import COUNTRY_GROUPS, DEFAULT_FROM_EMAIL, SITE_URL
+from copernicus.settings import COUNTRY_MEMBERSHIPS, DEFAULT_FROM_EMAIL, SITE_URL
 from insitu import models
 from insitu import signals
 from picklists.models import ProductGroup, Country
@@ -690,7 +690,9 @@ class CountryReportForm(forms.Form):
 
 
 class DataNetworkReportForm(forms.Form):
-    country_groups = forms.ChoiceField(required=False, choices=COUNTRY_GROUPS)
+    country_memberships = forms.ChoiceField(
+        required=False, choices=COUNTRY_MEMBERSHIPS
+    )
     countries = forms.ModelMultipleChoiceField(
         required=True, queryset=Country.objects.all()
     )

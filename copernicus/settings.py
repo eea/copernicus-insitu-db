@@ -317,7 +317,7 @@ CSP_SCRIPT_SRC = (
 )
 CSP_INCLUDE_NONCE_IN = ["script-src", "style-src"]
 
-COUNTRY_GROUPS = [
+COUNTRY_MEMBERSHIPS = [
     ("-", "-"),
     ("EEA", "EEA"),
     ("EU", "EU"),

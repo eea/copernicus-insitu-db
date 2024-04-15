@@ -46,7 +46,7 @@
   <form action="{% url 'reports:data_providers_network_report' %}" method="POST" style="width: 50%">
     {% csrf_token %}
 
-    {% bootstrap_field data_networks_report_form.country_groups required_css_class='required' %}
+    {% bootstrap_field data_networks_report_form.country_memberships required_css_class='required' %}
     {% bootstrap_field data_networks_report_form.countries required_css_class='required' addon_after='<a target="_blank" href="/help#country"><span class="glyphicon glyphicon-question-sign"></span></a>' %}
 
     <input class="btn btn-primary" type="submit" name="action" value="Generate Excel" />
@@ -66,7 +66,7 @@
       $('#id_countries').append(newOption).trigger('change');
       $('#id_countries').trigger('change');
 
-      const country_groups = {
+      const country_memberships = {
         "EUMETNET": [
           'AT', 'BE', 'HR', 'CY', 'CZ', 'DK', 'EE', 'FI', 'FR', 'ME', 'DE', 'GR',
           'HU', 'IS', 'IE', 'IT', 'LV', 'LU', 'MT', 'NT', 'NO', 'PL', 'PR', 'RS',
@@ -89,9 +89,9 @@
 
         ]
       };
-      const country_groups_input =   $('#id_country_groups');
-      country_groups_input.on( "change", function() {
-        const country_group_value = country_groups_input.val();
+      const country_memberships_input =   $('#id_country_memberships');
+      country_memberships_input.on( "change", function() {
+        const country_group_value = country_memberships_input.val();
         if (country_group_value === "-"){
           var selected = $('#id_countries')
           selected.val(null).trigger('change');
@@ -99,7 +99,7 @@
         }
         var selected = $('#id_countries')
         selected.val(null).trigger('change');
-        selected.push.apply(selected, country_groups[country_group_value]);
+        selected.push.apply(selected, country_memberships[country_group_value]);
         $('#id_countries').val(selected);
         $('#id_countries').trigger('change');
       });
