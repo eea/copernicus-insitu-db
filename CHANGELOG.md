@@ -3,6 +3,12 @@ Changelog
 
 * In case of major changes, an email should be sent to all users with the modifications.
 
+2.10.9 (2024-04-15)
+-------------------
+* Add country memberships to data provider network report
+* Update EU filter on data providers
+  [dianaboiangiu]
+
 2.10.8 (2024-04-04)
 -------------------
 * Improve Component description in Help page
