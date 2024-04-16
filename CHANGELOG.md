@@ -3,6 +3,11 @@ Changelog
 
 * In case of major changes, an email should be sent to all users with the modifications.
 
+2.10.10 (2024-04-16)
+-------------------
+* Add group permission to edit data/data providers
+  [dianaboiangiu]
+
 2.10.9 (2024-04-15)
 -------------------
 * Add country memberships to data provider network report
