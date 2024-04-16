@@ -1,6 +1,10 @@
 from django.shortcuts import get_object_or_404
 from insitu.models import User
-from copernicus.settings import PRODUCT_EDITOR_GROUP, READ_ONLY_GROUP
+from copernicus.settings import (
+    DATA_DATA_PROVIDER_EDITOR_GROUP,
+    PRODUCT_EDITOR_GROUP,
+    READ_ONLY_GROUP,
+)
 
 
 class BasePermission(object):
@@ -67,6 +71,16 @@ class IsOwnerUser(IsAuthenticated):
             or request.user.is_superuser
             or obj.has_user_perm(request.user)
             or request.user in obj.created_by.team.teammates.all()
+        )
+
+
+class IsDataProviderAndDataEditorUser(IsOwnerUser):
+    def has_object_permission(self, request, view, obj):
+        return (
+            super().has_object_permission(request, view, obj)
+            or request.user.groups.filter(
+                name=DATA_DATA_PROVIDER_EDITOR_GROUP
+            ).exists()
         )
 
 

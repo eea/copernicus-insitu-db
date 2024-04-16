@@ -12,6 +12,7 @@ from django_fsm import FSMField, transition
 from markdownx.models import MarkdownxField
 
 from insitu import signals
+from copernicus.settings import DATA_DATA_PROVIDER_EDITOR_GROUP
 from picklists import models as pickmodels
 
 User = get_user_model()
@@ -145,11 +146,16 @@ def check_owner_user(instance, user):
     teammate or if the user has specific permission to edit the object
     (still unsure how the last one applies but we'll leave it there for now)
     """
-    return (
+    result = (
         user == instance.created_by
         or user in instance.created_by.team.teammates.all()
         or instance.has_user_perm(user)
     )
+    if type(instance).__name__ == "Data" or type(instance).__name__ == "DataProvider":
+        result = (
+            result or user.groups.filter(name=DATA_DATA_PROVIDER_EDITOR_GROUP).exists()
+        )
+    return result
 
 
 def check_other_user(instance, user):

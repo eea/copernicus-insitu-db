@@ -3,6 +3,7 @@ from django.core.mail import send_mail
 from django.views.generic.edit import ModelFormMixin
 from django_datatables_view.base_datatable_view import BaseDatatableView
 from django.template.loader import render_to_string
+from django.utils.html import escape
 
 from copernicus.settings import DEFAULT_FROM_EMAIL, SITE_URL
 from insitu.utils import ALL_OPTIONS_LABEL

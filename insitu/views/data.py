@@ -23,7 +23,7 @@ from insitu.views.protected import (
 from insitu.views.protected import (
     IsAuthenticated,
     IsNotReadOnlyUser,
-    IsOwnerUser,
+    IsDataProviderAndDataEditorUser,
     IsPublicUser,
 )
 from insitu.views.protected.permissions import IsDraftObject
@@ -217,7 +217,11 @@ class DataEdit(LoggingProtectedUpdateView):
     template_name = "data/edit.html"
     model = models.Data
     context_object_name = "data"
-    permission_classes = (IsOwnerUser, IsDraftObject, IsNotReadOnlyUser)
+    permission_classes = (
+        IsDataProviderAndDataEditorUser,
+        IsDraftObject,
+        IsNotReadOnlyUser,
+    )
     permission_denied_redirect = reverse_lazy("data:list")
     target_type = "data"
 
@@ -324,7 +328,11 @@ class DataDelete(LoggingProtectedDeleteView):
     form_class = forms.DataForm
     model = models.Data
     context_object_name = "data"
-    permission_classes = (IsOwnerUser, IsDraftObject, IsNotReadOnlyUser)
+    permission_classes = (
+        IsDataProviderAndDataEditorUser,
+        IsDraftObject,
+        IsNotReadOnlyUser,
+    )
     permission_denied_redirect = reverse_lazy("data:list")
     target_type = "data"
 
@@ -402,7 +410,11 @@ class DataTransition(ChangesRequestedMailMixin, LoggingTransitionProtectedDetail
 class DataClearFeedback(LoggingProtectedCreateView):
     model = models.Data
     context_object_name = "data"
-    permission_classes = (IsOwnerUser, IsDraftObject, IsNotReadOnlyUser)
+    permission_classes = (
+        IsDataProviderAndDataEditorUser,
+        IsDraftObject,
+        IsNotReadOnlyUser,
+    )
     permission_denied_redirect = reverse_lazy("data:list")
     target_type = "data"
 

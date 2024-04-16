@@ -8,7 +8,7 @@ from insitu.views.protected import (
     IsAuthenticated,
     IsDraftObject,
     IsNotReadOnlyUser,
-    IsOwnerUser,
+    IsDataProviderAndDataEditorUser,
 )
 from django.urls import reverse_lazy
 
@@ -61,7 +61,11 @@ class DataDataProviderEdit(LoggingProtectedUpdateView):
     template_name = "data/data_provider/edit.html"
     form_class = forms.DataProviderRelationEditForm
     context_object_name = "rel"
-    permission_classes = (IsOwnerUser, IsDraftObject, IsNotReadOnlyUser)
+    permission_classes = (
+        IsDataProviderAndDataEditorUser,
+        IsDraftObject,
+        IsNotReadOnlyUser,
+    )
     permission_denied_redirect = reverse_lazy("data:list")
     target_type = "relation between data and data provider"
 
@@ -86,7 +90,11 @@ class DataDataProviderDelete(LoggingProtectedDeleteView):
     model = models.DataProviderRelation
     template_name = "data/data_provider/delete.html"
     context_object_name = "rel"
-    permission_classes = (IsOwnerUser, IsDraftObject, IsNotReadOnlyUser)
+    permission_classes = (
+        IsDataProviderAndDataEditorUser,
+        IsDraftObject,
+        IsNotReadOnlyUser,
+    )
     permission_denied_redirect = reverse_lazy("data:list")
     target_type = "relation between data and data provider"
 

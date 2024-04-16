@@ -22,7 +22,11 @@ from insitu.views.protected import (
     LoggingTransitionProtectedDetailView,
 )
 from insitu.views.protected import IsAuthenticated, IsNotReadOnlyUser
-from insitu.views.protected.permissions import IsOwnerUser, IsPublicUser, IsDraftObject
+from insitu.views.protected.permissions import (
+    IsDataProviderAndDataEditorUser,
+    IsPublicUser,
+    IsDraftObject,
+)
 from insitu.utils import get_choices, WORKFLOW_STATES
 
 from picklists import models as pickmodels
@@ -199,7 +203,11 @@ class DataProviderEditNetwork(LoggingProtectedUpdateView):
     form_class = forms.DataProviderNetworkForm
     context_object_name = "provider"
     model = models.DataProvider
-    permission_classes = (IsOwnerUser, IsDraftObject, IsNotReadOnlyUser)
+    permission_classes = (
+        IsDataProviderAndDataEditorUser,
+        IsDraftObject,
+        IsNotReadOnlyUser,
+    )
     permission_denied_redirect = reverse_lazy("provider:list")
     target_type = "data provider network"
 
@@ -244,7 +252,11 @@ class DataProviderEditNonNetwork(LoggingProtectedUpdateView):
     form_class = forms.DataProviderNonNetworkForm
     context_object_name = "provider"
     model = models.DataProvider
-    permission_classes = (IsOwnerUser, IsDraftObject, IsNotReadOnlyUser)
+    permission_classes = (
+        IsDataProviderAndDataEditorUser,
+        IsDraftObject,
+        IsNotReadOnlyUser,
+    )
     permission_denied_redirect = reverse_lazy("provider:list")
     target_type = "data provider"
 
@@ -287,7 +299,11 @@ class DataProviderEditNetworkMembers(ProtectedUpdateView):
     form_class = forms.DataProviderNetworkMembersForm
     context_object_name = "provider"
     model = models.DataProvider
-    permission_classes = (IsOwnerUser, IsDraftObject, IsNotReadOnlyUser)
+    permission_classes = (
+        IsDataProviderAndDataEditorUser,
+        IsDraftObject,
+        IsNotReadOnlyUser,
+    )
     permission_denied_redirect = reverse_lazy("provider:list")
 
     def form_valid(self, form):
@@ -307,7 +323,11 @@ class DataProviderDeleteNetwork(LoggingProtectedDeleteView):
     form_class = forms.DataProviderNetworkForm
     context_object_name = "provider"
     model = models.DataProvider
-    permission_classes = (IsOwnerUser, IsDraftObject, IsNotReadOnlyUser)
+    permission_classes = (
+        IsDataProviderAndDataEditorUser,
+        IsDraftObject,
+        IsNotReadOnlyUser,
+    )
     permission_denied_redirect = reverse_lazy("provider:list")
     target_type = "data provider network"
 
@@ -323,7 +343,11 @@ class DataProviderDeleteNonNetwork(LoggingProtectedDeleteView):
     form_class = forms.DataProviderNonNetworkForm
     context_object_name = "provider"
     model = models.DataProvider
-    permission_classes = (IsOwnerUser, IsDraftObject, IsNotReadOnlyUser)
+    permission_classes = (
+        IsDataProviderAndDataEditorUser,
+        IsDraftObject,
+        IsNotReadOnlyUser,
+    )
     permission_denied_redirect = reverse_lazy("provider:list")
     target_type = "data provider"
 
@@ -404,7 +428,11 @@ class DataProviderTransition(
 class DataProviderClearFeedback(LoggingProtectedCreateView):
     model = models.DataProvider
     context_object_name = "provider"
-    permission_classes = (IsOwnerUser, IsDraftObject, IsNotReadOnlyUser)
+    permission_classes = (
+        IsDataProviderAndDataEditorUser,
+        IsDraftObject,
+        IsNotReadOnlyUser,
+    )
     permission_denied_redirect = reverse_lazy("provider:list")
     target_type = "provider"
 

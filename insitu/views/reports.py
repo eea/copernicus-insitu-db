@@ -449,7 +449,7 @@ class DataProvidersNetwortReportView(
         ]
         country_codes = self.request.POST.getlist("countries")
         self.country_codes = None
-        if not "all" in country_codes:
+        if "all" not in country_codes:
             self.country_codes = country_codes
         return self.generate_excel()
 
