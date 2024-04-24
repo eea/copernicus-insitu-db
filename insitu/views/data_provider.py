@@ -129,7 +129,6 @@ class DataProviderDetail(ProtectedDetailView):
         return response
 
 
-
 class DataProviderAddNetwork(CreatedByMixin, LoggingProtectedCreateView):
     template_name = "data_provider/network/add.html"
     form_class = forms.DataProviderNetworkForm
