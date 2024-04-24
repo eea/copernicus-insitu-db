@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
 from django.contrib import messages
-from django.http import HttpResponseRedirect, Http404
+from django.http import HttpResponseRedirect, Http404, JsonResponse
 from django.urls import reverse, reverse_lazy
 from django_fsm import has_transition_perm
-
+from django.db.models import Subquery, OuterRef
 from insitu import documents
-from insitu import models
+from insitu.models import Component, DataProvider, DataProviderDetails
 from insitu import forms
 from insitu.views.base import (
     ESDatatableView,
@@ -14,6 +14,7 @@ from insitu.views.base import (
 )
 from insitu.views.protected import ProtectedUpdateView
 from insitu.views.protected import (
+    ProtectedView,
     ProtectedTemplateView,
     ProtectedDetailView,
     LoggingProtectedUpdateView,
@@ -21,7 +22,7 @@ from insitu.views.protected import (
     LoggingProtectedDeleteView,
     LoggingTransitionProtectedDetailView,
 )
-from insitu.views.protected import IsAuthenticated, IsNotReadOnlyUser
+from insitu.views.protected import IsAuthenticated, IsNotReadOnlyUser, HasToken
 from insitu.views.protected.permissions import (
     IsDataProviderAndDataEditorUser,
     IsPublicUser,
@@ -44,7 +45,7 @@ class DataProviderList(ProtectedTemplateView):
         states = [{"title": "All", "name": "All"}] + [
             {"title": title, "name": name} for name, title in WORKFLOW_STATES
         ]
-        components = get_choices("name", model_cls=models.Component)
+        components = get_choices("name", model_cls=Component)
         context.update(
             {
                 "provider_types": provider_types,
@@ -84,7 +85,7 @@ class DataProviderListJson(ESDatatableView):
 
 
 class DataProviderDetail(ProtectedDetailView):
-    model = models.DataProvider
+    model = DataProvider
     context_object_name = "provider"
     permission_classes = (IsPublicUser,)
     permission_denied_redirect = reverse_lazy("provider:list")
@@ -122,6 +123,11 @@ class DataProviderDetail(ProtectedDetailView):
             "name", flat=True
         )
         return context
+
+    def get(self, request, *args, **kwargs):
+        response = super().get(request, *args, **kwargs)
+        return response
+
 
 
 class DataProviderAddNetwork(CreatedByMixin, LoggingProtectedCreateView):
@@ -202,7 +208,7 @@ class DataProviderEditNetwork(LoggingProtectedUpdateView):
     template_name = "data_provider/network/edit.html"
     form_class = forms.DataProviderNetworkForm
     context_object_name = "provider"
-    model = models.DataProvider
+    model = DataProvider
     permission_classes = (
         IsDataProviderAndDataEditorUser,
         IsDraftObject,
@@ -251,7 +257,7 @@ class DataProviderEditNonNetwork(LoggingProtectedUpdateView):
     template_name = "data_provider/non_network/edit.html"
     form_class = forms.DataProviderNonNetworkForm
     context_object_name = "provider"
-    model = models.DataProvider
+    model = DataProvider
     permission_classes = (
         IsDataProviderAndDataEditorUser,
         IsDraftObject,
@@ -298,7 +304,7 @@ class DataProviderEditNetworkMembers(ProtectedUpdateView):
     template_name = "data_provider/network/edit_members.html"
     form_class = forms.DataProviderNetworkMembersForm
     context_object_name = "provider"
-    model = models.DataProvider
+    model = DataProvider
     permission_classes = (
         IsDataProviderAndDataEditorUser,
         IsDraftObject,
@@ -322,7 +328,7 @@ class DataProviderDeleteNetwork(LoggingProtectedDeleteView):
     template_name = "data_provider/network/delete.html"
     form_class = forms.DataProviderNetworkForm
     context_object_name = "provider"
-    model = models.DataProvider
+    model = DataProvider
     permission_classes = (
         IsDataProviderAndDataEditorUser,
         IsDraftObject,
@@ -342,7 +348,7 @@ class DataProviderDeleteNonNetwork(LoggingProtectedDeleteView):
     template_name = "data_provider/non_network/delete.html"
     form_class = forms.DataProviderNonNetworkForm
     context_object_name = "provider"
-    model = models.DataProvider
+    model = DataProvider
     permission_classes = (
         IsDataProviderAndDataEditorUser,
         IsDraftObject,
@@ -359,7 +365,7 @@ class DataProviderDeleteNonNetwork(LoggingProtectedDeleteView):
 class DataProviderTransition(
     ChangesRequestedMailMixin, LoggingTransitionProtectedDetailView
 ):
-    model = models.DataProvider
+    model = DataProvider
     template_name = "data_provider/transition.html"
     permission_classes = (IsAuthenticated, IsNotReadOnlyUser)
     context_object_name = "provider"
@@ -426,7 +432,7 @@ class DataProviderTransition(
 
 
 class DataProviderClearFeedback(LoggingProtectedCreateView):
-    model = models.DataProvider
+    model = DataProvider
     context_object_name = "provider"
     permission_classes = (
         IsDataProviderAndDataEditorUser,
@@ -443,3 +449,37 @@ class DataProviderClearFeedback(LoggingProtectedCreateView):
         return HttpResponseRedirect(
             reverse("provider:detail", kwargs={"pk": provider.pk})
         )
+
+
+class DataProviderListApiView(ProtectedView):
+    permission_classes = (HasToken,)
+
+    def get(self, request, *args, **kwargs):
+        data = []
+        data_providers = (
+            DataProvider.objects.all()
+            .prefetch_related("countries", "members")
+            .annotate(
+                acronym=Subquery(
+                    DataProviderDetails.objects.filter(
+                        data_provider=OuterRef("pk"), _deleted=False
+                    ).values_list("acronym", flat=True)[:1]
+                )
+            )
+        )
+        for provider in data_providers:
+            entry = {
+                "id": provider.id,
+                "acronym": provider.acronym,
+                "name": provider.name,
+                "countries": [
+                    {"code": country.code, "name": country.name}
+                    for country in provider.countries.all()
+                ],
+                "link": "https://cis2.eea.europa.eu"
+                + reverse("provider:detail", kwargs={"pk": provider.id}),
+                "members": [member.id for member in provider.members.all()],
+                "is_network": provider.is_network,
+            }
+            data.append(entry)
+        return JsonResponse(data, safe=False)

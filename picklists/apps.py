@@ -6,3 +6,4 @@ from django.apps import AppConfig
 
 class PicklistsConfig(AppConfig):
     name = "picklists"
+    verbose_name = "Picklists"

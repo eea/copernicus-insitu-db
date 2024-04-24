@@ -90,6 +90,7 @@ data_patterns = [
 
 provider_patterns = [
     path("list/", views.DataProviderList.as_view(), name="list"),
+    path("list/json/", views.DataProviderListApiView.as_view(), name="list_json"),
     path("data/", views.DataProviderListJson.as_view(), name="json"),
     path("<int:pk>/", views.DataProviderDetail.as_view(), name="detail"),
     path("add-network/", views.DataProviderAddNetwork.as_view(), name="add_network"),

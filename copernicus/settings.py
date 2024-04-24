@@ -174,6 +174,9 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+API_TOKEN = env("API_TOKEN", default="token")
+API_PREFIX = env("API_PREFIX", default="Token ")
+
 READ_ONLY_GROUP = env("READ_ONLY_GROUP", default="ReadOnly")
 PRODUCT_EDITOR_GROUP = env("PRODUCT_EDITOR_GROUP", default="ProductEditor")
 DATA_DATA_PROVIDER_EDITOR_GROUP = env(

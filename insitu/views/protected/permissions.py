@@ -1,9 +1,12 @@
 from django.shortcuts import get_object_or_404
+
 from insitu.models import User
 from copernicus.settings import (
     DATA_DATA_PROVIDER_EDITOR_GROUP,
     PRODUCT_EDITOR_GROUP,
     READ_ONLY_GROUP,
+    API_TOKEN,
+    API_PREFIX,
 )
 
 
@@ -27,6 +30,17 @@ class IsAuthenticated(BasePermission):
         return (
             request.user and request.user.is_authenticated and request.user.is_active
         )
+
+
+class HasToken(BasePermission):
+    def has_permission(self, request, view):
+        auth_header = request.META.get("HTTP_AUTHORIZATION", "")
+        if not auth_header.startswith(API_PREFIX):
+            return False
+        token = auth_header[len(API_PREFIX) :]
+        if not token == API_TOKEN:
+            return False
+        return True
 
 
 class IsNotReadOnlyUser(IsAuthenticated):
