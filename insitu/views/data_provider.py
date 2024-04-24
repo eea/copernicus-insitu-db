@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from django.contrib import messages
+from copernicus.settings import SITE_URL
 from django.http import HttpResponseRedirect, Http404, JsonResponse
 from django.urls import reverse, reverse_lazy
 from django_fsm import has_transition_perm
@@ -475,7 +476,7 @@ class DataProviderListApiView(ProtectedView):
                     {"code": country.code, "name": country.name}
                     for country in provider.countries.all()
                 ],
-                "link": "https://cis2.eea.europa.eu"
+                "link": SITE_URL
                 + reverse("provider:detail", kwargs={"pk": provider.id}),
                 "members": [member.id for member in provider.members.all()],
                 "is_network": provider.is_network,

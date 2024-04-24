@@ -3,6 +3,11 @@ Changelog
 
 * In case of major changes, an email should be sent to all users with the modifications.
 
+2.10.12 (2024-04-24)
+--------------------
+* Improve endpoint
+  [dianaboiangiu]
+
 2.10.11 (2024-04-24)
 -------------------
 * Add data provider listing endpoint

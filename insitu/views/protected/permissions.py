@@ -37,7 +37,7 @@ class HasToken(BasePermission):
         auth_header = request.META.get("HTTP_AUTHORIZATION", "")
         if not auth_header.startswith(API_PREFIX):
             return False
-        token = auth_header[len(API_PREFIX) :]
+        token = auth_header[len(API_PREFIX) + 1 :]
         if not token == API_TOKEN:
             return False
         return True
