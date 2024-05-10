@@ -3,6 +3,11 @@ Changelog
 
 * In case of major changes, an email should be sent to all users with the modifications.
 
+2.10.13 (2024-05-10)
+--------------------
+* Added requirement groups to /provider/list/json/
+ [dianboiangiu]
+
 2.10.12 (2024-04-24)
 --------------------
 * Improve endpoint
