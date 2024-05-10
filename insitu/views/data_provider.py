@@ -458,16 +458,32 @@ class DataProviderListApiView(ProtectedView):
         data = []
         data_providers = (
             DataProvider.objects.all()
-            .prefetch_related("countries", "members")
+            .prefetch_related(
+                "countries",
+                "members",
+                "dataproviderrelation_set__data",
+                "dataproviderrelation_set",
+                "dataproviderrelation_set__data__requirements",
+                "dataproviderrelation_set__data__requirements__group",
+            )
             .annotate(
                 acronym=Subquery(
                     DataProviderDetails.objects.filter(
                         data_provider=OuterRef("pk"), _deleted=False
                     ).values_list("acronym", flat=True)[:1]
-                )
+                ),
             )
         )
+
         for provider in data_providers:
+            requirement_groups = []
+            for dp_relation in provider.dataproviderrelation_set.all():
+                data_requirement_groups = [
+                    x.group for x in dp_relation.data.requirements.all()
+                ]
+                for group in data_requirement_groups:
+                    if group not in requirement_groups:
+                        requirement_groups.append(group)
             entry = {
                 "id": provider.id,
                 "acronym": provider.acronym,
@@ -479,6 +495,10 @@ class DataProviderListApiView(ProtectedView):
                 "link": SITE_URL
                 + reverse("provider:detail", kwargs={"pk": provider.id}),
                 "members": [member.id for member in provider.members.all()],
+                "requirement_groups": [
+                    {"id": requirement_group.id, "name": requirement_group.name}
+                    for requirement_group in requirement_groups
+                ],
                 "is_network": provider.is_network,
             }
             data.append(entry)
