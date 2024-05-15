@@ -3,6 +3,11 @@ Changelog
 
 * In case of major changes, an email should be sent to all users with the modifications.
 
+2.10.14 (2024-05-15)
+--------------------
+* Added provider type in data provider list api
+ [dianaboiangiu]
+
 2.10.13 (2024-05-10)
 --------------------
 * Added requirement groups to /provider/list/json/
