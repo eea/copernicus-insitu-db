@@ -472,6 +472,11 @@ class DataProviderListApiView(ProtectedView):
                         data_provider=OuterRef("pk"), _deleted=False
                     ).values_list("acronym", flat=True)[:1]
                 ),
+                provider_type=Subquery(
+                    DataProviderDetails.objects.filter(
+                        data_provider=OuterRef("pk")
+                    ).values_list("provider_type__name", flat=True)[:1]
+                ),
             )
         )
 
@@ -488,6 +493,7 @@ class DataProviderListApiView(ProtectedView):
                 "id": provider.id,
                 "acronym": provider.acronym,
                 "name": provider.name,
+                "provider_type": provider.provider_type,
                 "countries": [
                     {"code": country.code, "name": country.name}
                     for country in provider.countries.all()
