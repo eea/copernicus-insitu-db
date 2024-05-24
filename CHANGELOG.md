@@ -3,6 +3,12 @@ Changelog
 
 * In case of major changes, an email should be sent to all users with the modifications.
 
+2.10.15 (2024-05-24)
+--------------------
+* Add website to data provider list endpoint
+* Update User Manual
+  [dianaboiangiu]
+
 2.10.14 (2024-05-15)
 --------------------
 * Added provider type in data provider list api

@@ -472,7 +472,7 @@ class DataProviderListApiView(ProtectedView):
                         data_provider=OuterRef("pk"), _deleted=False
                     ).values_list("acronym", flat=True)[:1]
                 ),
-                website = Subquery(
+                website=Subquery(
                     DataProviderDetails.objects.filter(
                         data_provider=OuterRef("pk"), _deleted=False
                     ).values_list("website", flat=True)[:1]
