@@ -65,6 +65,7 @@ Changelog
   [dianaboiangiu]
 
 2.10.2 (2024-03-19)
+-------------------
 * Fix sentry issues
 * Fix data providers network report corner case
   [dianaboiangiu]

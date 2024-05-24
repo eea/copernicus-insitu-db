@@ -472,6 +472,11 @@ class DataProviderListApiView(ProtectedView):
                         data_provider=OuterRef("pk"), _deleted=False
                     ).values_list("acronym", flat=True)[:1]
                 ),
+                website = Subquery(
+                    DataProviderDetails.objects.filter(
+                        data_provider=OuterRef("pk"), _deleted=False
+                    ).values_list("website", flat=True)[:1]
+                ),
                 provider_type=Subquery(
                     DataProviderDetails.objects.filter(
                         data_provider=OuterRef("pk")
@@ -501,6 +506,7 @@ class DataProviderListApiView(ProtectedView):
                 "link": SITE_URL
                 + reverse("provider:detail", kwargs={"pk": provider.id}),
                 "members": [member.id for member in provider.members.all()],
+                "website": provider.website,
                 "requirement_groups": [
                     {"id": requirement_group.id, "name": requirement_group.name}
                     for requirement_group in requirement_groups

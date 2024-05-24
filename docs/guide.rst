@@ -654,6 +654,20 @@ will be stored. The log gives informations about the user, the action the user m
     *Loggging management*
 
 
+Releases
+========
+
+The application is released in versions. Each version has a month and year
+combination and a short description of the changes made during the last version.
+The releases can be visualised under the “Releases” tab from the About page.
+
+..  figure:: screenshots/releases.png
+    :width: 600px
+    :align: center
+    :target: _images/releases.png
+
+    *Releases*
+
 Soft deletion
 =============
 
