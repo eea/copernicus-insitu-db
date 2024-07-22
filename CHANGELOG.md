@@ -3,6 +3,11 @@ Changelog
 
 * In case of major changes, an email should be sent to all users with the modifications.
 
+2.10.16 (2024-07-22)
+--------------------
+* Add flag icons for countries
+  [dianaboiangiu]
+
 2.10.15 (2024-05-24)
 --------------------
 * Add website to data provider list endpoint
