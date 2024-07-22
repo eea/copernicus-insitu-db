@@ -1,0 +1,24 @@
+{% load static %}
+
+<div class="row" id="country">
+    <a href="#country"><h1>Country</h1></a>
+    <table class="table table-bordered">
+      <thead>
+        <tr>
+          <td><strong>flag</strong></td>
+          <td><strong>code</strong></td>
+          <td><strong>name</strong></td>
+        </tr>
+      </thead>
+      <tbody>
+        {% for country_ob in country %}
+          <tr>
+            <td><img src="{% static '/flags/' %}{{country_ob.code}}.png" alt=""></td>
+            <td><strong>{{ country_ob.code }}</strong></td>
+            <td>{{ country_ob.name }}</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  

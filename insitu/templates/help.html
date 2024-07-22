@@ -46,6 +46,8 @@
         {% include "bits/help_metrics.html" %}
       {% elif model == 'state' %}
         {% include "bits/help_state.html" %}
+      {% elif model == 'country' %}
+        {% include "bits/help_country.html" %}
       {% endif %}
     {% else %}
       <div class="row" id="{{ model }}">

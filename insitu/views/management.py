@@ -130,7 +130,7 @@ class HelpPage(ProtectedTemplateView):
             "component",
             CopernicusService,
             models.Criticality,
-            models.Country,
+            "country",
             models.DataFormat,
             models.DataPolicy,
             "data_provider_definitions",
@@ -178,6 +178,7 @@ class HelpPage(ProtectedTemplateView):
                 context["models"][model._meta.model_name] = data
         context["email"] = settings.SUPPORT_EMAIL
         context["components"] = Component.objects.all()
+        context["country"] = models.Country.objects.all()
         return context
 
 

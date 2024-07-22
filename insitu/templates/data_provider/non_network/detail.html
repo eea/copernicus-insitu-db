@@ -77,7 +77,10 @@
         </th>
         <td class="col-md-8 col-sm-6">
           {% for country in provider.countries.all %}
-            <span class="col-sm-12 no-padding-left">{{ country }}</span>
+            <span class="col-sm-12 no-padding-left">
+              <img src="{% static '/flags/' %}{{country.code}}.png" alt="">
+              {{ country.name }}
+            </span>
           {% endfor %}
         </td>
       </tr>

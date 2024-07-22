@@ -498,6 +498,7 @@ class DataProviderListApiView(ProtectedView):
                 "id": provider.id,
                 "acronym": provider.acronym,
                 "name": provider.name,
+                "native_name": provider.native_name,
                 "provider_type": provider.provider_type,
                 "countries": [
                     {"code": country.code, "name": country.name}
