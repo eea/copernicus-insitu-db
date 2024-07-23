@@ -19,7 +19,7 @@ RUN apk update \
     --repository http://dl-3.alpinelinux.org/alpine/edge/community/ \
     --allow-untrusted \ 
     && mkdir -p $APP_HOME/logging \
-    && pip install --upgrade pip \
+    && pip install pip==24.0 \
     && pip install Pillow \
     && pip install --no-cache-dir -r $REQFILE \
 
