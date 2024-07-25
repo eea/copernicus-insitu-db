@@ -1,19 +1,21 @@
 import datetime
+import string
+import xlsxwriter
 
+from io import BytesIO
+from Levenshtein import distance
+from openpyxl import load_workbook
 from reportlab.lib.pagesizes import A4, landscape
 from reportlab.pdfbase.ttfonts import TTFont
 from reportlab.pdfbase import pdfmetrics
 from reportlab.platypus import SimpleDocTemplate
+from wkhtmltopdf.views import PDFTemplateResponse
 
-import string
-import xlsxwriter
-from io import BytesIO
-
-from django.template.loader import get_template
-from openpyxl import load_workbook
 from django.http import HttpResponse, JsonResponse, Http404
-from django.urls import reverse_lazy
+from django.db.models import Subquery, OuterRef
 from django.shortcuts import get_object_or_404
+from django.template.loader import get_template
+from django.urls import reverse, reverse_lazy
 from django.views import View
 
 from explorer.app_settings import UNSAFE_RENDERING
@@ -23,13 +25,23 @@ from explorer.views import DownloadQueryView
 from explorer.views.export import _export
 from explorer.utils import extract_params
 
-from wkhtmltopdf.views import PDFTemplateResponse
-
-from insitu.models import Component, CopernicusService, Product, DataProvider
-from insitu.forms import CountryReportForm, DataNetworkReportForm, StandardReportForm
+from insitu.forms import (
+    CountryReportForm,
+    DataNetworkReportForm,
+    StandardReportForm,
+    DataProviderDuplicatesReportForm,
+)
+from insitu.models import (
+    Component,
+    CopernicusService,
+    Product,
+    DataProvider,
+    DataProviderDetails,
+)
 from insitu.views.data_provider_network_report_mixin import (
     DataProviderNetworkReportExcelMixin,
 )
+from insitu.views.protected.permissions import IsAuthenticated
 from insitu.views.reportsmixins import (
     ReportExcelMixin,
     PDFExcelMixin,
@@ -393,6 +405,143 @@ class CountryReportView(
         self.generate_pdf_file(menu_pdf)
         response.write(buff.getvalue())
         buff.close()
+        return response
+
+
+class DataProviderDuplicatesReportView(
+    ProtectedTemplateView, ReportExcelMixin, PDFExcelMixin
+):
+    template_name = "reports/data_provider_duplicates_report.html"
+    permission_classes = (IsAuthenticated,)
+    permission_denied_redirect = reverse_lazy("auth:login")
+
+    def get_context_data(self, **kwargs):
+        context = super(DataProviderDuplicatesReportView, self).get_context_data(
+            **kwargs
+        )
+        context["countries"] = Country.objects.all()
+        context["form"] = DataProviderDuplicatesReportForm()
+        return context
+
+    def generate_excel_file(self, workbook):
+        self.set_formats(workbook)
+        worksheet = workbook.add_worksheet("")
+        worksheet.set_column("A1:A1", 30)
+        worksheet.set_column("B1:B1", 50)
+        worksheet.set_column("C1:C1", 50)
+        worksheet.set_column("D1:D1", 30)
+        worksheet.set_column("E1:E1", 50)
+        worksheet.set_column("F1:F1", 50)
+        headers = [
+            "PROVIDER LINK",
+            "PROVIDER NAME",
+            "PROVIDER WEBSITE",
+            "DUPLICATE LINK",
+            "DUPLICATE NAME",
+            "DUPLICATE WEBSITE",
+        ]
+        if self.request.POST.get("country", None):
+            country = Country.objects.get(code=self.request.POST["country"])
+            title = f"Potential provider duplicates in {country.name}"
+        else:
+            country = None
+            title = "Potential provider duplicates in all countries"
+        worksheet.write_row("A1", [title], self.format_header)
+        worksheet.write_row("A2", headers, self.format_cols_headers)
+
+        data_providers = DataProvider.objects.all().annotate(
+            website=Subquery(
+                DataProviderDetails.objects.filter(
+                    data_provider=OuterRef("pk"), _deleted=False
+                ).values_list("website", flat=True)[:1]
+            ),
+        )
+
+        if country:
+            data_providers = data_providers.filter(countries__code=country.code)
+
+        index = 2
+        for dp in data_providers:
+            dp_link = self.request.build_absolute_uri(
+                reverse("provider:detail", kwargs={"pk": dp.id})
+            )
+            duplicates = [
+                dp2
+                for dp2 in data_providers
+                if dp.id != dp2.id
+                and (
+                    distance(dp.name, dp2.name) <= 2
+                    or (dp.website != "" and distance(dp.website, dp2.website) <= 2)
+                )
+            ]
+            if len(duplicates) >= 2:
+                worksheet.merge_range(
+                    index,
+                    0,
+                    index + len(duplicates) - 1,
+                    0,
+                    dp_link,
+                    self.format_rows,
+                )
+                worksheet.merge_range(
+                    index,
+                    1,
+                    index + len(duplicates) - 1,
+                    1,
+                    dp.name,
+                    self.format_rows,
+                )
+                worksheet.merge_range(
+                    index,
+                    2,
+                    index + len(duplicates) - 1,
+                    2,
+                    dp.website,
+                    self.format_rows,
+                )
+
+                for dp2 in duplicates:
+                    dp2_link = self.request.build_absolute_uri(
+                        reverse("provider:detail", kwargs={"pk": dp2.id})
+                    )
+                    data = [
+                        dp2_link,
+                        dp2.name,
+                        dp2.website,
+                    ]
+                    worksheet.write_row(index, 3, data, self.format_rows)
+                    index += 1
+            elif len(duplicates) == 1:
+                dp2 = duplicates[0]
+                dp2_link = self.request.build_absolute_uri(
+                    reverse("provider:detail", kwargs={"pk": dp2.id})
+                )
+                data = [
+                    dp_link,
+                    dp.name,
+                    dp.website,
+                    dp2_link,
+                    dp2.name,
+                    dp2.website,
+                ]
+                worksheet.write_row(index, 0, data, self.format_rows)
+                index += 1
+                continue
+
+    def post(self, request, *args, **kwargs):
+        output = BytesIO()
+        workbook = xlsxwriter.Workbook(output)
+        self.generate_excel_file(workbook)
+        workbook.close()
+        output.seek(0)
+        today = datetime.datetime.now().strftime("%d_%m_%Y")
+        filename = f"CIS2_Potential_Provider_Duplicates_Report_{today}.xlsx"
+        cont_type = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+        response = HttpResponse(
+            output,
+            content_type=cont_type,
+        )
+        response["Content-Disposition"] = "attachment; filename=%s" % filename
         return response
 
 

@@ -16,34 +16,108 @@
     </h1>
   </div>
 
-  {% if user.is_authenticated %}
-
-    <div class="container margin-bottom-20">
-      <h3>Special reports:</h3>
-      <p>Those reports are exported as spreadsheet files with unmerged cells that can be filtered afterwards with specialized tools.</p>
-      <h4>1.This report contains all relevant columns from products, requirements, data and data requirements for the following services:</h4>
-      <p>a) Copernicus Emergency Management Service</p>
-      <p>b) Copernicus Land Monitoring Service</p>
-      <p>c) Copernicus Security Service</p>
-      <a id="" class="btn btn-primary" href="{% static 'sheets/Special_report_1.xlsx' %}" download>Download Excel</a>
-
-      <h4>2.This report contains all relevant columns from products, requirements, data and data requirements for the following services:</h4>
-      <p>a) Copernicus Atmosphere Monitoring Service</p>
-      <p>b) Copernicus Marine Environment Monitoring Service</p>
-      <p>c) Copernicus Climate Change Service</p>
-      <a id="" class="btn btn-primary" href="{% static 'sheets/Special_report_2.xlsx' %}">Download Excel</a>
-      <a href="{% url 'reports:standard_report' %}"><h3>Standard Report</h3></a>
-      <a href="{% url 'reports:country_report' %}"><h3>Country Report</h3></a>
-    </div>
-  {% else %}
-    <div class="container margin-bottom-20">
-      <a href="{% url 'reports:standard_report' %}"><h3>Standard Report</h3></a>
-      <a href="{% url 'reports:country_report' %}"><h3>Country Report</h3></a>
-    </div>
-  {% endif %}
+  <h3>Special reports</h3>
 
   <div>
     <table class="table table-bordered">
+    <thead>
+      <tr>
+        <td><strong>Name</strong></td>
+        <td><strong>Description</strong></td>
+      </tr>
+    </thead>
+    <tbody>
+      {% if user.is_authenticated %}
+        <tr>
+          <td>
+            <strong>
+              <a href="{% static 'sheets/Special_report_1.xlsx' %}" download>Special report 1</a>
+            </strong>
+          </td>
+          <td>
+            <p>This report is exported as spreadsheet files with unmerged cells that can be filtered afterwards with specialized tools.
+            The report contains all relevant columns from products, requirements, data and data requirements for the following services:</h4>
+            <p>a) Copernicus Emergency Management Service</p>
+            <p>b) Copernicus Land Monitoring Service</p>
+            <p>c) Copernicus Security Service</p>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <strong>
+              <a href="{% static 'sheets/Special_report_2.xlsx' %}" download>Special report 2</a>
+            </strong>
+          </td>
+          <td>
+            <p>This report is exported as spreadsheet files with unmerged cells that can be filtered afterwards with specialized tools.
+            The report contains all relevant columns from products, requirements, data and data requirements for the following services:</p>
+            <p>a) Copernicus Atmosphere Monitoring Service</p>
+            <p>b) Copernicus Marine Environment Monitoring Service</p>
+            <p>c) Copernicus Climate Change Service</p>
+          </td>
+        </tr>
+      {% endif %}
+      <tr>
+        <td>
+          <strong>
+            <a href="{% url 'reports:standard_report' %}">Standard Report</a>
+          </strong>
+        </td>
+        <td>
+          <p>
+            This Report sets out in a systematic way the information contained
+            in the database relating to a selected component.
+          </p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <strong>
+            <a href="{% url 'reports:country_report' %}">Country Report</a>
+          </strong>
+        </td>
+        <td>
+          <p>
+            The Country Report provides an overview of national organisations which are providing
+            in situ observations data to support Copernicus products.
+          </p>
+        </td>
+      </tr>
+      {% if user.is_authenticated %}
+        <tr>
+          <td>
+            <strong>
+              <a href="{% url 'reports:country_report' %}">Data provider network report</a>
+            </strong>
+          </td>
+          <td>
+            <p>
+              Provides an overview of the Networks, Research Infrastructures and their members for the selected country/ies.
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <strong>
+              <a href="{% url 'reports:data_provider_duplicates_report' %}">Potential data provider duplicates report              </a>
+            </strong>
+          </td>
+          <td>
+            <p>This report identifies and lists data providers with the similar name or website to aid the check
+               for duplicates. The report can either be generated for all data providers or for a specific country.
+               In the case of a country selection, only data providers that have the selected country in their "Country" field
+               will be considered.
+            </p>
+          </td>
+        </tr>
+      {% endif %}
+    </tbody>
+  </table>
+</div>
+
+<h3>Pivot Reports</h3>
+<div>
+  <table class="table table-bordered">
     <thead>
       <tr>
         <td>UID</td>
@@ -53,15 +127,15 @@
     </thead>
     <tbody>
       {% for query in queries %}
-          <tr>
-            <td>{{ query.id }}</td>
-            <td>
-              <strong>
-                <a href="{% url 'reports:detail' query.id %}">{{ query.title }}</a>
-              </strong>
-            </td>
-            <td>{{ query.description | linebreaks }}</td>
-          </tr>
+        <tr>
+          <td>{{ query.id }}</td>
+          <td>
+            <strong>
+              <a href="{% url 'reports:detail' query.id %}">{{ query.title }}</a>
+            </strong>
+          </td>
+          <td>{{ query.description | linebreaks }}</td>
+        </tr>
       {% endfor %}
     </tbody>
   </table>

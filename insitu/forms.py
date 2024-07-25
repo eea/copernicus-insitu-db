@@ -689,6 +689,15 @@ class CountryReportForm(forms.Form):
     )
 
 
+class DataProviderDuplicatesReportForm(forms.Form):
+    country = forms.ModelChoiceField(
+        required=False,
+        queryset=Country.objects.all(),
+        label="Select a country",
+        empty_label="All countries",
+    )
+
+
 class DataNetworkReportForm(forms.Form):
     country_memberships = forms.ChoiceField(
         required=False, choices=COUNTRY_MEMBERSHIPS

@@ -1,0 +1,37 @@
+{% extends '_layout.html' %}
+{% load bootstrap3 %}
+{% load static %}
+
+{% block style %}
+  <link rel="stylesheet" type="text/css"
+        href="{% static 'css/select2.min.css' %}"/>
+  <link rel="stylesheet" type="text/css"
+        href="{% static 'css/select2-bootstrap.min.css' %}"/>
+{% endblock %}
+
+{% block title %}Potential data provider duplicates report{% endblock %}
+
+{% block content %}
+  <div class="row">
+    <h1 class="col-sm-12">
+      <span>Potential data provider duplicates report</span>
+    </h1>
+  </div>
+  <div class="container" style="margin-bottom:20px;">
+  </div>
+  <form action="" method="POST" style="width: 50%">
+    {% csrf_token %}
+    <div class="form-group">
+      <label class="control-label" for="id_country">Countries</label>
+      <select name="country" class="form-control" id="id_country">
+        <option value="">All countries</option>
+        {% for country in countries %}
+          <option value="{{ country.code }}">{{ country.name }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <input class="btn btn-primary" type="submit" name="action" value="Generate Excel" />
+    <a href="{% url 'about' %}"
+       class="btn btn-default">Cancel</a>
+  </form>
+{% endblock %}
