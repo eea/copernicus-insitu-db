@@ -12,22 +12,16 @@ function updateFilterOptions(filter, option_data) {
     } else if (option == "false" || option == "No" || option == false) {
       option_label = "No";
     }
-
     if (filter == 'copernicus_service_product') {
-      debugger;
-      if (option_data.selected == 'true'){
+      if (option_data.selected == 'true' || option_data.selected == 'false') {
         selected = ' selected';
-        option_label = "Yes";
-
-      } else if (option_data.selected == 'false'){
-        selected = ' selected';
-        option_label = 'No';
-      } else {
+      }
+    }
+    else {
         if (option_data.selected == option) {
           selected = ' selected';
         }
       }
-    }
     select.append(
       '<option value="' + option + '"' + selected + '>' + option_label + '</option>');
   });
