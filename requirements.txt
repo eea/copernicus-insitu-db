@@ -15,6 +15,7 @@ django-wkhtmltopdf==3.4.0
 Django==3.2.25
 reportlab==4.0.8
 elasticsearch-dsl==6.4.0
+Levenshtein==0.25.1
 openpyxl==3.1.2
 psycopg2==2.9.9
 pytz==2023.3.post1
