@@ -3,6 +3,12 @@ Changelog
 
 * In case of major changes, an email should be sent to all users with the modifications.
 
+2.10.17 (2024-07-25)
+--------------------
+* Add report for detecting duplicated data providers
+* Fix bug in data listing filters
+  [dianaboiangiu]
+
 2.10.16 (2024-07-22)
 --------------------
 * Add flag icons for countries
