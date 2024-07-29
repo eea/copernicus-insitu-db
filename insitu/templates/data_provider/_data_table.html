@@ -12,6 +12,8 @@
           Role
           <a target="_blank" href="/help#data_provider_roles"><span class="glyphicon glyphicon-question-sign"></span></a>
         </th>
+        <th>Created on</th>
+        <th>Last updated on</th>
       </tr>
       </thead>
       <tbody>
@@ -21,6 +23,8 @@
             <a href="{% url 'data:detail' rel.data.pk %}">{{ rel.data.name }}</a>
           </td>
           <td>{{ rel.get_role_display }}</td>
+          <td>{{ rel.created_at }}</td>
+          <td>{{ rel.updated_at }}</td>
         </tr>
       {% endfor %}
       </tbody>

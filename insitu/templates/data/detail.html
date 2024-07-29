@@ -269,6 +269,15 @@
           </tr>
         {% endif %}
       {% endif %}
+      <tr class="row">
+        <th class="col-md-4 col-sm-6">Created on</th>
+        <td class="col-md-8 col-sm-6">{{ data.created_at }}</td>
+      </tr>
+
+      <tr class="row">
+        <th class="col-md-4 col-sm-6">Last modified on</th>
+        <td class="col-md-8 col-sm-6">{{ data.updated_at }}</td>
+      </tr>
       </tbody>
     </table>
   </div>
@@ -298,7 +307,9 @@
             <a target="_blank" href="/help#data_provider_roles"><span class="glyphicon glyphicon-question-sign"></span></a>
           </th>
           <th class="no-sort">Is network</th>
-          <th class="no-sort width-10"></th>
+          <th>Created on</th>
+          <th>Last modified on</th>
+          <th class="no-sort"></th>
         </tr>
         </thead>
         <tbody>
@@ -316,6 +327,8 @@
                 <span class='glyphicon glyphicon-remove-circle text-danger'></span>
               {% endif %}
             </td>
+            <td>{{ data.created_at }}</td>
+            <td>{{ data.updated_at }}</td>
             <td class="row">
               {% if not user_groups|check_group:READ_ONLY_GROUP %}
                 {% if rel.state == 'draft' %}
@@ -350,6 +363,8 @@
           <th class="no-sort">Note</th>
           <th class="no-sort">Information costs</th>
           <th class="no-sort">Handling costs</th>
+          <th>Created on</th>
+          <th>Last modified on</th>
         </tr>
         </thead>
         <tbody>
@@ -375,6 +390,8 @@
                 <span class='glyphicon glyphicon-remove-circle text-danger'></span>
               {% endif %}
             </td>
+            <td>{{ data.created_at }}</td>
+            <td>{{ data.updated_at }}</td>
           </tr>
         {% endfor %}
         </tbody>

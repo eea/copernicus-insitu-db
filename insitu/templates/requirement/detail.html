@@ -249,6 +249,17 @@
           </tr>
         {% endif %}
       {% endif %}
+
+      <tr class="row">
+        <th class="col-md-4 col-sm-6">Created on</th>
+        <td class="col-md-8 col-sm-6">{{ requirement.created_at }}</td>
+      </tr>
+
+      <tr class="row">
+        <th class="col-md-4 col-sm-6">Last updated on</th>
+        <td class="col-md-8 col-sm-6">{{ requirement.updated_at }}</td>
+      </tr>
+
       </tbody>
     </table>
   </div>
@@ -283,6 +294,8 @@
           <th>Criticality</th>
           <th class="no-sort">Barriers</th>
           <th class="no-sort">Note</th>
+          <th>Created on</th>
+          <th>Last updated on</th>
           <th class="no-sort"></th>
         </tr>
         </thead>
@@ -306,6 +319,8 @@
               {% endfor %}
             </td>
             <td>{{ rel.note }}</td>
+            <td>{{ rel.created_at }}</td>
+            <td>{{ rel.updated_at }}</td>
             <td class="row">
               {% if not user_groups|check_group:READ_ONLY_GROUP %}
                 {% if requirement.state == 'draft' %}
@@ -353,6 +368,8 @@
           <th class="no-sort">Note</th>
           <th class="no-sort">Information costs</th>
           <th class="no-sort">Handling costs</th>
+          <th>Created on</th>
+          <th>Last updated on</th>
           <th class="no-sort"></th>
         </tr>
         </thead>
@@ -378,6 +395,8 @@
                 <span class='glyphicon glyphicon-remove-circle text-danger'></span>
               {% endif %}
             </td>
+            <td> {{ rel.created_at }}</td>
+            <td> {{ rel.updated_at }}</td>
             <td class="row">
               {% if not user_groups|check_group:READ_ONLY_GROUP %}
                 {% if requirement.state == 'draft' %}

@@ -118,6 +118,17 @@
           {% endfor %}
         </td>
       </tr>
+
+      <tr class="row">
+        <th class="col-md-4 col-sm-6">Created on</th>
+        <td class="col-md-8 col-sm-6">{{ product.created_at }}</td>
+      </tr>
+
+      <tr class="row">
+        <th class="col-md-4 col-sm-6">Last updated on</th>
+        <td class="col-md-8 col-sm-6">{{ product.updated_at }}</td>
+      </tr>
+
       </tbody>
     </table>
   </div>
@@ -138,6 +149,8 @@
           <th>Criticality</th>
           <th class="no-sort">Barriers</th>
           <th class="no-sort">Note</th>
+          <th>Created on</th>
+          <th>Last updated on</th>
         </tr>
         </thead>
         <tbody>
@@ -157,6 +170,8 @@
               {% endfor %}
             </td>
             <td>{{ rel.note }}</td>
+            <td>{{ rel.created_at }}</td>
+            <td>{{ rel.updated_at }}</td>
           </tr>
         {% endfor %}
         </tbody>

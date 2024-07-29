@@ -226,6 +226,14 @@
           </tr>
         {% endif %}
       {% endif %}
+      <tr class="row">
+        <th class="col-md-4 col-sm-6">Created on</th>
+        <td class="col-md-8 col-sm-6">{{ provider.created_at }}</td>
+      </tr>
+      <tr class="row">
+        <th class="col-md-4 col-sm-6">Last updated on</th>
+        <td class="col-md-8 col-sm-6">{{ provider.updated_at }}</td>
+      </tr>
       </tbody>
     </table>
   </div>
