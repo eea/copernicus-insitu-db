@@ -661,7 +661,7 @@ class UserActionsReportView(ProtectedTemplateView, ReportExcelMixin):
         users = [u.username for u in data["users"]]
         logged_actions = LoggedAction.objects.filter(
             logged_date__range=[data["start_date"], data["end_date"]]
-        )
+        ).order_by("logged_date")
         if users:
             logged_actions = logged_actions.filter(user__in=users)
         index = 1
