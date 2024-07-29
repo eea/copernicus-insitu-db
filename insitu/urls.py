@@ -174,6 +174,11 @@ reports_patterns = [
         views.DataProviderDuplicatesReportView.as_view(),
         name="data_provider_duplicates_report",
     ),
+    path(
+        "user_actions/",
+        views.UserActionsReportView.as_view(),
+        name="user_actions_report",
+    ),
     path("<query_id>/", views.ReportsDetailView.as_view(), name="detail"),
     path("<query_id>/json/", views.ReportDataJsonView.as_view(), name="json"),
     path("snapshot/", views.SnapshotView.as_view(), name="snapshot"),

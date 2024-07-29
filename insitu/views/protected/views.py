@@ -147,7 +147,6 @@ class ProtectedListView(ProtectedView, ListView):
 
 
 class ProtectedTemplateView(ProtectedView, TemplateView):
-
     """
     Convenience view adding permissions support to
     `django.views.generic.TemplateView`.
@@ -227,7 +226,6 @@ class LoggingProtectedUpdateView(
 class ProtectedDeleteView(
     ProtectedObjectMixin, ProtectedView, DeleteView, metaclass=ProtectedFormViewBase
 ):
-
     """
     Convenience view adding permissions support to
     `django.views.generic.DeleteView`.
@@ -243,7 +241,6 @@ class LoggingProtectedDeleteView(
     DeleteView,
     metaclass=ProtectedFormViewBase,
 ):
-
     """
     Convenience view adding permissions and logging
     support to `django.views.generic.DeleteView`.

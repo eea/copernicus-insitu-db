@@ -2,6 +2,8 @@ import datetime
 import string
 import xlsxwriter
 
+from insitu.utils import get_object
+
 from io import BytesIO
 from Levenshtein import distance
 from openpyxl import load_workbook
@@ -30,6 +32,7 @@ from insitu.forms import (
     DataNetworkReportForm,
     StandardReportForm,
     DataProviderDuplicatesReportForm,
+    UserActionsForm,
 )
 from insitu.models import (
     Component,
@@ -37,6 +40,7 @@ from insitu.models import (
     Product,
     DataProvider,
     DataProviderDetails,
+    LoggedAction,
 )
 from insitu.views.data_provider_network_report_mixin import (
     DataProviderNetworkReportExcelMixin,
@@ -319,7 +323,7 @@ class ReportsStandardReportView(
         elif action == "Generate Excel":
             return self.generate_excel()
         else:
-            return HttpResponse("Inccorect value selected")
+            return HttpResponse("Incorect value selected")
 
 
 class CountryReportView(
@@ -356,7 +360,7 @@ class CountryReportView(
         elif action == "Generate Excel":
             return self.generate_excel()
         else:
-            return HttpResponse("Inccorect value selected")
+            return HttpResponse("Incorect value selected")
 
     def generate_excel(self):
         output = BytesIO()
@@ -616,3 +620,106 @@ class DataProvidersNetwortReportView(
         )
         response["Content-Disposition"] = "attachment; filename=%s" % filename
         return response
+
+
+class UserActionsReportView(ProtectedTemplateView, ReportExcelMixin):
+    template_name = "reports/user_actions_report.html"
+    permission_classes = ()
+    permission_denied_redirect = reverse_lazy("auth:login")
+
+    def get_context_data(self, **kwargs):
+        context = super(UserActionsReportView, self).get_context_data(**kwargs)
+        context["form"] = UserActionsForm()
+        return context
+
+    def generate_excel_file(self, workbook, data):
+        self.set_formats(workbook)
+        worksheet = workbook.add_worksheet("")
+        worksheet.set_column("A1:A1", 20)
+        worksheet.set_column("B1:B1", 20)
+        worksheet.set_column("C1:C1", 30)
+        worksheet.set_column("D1:D1", 50)
+        worksheet.set_column("E1:E1", 20)
+        worksheet.set_column("F1:F1", 50)
+        worksheet.set_column("G1:G1", 30)
+        worksheet.set_column("H1:H1", 30)
+        worksheet.set_column("I1:I1", 30)
+        worksheet.set_column("J1:J1", 30)
+        headers = [
+            "LOGGED DATE",
+            "USER",
+            "ACTION",
+            "TARGET TYPE",
+            "TARGET ID",
+            "TARGET NAME",
+            "TARGET STATE",
+            "TARGET LINK",
+            "TARGET NOTE",
+            "EXTRA",
+        ]
+        worksheet.write_row("A1", headers, self.format_cols_headers)
+        users = [u.username for u in data["users"]]
+        logged_actions = LoggedAction.objects.filter(
+            logged_date__range=[data["start_date"], data["end_date"]]
+        )
+        if users:
+            logged_actions = logged_actions.filter(user__in=users)
+        index = 1
+        for logged_action in logged_actions:
+            target = None
+            if logged_action.id_target:
+                target = get_object(logged_action.id_target, logged_action.target_type)
+
+            if target:
+                target_name = target.name
+                target_state = getattr(target, "state", "")
+                if target_state and data["states"]:
+                    if target_state not in data["states"]:
+                        continue
+                if logged_action.action != "deleted":
+                    target_link = self.request.build_absolute_uri(
+                        target.get_detail_link()
+                    )
+                else:
+                    target_link = ""
+            else:
+                target = ""
+                target_name = ""
+                target_state = ""
+                target_link = ""
+            write_data = [
+                logged_action.logged_date.strftime("%Y-%m-%d %H:%M:%S"),
+                logged_action.user,
+                logged_action.action,
+                logged_action.target_type,
+                logged_action.id_target,
+                target_name,
+                target_state,
+                target_link,
+                logged_action.target_note,
+                logged_action.extra,
+            ]
+            worksheet.write_row(index, 0, write_data, self.format_rows)
+            index += 1
+
+    def post(self, request, *args, **kwargs):
+        form = UserActionsForm(request.POST)
+        if form.is_valid():
+            output = BytesIO()
+            workbook = xlsxwriter.Workbook(output)
+            self.generate_excel_file(workbook, form.cleaned_data)
+            workbook.close()
+            output.seek(0)
+            today = datetime.datetime.now().strftime("%d_%m_%Y")
+            filename = f"CIS2_User_actions_{today}.xlsx"
+            cont_type = (
+                "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+            )
+            response = HttpResponse(
+                output,
+                content_type=cont_type,
+            )
+            response["Content-Disposition"] = "attachment; filename=%s" % filename
+            return response
+            return HttpResponse("Form is valid")
+        return HttpResponse("Incorrect value selected")

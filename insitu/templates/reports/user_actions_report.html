@@ -1,0 +1,64 @@
+{% extends '_layout.html' %}
+{% load bootstrap3 %}
+{% load static %}
+
+{% block style %}
+  <link rel="stylesheet" type="text/css"
+        href="{% static 'css/select2.min.css' %}"/>
+  <link rel="stylesheet" type="text/css"
+        href="{% static 'css/select2-bootstrap.min.css' %}"/>
+  <link rel="stylesheet" type="text/css"
+        href="{% static 'css/bootstrap-datetime-picker.min.css' %}"/>
+{% endblock %}
+
+{% block title %}User actions report{% endblock %}
+
+{% block content %}
+  <div class="row">
+    <h1 class="col-sm-12">
+      <span>User actions report</span>
+    </h1>
+  </div>
+
+  <form action="" method="POST" style="width: 50%">
+    {% csrf_token %}
+
+
+    <div class="form-group">
+        <label class="control-label">
+          Period
+        </label>
+        <div class="input-group input-daterange">
+            <input type="text" class="input-sm form-control" name="start_date"
+                   id="id_start_date" data-provide="datepicker" autocomplete="off"
+                   value="{{ form.start_date.value|date:'m/d/Y'}}" required/>
+            <span class="input-group-addon">to</span>
+            <input type="text" class="input-sm form-control" name="end_date"
+                   id="id_end_date" data-provide="datepicker" autocomplete="off"
+                   value="{{ form.end_date.value|date:'m/d/Y'}}" required/>
+            <div class="input-group-addon">
+              <span class="glyphicon glyphicon-th"></span>
+            </div>
+        </div>
+        </div>
+
+    {% bootstrap_field form.users required_css_class='required' %}
+
+    {% bootstrap_field form.states required_css_class='required' %}
+
+    <input class="btn btn-primary" type="submit" name="action" value="Generate Excel" />
+    <a href="{% url 'about' %}"
+       class="btn btn-default">Cancel</a>
+  </form>
+{% endblock %}
+
+{% block scripts %}
+  <script src="{% static 'js/select2.min.js' %}"></script>
+  <script src="{% static 'js/bootstrap.min.js' %}"></script>
+  <script src="{% static 'js/bootstrap-datetime-picker.min.js' %}"></script>
+  <script nonce="{{request.csp_nonce}}">
+    $(document).ready(function () {
+      $('select').select2();
+    });
+  </script>
+{% endblock %}

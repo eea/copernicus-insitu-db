@@ -3,7 +3,15 @@ import xlsxwriter
 from io import BytesIO
 from django.http import HttpResponse
 
-from insitu.models import Data, DataProvider, Product, Requirement
+from insitu.models import (
+    Data,
+    DataProvider,
+    Product,
+    Requirement,
+    DataProviderRelation,
+    ProductRequirement,
+    DataRequirement,
+)
 
 ALL_OPTIONS_LABEL = "All"
 
@@ -116,6 +124,24 @@ def get_name(obj_id, obj_type):
         elif obj_type == "data provider":
             name = DataProvider.objects.really_all().filter(id=obj_id).first().name
     return name
+
+
+def get_object(obj_id, obj_type):
+    if obj_id:
+        if obj_type == "requirement":
+            return Requirement.objects.really_all().filter(id=obj_id).first()
+        elif obj_type == "data":
+            return Data.objects.really_all().filter(id=obj_id).first()
+        elif obj_type == "product":
+            return Product.objects.really_all().filter(id=obj_id).first()
+        elif obj_type == "data provider" or obj_type == "data provider network":
+            return DataProvider.objects.really_all().filter(id=obj_id).first()
+        elif obj_type == "relation between data and data provider":
+            return DataProviderRelation.objects.really_all().filter(id=obj_id).first()
+        elif obj_type == "relation between product and requirement":
+            return ProductRequirement.objects.really_all().filter(id=obj_id).first()
+        elif obj_type == "relation between data and requirement":
+            return DataRequirement.objects.really_all().filter(id=obj_id).first()
 
 
 def export_logs_excel(queryset):

@@ -99,7 +99,7 @@
         <tr>
           <td>
             <strong>
-              <a href="{% url 'reports:data_provider_duplicates_report' %}">Potential data provider duplicates report              </a>
+              <a href="{% url 'reports:data_provider_duplicates_report' %}">Potential data provider duplicates report</a>
             </strong>
           </td>
           <td>
@@ -107,6 +107,26 @@
                for duplicates. The report can either be generated for all data providers or for a specific country.
                In the case of a country selection, only data providers that have the selected country in their "Country" field
                will be considered.
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <strong>
+              <a href="{% url 'reports:user_actions_report' %}">User actions report</a>
+            </strong>
+          </td>
+          <td>
+            <p>This report exports all the modifications made by the users in a selected period of time.</p>
+            <p>The "Period" value is mandatory for exporting this report.</p>
+            <p>Selecting no users will result in exporting all the entries, regardless of the user, and selecting no
+               states will also result in exporting all the values, regardless of the entries' states.</p>
+            <p>For modifications made to the entries of type <b>relation between two objects</b>,
+               the link generated will point to the page of the object on which the relation can be edited.
+               (e.g for a relation between a Product and a Requirement, the link will be generated to the Requirement's page) .
+            </p>
+            <p>
+               For "deleted" action, the link cell will be blank.
             </p>
           </td>
         </tr>

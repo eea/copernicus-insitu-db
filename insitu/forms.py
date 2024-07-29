@@ -762,3 +762,20 @@ class CreateUserForm(UserCreationForm):
             "first_name": forms.TextInput(attrs={"placeholder": "First Name"}),
             "last_name": forms.TextInput(attrs={"placeholder": "Last Name"}),
         }
+
+
+class UserActionsForm(forms.Form):
+    start_date = forms.DateField()
+    end_date = forms.DateField()
+    users = forms.ModelMultipleChoiceField(
+        required=False, queryset=models.User.objects.all()
+    )
+    states = forms.MultipleChoiceField(
+        required=False,
+        choices=(
+            ("draft", "Draft"),
+            ("changes", "Changes requested"),
+            ("ready", "Ready for validation"),
+            ("valid", "Valid"),
+        ),
+    )

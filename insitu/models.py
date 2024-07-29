@@ -6,8 +6,8 @@ from django.contrib.auth import get_user_model
 from django.db import models
 from django.db.models.signals import post_save, post_delete
 from django.db.models.query import QuerySet
-
 from django_fsm import FSMField, transition
+from django.urls import reverse
 
 from markdownx.models import MarkdownxField
 
@@ -315,6 +315,9 @@ class Requirement(OwnerHistoryModel, ValidationWorkflowModel, SoftDeleteModel):
     def __str__(self):
         return self.name
 
+    def get_detail_link(self):
+        return reverse("requirement:detail", kwargs={"pk": self.id})
+
     def has_user_perm(self, user):
         return user.has_perm("change_requirement", self) and user.has_perm(
             "delete_requirement", self
@@ -431,6 +434,9 @@ class Product(SoftDeleteModel):
     def __str__(self):
         return self.name
 
+    def get_detail_link(self):
+        return reverse("product:detail", kwargs={"pk": self.id})
+
     class Meta:
         indexes = [
             models.Index(fields=["_deleted", "area"]),
@@ -461,6 +467,13 @@ class ProductRequirement(OwnerHistoryModel, ValidationWorkflowModel, SoftDeleteM
 
     def __str__(self):
         return "{} - {}".format(self.product.name, self.requirement.name)
+
+    def get_detail_link(self):
+        return reverse("requirement:detail", kwargs={"pk": self.requirement.id})
+
+    @property
+    def name(self):
+        return f"Product: {self.product.name} - Requirement: {self.requirement.name}"
 
     def has_user_perm(self, user):
         return user.has_perm("change_requirement", self.requirement) and user.has_perm(
@@ -501,6 +514,9 @@ class DataProvider(OwnerHistoryModel, ValidationWorkflowModel, SoftDeleteModel):
 
     def __str__(self):
         return self.name
+
+    def get_detail_link(self):
+        return reverse("provider:detail", kwargs={"pk": self.id})
 
     def has_user_perm(self, user):
         return user.has_perm("change_dataprovider", self) and user.has_perm(
@@ -748,6 +764,9 @@ class Data(OwnerHistoryModel, ValidationWorkflowModel, SoftDeleteModel):
     def __str__(self):
         return self.name
 
+    def get_detail_link(self):
+        return reverse("data:detail", kwargs={"pk": self.id})
+
     def get_related_objects(self):
         objects = []
         objects += [obj for obj in self.dataproviderrelation_set.all()]
@@ -844,6 +863,13 @@ class DataRequirement(OwnerHistoryModel, ValidationWorkflowModel, SoftDeleteMode
     def __str__(self):
         return "{} - {}".format(self.data.name, self.requirement.name)
 
+    def get_detail_link(self):
+        return reverse("requirement:detail", kwargs={"pk": self.requirement.id})
+
+    @property
+    def name(self):
+        return f"Data: {self.data.name} - Requirement: {self.requirement.name}"
+
     def has_user_perm(self, user):
         return user.has_perm("change_requirement", self.requirement) and user.has_perm(
             "delete_requirement", self.requirement
@@ -868,6 +894,13 @@ class DataProviderRelation(
 
     def __str__(self):
         return "{} - {}".format(self.data.name, self.provider.name)
+
+    def get_detail_link(self):
+        return reverse("data:detail", kwargs={"pk": self.data.id})
+
+    @property
+    def name(self):
+        return f"Provider: {self.provider.name} - Data: {self.data.name}"
 
     def has_user_perm(self, user):
         return user.has_perm("change_data", self.data) and user.has_perm(
