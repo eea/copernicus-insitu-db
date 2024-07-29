@@ -3,6 +3,11 @@ Changelog
 
 * In case of major changes, an email should be sent to all users with the modifications.
 
+2.10.18 (2024-07-29)
+--------------------
+* Add report for user actions
+  [dianaboiangiu]
+
 2.10.17 (2024-07-25)
 --------------------
 * Add report for detecting duplicated data providers
