@@ -3,6 +3,12 @@ Changelog
 
 * In case of major changes, an email should be sent to all users with the modifications.
 
+2.10.20 (2024-08-01)
+--------------------
+* Improve detecting duplicates
+* For data providers without requirement group, list their network's requirement groups
+  [dianaboiangiu]
+
 2.10.19 (2024-07-29)
 --------------------
 * Add created on, last updated on fields on the detail pages of all objects
