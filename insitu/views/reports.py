@@ -475,7 +475,8 @@ class DataProviderDuplicatesReportView(
                 if dp.id != dp2.id
                 and (
                     distance(dp.name, dp2.name) <= 2
-                    or (dp.website != "" and distance(dp.website, dp2.website) <= 2)
+                    or (dp.website != "" and distance(dp.website, dp2.website) < 2)
+                    or (dp.edmo and dp2.edmo and dp.edmo == dp2.edmo)
                 )
             ]
             if len(duplicates) >= 2:

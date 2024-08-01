@@ -461,6 +461,7 @@ class DataProviderListApiView(ProtectedView):
             .prefetch_related(
                 "countries",
                 "members",
+                "networks",
                 "dataproviderrelation_set__data",
                 "dataproviderrelation_set",
                 "dataproviderrelation_set__data__requirements",
@@ -484,16 +485,46 @@ class DataProviderListApiView(ProtectedView):
                 ),
             )
         )
+        dp_networks = DataProvider.objects.filter(is_network=True).prefetch_related(
+            "countries",
+            "members",
+            "dataproviderrelation_set__data",
+            "dataproviderrelation_set",
+            "dataproviderrelation_set__data__requirements",
+            "dataproviderrelation_set__data__requirements__group",
+        )
 
-        for provider in data_providers:
+        networks_requirement_groups = {}
+        for network in dp_networks:
             requirement_groups = []
-            for dp_relation in provider.dataproviderrelation_set.all():
+            for dp_relation in network.dataproviderrelation_set.all():
                 data_requirement_groups = [
                     x.group for x in dp_relation.data.requirements.all()
                 ]
                 for group in data_requirement_groups:
                     if group not in requirement_groups:
                         requirement_groups.append(group)
+            networks_requirement_groups[network.id] = requirement_groups
+        for provider in data_providers:
+            requirement_groups = []
+            if provider.is_network:
+                requirement_groups = networks_requirement_groups[provider.id]
+            else:
+                for dp_relation in provider.dataproviderrelation_set.all():
+                    data_requirement_groups = [
+                        x.group for x in dp_relation.data.requirements.all()
+                    ]
+                    for group in data_requirement_groups:
+                        if group not in requirement_groups:
+                            requirement_groups.append(group)
+
+                if not requirement_groups:
+                    for network in provider.networks.all():
+                        for dp_relation in network.dataproviderrelation_set.all():
+                            for group in networks_requirement_groups[network.id]:
+                                if group not in requirement_groups:
+                                    requirement_groups.append(group)
+
             entry = {
                 "id": provider.id,
                 "acronym": provider.acronym,
