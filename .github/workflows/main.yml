@@ -25,7 +25,7 @@ jobs:
       - uses: actions/checkout@v2
 
       - name: Spin up docker containers
-        run: docker-compose up -d
+        run: docker compose up -d
 
       - name: Run flake8
         run: docker exec insitu.app flake8
