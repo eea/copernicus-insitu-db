@@ -35,3 +35,6 @@ jobs:
 
       - name: Test Django app
         run: docker exec insitu.app python manage.py test --settings=copernicus.test_settings
+
+      - name: Test Django coverage
+        run: docker exec insitu.app coverage run --source='.' manage.py test --settings=copernicus.test_settings
