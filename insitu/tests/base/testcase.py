@@ -2,9 +2,8 @@ import csv
 import os
 
 from django.test import TestCase
-from django.conf import settings
 from copernicus.test_settings import LOGGING_CSV_FILENAME, LOGGING_CSV_PATH
-from insitu.tests.base import UserFactory, GroupFactory
+from insitu.tests.base import UserFactory
 from insitu.models import LoggedAction
 
 
