@@ -3,6 +3,13 @@ Changelog
 
 * In case of major changes, an email should be sent to all users with the modifications.
 
+2.11.0 (2024-09-09)
+-------------------
+* Remove Use cases feature
+* Limit fields in Special Report 1
+* Upgrade packages with warnings
+  [dianaboiangiu]
+
 2.10.20 (2024-08-01)
 --------------------
 * Improve detecting duplicates
