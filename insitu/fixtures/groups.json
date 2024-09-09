@@ -73,13 +73,5 @@
                 44
             ]
         }
-    },
-    {
-        "model": "auth.group",
-        "pk": 5,
-        "fields": {
-            "name": "UseCasesPublisher",
-            "permissions": []
-        }
     }
 ]

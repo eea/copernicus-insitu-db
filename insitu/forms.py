@@ -196,9 +196,9 @@ class RequirementForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields[
-            "name"
-        ].help_text = 'Please avoid separating words with the character "_"'
+        self.fields["name"].help_text = (
+            'Please avoid separating words with the character "_"'
+        )
 
     def _clean_scale(self):
         check_fields = [

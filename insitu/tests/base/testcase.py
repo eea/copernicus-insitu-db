@@ -25,9 +25,6 @@ class FormCheckTestCase(TestCase):
         self.errors.update(self.custom_errors)
         self.creator = UserFactory(username="Creator")
         self.other_user = UserFactory(username="Other")
-        group = GroupFactory(name=settings.USE_CASES_PUBLISHER_GROUP)
-        self.publisher = UserFactory(username="Superuser", is_superuser=True)
-        self.publisher.groups.add(group)
 
     def login_creator(self):
         self.client.force_login(self.creator)

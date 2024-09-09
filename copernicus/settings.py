@@ -72,7 +72,6 @@ INSTALLED_APPS = [
     "wkhtmltopdf",
     "picklists",
     "insitu",
-    "use_cases",
 ]
 
 if not DEBUG:
@@ -184,9 +183,6 @@ DATA_DATA_PROVIDER_EDITOR_GROUP = env(
     "DATA_DATA_PROVIDER_EDITOR_GROUP", default="DataDataProviderEditor"
 )
 PICKLISTS_EDITOR_GROUP = env("PICKLISTS_EDITOR_GROUP", default="PicklistsEditor")
-USE_CASES_PUBLISHER_GROUP = env(
-    "USE_CASES_PUBLISHER_GROUP", default="UseCasesPublisher"
-)
 
 # Internationalization
 # https://docs.djangoproject.com/en/1.11/topics/i18n/
@@ -257,8 +253,6 @@ EXPLORER_SQL_WHITELIST = {
     "Data updated",
     "data_updated",
 }
-
-USE_CASES_FEATURE_TOGGLE = os.environ.get("USE_CASES_FEATURE_TOGGLE", False)
 
 
 def EXPLORER_PERMISSION_VIEW(request):
