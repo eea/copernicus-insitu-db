@@ -152,9 +152,9 @@ class SnapshotView(ProtectedTemplateView):
     def get(self, request, *args, **kwargs):
         response = HttpResponse()
         date = datetime.datetime.now().strftime("%Y%m%d")
-        response["Content-Disposition"] = (
-            "attachment; filename=insitu_{0}.sql.gz".format(date)
-        )
+        response[
+            "Content-Disposition"
+        ] = "attachment; filename=insitu_{0}.sql.gz".format(date)
         response["X-Accel-Redirect"] = "/static/protected/database.sql.gz"
         return response
 
