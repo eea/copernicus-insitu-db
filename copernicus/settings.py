@@ -149,7 +149,15 @@ DATABASES = {
         "NAME": env("POSTGRES_DB", default="insitu"),
         "USER": env("POSTGRES_USER", default="demo"),
         "PASSWORD": env("POSTGRES_PASSWORD", default="demo"),
-    }
+    },
+    "explorer": {
+        "ENGINE": "django.db.backends.postgresql",
+        "HOST": env("POSTGRES_HOST", default="db"),
+        "PORT": 5432,
+        "NAME": env("POSTGRES_DB", default="insitu"),
+        "USER": env("POSTGRES_EXPLORER_USER", default="explorer"),
+        "PASSWORD": env("POSTGRES_EXPLORER_PASSWORD", default="explorer"),
+    },
 }
 
 DEFAULT_AUTO_FIELD = "django.db.models.AutoField"
@@ -243,7 +251,7 @@ LOGIN_REDIRECT_URL = "/"
 
 SUPPORT_EMAIL = os.environ.get("SUPPORT_EMAIL", "")
 
-EXPLORER_CONNECTIONS = {"Default": "default"}
+EXPLORER_CONNECTIONS = {"Default": "explorer"}
 EXPLORER_DEFAULT_ROWS = 50000
 EXPLORER_SQL_WHITELIST = {
     "update_frequency",
@@ -259,7 +267,7 @@ def EXPLORER_PERMISSION_VIEW(request):
     return request.user.is_authenticated
 
 
-EXPLORER_DEFAULT_CONNECTION = "default"
+EXPLORER_DEFAULT_CONNECTION = "explorer"
 EXPLORER_SCHEMA_EXCLUDE_TABLE_PREFIXES = [
     "auth_group",
     "auth_group_permissions",

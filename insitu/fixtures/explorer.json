@@ -8,9 +8,9 @@
             "description": "Use cases:\r\n 1. List Requirements per given Product, Component, or Service\r\n 2. List Requirements classified according to criticality per given Product, Component, or Service (filter by Criticality)\r\n 3. List barriers per Product, Component, or Service\r\n 4. List requirements with level_of_compliance different from “fully compliant” per given Service\r\n5.  List main outstanding gaps per Service, Product, and Component ( by level of compliance)\r\n6.  List  Requirements per given Product\r\n7.  List Requirements with level_of_compliance “none” or “partially fulfilled” per given Service Component\r\n8.  List Essential Requirements per given Product, Component, or Service (filter by Criticality)\r\n9.  List Requirements per given Product, Component, or Service that are essential and not fulfilled (filter by Criticality and Level of Compliance)\r\n\r\nFiltering done on the objects of the report:\r\n- Products that have a link to at least one requirement.\r\n- Requirements with at least one link to a product",
             "created_by_user": 1,
             "created_at": "2018-08-01T08:42:36.799Z",
-            "last_run_date": "2024-03-01T14:20:05.026Z",
+            "last_run_date": "2024-09-12T08:57:43.623Z",
             "snapshot": false,
-            "connection": "default"
+            "connection": ""
         }
     },
     {
@@ -22,9 +22,9 @@
             "description": "Use cases:\r\n1.  List Data  per given Product, Component, or Service\r\n2.  List Data used by a given Product, Component, or Service. with (no) information/handling cost\r\n3. Present a list of Data per Product group\r\n\r\nFiltering done on the objects of the report:\r\n- Products that have a link to at least one requirement which has at least one link to a data set.\r\n- Data with at least one link to a requirement linked to a product",
             "created_by_user": 1,
             "created_at": "2018-08-01T08:43:07.606Z",
-            "last_run_date": "2022-10-03T12:20:49.215Z",
+            "last_run_date": "2024-09-12T08:57:59.640Z",
             "snapshot": false,
-            "connection": "default"
+            "connection": ""
         }
     },
     {
@@ -50,9 +50,9 @@
             "description": "Use cases:\r\n 1. Count Requirements per Entrusted Entity\r\n 2. Count Requirements per Component\r\n 3. Count Products per Component\r\n 4. Count Products per Entrusted Entity\r\n\r\nFiltering done on the objects of the report:\r\n- All Products are considered for the counting\r\n- The requirements which have a link to a product of the selected component/entrusted entity are considered for the counting",
             "created_by_user": 1,
             "created_at": "2018-08-01T08:43:53.335Z",
-            "last_run_date": "2024-04-04T11:45:12.366Z",
+            "last_run_date": "2024-09-12T08:57:22.759Z",
             "snapshot": false,
-            "connection": "default"
+            "connection": ""
         }
     },
     {
@@ -64,9 +64,9 @@
             "description": "Use cases:\r\n 1. List data providers which deliver data and a count of data delivered.\r\n\r\nFiltering done on the objects of the report: \r\n- Data providers with at least one link to a data set",
             "created_by_user": 1,
             "created_at": "2018-08-01T08:44:12.306Z",
-            "last_run_date": "2023-02-24T11:53:53.658Z",
+            "last_run_date": "2024-09-12T08:56:53.807Z",
             "snapshot": false,
-            "connection": "default"
+            "connection": ""
         }
     },
     {
@@ -78,9 +78,9 @@
             "description": "Use cases:\r\n1. List all requirements and their related areas.\r\n\r\nFiltering done on the objects of the report:\r\n- Requirements with at least one link to a product and one link to a data object",
             "created_by_user": 1,
             "created_at": "2018-08-01T08:44:36.945Z",
-            "last_run_date": "2023-02-24T11:14:59.745Z",
+            "last_run_date": "2024-09-12T08:58:30.064Z",
             "snapshot": false,
-            "connection": "default"
+            "connection": ""
         }
     },
     {
@@ -92,9 +92,9 @@
             "description": "Use cases:\r\n1.  List Data Providers for a given Country or Network\r\n2.  List all commercial Data Providers for a given Country or Network (filter by provider type)\r\n\r\nFiltering done on the objects of the report:\r\n- All Data Providers are shown in this report\r\n- Data sets which have a link to a component and service through  a product and a requirement",
             "created_by_user": 1,
             "created_at": "2018-11-01T13:49:26.768Z",
-            "last_run_date": "2024-01-26T07:25:02.414Z",
+            "last_run_date": "2024-09-12T08:57:07.727Z",
             "snapshot": false,
-            "connection": "default"
+            "connection": ""
         }
     },
     {
@@ -106,9 +106,9 @@
             "description": "Use cases:\r\n1. List Data Providers per given Product, Component, or Service\r\n2. List all commercial Data Providers contributing to Copernicus per Service (filter by provider type)\r\n3. List Data providers (networks) contributing to Copernicus per Entrusted Entity\r\n4.  List of Service, Product and Component to which a selected Data provider contribute.\r\n5.  List  Data Providers per Product, Component or Service\r\n6.  List Networks and DataProviders delivering data to the selected service/entrusted Entities\r\n7.  List Data Providers deliver essential data to us  (filter by Level of Compliance)\r\n\r\nFiltering done on the objects of the report:\r\n- All Products are shown in this report (some exceptions might appear for duplicated names)\r\n- Requirements which have at least one link to a product\r\n- Data objects which have at least one link to a requirement\r\n- Data providers which have at least one link to a data object",
             "created_by_user": 1,
             "created_at": "2018-11-01T15:17:56.402Z",
-            "last_run_date": "2024-03-26T14:07:17.786Z",
+            "last_run_date": "2024-09-12T08:58:17.081Z",
             "snapshot": false,
-            "connection": "default"
+            "connection": ""
         }
     },
     {
@@ -120,9 +120,9 @@
             "description": "Use cases:\r\n1.  List Data fully compliant with Requirements ( filter by Level of compliance)\r\n\r\nFiltering done on the objects of the report: \r\n- Products that have a link to at least one requirement which has at least one link to a data set.\r\n- Requirements with at least one link to a data set and at least one link to a product\r\n- Data with at least one link to a requirement linked to a product",
             "created_by_user": 1,
             "created_at": "2018-11-01T15:40:37.236Z",
-            "last_run_date": "2024-03-01T14:42:04.455Z",
+            "last_run_date": "2024-09-12T08:56:47.750Z",
             "snapshot": false,
-            "connection": "default"
+            "connection": ""
         }
     },
     {
@@ -134,9 +134,9 @@
             "description": "Use cases:\r\n1. List INSPIRE themes covered by Data\r\n\r\nFiltering done on the objects of the report:\r\n- All Data sets are shown in this report",
             "created_by_user": 1,
             "created_at": "2018-11-01T16:27:53.396Z",
-            "last_run_date": "2024-03-26T14:10:14.959Z",
+            "last_run_date": "2024-09-12T08:57:15.091Z",
             "snapshot": false,
-            "connection": "default"
+            "connection": ""
         }
     },
     {
@@ -148,9 +148,9 @@
             "description": "1.This report contains all relevant columns from products, requirements, data and data requirements for the following services:\r\n    a) Copernicus Emergency Management Service\r\n    b) Copernicus Land Monitoring Service\r\n    c) Copernicus Security Service",
             "created_by_user": 1,
             "created_at": "2019-05-23T09:01:56.412Z",
-            "last_run_date": "2024-09-09T14:45:39.363Z",
+            "last_run_date": "2024-09-12T08:58:47.569Z",
             "snapshot": false,
-            "connection": "default"
+            "connection": ""
         }
     },
     {
@@ -162,9 +162,9 @@
             "description": "1.This report contains all relevant columns from products, requirements, data and data requirements for the following services:\r\n    a) Copernicus Emergency Management Service\r\n    b) Copernicus Land Monitoring Service\r\n    c) Copernicus Security Service",
             "created_by_user": 1,
             "created_at": "2019-05-27T11:40:51.295Z",
-            "last_run_date": "2024-03-05T09:45:43.352Z",
+            "last_run_date": "2024-09-12T08:58:55.548Z",
             "snapshot": false,
-            "connection": "default"
+            "connection": ""
         }
     },
     {
@@ -176,9 +176,9 @@
             "description": "Use cases:\r\n 1. List Requirements per given Product, Component, or Service\r\n 2. List Requirements classified according to criticality per given Product, Component, or Service (filter by Criticality)\r\n 3. List barriers per Product, Component, or Service\r\n 4. List requirements with level_of_compliance different from “fully compliant” per given Service\r\n5.  List main outstanding gaps per Service, Product, and Component ( by level of compliance)\r\n6.  List  Requirements per given Product\r\n7.  List Requirements with level_of_compliance “none” or “partially fullfilled” per given Service Component\r\n8.  List Essential Requirements per given Product, Component, or Service (filter by Criticality)\r\n9.  List Requirements per given Product, Component, or Service that are essential and not fulfilled (filter by Criticality and Level of Compliance)",
             "created_by_user": 1,
             "created_at": "2021-12-17T11:19:27.434Z",
-            "last_run_date": "2021-12-17T11:19:27.521Z",
+            "last_run_date": "2024-09-12T08:57:30.915Z",
             "snapshot": false,
-            "connection": "default"
+            "connection": ""
         }
     },
     {
@@ -190,9 +190,9 @@
             "description": "Use cases:\r\n1. List Data Providers per given Product, Component, or Service\r\n2. List all commercial Data Providers contributing to Copernicus per Service (filter by provider type)\r\n3. List Data providers (networks) contributing to Copernicus per Entrusted Entity\r\n4.  List of Service, Product and Component to which a selected Data provider contribute.\r\n5.  List  Data Providers per Product, Component or Service\r\n6.  List Networks and DataProviders delivering data to the selected service/entrusted Entities\r\n7.  List Data Providers deliver essential data to us  (filter by Level of Compliance)",
             "created_by_user": 1,
             "created_at": "2021-12-17T11:28:00.382Z",
-            "last_run_date": "2024-03-01T14:29:54.522Z",
+            "last_run_date": "2024-09-12T08:58:09.388Z",
             "snapshot": false,
-            "connection": "default"
+            "connection": ""
         }
     },
     {
@@ -204,9 +204,9 @@
             "description": "Use cases:\r\n1.Filter per ‘Data Provider Country’\r\n2. Filter per ‘Product component’\r\n3. List data providers networks and data count per data provider",
             "created_by_user": 1,
             "created_at": "2023-10-19T15:14:29.605Z",
-            "last_run_date": "2023-10-20T09:28:30.773Z",
+            "last_run_date": "2024-09-12T08:57:00.716Z",
             "snapshot": false,
-            "connection": "default"
+            "connection": ""
         }
     },
     {
@@ -218,9 +218,9 @@
             "description": "Use cases:\r\n 1. List all Requirements with all their attributes",
             "created_by_user": 1,
             "created_at": "2024-03-01T14:35:54.952Z",
-            "last_run_date": "2024-03-01T14:37:27.788Z",
+            "last_run_date": "2024-09-12T08:58:38.903Z",
             "snapshot": false,
-            "connection": "default"
+            "connection": ""
         }
     }
 ]

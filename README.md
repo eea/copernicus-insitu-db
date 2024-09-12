@@ -33,6 +33,8 @@ Copernicus services on in situ data requirements (current and expected), data us
         python manage.py migrate
         python manage.py createsuperuser
 
+1. Create read-only db user for explorer using the information from **docker/init_explorer_db.sql**
+
 1. Create SQL views:
 
         docker cp docker/create_views.sql insitu.db:create_views.sql
