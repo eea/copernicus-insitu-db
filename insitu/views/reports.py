@@ -38,7 +38,12 @@ from insitu.models import (
     Component,
     CopernicusService,
     Product,
+    ProductRequirement,
+    DataRequirement,
+    Requirement,
+    Data,
     DataProvider,
+    DataProviderRelation,
     DataProviderDetails,
     LoggedAction,
 )
@@ -627,11 +632,94 @@ class UserActionsReportView(ProtectedTemplateView, ReportExcelMixin):
     template_name = "reports/user_actions_report.html"
     permission_classes = ()
     permission_denied_redirect = reverse_lazy("auth:login")
+    # Mapping of object types to their respective model classes and filtered data keys
+    # [logged_type] : (model_class, filtered_data_key)
+    OBJECTS_MAPPING = {
+        "product": (Product, "products"),
+        "requirement": (Requirement, "requirements"),
+        "data": (Data, "data"),
+        "data provider": (DataProvider, "data_providers"),
+        "data provider network": (DataProvider, "data_providers"),
+        "relation between product and requirement": (
+            ProductRequirement,
+            "product_requirements",
+        ),
+        "relation between data and requirement": (
+            DataRequirement,
+            "data_requirements",
+        ),
+        "relation between data and data provider": (
+            DataProviderRelation,
+            "data_provider_relations",
+        ),
+    }
 
     def get_context_data(self, **kwargs):
         context = super(UserActionsReportView, self).get_context_data(**kwargs)
         context["form"] = UserActionsForm()
         return context
+
+    def check_object(self, obj_id, obj_type, filtered_data=None):
+        if obj_type in self.OBJECTS_MAPPING:
+            if obj_id not in filtered_data[self.OBJECTS_MAPPING[obj_type][1]]:
+                return False
+        return True
+
+    def get_object(self, obj_id, obj_type):
+        if obj_id:
+            if obj_type in self.OBJECTS_MAPPING:
+                return (
+                    self.OBJECTS_MAPPING[obj_type][0]
+                    .objects.really_all()
+                    .filter(id=obj_id)
+                    .first()
+                )
+
+    def get_filtered_data(self, data):
+        filtered_data = {}
+        components = None
+        if data["services"]:
+            components = Component.objects.filter(service__in=data["services"])
+        if data["components"]:
+            components = Component.objects.filter(id__in=data["components"])
+        if components:
+            filtered_data["products"] = (
+                Product.objects.really_all()
+                .filter(component__in=components)
+                .values_list("id", flat=True)
+            )
+            product_requirements = (
+                ProductRequirement.objects.really_all()
+                .filter(product_id__in=filtered_data["products"])
+                .distinct()
+            )
+            filtered_data["product_requirements"] = product_requirements.values_list(
+                "id", flat=True
+            )
+            filtered_data["requirements"] = product_requirements.values_list(
+                "requirement_id", flat=True
+            )
+            data_requirements = (
+                DataRequirement.objects.really_all()
+                .filter(requirement_id__in=filtered_data["requirements"])
+                .distinct()
+            )
+            filtered_data["data_requirements"] = data_requirements.values_list(
+                "id", flat=True
+            )
+            filtered_data["data"] = data_requirements.values_list("data_id", flat=True)
+            data_provider_relations = (
+                DataProviderRelation.objects.really_all()
+                .filter(data_id__in=filtered_data["data"])
+                .distinct()
+            )
+            filtered_data["data_provider_relations"] = (
+                data_provider_relations.values_list("id", flat=True)
+            )
+            filtered_data["data_providers"] = data_provider_relations.values_list(
+                "provider_id", flat=True
+            )
+        return filtered_data
 
     def generate_excel_file(self, workbook, data):
         self.set_formats(workbook)
@@ -659,6 +747,7 @@ class UserActionsReportView(ProtectedTemplateView, ReportExcelMixin):
             "EXTRA",
         ]
         worksheet.write_row("A1", headers, self.format_cols_headers)
+        filtered_data = self.get_filtered_data(data)
         users = [u.username for u in data["users"]]
         logged_actions = LoggedAction.objects.filter(
             logged_date__range=[data["start_date"], data["end_date"]]
@@ -669,6 +758,14 @@ class UserActionsReportView(ProtectedTemplateView, ReportExcelMixin):
         for logged_action in logged_actions:
             target = None
             if logged_action.id_target:
+                if filtered_data:
+                    include_log = self.check_object(
+                        int(logged_action.id_target),
+                        logged_action.target_type,
+                        filtered_data,
+                    )
+                    if not include_log:
+                        continue
                 target = get_object(logged_action.id_target, logged_action.target_type)
 
             if target:

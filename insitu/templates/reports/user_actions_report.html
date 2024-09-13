@@ -46,6 +46,10 @@
 
     {% bootstrap_field form.states required_css_class='required' %}
 
+    {% bootstrap_field form.services %}
+
+    {% bootstrap_field form.components %}
+
     <input class="btn btn-primary" type="submit" name="action" value="Generate Excel" />
     <a href="{% url 'about' %}"
        class="btn btn-default">Cancel</a>
@@ -59,6 +63,16 @@
   <script nonce="{{request.csp_nonce}}">
     $(document).ready(function () {
       $('select').select2();
+      $('#id_services').change(function (e, passDeselectingComponents) {
+        if (passDeselectingComponents != 'yes'){
+          $("#id_components").val('').trigger('change', ['yes']);
+        }
+      });
+      $('#id_components').change(function (e, passDeselectingServices) {
+        if (passDeselectingServices != 'yes'){
+          $("#id_services").val('').trigger('change', ['yes']);
+        }
+      });
     });
   </script>
 {% endblock %}

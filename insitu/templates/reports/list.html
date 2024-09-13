@@ -128,6 +128,13 @@
             <p>
                For "deleted" action, the link cell will be blank.
             </p>
+            <p>
+              The report can also be filtered by services and components, but not by both at the same time.
+              The report will include only the products that are part of the selected services/components and the requirements
+              linked to them, the data linked to those requirements and the data providers linked to the filtered data.
+              Please also note that the deleted entries are also considered in this filtering (to include the "delete" action),
+              so an object might be included in the report even if its link was deleted.
+            </p>
           </td>
         </tr>
       {% endif %}

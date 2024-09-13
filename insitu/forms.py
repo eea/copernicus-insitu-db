@@ -1,6 +1,7 @@
 import re
 
 from django import forms
+from django.core.exceptions import ValidationError
 from django.core.mail import send_mail
 from django.urls import reverse
 from django.db import transaction
@@ -779,3 +780,29 @@ class UserActionsForm(forms.Form):
             ("valid", "Valid"),
         ),
     )
+    services = forms.ModelMultipleChoiceField(
+        required=False,
+        queryset=models.CopernicusService.objects.all(),
+        help_text="""
+            Only services or only components can be selected, not both.
+            When selecting services, the components field will be emptied."
+        """,
+    )
+    components = forms.ModelMultipleChoiceField(
+        required=False,
+        queryset=models.Component.objects.all(),
+        help_text="""
+            Only services or only components can be selected, not both.
+            When selecting components, the services field will be emptied."
+        """,
+    )
+
+    def clean(self):
+        cleaned_data = super().clean()
+        services = cleaned_data.get("services")
+        components = cleaned_data.get("components")
+        if services and components:
+            # Only do something if both fields are valid so far.
+            raise ValidationError(
+                "Selecting a combination of services and components is not allowed."
+            )
