@@ -3,6 +3,11 @@ Changelog
 
 * In case of major changes, an email should be sent to all users with the modifications.
 
+2.11.2 (2024-09-13)
+-------------------
+* Add Services/Components filters to User Actions report
+  [dianaboiangiu]
+
 2.11.1 (2024-09-12)
 -------------------
 * Set separate DB connection for explorer package
