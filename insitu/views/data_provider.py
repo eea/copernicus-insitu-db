@@ -81,6 +81,7 @@ class DataProviderListJson(ESDatatableView):
         "state",
         "data__requirements__products__component__name",
     ]
+    search_fields = ["id", "name", "native_name", "acronym"]
     document = documents.DataProviderDoc
     permission_classes = (IsPublicUser,)
 

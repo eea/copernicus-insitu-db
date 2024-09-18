@@ -293,7 +293,15 @@ class DataProviderDoc(Document):
             )
         },
     )
-    native_name = fields.KeywordField(attr="get_elastic_search_data.native_name")
+    native_name = fields.TextField(
+        analyzer=case_insensitive_analyzer,
+        fielddata=True,
+        fields={
+            "raw": fields.KeywordField(
+                multi=True, ignore_above=256, normalizer=case_insensitive_normalizer
+            )
+        },
+    )
     description = fields.TextField()
     is_network = fields.BooleanField()
     acronym = fields.KeywordField(attr="get_elastic_search_data.acronym")

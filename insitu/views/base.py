@@ -14,6 +14,7 @@ class ESDatatableView(BaseDatatableView, ProtectedView):
     filter_translation = {}
     extra_filters = {}
     escape_values = False
+    search_fields = ["id", "name", "acronym"]
 
     def get_initial_queryset(self):
         return self.document.search()
@@ -113,7 +114,7 @@ class ESDatatableView(BaseDatatableView, ProtectedView):
         if search_text:
             search = search.query(
                 "query_string",
-                fields=["id", "name", "acronym"],
+                fields=self.search_fields,
                 query='"' + search_text + '"',
                 lenient=True,
             )
