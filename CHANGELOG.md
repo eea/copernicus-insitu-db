@@ -3,6 +3,11 @@ Changelog
 
 * In case of major changes, an email should be sent to all users with the modifications.
 
+2.11.4 (2024-10-15)
+-------------------
+* Improve reports listing
+  [dianaboiangiu]
+
 2.11.3 (2024-09-18)
 -------------------
 * Data providers listing - Add native name as a searching field

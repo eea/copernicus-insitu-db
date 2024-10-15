@@ -147,7 +147,9 @@
   <table class="table table-bordered">
     <thead>
       <tr>
-        <td>UID</td>
+        {% if user.is_authenticated %}
+          <td>UID</td>
+        {% endif %}
         <td><strong>Name</strong></td>
         <td><strong>Description</strong></td>
       </tr>
@@ -155,7 +157,9 @@
     <tbody>
       {% for query in queries %}
         <tr>
-          <td>{{ query.id }}</td>
+          {% if user.is_authenticated %}
+            <td>{{ query.id }}</td>
+          {% endif %}
           <td>
             <strong>
               <a href="{% url 'reports:detail' query.id %}">{{ query.title }}</a>

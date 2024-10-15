@@ -82,7 +82,7 @@ class ReportsListView(ProtectedTemplateView):
             )
         else:
             context["queries"] = (
-                Query.objects.exclude(id__in=[1, 8, 11, 12, 17])
+                Query.objects.filter(id__in=[2, 3, 4, 5, 6, 9, 10, 13, 14, 16])
                 .order_by("id")
                 .values("id", "title", "description")
             )
@@ -95,8 +95,9 @@ class ReportsDetailView(ProtectedTemplateView):
     permission_denied_redirect = reverse_lazy("auth:login")
 
     def get(self, request, *args, **kwargs):
+        PUBLIC_REPORTS = ["2", "3", "4", "5", "6", "9", "10", "13", "14", "16"]
         if not request.user.is_authenticated:
-            if kwargs["query_id"] in ["1", "8", "11", "12", "17"]:
+            if kwargs["query_id"] not in PUBLIC_REPORTS:
                 return HttpResponse(
                     "You don't have permission to access this page", status=403
                 )
