@@ -3,6 +3,11 @@ Changelog
 
 * In case of major changes, an email should be sent to all users with the modifications.
 
+2.11.5 (2024-10-16)
+-------------------
+* Add entries count report
+  [dianaboiangiu]
+
 2.11.4 (2024-10-15)
 -------------------
 * Improve reports listing
