@@ -32,6 +32,7 @@ from insitu.forms import (
     DataNetworkReportForm,
     StandardReportForm,
     DataProviderDuplicatesReportForm,
+    EntriesCountReportForm,
     UserActionsForm,
 )
 from insitu.models import (
@@ -50,6 +51,7 @@ from insitu.models import (
 from insitu.views.data_provider_network_report_mixin import (
     DataProviderNetworkReportExcelMixin,
 )
+from insitu.views.entries_count_report_mixin import EntriesCountReportExcelMixin
 from insitu.views.protected.permissions import IsAuthenticated
 from insitu.views.reportsmixins import (
     ReportExcelMixin,
@@ -620,6 +622,40 @@ class DataProvidersNetwortReportView(
         workbook.close()
         output.seek(0)
         filename = self.generate_filename(".xlsx")
+        cont_type = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+        response = HttpResponse(
+            output,
+            content_type=cont_type,
+        )
+        response["Content-Disposition"] = "attachment; filename=%s" % filename
+        return response
+
+
+class EntriesCountReportView(ProtectedTemplateView, EntriesCountReportExcelMixin):
+    template_name = "reports/entries_count_report.html"
+    permission_classes = ()
+    permission_denied_redirect = reverse_lazy("auth:login")
+
+    def get_context_data(self, **kwargs):
+        context = super(EntriesCountReportView, self).get_context_data(**kwargs)
+        context["form"] = EntriesCountReportForm()
+        return context
+
+    def generate_filename(self, extension):
+        now = datetime.datetime.now()
+        return f"Entries_Count_Report_{now:%d%m%Y_%H%M}.{extension}"
+
+    def post(self, request, *args, **kwargs):
+        self.entrusted_entities_ids = self.request.POST.getlist("entrusted_entities")
+        return self.generate_excel()
+
+    def generate_excel(self):
+        output = BytesIO()
+        workbook = xlsxwriter.Workbook(output)
+        self.generate_excel_file(workbook)
+        workbook.close()
+        output.seek(0)
+        filename = self.generate_filename("xlsx")
         cont_type = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
         response = HttpResponse(
             output,

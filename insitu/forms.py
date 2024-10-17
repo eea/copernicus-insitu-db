@@ -806,3 +806,9 @@ class UserActionsForm(forms.Form):
             raise ValidationError(
                 "Selecting a combination of services and components is not allowed."
             )
+
+
+class EntriesCountReportForm(forms.Form):
+    entrusted_entities = forms.ModelMultipleChoiceField(
+        required=False, queryset=models.EntrustedEntity.objects.all()
+    )

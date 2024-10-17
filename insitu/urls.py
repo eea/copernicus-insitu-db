@@ -168,6 +168,11 @@ reports_patterns = [
         views.DataProvidersNetwortReportView.as_view(),
         name="data_providers_network_report",
     ),
+    path(
+        "entries_count_report/",
+        views.EntriesCountReportView.as_view(),
+        name="entries_count_report",
+    ),
     path("country_report/", views.CountryReportView.as_view(), name="country_report"),
     path(
         "data_provider_duplicates_report/",
