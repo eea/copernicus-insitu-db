@@ -160,12 +160,12 @@ reports_patterns = [
     path("list/", views.ReportsListView.as_view(), name="list"),
     path(
         "standard_report/",
-        views.ReportsStandardReportView.as_view(),
+        views.StandardReportView.as_view(),
         name="standard_report",
     ),
     path(
         "data_providers_network, ",
-        views.DataProvidersNetwortReportView.as_view(),
+        views.DataProvidersNetworkReportView.as_view(),
         name="data_providers_network_report",
     ),
     path(
@@ -193,7 +193,7 @@ reports_patterns = [
         name="download",
     ),
     path("schema/", RedirectView.as_view(pattern_name="explorer_schema")),
-    path("report/pdf/", views.Pdf.as_view(), name="report_pdf"),
+    path("report/pdf/", views.HTMLToPDFView.as_view(), name="report_pdf"),
 ]
 
 urlpatterns = [

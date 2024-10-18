@@ -103,6 +103,12 @@ PICKLISTS_DESCRIPTION = {
 }
 
 
+def as_text(value):
+    if value is None:
+        return ""
+    return str(value)
+
+
 def get_choices(field, model_cls=None, objects=None):
     model_values = []
     if model_cls:

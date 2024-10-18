@@ -8,32 +8,11 @@ from insitu.models import (
     DataRequirement,
 )
 from insitu.models import EntrustedEntity
+from insitu.views._reports.base import BaseExcelMixin
 
 
-class EntriesCountReportExcelMixin:
+class EntriesCountReportExcelMixin(BaseExcelMixin):
     def set_formats(self, workbook):
-        self.merge_format = workbook.add_format(
-            {
-                "bold": 1,
-                "align": "center",
-                "valign": "vcenter",
-                "font_name": "Calibri",
-                "font_size": 14,
-                "text_wrap": 1,
-                "font_color": "#00B050",
-            }
-        )
-
-        self.format_header = workbook.add_format(
-            {
-                "bold": 1,
-                "align": "left",
-                "valign": "vcenter",
-                "font_name": "Calibri",
-                "font_size": 14,
-                "font_color": "red",
-            }
-        )
 
         self.format_cols_headers = workbook.add_format(
             {
@@ -56,16 +35,6 @@ class EntriesCountReportExcelMixin:
                 "font_size": 12,
                 "text_wrap": True,
                 "border": 1,
-            }
-        )
-
-        self.format_rows_introduction = workbook.add_format(
-            {
-                "align": "justify",
-                "valign": "vcenter",
-                "font_name": "Calibri",
-                "font_size": 12,
-                "text_wrap": True,
             }
         )
 
@@ -146,7 +115,6 @@ class EntriesCountReportExcelMixin:
         )
         self.generate_rows_for_root_entries(worksheet, entrusted_entities, 1)
 
-    def generate_excel_file(self, workbook):
-        self.set_formats(workbook)
+    def generate_worksheets(self, workbook, data=None):
         worksheet = workbook.add_worksheet("TABLE 1")
         self.generate_table_1(workbook, worksheet)

@@ -1,24 +1,8 @@
-import datetime
 import string
-import xlsxwriter
 
-from insitu.utils import get_object
-
+from datetime import datetime
 from io import BytesIO
-from Levenshtein import distance
 from openpyxl import load_workbook
-from reportlab.lib.pagesizes import A4, landscape
-from reportlab.pdfbase.ttfonts import TTFont
-from reportlab.pdfbase import pdfmetrics
-from reportlab.platypus import SimpleDocTemplate
-from wkhtmltopdf.views import PDFTemplateResponse
-
-from django.http import HttpResponse, JsonResponse, Http404
-from django.db.models import Subquery, OuterRef
-from django.shortcuts import get_object_or_404
-from django.template.loader import get_template
-from django.urls import reverse, reverse_lazy
-from django.views import View
 
 from explorer.app_settings import UNSAFE_RENDERING
 from explorer.exporters import get_exporter_class
@@ -26,6 +10,13 @@ from explorer.models import Query
 from explorer.views import DownloadQueryView
 from explorer.views.export import _export
 from explorer.utils import extract_params
+from wkhtmltopdf.views import PDFTemplateResponse
+
+from django.http import HttpResponse, JsonResponse, Http404
+from django.shortcuts import get_object_or_404
+from django.template.loader import get_template
+from django.urls import reverse_lazy
+from django.views import View
 
 from insitu.forms import (
     CountryReportForm,
@@ -39,34 +30,22 @@ from insitu.models import (
     Component,
     CopernicusService,
     Product,
-    ProductRequirement,
-    DataRequirement,
-    Requirement,
-    Data,
     DataProvider,
-    DataProviderRelation,
-    DataProviderDetails,
-    LoggedAction,
 )
-from insitu.views.data_provider_network_report_mixin import (
-    DataProviderNetworkReportExcelMixin,
-)
-from insitu.views.entries_count_report_mixin import EntriesCountReportExcelMixin
-from insitu.views.protected.permissions import IsAuthenticated
-from insitu.views.reportsmixins import (
-    ReportExcelMixin,
-    PDFExcelMixin,
+from insitu.views._reports import (
     CountryReportExcelMixin,
     CountryReportPDFMixin,
+    DataProviderDuplicatesReportMixin,
+    DataProviderNetworkReportExcelMixin,
+    EntriesCountReportExcelMixin,
+    UserActionsReportMixin,
+    StandardReportExcelMixin,
+    StandardReportPDFMixin,
 )
+from insitu.views.protected.permissions import IsAuthenticated
 from insitu.views.protected.views import ProtectedTemplateView, ProtectedView
+from insitu.utils import as_text
 from picklists.models import Country
-
-
-def as_text(value):
-    if value is None:
-        return ""
-    return str(value)
 
 
 class ReportsListView(ProtectedTemplateView):
@@ -125,9 +104,9 @@ class ReportsDetailView(ProtectedTemplateView):
             "description": self.report.description,
             "params": extract_params(self.report.sql),
         }
-        filename = self.get_filename(
-            self.report.title
-        ) + datetime.datetime.now().strftime("%Y%m%d")
+        filename = self.get_filename(self.report.title) + datetime.now().strftime(
+            "%Y%m%d"
+        )
         context.update(
             {
                 "html_filename": filename + ".html",
@@ -159,7 +138,7 @@ class ReportDataJsonView(ProtectedView):
 class SnapshotView(ProtectedTemplateView):
     def get(self, request, *args, **kwargs):
         response = HttpResponse()
-        date = datetime.datetime.now().strftime("%Y%m%d")
+        date = datetime.now().strftime("%Y%m%d")
         response["Content-Disposition"] = (
             "attachment; filename=insitu_{0}.sql.gz".format(date)
         )
@@ -173,7 +152,7 @@ class DownloadReportsView(DownloadQueryView):
         format = request.GET.get("format", "csv")
         exporter_class = get_exporter_class(format)
         file_extension = exporter_class.file_extension
-        date = "_" + datetime.datetime.now().strftime("%Y%m%d")
+        date = "_" + datetime.now().strftime("%Y%m%d")
         response = _export(request, query)
         response["Content-Disposition"] = (date + file_extension).join(
             response["Content-Disposition"].split(file_extension)
@@ -196,7 +175,7 @@ class DownloadReportsView(DownloadQueryView):
         return response
 
 
-class Pdf(View):
+class HTMLToPDFView(View):
     def render(self, context, request):
         template = get_template("reports/reports_pdf.html")
         template_response = PDFTemplateResponse(
@@ -217,13 +196,13 @@ class Pdf(View):
         context = {
             "data": request.POST["data"],
             "title": request.POST.get("title", ""),
-            "date": datetime.datetime.now().strftime("%Y %m %d"),
+            "date": datetime.now().strftime("%Y %m %d"),
         }
         return self.render(context, request)
 
 
-class ReportsStandardReportView(
-    ProtectedTemplateView, ReportExcelMixin, PDFExcelMixin
+class StandardReportView(
+    ProtectedTemplateView, StandardReportExcelMixin, StandardReportPDFMixin
 ):
     template_name = "reports/standard_report.html"
     permission_classes = ()
@@ -243,69 +222,11 @@ class ReportsStandardReportView(
         return components
 
     def get_context_data(self, **kwargs):
-        context = super(ReportsStandardReportView, self).get_context_data(**kwargs)
+        context = super(StandardReportView, self).get_context_data(**kwargs)
         context["services"] = self.get_filtered_services()
         context["components"] = self.get_filtered_components(context["services"])
         context["form"] = StandardReportForm()
         return context
-
-    def generate_excel(self):
-        output = BytesIO()
-        workbook = xlsxwriter.Workbook(output)
-        self.generate_excel_file(workbook)
-        workbook.close()
-        output.seek(0)
-        filename = self.generate_filename(".xlsx")
-        cont_type = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-        response = HttpResponse(
-            output,
-            content_type=cont_type,
-        )
-        response["Content-Disposition"] = "attachment; filename=%s" % filename
-        return response
-
-    def generate_filename(self, extension):
-        services = "_".join([service.acronym for service in self.services])
-        components = "_".join([component.acronym for component in self.components])
-        date = datetime.datetime.now().strftime("%Y%m%d_%H%M")
-        filename = (
-            "_".join(["Standard_Report", services, components, date]) + extension
-        )
-        return filename
-
-    def generate_pdf(self):
-        response = HttpResponse(content_type="application/pdf")
-        pdf_name = self.generate_filename(".pdf")
-        response["Content-Disposition"] = "attachment; filename=%s" % pdf_name
-
-        buff = BytesIO()
-        pdfmetrics.registerFont(
-            TTFont(
-                "Calibri",
-                "/var/local/copernicus/insitu/static/fonts/CalibriRegular.ttf",
-            )
-        )
-        pdfmetrics.registerFont(
-            TTFont(
-                "Calibri-Bold",
-                "/var/local/copernicus/insitu/static/fonts/CalibriBold.ttf",
-            )
-        )
-        pdfmetrics.registerFontFamily("Calibri", normal="Calibri", bold="CalibriBold")
-
-        menu_pdf = SimpleDocTemplate(
-            buff,
-            rightMargin=10,
-            pagesize=landscape(A4),
-            leftMargin=10,
-            topMargin=30,
-            bottomMargin=10,
-        )
-
-        self.generate_pdf_file(menu_pdf)
-        response.write(buff.getvalue())
-        buff.close()
-        return response
 
     def post(self, request, *args, **kwargs):
         services = self.request.POST.getlist("service")
@@ -326,10 +247,15 @@ class ReportsStandardReportView(
             "name"
         )
         action = request.POST.get("action", "")
+        services = "_".join([service.acronym for service in self.services])
+        components = "_".join([component.acronym for component in self.components])
+        base_filename = "_".join(["Standard_Report", services, components])
         if action == "Generate PDF":
-            return self.generate_pdf()
+            filename = self.generate_filename(base_filename, "pdf")
+            return self.generate_pdf(filename)
         elif action == "Generate Excel":
-            return self.generate_excel()
+            filename = self.generate_filename(base_filename, "xlsx")
+            return self.generate_excel(filename)
         else:
             return HttpResponse("Incorect value selected")
 
@@ -348,12 +274,6 @@ class CountryReportView(
         context["data_networks_report_form"] = DataNetworkReportForm()
         return context
 
-    def generate_filename(self, extension):
-        country = Country.objects.get(code=self.country_code).name
-        date = datetime.datetime.now().strftime("%Y%m%d_%H%M")
-        filename = "_".join([country, "Country_Report", date]) + extension
-        return filename
-
     def post(self, request, *args, **kwargs):
         self.country_code = self.request.POST.getlist("country")[0]
         self.dataproviders = DataProvider.objects.filter(
@@ -362,66 +282,21 @@ class CountryReportView(
         self.dataproviders_networks = DataProvider.objects.filter(
             countries__code=self.country_code, is_network=True, _deleted=False
         ).order_by("name")
+        country = Country.objects.get(code=self.country_code).name
+        base_filename = "_".join([country, "Country_Report"])
         action = request.POST.get("action", "")
         if action == "Generate PDF":
-            return self.generate_pdf()
+            filename = self.generate_filename(base_filename, "pdf")
+            return self.generate_pdf(filename)
         elif action == "Generate Excel":
-            return self.generate_excel()
+            filename = self.generate_filename(base_filename, "xlsx")
+            return self.generate_excel(filename)
         else:
             return HttpResponse("Incorect value selected")
 
-    def generate_excel(self):
-        output = BytesIO()
-        workbook = xlsxwriter.Workbook(output)
-        self.generate_excel_file(workbook)
-        workbook.close()
-        output.seek(0)
-        filename = self.generate_filename(".xlsx")
-        cont_type = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-        response = HttpResponse(
-            output,
-            content_type=cont_type,
-        )
-        response["Content-Disposition"] = "attachment; filename=%s" % filename
-        return response
-
-    def generate_pdf(self):
-        response = HttpResponse(content_type="application/pdf")
-        pdf_name = self.generate_filename(".pdf")
-        response["Content-Disposition"] = "attachment; filename=%s" % pdf_name
-
-        buff = BytesIO()
-        pdfmetrics.registerFont(
-            TTFont(
-                "Calibri",
-                "/var/local/copernicus/insitu/static/fonts/CalibriRegular.ttf",
-            )
-        )
-        pdfmetrics.registerFont(
-            TTFont(
-                "Calibri-Bold",
-                "/var/local/copernicus/insitu/static/fonts/CalibriBold.ttf",
-            )
-        )
-        pdfmetrics.registerFontFamily("Calibri", normal="Calibri", bold="CalibriBold")
-
-        menu_pdf = SimpleDocTemplate(
-            buff,
-            rightMargin=10,
-            pagesize=landscape(A4),
-            leftMargin=10,
-            topMargin=30,
-            bottomMargin=10,
-        )
-
-        self.generate_pdf_file(menu_pdf)
-        response.write(buff.getvalue())
-        buff.close()
-        return response
-
 
 class DataProviderDuplicatesReportView(
-    ProtectedTemplateView, ReportExcelMixin, PDFExcelMixin
+    ProtectedTemplateView, DataProviderDuplicatesReportMixin
 ):
     template_name = "reports/data_provider_duplicates_report.html"
     permission_classes = (IsAuthenticated,)
@@ -435,134 +310,18 @@ class DataProviderDuplicatesReportView(
         context["form"] = DataProviderDuplicatesReportForm()
         return context
 
-    def generate_excel_file(self, workbook):
-        self.set_formats(workbook)
-        worksheet = workbook.add_worksheet("")
-        worksheet.set_column("A1:A1", 30)
-        worksheet.set_column("B1:B1", 50)
-        worksheet.set_column("C1:C1", 50)
-        worksheet.set_column("D1:D1", 30)
-        worksheet.set_column("E1:E1", 50)
-        worksheet.set_column("F1:F1", 50)
-        headers = [
-            "PROVIDER LINK",
-            "PROVIDER NAME",
-            "PROVIDER WEBSITE",
-            "DUPLICATE LINK",
-            "DUPLICATE NAME",
-            "DUPLICATE WEBSITE",
-        ]
-        if self.request.POST.get("country", None):
-            country = Country.objects.get(code=self.request.POST["country"])
-            title = f"Potential provider duplicates in {country.name}"
-        else:
-            country = None
-            title = "Potential provider duplicates in all countries"
-        worksheet.write_row("A1", [title], self.format_header)
-        worksheet.write_row("A2", headers, self.format_cols_headers)
-
-        data_providers = DataProvider.objects.all().annotate(
-            website=Subquery(
-                DataProviderDetails.objects.filter(
-                    data_provider=OuterRef("pk"), _deleted=False
-                ).values_list("website", flat=True)[:1]
-            ),
-        )
-
-        if country:
-            data_providers = data_providers.filter(countries__code=country.code)
-
-        index = 2
-        for dp in data_providers:
-            dp_link = self.request.build_absolute_uri(
-                reverse("provider:detail", kwargs={"pk": dp.id})
-            )
-            duplicates = [
-                dp2
-                for dp2 in data_providers
-                if dp.id != dp2.id
-                and (
-                    distance(dp.name, dp2.name) <= 2
-                    or (dp.website != "" and distance(dp.website, dp2.website) < 2)
-                    or (dp.edmo and dp2.edmo and dp.edmo == dp2.edmo)
-                )
-            ]
-            if len(duplicates) >= 2:
-                worksheet.merge_range(
-                    index,
-                    0,
-                    index + len(duplicates) - 1,
-                    0,
-                    dp_link,
-                    self.format_rows,
-                )
-                worksheet.merge_range(
-                    index,
-                    1,
-                    index + len(duplicates) - 1,
-                    1,
-                    dp.name,
-                    self.format_rows,
-                )
-                worksheet.merge_range(
-                    index,
-                    2,
-                    index + len(duplicates) - 1,
-                    2,
-                    dp.website,
-                    self.format_rows,
-                )
-
-                for dp2 in duplicates:
-                    dp2_link = self.request.build_absolute_uri(
-                        reverse("provider:detail", kwargs={"pk": dp2.id})
-                    )
-                    data = [
-                        dp2_link,
-                        dp2.name,
-                        dp2.website,
-                    ]
-                    worksheet.write_row(index, 3, data, self.format_rows)
-                    index += 1
-            elif len(duplicates) == 1:
-                dp2 = duplicates[0]
-                dp2_link = self.request.build_absolute_uri(
-                    reverse("provider:detail", kwargs={"pk": dp2.id})
-                )
-                data = [
-                    dp_link,
-                    dp.name,
-                    dp.website,
-                    dp2_link,
-                    dp2.name,
-                    dp2.website,
-                ]
-                worksheet.write_row(index, 0, data, self.format_rows)
-                index += 1
-                continue
-
     def post(self, request, *args, **kwargs):
-        output = BytesIO()
-        workbook = xlsxwriter.Workbook(output)
-        self.generate_excel_file(workbook)
-        workbook.close()
-        output.seek(0)
-        today = datetime.datetime.now().strftime("%d_%m_%Y")
-        filename = f"CIS2_Potential_Provider_Duplicates_Report_{today}.xlsx"
-        cont_type = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-        response = HttpResponse(
-            output,
-            content_type=cont_type,
+        filename = self.generate_filename(
+            "CIS2_Potential_Provider_Duplicates_Report", "xlsx"
         )
-        response["Content-Disposition"] = "attachment; filename=%s" % filename
-        return response
+        return self.generate_excel(filename)
 
 
-class DataProvidersNetwortReportView(
+class DataProvidersNetworkReportView(
     ProtectedTemplateView, DataProviderNetworkReportExcelMixin
 ):
     template_name = "reports/country_report.html"
-    permission_classes = ()
+    permission_classes = (IsAuthenticated,)
     permission_denied_redirect = reverse_lazy("auth:login")
 
     def get_context_data(self, **kwargs):
@@ -572,14 +331,8 @@ class DataProvidersNetwortReportView(
         context["data_networks_report_form"] = DataNetworkReportForm()
         return context
 
-    def generate_filename(self, extension):
-        return "Data_networks_report" + extension
-        country = Country.objects.get(code=self.country_code).name
-        date = datetime.datetime.now().strftime("%Y%m%d_%H%M")
-        filename = "_".join([country, "Country_Report", date]) + extension
-        return filename
-
     def post(self, request, *args, **kwargs):
+        # TODO: Move this hardcoded values to a boolean on the model
         self.ACCEPTED_NETWORKS_IDS = [
             802,
             21,
@@ -613,27 +366,13 @@ class DataProvidersNetwortReportView(
         self.country_codes = None
         if "all" not in country_codes:
             self.country_codes = country_codes
-        return self.generate_excel()
-
-    def generate_excel(self):
-        output = BytesIO()
-        workbook = xlsxwriter.Workbook(output)
-        self.generate_excel_file(workbook)
-        workbook.close()
-        output.seek(0)
-        filename = self.generate_filename(".xlsx")
-        cont_type = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-        response = HttpResponse(
-            output,
-            content_type=cont_type,
-        )
-        response["Content-Disposition"] = "attachment; filename=%s" % filename
-        return response
+        filename = self.generate_filename("Data_networks_report", "xlsx")
+        return self.generate_excel(filename)
 
 
 class EntriesCountReportView(ProtectedTemplateView, EntriesCountReportExcelMixin):
     template_name = "reports/entries_count_report.html"
-    permission_classes = ()
+    permission_classes = (IsAuthenticated,)
     permission_denied_redirect = reverse_lazy("auth:login")
 
     def get_context_data(self, **kwargs):
@@ -641,220 +380,25 @@ class EntriesCountReportView(ProtectedTemplateView, EntriesCountReportExcelMixin
         context["form"] = EntriesCountReportForm()
         return context
 
-    def generate_filename(self, extension):
-        now = datetime.datetime.now()
-        return f"Entries_Count_Report_{now:%d%m%Y_%H%M}.{extension}"
-
     def post(self, request, *args, **kwargs):
         self.entrusted_entities_ids = self.request.POST.getlist("entrusted_entities")
-        return self.generate_excel()
-
-    def generate_excel(self):
-        output = BytesIO()
-        workbook = xlsxwriter.Workbook(output)
-        self.generate_excel_file(workbook)
-        workbook.close()
-        output.seek(0)
-        filename = self.generate_filename("xlsx")
-        cont_type = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-        response = HttpResponse(
-            output,
-            content_type=cont_type,
-        )
-        response["Content-Disposition"] = "attachment; filename=%s" % filename
-        return response
+        filename = self.generate_filename("Entries_Count_Report", "xlsx")
+        return self.generate_excel(filename)
 
 
-class UserActionsReportView(ProtectedTemplateView, ReportExcelMixin):
+class UserActionsReportView(ProtectedTemplateView, UserActionsReportMixin):
     template_name = "reports/user_actions_report.html"
-    permission_classes = ()
+    permission_classes = (IsAuthenticated,)
     permission_denied_redirect = reverse_lazy("auth:login")
-    # Mapping of object types to their respective model classes and filtered data keys
-    # [logged_type] : (model_class, filtered_data_key)
-    OBJECTS_MAPPING = {
-        "product": (Product, "products"),
-        "requirement": (Requirement, "requirements"),
-        "data": (Data, "data"),
-        "data provider": (DataProvider, "data_providers"),
-        "data provider network": (DataProvider, "data_providers"),
-        "relation between product and requirement": (
-            ProductRequirement,
-            "product_requirements",
-        ),
-        "relation between data and requirement": (
-            DataRequirement,
-            "data_requirements",
-        ),
-        "relation between data and data provider": (
-            DataProviderRelation,
-            "data_provider_relations",
-        ),
-    }
 
     def get_context_data(self, **kwargs):
         context = super(UserActionsReportView, self).get_context_data(**kwargs)
         context["form"] = UserActionsForm()
         return context
 
-    def check_object(self, obj_id, obj_type, filtered_data=None):
-        if obj_type in self.OBJECTS_MAPPING:
-            if obj_id not in filtered_data[self.OBJECTS_MAPPING[obj_type][1]]:
-                return False
-        return True
-
-    def get_object(self, obj_id, obj_type):
-        if obj_id:
-            if obj_type in self.OBJECTS_MAPPING:
-                return (
-                    self.OBJECTS_MAPPING[obj_type][0]
-                    .objects.really_all()
-                    .filter(id=obj_id)
-                    .first()
-                )
-
-    def get_filtered_data(self, data):
-        filtered_data = {}
-        components = None
-        if data["services"]:
-            components = Component.objects.filter(service__in=data["services"])
-        if data["components"]:
-            components = Component.objects.filter(id__in=data["components"])
-        if components:
-            filtered_data["products"] = (
-                Product.objects.really_all()
-                .filter(component__in=components)
-                .values_list("id", flat=True)
-            )
-            product_requirements = (
-                ProductRequirement.objects.really_all()
-                .filter(product_id__in=filtered_data["products"])
-                .distinct()
-            )
-            filtered_data["product_requirements"] = product_requirements.values_list(
-                "id", flat=True
-            )
-            filtered_data["requirements"] = product_requirements.values_list(
-                "requirement_id", flat=True
-            )
-            data_requirements = (
-                DataRequirement.objects.really_all()
-                .filter(requirement_id__in=filtered_data["requirements"])
-                .distinct()
-            )
-            filtered_data["data_requirements"] = data_requirements.values_list(
-                "id", flat=True
-            )
-            filtered_data["data"] = data_requirements.values_list("data_id", flat=True)
-            data_provider_relations = (
-                DataProviderRelation.objects.really_all()
-                .filter(data_id__in=filtered_data["data"])
-                .distinct()
-            )
-            filtered_data["data_provider_relations"] = (
-                data_provider_relations.values_list("id", flat=True)
-            )
-            filtered_data["data_providers"] = data_provider_relations.values_list(
-                "provider_id", flat=True
-            )
-        return filtered_data
-
-    def generate_excel_file(self, workbook, data):
-        self.set_formats(workbook)
-        worksheet = workbook.add_worksheet("")
-        worksheet.set_column("A1:A1", 20)
-        worksheet.set_column("B1:B1", 20)
-        worksheet.set_column("C1:C1", 30)
-        worksheet.set_column("D1:D1", 50)
-        worksheet.set_column("E1:E1", 20)
-        worksheet.set_column("F1:F1", 50)
-        worksheet.set_column("G1:G1", 30)
-        worksheet.set_column("H1:H1", 30)
-        worksheet.set_column("I1:I1", 30)
-        worksheet.set_column("J1:J1", 30)
-        headers = [
-            "LOGGED DATE",
-            "USER",
-            "ACTION",
-            "TARGET TYPE",
-            "TARGET ID",
-            "TARGET NAME",
-            "TARGET STATE",
-            "TARGET LINK",
-            "TARGET NOTE",
-            "EXTRA",
-        ]
-        worksheet.write_row("A1", headers, self.format_cols_headers)
-        filtered_data = self.get_filtered_data(data)
-        users = [u.username for u in data["users"]]
-        logged_actions = LoggedAction.objects.filter(
-            logged_date__range=[data["start_date"], data["end_date"]]
-        ).order_by("logged_date")
-        if users:
-            logged_actions = logged_actions.filter(user__in=users)
-        index = 1
-        for logged_action in logged_actions:
-            target = None
-            if logged_action.id_target:
-                if filtered_data:
-                    include_log = self.check_object(
-                        int(logged_action.id_target),
-                        logged_action.target_type,
-                        filtered_data,
-                    )
-                    if not include_log:
-                        continue
-                target = get_object(logged_action.id_target, logged_action.target_type)
-
-            if target:
-                target_name = target.name
-                target_state = getattr(target, "state", "")
-                if target_state and data["states"]:
-                    if target_state not in data["states"]:
-                        continue
-                if logged_action.action != "deleted":
-                    target_link = self.request.build_absolute_uri(
-                        target.get_detail_link()
-                    )
-                else:
-                    target_link = ""
-            else:
-                target = ""
-                target_name = ""
-                target_state = ""
-                target_link = ""
-            write_data = [
-                logged_action.logged_date.strftime("%Y-%m-%d %H:%M:%S"),
-                logged_action.user,
-                logged_action.action,
-                logged_action.target_type,
-                logged_action.id_target,
-                target_name,
-                target_state,
-                target_link,
-                logged_action.target_note,
-                logged_action.extra,
-            ]
-            worksheet.write_row(index, 0, write_data, self.format_rows)
-            index += 1
-
     def post(self, request, *args, **kwargs):
         form = UserActionsForm(request.POST)
         if form.is_valid():
-            output = BytesIO()
-            workbook = xlsxwriter.Workbook(output)
-            self.generate_excel_file(workbook, form.cleaned_data)
-            workbook.close()
-            output.seek(0)
-            today = datetime.datetime.now().strftime("%d_%m_%Y")
-            filename = f"CIS2_User_actions_{today}.xlsx"
-            cont_type = (
-                "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-            )
-            response = HttpResponse(
-                output,
-                content_type=cont_type,
-            )
-            response["Content-Disposition"] = "attachment; filename=%s" % filename
-            return response
-            return HttpResponse("Form is valid")
+            filename = self.generate_filename("CIS2_User_Actions_Report", "xlsx")
+            return self.generate_excel(filename, form.cleaned_data)
         return HttpResponse("Incorrect value selected")

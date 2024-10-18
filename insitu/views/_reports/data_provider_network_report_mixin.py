@@ -2,21 +2,11 @@ from django.urls import reverse
 
 from insitu.models import DataProvider
 
+from insitu.views._reports.base import BaseExcelMixin
 
-class DataProviderNetworkReportExcelMixin:
+
+class DataProviderNetworkReportExcelMixin(BaseExcelMixin):
     def set_formats(self, workbook):
-        self.merge_format = workbook.add_format(
-            {
-                "bold": 1,
-                "align": "center",
-                "valign": "vcenter",
-                "font_name": "Calibri",
-                "font_size": 14,
-                "text_wrap": 1,
-                "font_color": "#00B050",
-            }
-        )
-
         self.format_header = workbook.add_format(
             {
                 "bold": 1,
@@ -49,16 +39,6 @@ class DataProviderNetworkReportExcelMixin:
                 "font_size": 12,
                 "text_wrap": True,
                 "border": 1,
-            }
-        )
-
-        self.format_rows_introduction = workbook.add_format(
-            {
-                "align": "justify",
-                "valign": "vcenter",
-                "font_name": "Calibri",
-                "font_size": 12,
-                "text_wrap": True,
             }
         )
 
@@ -211,7 +191,6 @@ class DataProviderNetworkReportExcelMixin:
         worksheet.set_row(0, 50)
         worksheet.set_row(1, 40)
         worksheet.write_row("A1", ["Networks"], self.format_header)
-        # worksheet.merge_range("A1:G1", "Networks", self.format_header)
         headers = [
             "Network Acronym",
             "Network Name",
@@ -242,7 +221,6 @@ class DataProviderNetworkReportExcelMixin:
             worksheet, research_infrastructures, entries_index + 1
         )
 
-    def generate_excel_file(self, workbook):
-        self.set_formats(workbook)
+    def generate_worksheets(self, workbook, data=None):
         worksheet = workbook.add_worksheet("TABLE 1")
         self.generate_table_1(workbook, worksheet)
