@@ -1,0 +1,84 @@
+{% extends '_layout.html' %}
+{% load bootstrap3 %}
+{% load static %}
+
+{% block style %}
+  <link rel="stylesheet" type="text/css"
+        href="{% static 'css/select2.min.css' %}"/>
+  <link rel="stylesheet" type="text/css"
+        href="{% static 'css/select2-bootstrap.min.css' %}"/>
+{% endblock %}
+
+{% block title %}Data provider network report{% endblock %}
+
+{% block content %}
+  <div class="row">
+    <h1 class="col-sm-12">
+      <span>Data provider network report</span>
+    </h1>
+  </div>
+  <div class="container" style="margin-bottom:20px;">
+  </div>
+  <form action="{% url 'reports:data_providers_network_report' %}" method="POST" style="width: 50%">
+    {% csrf_token %}
+
+    {% bootstrap_field form.country_memberships required_css_class='required' %}
+    {% bootstrap_field form.countries required_css_class='required' addon_after='<a target="_blank" href="/help#country"><span class="glyphicon glyphicon-question-sign"></span></a>' %}
+
+    <input class="btn btn-primary" type="submit" name="action" value="Generate Excel" />
+    <a href="{% url 'about' %}"
+       class="btn btn-default">Cancel</a>
+  </form>
+
+{% endblock %}
+
+{% block scripts %}
+  <script src="{% static 'js/select2.min.js' %}"></script>
+  <script nonce="{{request.csp_nonce}}">
+    $(document).ready(function () {
+      $('select').select2();
+      var data = { id: "all", text: 'All countries' };
+      var newOption = new Option(data.text, data.id, false, false);
+      $('#id_countries').append(newOption).trigger('change');
+      $('#id_countries').trigger('change');
+
+      const country_memberships = {
+        "EUMETNET": [
+          'AT', 'BE', 'HR', 'CY', 'CZ', 'DK', 'EE', 'FI', 'FR', 'ME', 'DE', 'GR',
+          'HU', 'IS', 'IE', 'IT', 'LV', 'LU', 'MT', 'NT', 'NO', 'PL', 'PR', 'RS',
+          'SK', 'SI', 'ES', 'SE', 'CH', 'MK', 'GB'
+        ],
+        "EU": [
+          "AT", "BE", "BG", "CZ", "HR","CY", "DK", "EE", "FI", "FR", "DE", "GR",
+          "IE", "IT", "HU", "LV", "LT", "LU", "MT", "NL", "PL", "PT", "RO", "SK", "SI",
+          "ES", "SE",
+        ],
+        "EEA": [
+          "AT", "BE", "BG", "HR", "CY", "CZ", "DK", "EE", "FI", "FR", "DE", "GR", "HU", "IS",
+          "IE", "IT", "LV", "LI", "LT", "LU", "MT", "NL", "NO", "PL", "PT", "RO", "SK", "SI",
+          "ES", "SE", "CH", "TR",
+        ],
+        "Copernicus": [
+          "AT", "BE", "BG", "CZ", "CY", "HR", "DK", "EE", "FI", "FR", "DE", "GR",
+          "HU", "IS", "IE", "IT", "LV", "LT", "LU", "MT", "NL", "NO", "PL", "RO", "SK",
+          "SI", "ES", "SE", "GB"
+
+        ]
+      };
+      const country_memberships_input =   $('#id_country_memberships');
+      country_memberships_input.on( "change", function() {
+        const country_group_value = country_memberships_input.val();
+        if (country_group_value === "-"){
+          var selected = $('#id_countries')
+          selected.val(null).trigger('change');
+          return;
+        }
+        var selected = $('#id_countries')
+        selected.val(null).trigger('change');
+        selected.push.apply(selected, country_memberships[country_group_value]);
+        $('#id_countries').val(selected);
+        $('#id_countries').trigger('change');
+      });
+    });
+  </script>
+{% endblock %}

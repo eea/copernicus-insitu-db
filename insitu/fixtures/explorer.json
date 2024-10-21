@@ -222,5 +222,19 @@
             "snapshot": false,
             "connection": ""
         }
+    },
+    {
+        "model": "explorer.query",
+        "pk": 18,
+        "fields": {
+            "title": "Data providers name.native name and website report",
+            "sql": "SELECT dp.id AS \"Data provider UID\",\r\n       dp.name AS \"Data provider name\",\r\n       u.first_name || ' ' || u.last_name as \"Data provider author\",\r\n       dpdetails.website AS \"Data provider website\",\r\n       coalesce(dp.native_name, '') AS \"Data provider native name\",\r\n       coalesce(dpd.product_component, '') AS \"Product component\",\r\n       coalesce(dpd.product_copernicus_service, '') AS \"Product copernicus service\"\r\nFROM insitu_dataprovider dp INNER JOIN insitu_dataproviderdetails dpdetails ON dp.id = dpdetails.data_provider_id INNER JOIN auth_user u ON u.id = dp.created_by_id\r\nFULL OUTER JOIN insitu_dataprovider_product_direct_view_report_7 dpd ON dpd.dataproviderrelation_provider_id = dp.id where dp._deleted = FALSE;",
+            "description": "Use cases:\r\n1. Filter data providers on services or components and access their names/native names or websites .",
+            "created_by_user": null,
+            "created_at": "2024-10-21T10:08:59.944Z",
+            "last_run_date": "2024-10-21T10:08:59.944Z",
+            "snapshot": false,
+            "connection": "explorer"
+        }
     }
 ]

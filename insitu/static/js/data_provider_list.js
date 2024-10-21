@@ -25,6 +25,7 @@ function updateFilterOptions(filter, option_data) {
   });
 }
 $(document).ready(function () {
+  var columnIndex = $('#columns-number').data('columns-number');
   var buttonCommon = {
     exportOptions: {
       format: {
@@ -166,7 +167,7 @@ $(document).ready(function () {
               "text-danger'></span>";
           }
         },
-        "targets": [8],
+        "targets": [columnIndex],
         "bSortable": false
       }
     ]

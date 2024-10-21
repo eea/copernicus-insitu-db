@@ -12,6 +12,7 @@ from explorer.views.export import _export
 from explorer.utils import extract_params
 from wkhtmltopdf.views import PDFTemplateResponse
 
+from django.conf import settings
 from django.http import HttpResponse, JsonResponse, Http404
 from django.shortcuts import get_object_or_404
 from django.template.loader import get_template
@@ -57,13 +58,13 @@ class ReportsListView(ProtectedTemplateView):
         context = super(ReportsListView, self).get_context_data(**kwargs)
         if self.request.user.is_authenticated:
             context["queries"] = (
-                Query.objects.exclude(id__in=[11, 12, 13, 14])
+                Query.objects.exclude(id__in=settings.EXCLUDE_REPORTS_IDS)
                 .order_by("id")
                 .values("id", "title", "description")
             )
         else:
             context["queries"] = (
-                Query.objects.filter(id__in=[2, 3, 4, 5, 6, 9, 10, 13, 14, 16])
+                Query.objects.filter(id__in=settings.PUBLIC_REPORTS_IDS)
                 .order_by("id")
                 .values("id", "title", "description")
             )
@@ -76,9 +77,8 @@ class ReportsDetailView(ProtectedTemplateView):
     permission_denied_redirect = reverse_lazy("auth:login")
 
     def get(self, request, *args, **kwargs):
-        PUBLIC_REPORTS = ["2", "3", "4", "5", "6", "9", "10", "13", "14", "16"]
         if not request.user.is_authenticated:
-            if kwargs["query_id"] not in PUBLIC_REPORTS:
+            if kwargs["query_id"] not in settings.PUBLIC_REPORTS_IDS:
                 return HttpResponse(
                     "You don't have permission to access this page", status=403
                 )
@@ -270,8 +270,7 @@ class CountryReportView(
     def get_context_data(self, **kwargs):
         context = super(CountryReportView, self).get_context_data(**kwargs)
         context["countries"] = Country.objects.all()
-        context["country_form"] = CountryReportForm()
-        context["data_networks_report_form"] = DataNetworkReportForm()
+        context["form"] = CountryReportForm()
         return context
 
     def post(self, request, *args, **kwargs):
@@ -320,15 +319,15 @@ class DataProviderDuplicatesReportView(
 class DataProvidersNetworkReportView(
     ProtectedTemplateView, DataProviderNetworkReportExcelMixin
 ):
-    template_name = "reports/country_report.html"
+    template_name = "reports/data_provider_network_report.html"
     permission_classes = (IsAuthenticated,)
     permission_denied_redirect = reverse_lazy("auth:login")
 
     def get_context_data(self, **kwargs):
-        context = super(CountryReportView, self).get_context_data(**kwargs)
-        context["countries"] = Country.objects.all()
-        context["country_form"] = CountryReportForm()
-        context["data_networks_report_form"] = DataNetworkReportForm()
+        context = super(DataProvidersNetworkReportView, self).get_context_data(
+            **kwargs
+        )
+        context["form"] = DataNetworkReportForm()
         return context
 
     def post(self, request, *args, **kwargs):

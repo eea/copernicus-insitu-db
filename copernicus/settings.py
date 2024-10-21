@@ -308,6 +308,11 @@ if DEBUG_TOOLBAR:
         # ...
     ]
 
+# Reports IDS that are accesible to the public
+PUBLIC_REPORTS_IDS = os.environ.get("PUBLIC_REPORTS_IDS", "").split(",")
+
+# Public reports IDS that should be excluded from the reports visible to the authenticated users
+EXCLUDE_REPORTS_IDS = os.environ.get("EXCLUDE_REPORTS_IDS", "").split(",")
 
 # Content Security Policy
 CSP_IMG_SRC = "'self'"

@@ -164,7 +164,7 @@ reports_patterns = [
         name="standard_report",
     ),
     path(
-        "data_providers_network, ",
+        "data_providers_network/",
         views.DataProvidersNetworkReportView.as_view(),
         name="data_providers_network_report",
     ),

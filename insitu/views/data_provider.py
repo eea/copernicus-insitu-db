@@ -85,6 +85,32 @@ class DataProviderListJson(ESDatatableView):
     document = documents.DataProviderDoc
     permission_classes = (IsPublicUser,)
 
+    def get_columns(self):
+        self.columns = [
+            "name",
+            "acronym",
+            "edmo",
+            "address",
+            "provider_type",
+            "is_network",
+            "state",
+        ]
+        if self.request.user.is_authenticated:
+            self.columns = [
+                "name",
+                "acronym",
+                "edmo",
+                "address",
+                "phone",
+                "email",
+                "contact_person",
+                "provider_type",
+                "is_network",
+                "state",
+            ]
+        self.order_columns = self.columns
+        return self.columns
+
 
 class DataProviderDetail(ProtectedDetailView):
     model = DataProvider

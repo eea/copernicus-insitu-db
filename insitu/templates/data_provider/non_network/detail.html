@@ -110,31 +110,34 @@
           </a>
         </td>
       </tr>
+
       <tr class="row">
         <th class="col-md-4 col-sm-6">Address</th>
         <td class="col-md-8 col-sm-6">{{ provider.details.all.0.address }}</td>
       </tr>
-      <tr class="row">
-        <th class="col-md-4 col-sm-6">Phone</th>
-        <td class="col-md-8 col-sm-6">
-          <a href="tel:{{ provider.details.all.0.phone }}">
-            {{ provider.details.all.0.phone }}
-          </a>
-        </td>
-      </tr>
-      <tr class="row">
-        <th class="col-md-4 col-sm-6">Email</th>
-        <td class="col-md-8 col-sm-6">
-          <a href="mailto:{{ provider.details.all.0.email }}" target="_top">
-            {{ provider.details.all.0.email }}
-          </a>
-        </td>
-      </tr>
-      <tr class="row">
-        <th class="col-md-4 col-sm-6">Contact person</th>
-        <td class="col-md-8 col-sm-6">
-          {{ provider.details.all.0.contact_person }}</td>
-      </tr>
+      {% if user.is_authenticated %}
+        <tr class="row">
+          <th class="col-md-4 col-sm-6">Phone</th>
+          <td class="col-md-8 col-sm-6">
+            <a href="tel:{{ provider.details.all.0.phone }}">
+              {{ provider.details.all.0.phone }}
+            </a>
+          </td>
+        </tr>
+        <tr class="row">
+          <th class="col-md-4 col-sm-6">Email</th>
+          <td class="col-md-8 col-sm-6">
+            <a href="mailto:{{ provider.details.all.0.email }}" target="_top">
+              {{ provider.details.all.0.email }}
+            </a>
+          </td>
+        </tr>
+        <tr class="row">
+          <th class="col-md-4 col-sm-6">Contact person</th>
+          <td class="col-md-8 col-sm-6">
+            {{ provider.details.all.0.contact_person }}</td>
+        </tr>
+      {% endif %}
       <tr class="row">
         <th class="col-md-4 col-sm-6">
           Provider type
