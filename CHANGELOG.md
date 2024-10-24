@@ -3,6 +3,11 @@ Changelog
 
 * In case of major changes, an email should be sent to all users with the modifications.
 
+2.11.8 (2024-10-24)
+-------------------
+* Fix requirements listing display
+  [dianaboiangiu]
+
 2.11.7 (2024-10-21)
 -------------------
 * Remove data providers contact information for unauthenticated users
