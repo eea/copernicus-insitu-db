@@ -22,7 +22,7 @@ $(document).ready(function () {
           if (row === 0) {
             return $.parseHTML(data)[0].innerHTML.replace(/^\s+|\s+$/g, '');
           }
-          if (row <= 9 && row >= 4) {
+          if (row <= 10 && row >= 5) {
             let goal = $.parseHTML(data)[0].innerHTML;
             let breakthrough = $.parseHTML(data)[1].innerHTML;
             let threshold = $.parseHTML(data)[2].innerHTML;
@@ -174,7 +174,7 @@ $(document).ready(function () {
             generate_div('blue', breakthrough) +
             generate_div('green', goal));
         },
-        "targets": [4, 5, 6, 7, 8, 9],
+        "targets": [5, 6, 7, 8, 9, 10],
         "bSortable": false
       }
     ]
