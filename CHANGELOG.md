@@ -3,6 +3,14 @@ Changelog
 
 * In case of major changes, an email should be sent to all users with the modifications.
 
+2.11.9 (2024-11-05)
+-------------------
+* Add status, essential variables to requirements listing
+* Add status to data listing
+* Add product UID to Pivot reports #8 and #14
+* Add data provider UID to Pivot report #5
+  [dianaboiangiu]
+
 2.11.8 (2024-10-24)
 -------------------
 * Fix requirements listing display
