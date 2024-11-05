@@ -108,6 +108,7 @@ $(document).ready(function () {
         d.quality_control_procedure = $('#quality_control_procedure').val();
         d.group = $('#group').val();
         d.product = $('#product').val();
+        d.status = $('#status').val();
         d.state = $('#state').val();
         d.component = $('#component').val();
       },
@@ -124,10 +125,12 @@ $(document).ready(function () {
       data.quality_control_procedure = $('#quality_control_procedure').val();
       data.group = $('#group').val();
       data.product = $('#product').val();
+      data.status = $('#status').val();
       data.state = $('#state').val();
       data.component = $('#component').val();
 
-      var keys = ['dissemination', 'quality_control_procedure', 'group', 'product', 'state', 'component']
+
+      var keys = ['dissemination', 'quality_control_procedure', 'group', 'product', 'status', 'state', 'component']
       var queryString = ''
       for(var key of keys) {
         if(isOk(data[key])) {
@@ -151,6 +154,7 @@ $(document).ready(function () {
       $('#quality_control_procedure').val( data.quality_control_procedure);
       $('#group').val(data.group);
       $('#product').val(data.product);
+      $('#status').val(data.status);
       $('#state').val(data.state);
       $('#component').val(data.component);
     },
@@ -180,7 +184,7 @@ $(document).ready(function () {
     ]
   }).fnFilterOnReturn();
 
-  $('#dissemination,#quality_control_procedure,#group,#product,#state,#component').on(
+  $('#dissemination,#quality_control_procedure,#group,#product,#status,#state,#component').on(
     'change', function (_event) {
       let table = $table.DataTable();
       table.ajax.reload();
@@ -188,7 +192,7 @@ $(document).ready(function () {
   );
 
   $('#reset-btn').on('click', function () {
-    $('#dissemination,#quality_control_procedure,#group,#product,#state,#component').val('All');
+    $('#dissemination,#quality_control_procedure,#group,#product,#status,#state,#component').val('All');
     let table = $table.DataTable();
     table.state.clear();
     table.ajax.reload();

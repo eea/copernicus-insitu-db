@@ -53,6 +53,9 @@ class EssentialVariable(models.Model):
     def __str__(self):
         return "{} - {} - {}".format(self.domain, self.component, self.parameter)
 
+    def to_elastic_search_format(self):
+        return str(self)
+
 
 class Status(models.Model):
     name = models.CharField(max_length=100)

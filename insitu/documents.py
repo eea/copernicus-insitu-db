@@ -111,6 +111,12 @@ class RequirementDoc(Document):
     quality_control_procedure = fields.KeywordField(
         attr="quality_control_procedure.name"
     )
+    essential_variables = fields.ObjectField(
+        attr="essential_variables",
+        properties={
+            "essential_variable": fields.KeywordField(attr="to_elastic_search_format"),
+        },
+    )
     group = fields.KeywordField(attr="group.name")
     uncertainty = fields.KeywordField(attr="uncertainty.to_elastic_search_format")
     update_frequency = fields.KeywordField(
@@ -125,6 +131,7 @@ class RequirementDoc(Document):
         attr="vertical_resolution.to_elastic_search_format"
     )
     state = fields.KeywordField(attr="state")
+    status = fields.KeywordField(attr="status.name")
 
     products = fields.ObjectField(
         attr="product_requirements",
@@ -151,6 +158,11 @@ class RequirementDoc(Document):
     def get_name_display(self):
         url = reverse("requirement:detail", kwargs={"pk": self.id})
         return '<a href="{url}">{name}</a>'.format(url=url, name=self.name)
+
+    def get_essential_variables_display(self):
+        return ", ".join(
+            [entry["essential_variable"] for entry in self.essential_variables]
+        )
 
     @staticmethod
     def delete_index(sender, **kwargs):
@@ -216,6 +228,7 @@ class DataDoc(Document):
         },
     )
     state = fields.KeywordField(attr="state")
+    status = fields.KeywordField(attr="status.name")
     note = fields.TextField()
 
     components = fields.ObjectField(

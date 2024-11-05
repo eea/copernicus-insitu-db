@@ -52,6 +52,7 @@ class DataList(ProtectedTemplateView):
         states = [{"title": "All", "name": "All"}] + [
             {"title": title, "name": name} for name, title in WORKFLOW_STATES
         ]
+        status_list = get_choices("name", model_cls=pickmodels.Status)
         components = get_choices("name", model_cls=models.Component)
         context.update(
             {
@@ -64,6 +65,7 @@ class DataList(ProtectedTemplateView):
                 "quality_control_procedures": quality_control_procedures,
                 "disseminations": disseminations,
                 "requirements": requirements,
+                "status_list": status_list,
                 "states": states,
                 "components": components,
             }
@@ -83,6 +85,7 @@ class DataListJson(ESDatatableView):
         "quality_control_procedure",
         "dissemination",
         "state",
+        "status",
     ]
     order_columns = columns
     filter_translation = {
@@ -100,6 +103,7 @@ class DataListJson(ESDatatableView):
         "quality_control_procedure",
         "dissemination",
         "requirement",
+        "status",
         "state",
         "component",
     ]
@@ -114,6 +118,7 @@ class DataListJson(ESDatatableView):
         "quality_control_procedure__name",
         "dissemination__name",
         "requirements__name",
+        "status__name",
         "state",
         "requirements__products__component__name",
     ]

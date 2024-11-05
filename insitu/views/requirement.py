@@ -156,6 +156,7 @@ class RequirementList(ProtectedTemplateView):
             {"title": title, "name": name} for name, title in WORKFLOW_STATES
         ]
         components = get_choices("name", model_cls=models.Component)
+        status_list = get_choices("name", model_cls=pickmodels.Status)
         context.update(
             {
                 "disseminations": disseminations,
@@ -163,6 +164,7 @@ class RequirementList(ProtectedTemplateView):
                 "quality_control_procedures": quality_control_procedures,
                 "groups": groups,
                 "states": states,
+                "status_list": status_list,
                 "components": components,
             }
         )
@@ -183,6 +185,8 @@ class RequirementListJson(ESDatatableView):
         "horizontal_resolution",
         "vertical_resolution",
         "state",
+        "status",
+        "essential_variables",
     ]
     order_columns = columns
     filter_translation = {
@@ -196,6 +200,7 @@ class RequirementListJson(ESDatatableView):
         "quality_control_procedure",
         "group",
         "product",
+        "status",
         "state",
         "component",
     ]  # These are the querystring parameters we expect.
@@ -204,6 +209,7 @@ class RequirementListJson(ESDatatableView):
         "quality_control_procedure__name",
         "group__name",
         "products__name",
+        "status__name",
         "state",
         "products__component__name",
     ]  # These are the corresponding model fields, in the same order.

@@ -98,6 +98,7 @@ $(document).ready(function () {
         d.quality_control_procedure = $('#quality_control_procedure').val();
         d.dissemination = $('#dissemination').val();
         d.requirement = $('#requirement').val();
+        d.status = $('#status').val();
         d.state = $('#state').val();
         d.component = $('#component').val();
       },
@@ -120,10 +121,12 @@ $(document).ready(function () {
       data.quality_control_procedure = $('#quality_control_procedure').val();
       data.dissemination = $('#dissemination').val();
       data.requirement = $('#requirement').val();
+      data.status = $('#status').val();
       data.state = $('#state').val();
       data.component = $('#component').val();
 
-      var keys = ['update_frequency', 'area', 'timeliness', 'data_policy', 'data_type',  "copernicus_service_product", 'data_format', 'quality_control_procedure', 'dissemination', 'requirement', 'state', 'component']
+
+      var keys = ['update_frequency', 'area', 'timeliness', 'data_policy', 'data_type',  "copernicus_service_product", 'data_format', 'quality_control_procedure', 'dissemination', 'requirement', 'status', 'state', 'component']
       var queryString = ''
       for(var key of keys) {
         if(isOk(data[key])) {
@@ -153,6 +156,7 @@ $(document).ready(function () {
       $('#quality_control_procedure').val(data.quality_control_procedure);
       $('#dissemination').val(data.dissemination);
       $('#requirement').val(data.requirement);
+      $('#status').val(data.status);
       $('#state').val(data.state);
       $('#component').val();
     },
@@ -163,7 +167,7 @@ $(document).ready(function () {
   }).fnFilterOnReturn();
 
   $('#name,#update_frequency,#area,#timeliness,#data_policy,#data_type,#copernicus_service_product,\
-      #data_format,#quality_control_procedure,#dissemination,#requirement,\
+      #data_format,#quality_control_procedure,#dissemination,#requirement,#status,\
       #state,#component').on(
     'change', function (_event) {
       var table = $table.DataTable();
@@ -172,7 +176,7 @@ $(document).ready(function () {
 
   $('#reset-btn').on('click', function () {
     $('#name,#update_frequency,#area,#timeliness,#data_policy,#data_type,#copernicus_service_product,\
-      #data_format,#quality_control_procedure,#dissemination,#requirement,\
+      #data_format,#quality_control_procedure,#dissemination,#requirement,#status,\
       #state,#component').val('All');
     var table = $table.DataTable();
     table.state.clear();
