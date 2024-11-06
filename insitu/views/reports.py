@@ -25,6 +25,7 @@ from insitu.forms import (
     StandardReportForm,
     DataProviderDuplicatesReportForm,
     EntriesCountReportForm,
+    EntriesStateReportForm,
     UserActionsForm,
 )
 from insitu.models import (
@@ -39,6 +40,7 @@ from insitu.views._reports import (
     DataProviderDuplicatesReportMixin,
     DataProviderNetworkReportExcelMixin,
     EntriesCountReportExcelMixin,
+    EntriesStateReportExcelMixin,
     UserActionsReportMixin,
     StandardReportExcelMixin,
     StandardReportPDFMixin,
@@ -383,6 +385,25 @@ class EntriesCountReportView(ProtectedTemplateView, EntriesCountReportExcelMixin
         self.entrusted_entities_ids = self.request.POST.getlist("entrusted_entities")
         filename = self.generate_filename("Entries_Count_Report", "xlsx")
         return self.generate_excel(filename)
+
+
+class EntriesStateReportView(ProtectedTemplateView, EntriesStateReportExcelMixin):
+    template_name = "reports/entries_state_report.html"
+    permission_classes = (IsAuthenticated,)
+    permission_denied_redirect = reverse_lazy("auth:login")
+
+    def get_context_data(self, **kwargs):
+        context = super(EntriesStateReportView, self).get_context_data(**kwargs)
+        context["form"] = EntriesStateReportForm()
+        return context
+
+    def post(self, request, *args, **kwargs):
+        form = EntriesStateReportForm(request.POST)
+        if form.is_valid():
+            filename = self.generate_filename("CIS2_Entries_State_Report", "xlsx")
+            self.entry_type = form.cleaned_data["entry_type"]
+            return self.generate_excel(filename)
+        return HttpResponse("Incorrect value selected")
 
 
 class UserActionsReportView(ProtectedTemplateView, UserActionsReportMixin):

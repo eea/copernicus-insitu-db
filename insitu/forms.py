@@ -812,3 +812,15 @@ class EntriesCountReportForm(forms.Form):
     entrusted_entities = forms.ModelMultipleChoiceField(
         required=False, queryset=models.EntrustedEntity.objects.all()
     )
+
+
+class EntriesStateReportForm(forms.Form):
+    entry_type = forms.ChoiceField(
+        required=True,
+        choices=(
+            ("Product", "Product"),
+            ("Requirement", "Requirement"),
+            ("Data", "Data"),
+            ("DataProvider", "Data Provider"),
+        ),
+    )

@@ -125,6 +125,20 @@
         <tr>
           <td>
             <strong>
+              <a href="{% url 'reports:entries_state_report' %}">Entries state report</a>
+            </strong>
+          </td>
+          <td>
+            <p>
+              This report exports the state, last_updated, url of the entries in the database.
+              The "Entry type" value is mandatory for exporting this report.
+              The report will include only the entries of the selected type.
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <strong>
               <a href="{% url 'reports:user_actions_report' %}">User actions report</a>
             </strong>
           </td>

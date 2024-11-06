@@ -173,6 +173,11 @@ reports_patterns = [
         views.EntriesCountReportView.as_view(),
         name="entries_count_report",
     ),
+    path(
+        "entries_state_report/",
+        views.EntriesStateReportView.as_view(),
+        name="entries_state_report",
+    ),
     path("country_report/", views.CountryReportView.as_view(), name="country_report"),
     path(
         "data_provider_duplicates_report/",

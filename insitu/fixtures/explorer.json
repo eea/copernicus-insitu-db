@@ -60,11 +60,11 @@
         "pk": 5,
         "fields": {
             "title": "Data provider statistics",
-            "sql": "SELECT dp.id AS \"Data provider UID\", dp.name AS \"Data provider name\",\r\n\r\n       CASE\r\n           WHEN dp.is_network = TRUE THEN 'Yes'\r\n           ELSE 'No'\r\n       END as \"Data provider Is network\",\r\n       count(d.id) AS \"Number of data delivered\"\r\nFROM insitu_dataprovider dp\r\nINNER JOIN insitu_dataproviderrelation dpr ON dpr.provider_id = dp.id\r\nINNER JOIN insitu_data d ON dpr.data_id = d.id\r\nWHERE dp._deleted = FALSE\r\n  AND dpr._deleted = FALSE\r\n  AND d._deleted = FALSE\r\nGROUP BY dp.id, dp.name, dp.is_network\r\nORDER BY UPPER(dp.name);",
+            "sql": "SELECT dp.id AS \"Data provider UID\", dp.name AS \"Data provider name\",\r\n       CASE\r\n           WHEN dp.is_network = TRUE THEN 'Yes'\r\n           ELSE 'No'\r\n       END as \"Data provider Is network\",\r\n       CASE\r\n           WHEN dpr.role = 1 THEN 'Originator'\r\n           WHEN dpr.role = 2 THEN 'Distributor'\r\n            WHEN dpr.role IS NULL THEN '-'\r\n       ELSE ''\r\n       END as \"Provider role\",\r\n       count(d.id) AS \"Number of data delivered per provider role\"\r\nFROM insitu_dataprovider dp\r\nINNER JOIN insitu_dataproviderrelation dpr ON dpr.provider_id = dp.id\r\nINNER JOIN insitu_data d ON dpr.data_id = d.id\r\nWHERE dp._deleted = FALSE\r\n  AND dpr._deleted = FALSE\r\n  AND d._deleted = FALSE\r\nGROUP BY dp.id, dp.name, dp.is_network, dpr.role\r\nORDER BY UPPER(dp.name);",
             "description": "Use cases:\r\n 1. List data providers which deliver data and a count of data delivered.\r\n\r\nFiltering done on the objects of the report: \r\n- Data providers with at least one link to a data set",
             "created_by_user": 1,
             "created_at": "2018-08-01T08:44:12.306Z",
-            "last_run_date": "2024-11-05T15:05:41.337Z",
+            "last_run_date": "2024-11-06T08:13:44.738Z",
             "snapshot": false,
             "connection": ""
         }
