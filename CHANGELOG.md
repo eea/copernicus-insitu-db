@@ -3,6 +3,11 @@ Changelog
 
 * In case of major changes, an email should be sent to all users with the modifications.
 
+2.11.11 (2024-11-22)
+--------------------
+* Add UID to data listing
+[dianaboiangiu]
+
 2.11.10(2024-11-06)
 -------------------
 * Add a new report to generate UID, name, state, last updated value and url for all entries
