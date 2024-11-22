@@ -26,27 +26,6 @@ function updateFilterOptions(filter, option_data) {
 }
 $(document).ready(function () {
   var columnIndex = $('#columns-number').data('columns-number');
-  var buttonCommon = {
-    exportOptions: {
-      format: {
-        body: function (data, row, _column, _node) {
-          if (row === 7) {
-            if (data.indexOf('glyphicon-ok-circle') != -1) {
-              return 'Yes';
-            }
-            else {
-              return 'No';
-            }
-          }
-          if (row === 0 || row === 3 || row === 4) {
-            return $.parseHTML(data)[0].innerHTML;
-          }
-
-          return data;
-        }
-      }
-    }
-  };
 
   var filters = {};
 
@@ -96,25 +75,53 @@ $(document).ready(function () {
     ],
     "buttons": [{
         extend: 'pdf',
-        exportOptions: { orthogonal: 'export' },
+        exportOptions: {
+          orthogonal: 'export',
+          format: {
+            body: function (data, row, _column, _node) {
+              if (row === 9) {
+                if (data.indexOf('glyphicon-ok-circle') != -1) {
+                  return 'Yes';
+                }
+                else {
+                  return 'No';
+                }
+              }
+              if (row === 1 || row === 5 || row === 6) {
+                return $.parseHTML(data)[0].innerHTML;
+              }
+              return data;
+            }
+          }
+        },
         text: 'Save as PDF',
         filename: 'CIS2_DataProviders',
         title: 'CIS2 Data Providers',
         orientation: 'landscape',
-        customize: function (doc) {
-          let cols = [];
-          let created = new Date().toDateString();
-          cols[0] = { text: 'https://cis2.eea.europa.eu , ' + created, alignment: 'right', margin: [50, 10], };
-          let objFooter = {};
-          objFooter.columns = cols;
-          doc.footer = objFooter;
-        }
       },
       {
         extend: 'excel',
         filename: 'CIS2_DataProviders.',
         title: 'CIS2 Data Providers',
         text: 'Save as Excel',
+        exportOptions: {
+          format: {
+            body: function (data, row, _column, _node) {
+              if (row === 9) {
+                if (data.indexOf('glyphicon-ok-circle') != -1) {
+                  return 'Yes';
+                }
+                else {
+                  return 'No';
+                }
+              }
+              if (row === 1 || row === 5 || row === 6) {
+                return $.parseHTML(data)[0].innerHTML;
+              }
+              return data;
+            }
+          }
+        }
       },
     ],
     "language": {

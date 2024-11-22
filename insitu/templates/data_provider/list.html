@@ -24,7 +24,7 @@
 {% endblock %}
 
 {% block content %}
-  <div id="columns-number" data-columns-number="{% if user.is_authenticated %}8{% else %}5{% endif %}"></div>
+  <div id="columns-number" data-columns-number="{% if user.is_authenticated %}9{% else %}6{% endif %}"></div>
   <div id="ajax-url" data-ajax-url="{% url 'provider:json' %}"></div>
   <div class="row">
     <h1 class="col-sm-12">
@@ -97,6 +97,7 @@
              class="width-100 table table-condensed table-bordered table-hover">
         <thead>
         <tr>
+          <th>UID</th>
           <th>Name</th>
           <th>Acronym</th>
           <th>

@@ -59,6 +59,7 @@ class DataProviderList(ProtectedTemplateView):
 
 class DataProviderListJson(ESDatatableView):
     columns = [
+        "id",
         "name",
         "acronym",
         "edmo",
@@ -87,6 +88,7 @@ class DataProviderListJson(ESDatatableView):
 
     def get_columns(self):
         self.columns = [
+            "id",
             "name",
             "acronym",
             "edmo",
@@ -97,6 +99,7 @@ class DataProviderListJson(ESDatatableView):
         ]
         if self.request.user.is_authenticated:
             self.columns = [
+                "id",
                 "name",
                 "acronym",
                 "edmo",
