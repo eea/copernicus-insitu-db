@@ -3,9 +3,14 @@ Changelog
 
 * In case of major changes, an email should be sent to all users with the modifications.
 
+2.11.12 (2024-12-02)
+--------------------
+* Add copernicus services and components on /provider/list/json/
+[dianaboiangiu]
+
 2.11.11 (2024-11-22)
 --------------------
-* Add UID to data listing
+* Add UID to data provider listing
 [dianaboiangiu]
 
 2.11.10(2024-11-06)
