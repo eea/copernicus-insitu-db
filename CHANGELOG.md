@@ -3,6 +3,11 @@ Changelog
 
 * In case of major changes, an email should be sent to all users with the modifications.
 
+2.11.13 (2024-12-03)
+--------------------
+* Fix flake8
+[dianaboiangiu]
+
 2.11.12 (2024-12-02)
 --------------------
 * Add copernicus services and components on /provider/list/json/
