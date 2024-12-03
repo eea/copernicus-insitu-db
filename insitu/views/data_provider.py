@@ -630,8 +630,8 @@ class DataProviderListApiView(ProtectedView):
                 components = networks_components[provider.id]
                 services = networks_services[provider.id]
             else:
-                components = {}
-                services = {}
+                components = []
+                services = []
                 for dp_relation in provider.dataproviderrelation_set.all():
                     data_requirement_groups = [
                         x.group for x in dp_relation.data.requirements.all()
@@ -649,27 +649,15 @@ class DataProviderListApiView(ProtectedView):
 
                 for component in components_dict:
                     if provider.id in component["data_providers"]:
-                        if not components.get(provider.id):
-                            components[provider.id] = [
-                                {"id": component["id"], "name": component["name"]}
-                            ]
-                        elif component["id"] not in [
-                            x["id"] for x in components.get(provider.id, [])
-                        ]:
-                            components[provider.id].append(
+                        if component["id"] not in [x["id"] for x in components]:
+                            components.append(
                                 {"id": component["id"], "name": component["name"]}
                             )
 
                 for service in services_dict:
                     if provider.id in service["data_providers"]:
-                        if not services.get(provider.id):
-                            services[provider.id] = [
-                                {"id": service["id"], "name": service["name"]}
-                            ]
-                        elif service["id"] not in [
-                            x["id"] for x in services.get(provider.id, [])
-                        ]:
-                            services[provider.id].append(
+                        if service["id"] not in [x["id"] for x in services]:
+                            services.append(
                                 {"id": service["id"], "name": service["name"]}
                             )
 
