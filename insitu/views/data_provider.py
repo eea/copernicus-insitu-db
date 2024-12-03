@@ -10,7 +10,6 @@ from insitu.models import (
     Component,
     DataProvider,
     DataProviderDetails,
-    Product,
     CopernicusService,
 )
 from insitu import forms
