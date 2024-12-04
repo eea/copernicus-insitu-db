@@ -10,7 +10,6 @@ from insitu.models import (
     Component,
     DataProvider,
     DataProviderDetails,
-    CopernicusService,
 )
 from insitu import forms
 from insitu.views.base import (
@@ -491,57 +490,48 @@ class DataProviderListApiView(ProtectedView):
 
     def get(self, request, *args, **kwargs):
         data = []
-        services = CopernicusService.objects.all().prefetch_related(
-            "component_set",
-            "component_set__products",
-            "component_set__products__product_requirements",
-            "component_set__products__product_requirements__requirement",
-            "component_set__products__product_requirements__requirement__datarequirement_set",
-            "component_set__products__product_requirements__requirement__datarequirement_set__data",
-            "component_set__products__product_requirements__requirement__datarequirement_set__data__dataproviderrelation_set",
+        components = (
+            Component.objects.all()
+            .prefetch_related(
+                "products",
+                "products__product_requirements",
+                "products__product_requirements__requirement",
+                "products__product_requirements__requirement__datarequirement_set",
+                "products__product_requirements__requirement__datarequirement_set__data",
+                "products__product_requirements__requirement__datarequirement_set__data__dataproviderrelation_set",
+            )
+            .select_related("service")
         )
-        services_dict = []
         components_dict = []
-        for service in services:
-            service_dict = {
-                "id": service.id,
-                "name": service.name,
+
+        for component in components:
+            component_dict = {
+                "id": component.id,
+                "name": component.name,
+                "service_id": component.service.id,
+                "service_name": component.service.name,
                 "data_providers": [],
             }
-            for component in service.component_set.all():
-                component_dict = {
-                    "id": component.id,
-                    "name": component.name,
-                    "data_providers": [],
-                }
-                for product in component.products.all():
-                    for requirement in product.product_requirements.all():
+            for product in component.products.all():
+                for requirement in product.product_requirements.all():
+                    for (
+                        data_requirement
+                    ) in requirement.requirement.datarequirement_set.all():
                         for (
-                            data_requirement
-                        ) in requirement.requirement.datarequirement_set.all():
-                            for (
-                                dp_relation
-                            ) in data_requirement.data.dataproviderrelation_set.all():
+                            dp_relation
+                        ) in data_requirement.data.dataproviderrelation_set.all():
+                            if (
+                                dp_relation.provider_id
+                                not in component_dict["data_providers"]
+                            ):
                                 if (
                                     dp_relation.provider_id
                                     not in component_dict["data_providers"]
                                 ):
-                                    if (
+                                    component_dict["data_providers"].append(
                                         dp_relation.provider_id
-                                        not in component_dict["data_providers"]
-                                    ):
-                                        component_dict["data_providers"].append(
-                                            dp_relation.provider_id
-                                        )
-                                    if (
-                                        dp_relation.provider_id
-                                        not in service_dict["data_providers"]
-                                    ):
-                                        service_dict["data_providers"].append(
-                                            dp_relation.provider_id
-                                        )
-                components_dict.append(component_dict)
-            services_dict.append(service_dict)
+                                    )
+            components_dict.append(component_dict)
 
         data_providers = (
             DataProvider.objects.all()
@@ -549,10 +539,6 @@ class DataProviderListApiView(ProtectedView):
                 "countries",
                 "members",
                 "networks",
-                "dataproviderrelation_set__data",
-                "dataproviderrelation_set",
-                "dataproviderrelation_set__data__requirements",
-                "dataproviderrelation_set__data__requirements__group",
             )
             .annotate(
                 acronym=Subquery(
@@ -572,94 +558,19 @@ class DataProviderListApiView(ProtectedView):
                 ),
             )
         )
-        dp_networks = DataProvider.objects.filter(is_network=True).prefetch_related(
-            "countries",
-            "members",
-            "dataproviderrelation_set__data",
-            "dataproviderrelation_set",
-            "dataproviderrelation_set__data__requirements",
-            "dataproviderrelation_set__data__requirements__group",
-        )
-
-        networks_requirement_groups = {}
-        networks_components = {}
-        networks_services = {}
-
-        for network in dp_networks:
-            requirement_groups = []
-            for dp_relation in network.dataproviderrelation_set.all():
-                data_requirement_groups = [
-                    x.group for x in dp_relation.data.requirements.all()
-                ]
-                for group in data_requirement_groups:
-                    if group not in requirement_groups:
-                        requirement_groups.append(group)
-            networks_requirement_groups[network.id] = requirement_groups
-            networks_components[network.id] = []
-            networks_services[network.id] = []
-            for component in components_dict:
-                if network.id in component["data_providers"]:
-                    if not networks_components.get(network.id):
-                        networks_components[network.id] = [
-                            {"id": component["id"], "name": component["name"]}
-                        ]
-                    elif component["id"] not in [
-                        x["id"] for x in networks_components.get(network.id, [])
-                    ]:
-                        networks_components[network.id].append(
-                            {"id": component["id"], "name": component["name"]}
-                        )
-
-            for service in services_dict:
-                if network.id in service["data_providers"]:
-                    if not networks_services.get(network.id):
-                        networks_services[network.id] = [
-                            {"id": service["id"], "name": service["name"]}
-                        ]
-                    elif service["id"] not in [
-                        x["id"] for x in networks_services.get(network.id, [])
-                    ]:
-                        networks_services[network.id].append(
-                            {"id": service["id"], "name": service["name"]}
-                        )
-
         for provider in data_providers:
-            requirement_groups = []
-            if provider.is_network:
-                requirement_groups = networks_requirement_groups[provider.id]
-                components = networks_components[provider.id]
-                services = networks_services[provider.id]
-            else:
-                components = []
-                services = []
-                for dp_relation in provider.dataproviderrelation_set.all():
-                    data_requirement_groups = [
-                        x.group for x in dp_relation.data.requirements.all()
-                    ]
-                    for group in data_requirement_groups:
-                        if group not in requirement_groups:
-                            requirement_groups.append(group)
-
-                if not requirement_groups:
-                    for network in provider.networks.all():
-                        for dp_relation in network.dataproviderrelation_set.all():
-                            for group in networks_requirement_groups[network.id]:
-                                if group not in requirement_groups:
-                                    requirement_groups.append(group)
-
-                for component in components_dict:
-                    if provider.id in component["data_providers"]:
-                        if component["id"] not in [x["id"] for x in components]:
-                            components.append(
-                                {"id": component["id"], "name": component["name"]}
-                            )
-
-                for service in services_dict:
-                    if provider.id in service["data_providers"]:
-                        if service["id"] not in [x["id"] for x in services]:
-                            services.append(
-                                {"id": service["id"], "name": service["name"]}
-                            )
+            components = []
+            for component in components_dict:
+                if provider.id in component["data_providers"]:
+                    if component["id"] not in [x["id"] for x in components]:
+                        components.append(
+                            {
+                                "id": component["id"],
+                                "name": component["name"],
+                                "service_id": component["service_id"],
+                                "service_name": component["service_name"],
+                            }
+                        )
 
             entry = {
                 "id": provider.id,
@@ -675,12 +586,7 @@ class DataProviderListApiView(ProtectedView):
                 + reverse("provider:detail", kwargs={"pk": provider.id}),
                 "members": [member.id for member in provider.members.all()],
                 "website": provider.website,
-                "requirement_groups": [
-                    {"id": requirement_group.id, "name": requirement_group.name}
-                    for requirement_group in requirement_groups
-                ],
                 "components": components,
-                "services": services,
                 "is_network": provider.is_network,
             }
             data.append(entry)
