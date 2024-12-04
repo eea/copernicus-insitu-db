@@ -3,6 +3,11 @@ Changelog
 
 * In case of major changes, an email should be sent to all users with the modifications.
 
+2.11.15 (2024-12-04)
+--------------------
+* Change format of components on /provider/list/json
+[dianaboiangiu]
+
 2.11.14 (2024-12-03)
 --------------------
 * Change format of services and components on /provider/list/json
