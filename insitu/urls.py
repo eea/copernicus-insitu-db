@@ -1,11 +1,39 @@
 from django.urls import include, path, re_path
 from django.contrib.auth import views as auth_views
+from django.contrib.sitemaps import views as sitemap_views
 from django.views.generic.base import RedirectView
 from django.views.static import serve
+from django.views.generic import TemplateView
 
 from copernicus import settings
 from insitu import views
+from insitu.sitemaps import (
+    ProductSitemap,
+    ProductListSitemap,
+    RequirementSitemap,
+    RequirementListSitemap,
+    DataSitemap,
+    DataListSitemap,
+    DataProviderSitemap,
+    DataProviderListSitemap,
+    AboutSitemap,
+    DocsSitemap,
+    HelpSitemap,
+)
 
+sitemaps = {
+    "about": AboutSitemap,
+    "products_list_page": ProductListSitemap,
+    "requirements_list_page": RequirementListSitemap,
+    "data_list_page": DataListSitemap,
+    "data_providers_list_page": DataProviderListSitemap,
+    "product": ProductSitemap,
+    "requirement": RequirementSitemap,
+    "data": DataSitemap,
+    "provider": DataProviderSitemap,
+    "help": HelpSitemap,
+    "docs": DocsSitemap,
+}
 
 product_requirement_patterns = [
     path("add/", views.ProductRequirementAdd.as_view(), name="add"),
@@ -202,6 +230,12 @@ reports_patterns = [
 ]
 
 urlpatterns = [
+    path(
+        "sitemap.xml",
+        sitemap_views.sitemap,
+        {"sitemaps": sitemaps},
+        name="django.contrib.sitemaps.views.sitemap",
+    ),
     path("", RedirectView.as_view(url="/about")),
     path(
         "password/reset/",
@@ -265,5 +299,9 @@ urlpatterns = [
         "user/change_name",
         views.ChangeNameEmail.as_view(),
         name="change_name_email",
+    ),
+    path(
+        "robots.txt",
+        TemplateView.as_view(template_name="robots.txt", content_type="text/plain"),
     ),
 ]

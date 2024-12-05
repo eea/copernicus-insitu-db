@@ -72,6 +72,8 @@ INSTALLED_APPS = [
     "wkhtmltopdf",
     "picklists",
     "insitu",
+    "django.contrib.sites",
+    "django.contrib.sitemaps",
 ]
 
 if not DEBUG:
@@ -181,6 +183,8 @@ AUTH_PASSWORD_VALIDATORS = [
         "NAME": "django.contrib.auth.password_validation.NumericPasswordValidator",
     },
 ]
+
+SITE_ID = 1
 
 API_TOKEN = env("API_TOKEN", default="token")
 API_PREFIX = env("API_PREFIX", default="Token")

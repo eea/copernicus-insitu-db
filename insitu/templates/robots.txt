@@ -1,0 +1,15 @@
+User-agent: *
+Disallow: /admin
+Disallow: /manage
+Disallow: /reports/snapshot
+Disallow: /static/admin
+Disallow: /explorer
+Disallow: /provider/list/json
+Disallow: /login
+Disallow: /logout
+Disallow: /password/reset
+Disallow: /change-password
+Disallow: /user/records
+Disallow: /reports/[0-9]+/
+
+Sitemap: https://cis2.eea.europa.eu/sitemap.xml

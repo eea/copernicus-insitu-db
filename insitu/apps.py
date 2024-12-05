@@ -6,3 +6,6 @@ from django.apps import AppConfig
 
 class InsituConfig(AppConfig):
     name = "insitu"
+
+    class Meta:
+        app_label = "insitu"
