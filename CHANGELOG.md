@@ -3,6 +3,11 @@ Changelog
 
 * In case of major changes, an email should be sent to all users with the modifications.
 
+2.11.16 (2024-12-05)
+--------------------
+* Add sitemap.xml and robots.txt
+[dianaboiangiu]
+
 2.11.15 (2024-12-04)
 --------------------
 * Change format of components on /provider/list/json
