@@ -319,12 +319,15 @@ PUBLIC_REPORTS_IDS = os.environ.get("PUBLIC_REPORTS_IDS", "").split(",")
 EXCLUDE_REPORTS_IDS = os.environ.get("EXCLUDE_REPORTS_IDS", "").split(",")
 
 # Content Security Policy
-CSP_IMG_SRC = "'self'"
+CSP_IMG_SRC = ("'self'",)
+
 CSP_STYLE_SRC = (
     "'self'",
     "http://cdnjs.cloudflare.com",
     "http://code.jquery.com",
     "http://maxcdn.bootstrapcdn.com",
+    "'sha256-47DEQpj8HBSa+/TImW+5JCeuQeRkm5NMpJWZG3hSuFU='",
+    "'sha256-p08VBe6m5i8+qtXWjnH/AN3klt1l4uoOLsjNn8BjdQo='",
 )
 CSP_SCRIPT_SRC = (
     "'self'",
