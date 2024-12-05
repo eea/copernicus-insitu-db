@@ -3,7 +3,6 @@ from django.contrib.auth import views as auth_views
 from django.contrib.sitemaps import views as sitemap_views
 from django.views.generic.base import RedirectView
 from django.views.static import serve
-from django.views.generic import TemplateView
 
 from copernicus import settings
 from insitu import views
@@ -299,9 +298,5 @@ urlpatterns = [
         "user/change_name",
         views.ChangeNameEmail.as_view(),
         name="change_name_email",
-    ),
-    path(
-        "robots.txt",
-        TemplateView.as_view(template_name="robots.txt", content_type="text/plain"),
     ),
 ]
