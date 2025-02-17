@@ -12,6 +12,7 @@ from explorer.models import Query
 from explorer.views import DownloadQueryView
 from explorer.views.export import _export
 from explorer.utils import extract_params
+
 # from wkhtmltopdf.views import PDFTemplateResponse
 
 from django.conf import settings
@@ -183,12 +184,12 @@ class HTMLToPDFView(View):
     def render(self, context, request):
         template = get_template("reports/reports_pdf.html")
         filename = f"Pivot_Report_{datetime.now().strftime('%Y%m%d')}.pdf"
-        response = HttpResponse(content_type='application/pdf')
-        response['Content-Disposition'] = f'attachment; filename="{filename}"'
+        response = HttpResponse(content_type="application/pdf")
+        response["Content-Disposition"] = f'attachment; filename="{filename}"'
         html = template.render(context)
         pisa_status = pisa.CreatePDF(html, dest=response)
         if pisa_status.err:
-            return HttpResponse(f'We had some errors <pre>{html}</pre>')
+            return HttpResponse(f"We had some errors <pre>{html}</pre>")
         return response
 
     def post(self, request, *args, **kwargs):
