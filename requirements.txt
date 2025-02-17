@@ -11,13 +11,12 @@ django-guardian==2.4.0
 django-hijack==3.4.5
 django-markdownx==4.0.7
 django-sql-explorer==3.2.1
-django-wkhtmltopdf==3.4.0
 Django==3.2.25
 reportlab==4.0.8
 elasticsearch-dsl==6.4.0
 Levenshtein==0.25.1
 openpyxl==3.1.2
-psycopg2==2.9.9
+psycopg2-binary==2.9.10
 pytz==2023.3.post1
 sentry-sdk==2.13.0
 Sphinx==7.1.2

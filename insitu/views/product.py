@@ -67,8 +67,8 @@ class ProductList(ProtectedTemplateView):
 
 
 class ProductListJson(ESDatatableView):
-    columns = ["name", "service", "entities", "component", "group", "status", "area"]
-    order_columns = ["name", "service", "component", "group", "status", "area"]
+    columns = ["id", "name", "service", "entities", "component", "group", "status", "area"]
+    order_columns = ["id", "name", "service", "entities", "component", "group", "status", "area"]
     filters = ["service", "entity", "component", "group", "status", "area"]
     filter_translation = {
         "entity": "entities.entity",

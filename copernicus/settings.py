@@ -69,7 +69,6 @@ INSTALLED_APPS = [
     "docs",
     "guardian",
     "explorer",
-    "wkhtmltopdf",
     "picklists",
     "insitu",
     "django.contrib.sites",
@@ -136,7 +135,6 @@ TEMPLATES = [
         },
     },
 ]
-WKHTMLTOPDF_CMD = "/usr/bin/wkhtmltopdf"
 WSGI_APPLICATION = "copernicus.wsgi.application"
 
 

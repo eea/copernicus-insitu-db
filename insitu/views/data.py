@@ -75,6 +75,7 @@ class DataList(ProtectedTemplateView):
 
 class DataListJson(ESDatatableView):
     columns = [
+        "id",
         "name",
         "update_frequency",
         "area",

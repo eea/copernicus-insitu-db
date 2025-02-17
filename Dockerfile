@@ -1,5 +1,4 @@
-FROM python:3.8-alpine3.13
-
+FROM python:3.8-alpine
 ARG REQFILE=requirements-dep.txt
 ENV APP_HOME=/var/local/copernicus
 
@@ -13,12 +12,11 @@ RUN apk update \
         jpeg-dev zlib-dev libjpeg \
         gcc netcat-openbsd postgresql-dev \
     pcre-dev linux-headers make \
-    xvfb  ttf-freefont fontconfig dbus qt5-qtbase-dev \
-    qt5-qtwebkit-dev qt5-qtsvg-dev qt5-qtxmlpatterns-dev \
-    && apk add wkhtmltopdf --no-cache \
+    xvfb  ttf-freefont fontconfig dbus libffi-dev \
     --repository http://dl-3.alpinelinux.org/alpine/edge/community/ \
     --allow-untrusted \ 
     && mkdir -p $APP_HOME/logging \
+
     && pip install pip==24.0 \
     && pip install Pillow \
     && pip install --no-cache-dir -r $REQFILE \

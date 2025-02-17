@@ -41,6 +41,11 @@
     <table id="detail-table" class="table borderless col-sm-12">
       <tbody>
       <tr class="row">
+        <th class="col-md-4 col-sm-6">UID</th>
+        <td class="col-md-8 col-sm-6">{{ product.pk }}</td>
+      </tr>
+
+      <tr class="row">
         <th class="col-md-4 col-sm-6">Name</th>
         <td class="col-md-8 col-sm-6">{{ product.name }}</td>
       </tr>
@@ -156,7 +161,7 @@
         <tbody>
         {% for rel in product.product_requirements.all %}
           <tr>
-            <td>{{ rel.requirement.pk }}</td>
+            <td>{{ rel.requirement_id }}</td>
             <td>
               <a
                 href="{% url 'requirement:detail' rel.requirement.pk %}">{{ rel.requirement.name }}</a>

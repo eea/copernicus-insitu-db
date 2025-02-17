@@ -49,6 +49,10 @@
     <table id="detail-table" class="table borderless col-sm-12">
       <tbody>
       <tr class="row">
+        <th class="col-md-4 col-sm-6">UID</th>
+        <td class="col-md-8 col-sm-6">{{ provider.pk }}</td>
+      </tr>
+      <tr class="row">
         <th class="col-md-4 col-sm-6">Name</th>
         <td class="col-md-8 col-sm-6">{{ provider.name }}</td>
       </tr>
@@ -81,7 +85,10 @@
         </th>
         <td class="col-md-8 col-sm-6">
           {% for country in provider.countries.all %}
-            <span class="col-sm-12 no-padding-left">{{ country }}</span>
+            <span class="col-sm-12 no-padding-left">
+              <img src="{% static '/flags/' %}{{country.code}}.png" alt="">
+              {{ country.name }}
+            </span>
           {% endfor %}
         </td>
       </tr>

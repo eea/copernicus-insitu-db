@@ -52,6 +52,11 @@
     <table id="detail-table" class="table borderless col-sm-12">
       <tbody>
       <tr class="row">
+        <th class="col-md-4 col-sm-6">UID</th>
+        <td class="col-md-8 col-sm-6">{{ requirement.pk }}</td>
+      </tr>
+
+      <tr class="row">
         <th class="col-md-4 col-sm-6">Name</th>
         <td class="col-md-8 col-sm-6">{{ requirement.name }}</td>
       </tr>
@@ -288,6 +293,7 @@
              class="table table-condensed table-bordered table-hover">
         <thead>
         <tr>
+          <th>Product UID</th>
           <th>Product</th>
           <th>Level of definition</th>
           <th>Relevant for</th>
@@ -302,6 +308,7 @@
         <tbody>
         {% for rel in requirement.product_requirements.all %}
           <tr>
+            <td>{{ rel.product_id }}</td>
             <td>
               <a
                 href="{% url 'product:detail' rel.product.pk %}">{{ rel.product.name }}</a>
@@ -363,6 +370,7 @@
              class="table table-condensed table-bordered table-hover">
         <thead>
         <tr>
+          <th>Data UID</th>
           <th>Data</th>
           <th>Level of compliance</th>
           <th class="no-sort">Note</th>
@@ -376,6 +384,7 @@
         <tbody>
         {% for rel in requirement.datarequirement_set.all %}
           <tr>
+            <td>{{ rel.data_id }}</td>
             <td>
               <a href="{% url 'data:detail' rel.data.pk %}">{{ rel.data }}</a>
             </td>
@@ -484,84 +493,80 @@
           }
         ]
       });
-    })
-  </script>
-  <script nonce="{{request.csp_nonce}}">
-    $(function () {
-      var requirement_name = '{{ requirement.name | escapejs }}'
-      var requirement_title = requirement_name
-      requirement_name = requirement_name.split(' ').join('_')
-      var buttonCommon = {
-        exportOptions: {
-          format: {
-            body: function ( data, row, column, node ){
-              if (row === 3 || row == 4 ){
-                if(data.indexOf('glyphicon-ok-circle') != -1){
-                  return 'Yes'
-                }
-                else{
-                  return 'No'
-                }
-              }
-              if (row === 0){
-                return $.parseHTML(data)[0].innerHTML
-              }
-              if (row == 5){
-                return ''
-              }
-              return data
-            }
+      var bodyFunction = function ( data, row, column, node ){
+        if (row === 4 || row == 5 ){
+          if(data.indexOf('glyphicon-ok-circle') != -1){
+            return 'Yes'
+          }
+          else{
+            return 'No'
           }
         }
+        if (row === 1){
+          return $.parseHTML(data)[0].innerHTML
+        }
+        if (row == 8){
+          return ''
+        }
+        return data
       }
       var table = $('#data').dataTable({
         "dom": "<'row'<'col-sm-12'B>>" +
-               "<'row'<'col-sm-5'i><'col-sm-12'f><'col-sm-4 display-margin'l><'col-sm-8'p>>" +
-               "<'row'<'col-sm-12'tr>>" +
-               "<'row'<'col-sm-12'p>>",
-        "buttons": [
-          $.extend( true, {}, buttonCommon,{
-            extend: 'pdf',
-            exportOptions: { orthogonal: 'export' },
-            text: 'Save as PDF',
-            filename: 'CIS2_Requirement_' +  requirement_name + '_relation_with_data',
-            title: 'CIS2 Requirement "' + requirement_title + '" relation with data',
-            orientation: 'portrait',
-            exportOptions: {
-              modifier: {
-                page: 'all'
-              }
-            },
-              customize: function ( doc ){
-              var cols = [];
-              var created = new Date().toDateString();
-              cols[0] = {text: 'https://cis2.eea.europa.eu , ' + created, alignment: 'right', margin:[50, 10], };
-              var objFooter = {};
-              objFooter['columns'] = cols;
-              doc['footer']=objFooter;
+        "<'row'<'col-sm-5'i><'col-sm-12'f><'col-sm-4 display-margin'l><'col-sm-8'p>>" +
+        "<'row'<'col-sm-12'tr>>" +
+        "<'row'<'col-sm-12'p>>",
+        "lengthMenu": [
+          [ 10, 25, 50, -1 ],
+          [ '10 rows', '25 rows', '50 rows', 'Show all' ]
+        ],
+        "buttons": [{
+          extend: 'pdf',
+          exportOptions: {
+            orthogonal: 'export' ,
+            format: {
+              body: bodyFunction,
             }
-        }),
-        $.extend( true, {}, buttonCommon,{
-          extend: 'excel',
+          },
+          text: 'Save as PDF',
           filename: 'CIS2_Requirement_' +  requirement_name + '_relation_with_data',
           title: 'CIS2 Requirement "' + requirement_title + '" relation with data',
+          orientation: 'portrait',
+          customize: function ( doc ){
+            var cols = [];
+            var created = new Date().toDateString();
+            cols[0] = {text: 'https://cis2.eea.europa.eu , ' + created, alignment: 'right', margin:[50, 10], };
+            var objFooter = {};
+            objFooter['columns'] = cols;
+            doc['footer']=objFooter;
+          },
+        },
+        {
+          extend: 'excel',
+          filename: 'CIS2_Requirement_' +  requirement_name + '_relation_with_products',
+          title: 'CIS2 Requirement "' + requirement_title + '" relation with products',
           text: 'Save as Excel',
-        }),
-        ],
-        "language": {
-          "infoFiltered": "<span class='green-text'>(filtered from _MAX_ total records)<span>",
-        },
-        "drawCallback": function(settings) {
-          var info = $(this).closest('.dataTables_wrapper').find('.dataTables_info');
-          info.toggle(this.api().page.info().recordsDisplay > 9);
-        },
-        columnDefs: [
-          {
-            targets: 'no-sort',
-            orderable: false
+          exportOptions: {
+            orthogonal: 'export' ,
+            format: {
+              body: bodyFunction,
+            }
           }
-        ]
-      });
-    })
-  </script>
+        },
+      ],
+      "language": {
+        "infoFiltered": "<span class='green-text'>(filtered from _MAX_ total records)<span>",
+      },
+      "drawCallback": function(settings) {
+        var info = $(this).closest('.dataTables_wrapper').find('.dataTables_info');
+        info.toggle(this.api().page.info().recordsDisplay > 9);
+      },
+      columnDefs: [
+        {
+          targets: 'no-sort',
+          orderable: false
+        }
+      ]
+    });
+  });
+</script>
 {% endblock %}

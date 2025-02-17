@@ -4,13 +4,15 @@ from datetime import datetime
 from io import BytesIO
 from openpyxl import load_workbook
 
+from xhtml2pdf import pisa
+
 from explorer.app_settings import UNSAFE_RENDERING
 from explorer.exporters import get_exporter_class
 from explorer.models import Query
 from explorer.views import DownloadQueryView
 from explorer.views.export import _export
 from explorer.utils import extract_params
-from wkhtmltopdf.views import PDFTemplateResponse
+# from wkhtmltopdf.views import PDFTemplateResponse
 
 from django.conf import settings
 from django.http import HttpResponse, JsonResponse, Http404
@@ -180,19 +182,14 @@ class DownloadReportsView(DownloadQueryView):
 class HTMLToPDFView(View):
     def render(self, context, request):
         template = get_template("reports/reports_pdf.html")
-        template_response = PDFTemplateResponse(
-            request=request,
-            template=template,
-            filename="test.pdf",
-            context=context,
-            show_content_in_browser=False,
-            cmd_options={
-                "javascript-delay": 3000,
-            },
-        )
-        template_response.render()
-        content = template_response.rendered_content
-        return HttpResponse(content, content_type="application/pdf")
+        filename = f"Pivot_Report_{datetime.now().strftime('%Y%m%d')}.pdf"
+        response = HttpResponse(content_type='application/pdf')
+        response['Content-Disposition'] = f'attachment; filename="{filename}"'
+        html = template.render(context)
+        pisa_status = pisa.CreatePDF(html, dest=response)
+        if pisa_status.err:
+            return HttpResponse(f'We had some errors <pre>{html}</pre>')
+        return response
 
     def post(self, request, *args, **kwargs):
         context = {

@@ -58,6 +58,10 @@
     <table id="detail-table" class="table borderless col-sm-12">
       <tbody>
       <tr class="row">
+        <th class="col-md-4 col-sm-6">UID</th>
+        <td class="col-md-8 col-sm-6">{{ data.pk }}</td>
+      </tr>
+      <tr class="row">
         <th class="col-md-4 col-sm-6">Name</th>
         <td class="col-md-8 col-sm-6">{{ data.name }}</td>
       </tr>
@@ -301,6 +305,7 @@
              class="table table-condensed table-bordered table-hover">
         <thead>
         <tr>
+          <th>Data provider UID</th>
           <th>Data provider</th>
           <th>
             Role
@@ -315,6 +320,7 @@
         <tbody>
         {% for rel in data.dataproviderrelation_set.all %}
           <tr>
+            <td>{{ rel.provider_id }}</td>
             <td>
               <a
                 href="{% url 'provider:detail' rel.provider.pk %}">{{ rel.provider.name }}</a>
@@ -358,6 +364,7 @@
              class="table table-condensed table-bordered table-hover">
         <thead>
         <tr>
+          <th>Requirement UID</th>
           <th>Requirement</th>
           <th>Level of compliace</th>
           <th class="no-sort">Note</th>
@@ -370,6 +377,7 @@
         <tbody>
         {% for rel in data.datarequirement_set.all %}
           <tr>
+            <td>{{ rel.requirement_id }}</td>
             <td>
               <a
                 href="{% url 'requirement:detail' rel.requirement.pk %}">{{ rel.requirement }}</a>
@@ -419,7 +427,7 @@
         exportOptions: {
           format: {
             body: function ( data, row, column, node ){
-              if (row === 2 ){
+              if (row === 3 ){
                 if(data.indexOf('glyphicon-ok-circle') != -1){
                   return 'Yes'
                 }
@@ -427,10 +435,10 @@
                   return 'No'
                 }
               }
-              if (row === 0){
+              if (row === 1){
                 return $.parseHTML(data)[0].innerHTML
               }
-              if (row == 3){
+              if (row == 6){
                 return ''
               }
               return data
@@ -498,7 +506,7 @@
         exportOptions: {
           format: {
             body: function ( data, row, column, node ){
-              if (row === 3 || row === 4 ){
+              if (row === 4 || row === 5 ){
                 if(data.indexOf('glyphicon-ok-circle') != -1){
                   return 'Yes'
                 }
@@ -506,7 +514,7 @@
                   return 'No'
                 }
               }
-              if (row === 0){
+              if (row === 1){
                 return $.parseHTML(data)[0].innerHTML
               }
               return data

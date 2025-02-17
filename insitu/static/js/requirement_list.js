@@ -12,38 +12,6 @@ function updateFilterOptions(filter, option_data) {
   });
 }
 $(document).ready(function () {
-  let buttonCommon = {
-    exportOptions: {
-      format: {
-        header: function (data, _columnIdx) {
-          return data.split('<span')[0].replace(/^\s+|\s+$/g, '');
-        },
-        body: function (data, row, _column, _node) {
-          if (row === 0) {
-            return $.parseHTML(data)[0].innerHTML.replace(/^\s+|\s+$/g, '');
-          }
-          if (row <= 10 && row >= 5) {
-            let goal = $.parseHTML(data)[0].innerHTML;
-            let breakthrough = $.parseHTML(data)[1].innerHTML;
-            let threshold = $.parseHTML(data)[2].innerHTML;
-            let metrics = '';
-            if (goal) {
-              metrics += 'Threshold: ' + '\n' + $.parseHTML(data)[0].innerHTML + '\n';
-            }
-            if (breakthrough) {
-              metrics += 'Breakthrough: ' + '\n' + $.parseHTML(data)[1].innerHTML + '\n';
-            }
-            if (threshold) {
-              metrics += 'Goal: ' + '\n' + $.parseHTML(data)[2].innerHTML + '\n';
-            }
-            return metrics.replace(/^\s+|\s+$/g, '');
-          }
-          return data;
-        }
-      }
-    }
-  };
-
   var filters = {};
 
   var queryString = window.location.search.substring(1);
@@ -64,6 +32,28 @@ $(document).ready(function () {
     $('#' + key).val(filters[key])
   })
 
+  var bodyProcessing = function (data, row, _column, _node) {
+    if (row === 1){
+      return $.parseHTML(data)[0].innerHTML.replace(/^\s+|\s+$/g, '');
+    }
+    if (row <= 10 && row >= 5) {
+      let goal = $.parseHTML(data)[0].innerHTML;
+      let breakthrough = $.parseHTML(data)[1].innerHTML;
+      let threshold = $.parseHTML(data)[2].innerHTML;
+      let metrics = '';
+      if (goal) {
+        metrics += 'Threshold: ' + '\n' + $.parseHTML(data)[0].innerHTML + '\n';
+      }
+      if (breakthrough) {
+        metrics += 'Breakthrough: ' + '\n' + $.parseHTML(data)[1].innerHTML + '\n';
+      }
+      if (threshold) {
+        metrics += 'Goal: ' + '\n' + $.parseHTML(data)[2].innerHTML + '\n';
+      }
+      return metrics.replace(/^\s+|\s+$/g, '');
+    }
+    return data;
+  }
   var $table = $('#requirements').dataTable({
     "processing": true,
     "serverSide": true,
@@ -77,10 +67,19 @@ $(document).ready(function () {
     ],
     "buttons": [{
         extend: 'pdf',
-        exportOptions: { orthogonal: 'export' },
+        exportOptions: {
+          orthogonal: 'export',
+          format: {
+            header: function (data, _columnIdx) {
+              return data.split('<span')[0].replace(/^\s+|\s+$/g, '');
+            },
+            body: bodyProcessing,
+          }
+        },
         text: 'Save as PDF',
         filename: 'CIS2_Requirements',
         title: 'CIS2 Requirements',
+        pageSize: 'A2',
         orientation: 'landscape',
         customize: function (doc) {
           let cols = [];
@@ -89,13 +88,23 @@ $(document).ready(function () {
           let objFooter = {};
           objFooter.columns = cols;
           doc.footer = objFooter;
-        }
+          doc.content[1].table.widths = Array(doc.content[1].table.body[0].length + 1).join('*').split('');
+        },
       },
         {
           extend: 'excel',
           filename: 'CIS2_Requirements.',
           title: 'CIS2 Requirements',
           text: 'Save as Excel',
+          exportOptions: {
+            orthogonal: 'export',
+            format: {
+              header: function (data, _columnIdx) {
+                return data.split('<span')[0].replace(/^\s+|\s+$/g, '');
+              },
+              body: bodyProcessing,
+            }
+          },
         },
     ],
     "language": {
