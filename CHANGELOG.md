@@ -3,6 +3,14 @@ Changelog
 
 * In case of major changes, an email should be sent to all users with the modifications.
 
+2.11.18 (2025-02-17)
+--------------------
+* Added Netherlands to EUMETNET drop-down option
+* Added UID in the listing/detail pages
+* Added country flags on the network detail pages
+* Fixed Dockerimage
+[dianaboiangiu]
+
 2.11.17 (2024-12-05)
 --------------------
 * Fix style for sitemap.xml
