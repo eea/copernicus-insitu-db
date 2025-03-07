@@ -4,7 +4,7 @@ from copernicus.settings import SITE_URL
 from django.http import HttpResponseRedirect, Http404, JsonResponse
 from django.urls import reverse, reverse_lazy
 from django_fsm import has_transition_perm
-from django.db.models import Subquery, OuterRef
+from django.db.models import Count, Subquery, OuterRef, Q
 from insitu import documents
 from insitu.models import (
     Component,
@@ -488,9 +488,8 @@ class DataProviderClearFeedback(LoggingProtectedCreateView):
 class DataProviderListApiView(ProtectedView):
     permission_classes = (HasToken,)
 
-    def get(self, request, *args, **kwargs):
-        data = []
-        components = (
+    def get_components(self, request):
+        return (
             Component.objects.all()
             .prefetch_related(
                 "products",
@@ -502,10 +501,13 @@ class DataProviderListApiView(ProtectedView):
             )
             .select_related("service")
         )
-        components_dict = []
+
+    def get_providers_grouped_by_components(self, request):
+        components = self.get_components(request)
+        providers_grouped_by_components = []
 
         for component in components:
-            component_dict = {
+            entry = {
                 "id": component.id,
                 "name": component.name,
                 "service_id": component.service.id,
@@ -520,20 +522,19 @@ class DataProviderListApiView(ProtectedView):
                         for (
                             dp_relation
                         ) in data_requirement.data.dataproviderrelation_set.all():
-                            if (
-                                dp_relation.provider_id
-                                not in component_dict["data_providers"]
-                            ):
+                            if dp_relation.provider_id not in entry["data_providers"]:
                                 if (
                                     dp_relation.provider_id
-                                    not in component_dict["data_providers"]
+                                    not in entry["data_providers"]
                                 ):
-                                    component_dict["data_providers"].append(
+                                    entry["data_providers"].append(
                                         dp_relation.provider_id
                                     )
-            components_dict.append(component_dict)
+            providers_grouped_by_components.append(entry)
+        return providers_grouped_by_components
 
-        data_providers = (
+    def get_data_providers(self, request):
+        return (
             DataProvider.objects.all()
             .prefetch_related(
                 "countries",
@@ -556,11 +557,28 @@ class DataProviderListApiView(ProtectedView):
                         data_provider=OuterRef("pk")
                     ).values_list("provider_type__name", flat=True)[:1]
                 ),
+                requirements_count=Count(
+                    "dataproviderrelation__data__requirements",
+                    filter=Q(dataproviderrelation___deleted=False)
+                    & Q(dataproviderrelation__data__datarequirement___deleted=False),
+                    distinct=True,
+                ),
             )
         )
+
+    def get(self, request, *args, **kwargs):
+        data = {}
+
+        providers_grouped_by_components = self.get_providers_grouped_by_components(
+            request
+        )
+
+        data_providers = self.get_data_providers(request)
+
+        providers_components = {}
         for provider in data_providers:
             components = []
-            for component in components_dict:
+            for component in providers_grouped_by_components:
                 if provider.id in component["data_providers"]:
                     if component["id"] not in [x["id"] for x in components]:
                         components.append(
@@ -571,7 +589,20 @@ class DataProviderListApiView(ProtectedView):
                                 "service_name": component["service_name"],
                             }
                         )
+            providers_components[provider.id] = components
 
+        for provider in data_providers:
+            components = providers_components[provider.id]
+            if provider.requirements_count == 0:
+                providers_components_dict = {}
+                for component in components:
+                    providers_components_dict[component["id"]] = component
+                for network in provider.networks.all():
+                    for network in network.members.all():
+                        for entry in providers_components[network.id]:
+                            if not providers_components_dict.get(entry["id"]):
+                                providers_components_dict[entry["id"]] = entry
+                components = list(providers_components_dict.values())
             entry = {
                 "id": provider.id,
                 "acronym": provider.acronym,
@@ -589,5 +620,5 @@ class DataProviderListApiView(ProtectedView):
                 "components": components,
                 "is_network": provider.is_network,
             }
-            data.append(entry)
+            data[provider.id] = entry
         return JsonResponse(data, safe=False)
