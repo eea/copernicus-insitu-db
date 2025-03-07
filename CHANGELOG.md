@@ -3,6 +3,10 @@ Changelog
 
 * In case of major changes, an email should be sent to all users with the modifications.
 
+2.11.19 (2025-03-07)
+--------------------
+* Changes to the provider/list/json/ endpoint: Aggregate Services/Components from member networks into the member's Services/Components list for members without data that has connections to requirements.
+
 2.11.18 (2025-02-17)
 --------------------
 * Added Netherlands to EUMETNET drop-down option
