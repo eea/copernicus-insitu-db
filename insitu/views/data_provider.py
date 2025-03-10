@@ -505,7 +505,6 @@ class DataProviderListApiView(ProtectedView):
     def get_providers_grouped_by_components(self, request):
         components = self.get_components(request)
         providers_grouped_by_components = []
-
         for component in components:
             entry = {
                 "id": component.id,
@@ -567,7 +566,7 @@ class DataProviderListApiView(ProtectedView):
         )
 
     def get(self, request, *args, **kwargs):
-        data = {}
+        data = []
 
         providers_grouped_by_components = self.get_providers_grouped_by_components(
             request
@@ -620,5 +619,5 @@ class DataProviderListApiView(ProtectedView):
                 "components": components,
                 "is_network": provider.is_network,
             }
-            data[provider.id] = entry
+            data.append(entry)
         return JsonResponse(data, safe=False)
