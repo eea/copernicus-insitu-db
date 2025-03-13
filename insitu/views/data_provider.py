@@ -4,7 +4,7 @@ from copernicus.settings import SITE_URL
 from django.http import HttpResponseRedirect, Http404, JsonResponse
 from django.urls import reverse, reverse_lazy
 from django_fsm import has_transition_perm
-from django.db.models import Count, Subquery, OuterRef, Q
+from django.db.models import Subquery, OuterRef
 from insitu import documents
 from insitu.models import (
     Component,
@@ -556,12 +556,6 @@ class DataProviderListApiView(ProtectedView):
                         data_provider=OuterRef("pk")
                     ).values_list("provider_type__name", flat=True)[:1]
                 ),
-                requirements_count=Count(
-                    "dataproviderrelation__data__requirements",
-                    filter=Q(dataproviderrelation___deleted=False)
-                    & Q(dataproviderrelation__data__datarequirement___deleted=False),
-                    distinct=True,
-                ),
             )
         )
 
@@ -592,16 +586,15 @@ class DataProviderListApiView(ProtectedView):
 
         for provider in data_providers:
             components = providers_components[provider.id]
-            if provider.requirements_count == 0:
-                providers_components_dict = {}
-                for component in components:
-                    providers_components_dict[component["id"]] = component
-                for network in provider.networks.all():
-                    for network in network.members.all():
-                        for entry in providers_components[network.id]:
-                            if not providers_components_dict.get(entry["id"]):
-                                providers_components_dict[entry["id"]] = entry
-                components = list(providers_components_dict.values())
+            providers_components_dict = {}
+            for component in components:
+                providers_components_dict[component["id"]] = component
+            for network in provider.networks.all():
+                for network in network.members.all():
+                    for entry in providers_components[network.id]:
+                        if not providers_components_dict.get(entry["id"]):
+                            providers_components_dict[entry["id"]] = entry
+            components = list(providers_components_dict.values())
             entry = {
                 "id": provider.id,
                 "acronym": provider.acronym,
