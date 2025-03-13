@@ -3,6 +3,11 @@ Changelog
 
 * In case of major changes, an email should be sent to all users with the modifications.
 
+2.11.21 (2025-03-10)
+--------------------
+* Changes to the provider/list/json/ endpoint: Add member's network's Services/Components to the member's list for all data providers
+[dianaboiangiu]
+
 2.11.20 (2025-03-10)
 --------------------
 * Fix provider/list/json/ endpoint format
