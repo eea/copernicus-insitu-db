@@ -126,7 +126,6 @@ $(document).ready(function () {
       data.state = $('#state').val();
       data.component = $('#component').val();
 
-
       var keys = ['update_frequency', 'area', 'timeliness', 'data_policy', 'data_type',  "copernicus_service_product", 'data_format', 'quality_control_procedure', 'dissemination', 'requirement', 'status', 'state', 'component']
       var queryString = ''
       for(var key of keys) {
@@ -167,7 +166,7 @@ $(document).ready(function () {
     },
   }).fnFilterOnReturn();
 
-  $('#id','#name,#update_frequency,#area,#timeliness,#data_policy,#data_type,#copernicus_service_product,\
+  $('#id,#name,#update_frequency,#area,#timeliness,#data_policy,#data_type,#copernicus_service_product,\
       #data_format,#quality_control_procedure,#dissemination,#requirement,#status,\
       #state,#component').on(
     'change', function (_event) {
@@ -176,7 +175,7 @@ $(document).ready(function () {
     });
 
   $('#reset-btn').on('click', function () {
-    $('#id','#name,#update_frequency,#area,#timeliness,#data_policy,#data_type,#copernicus_service_product,\
+    $('#id,#name,#update_frequency,#area,#timeliness,#data_policy,#data_type,#copernicus_service_product,\
       #data_format,#quality_control_procedure,#dissemination,#requirement,#status,\
       #state,#component').val('All');
     var table = $table.DataTable();
