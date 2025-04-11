@@ -3,7 +3,12 @@ Changelog
 
 * In case of major changes, an email should be sent to all users with the modifications.
 
-2.11.21 (2025-03-10)
+2.11.22 (2025-04-11)
+--------------------
+* Fix filters in data listing page
+[dianaboiangiu]
+
+2.11.21 (2025-03-14)
 --------------------
 * Changes to the provider/list/json/ endpoint: Add member's network's Services/Components to the member's list for all data providers
 [dianaboiangiu]
