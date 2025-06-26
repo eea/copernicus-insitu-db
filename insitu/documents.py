@@ -324,7 +324,12 @@ class DataProviderDoc(Document):
     contact_person = fields.KeywordField(attr="get_elastic_search_data.contact_person")
     provider_type = fields.KeywordField(attr="get_elastic_search_data.provider_type")
     state = fields.KeywordField(attr="state")
-
+    countries = fields.ObjectField(
+        attr="countries",
+        properties={
+            "name": fields.KeywordField(attr="name"),
+        },
+    )
     components = fields.ObjectField(
         attr="components",
         properties={

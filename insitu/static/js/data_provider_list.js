@@ -57,6 +57,7 @@ $(document).ready(function () {
         d.provider_type = $('#provider_type').val();
         d.state = $('#state').val();
         d.component = $('#component').val();
+        d.country = $('#country').val();
       },
       "dataSrc": function (json) {
         $.each(json.filters, function (key, value) {
@@ -133,8 +134,9 @@ $(document).ready(function () {
       data.provider_type = $('#provider_type').val();
       data.state = $('#state').val();
       data.component = $('#component').val();
+      data.country = $('#country').val();
 
-      var keys = ['is_network', 'provider_type', 'state', 'component']
+      var keys = ['is_network', 'provider_type', 'state', 'component', 'country'];
       var queryString = ''
       for(var key of keys) {
         if(isOk(data[key])) {
@@ -157,6 +159,7 @@ $(document).ready(function () {
       $('#provider_type').val(data.provider_type);
       $('#state').val(data.state);
       $('#component').val();
+      $('#country').val();
     },
     "drawCallback": function (_settings) {
       let info = $(this).closest('.dataTables_wrapper').find('.dataTables_info');
@@ -180,13 +183,13 @@ $(document).ready(function () {
     ]
   }).fnFilterOnReturn();
 
-  $('#is_network,#provider_type,#state,#component').on('change', function (_event) {
+  $('#is_network,#provider_type,#state,#component,#country').on('change', function (_event) {
     let table = $table.DataTable();
     table.ajax.reload();
   });
 
   $('#reset-btn').on('click', function () {
-    $('#is_network,#provider_type,#state,#component').val('All');
+    $('#is_network,#provider_type,#state,#component,#country').val('All');
     let table = $table.DataTable();
     table.state.clear();
     table.ajax.reload();
