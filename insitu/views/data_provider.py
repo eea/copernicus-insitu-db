@@ -51,11 +51,13 @@ class DataProviderList(ProtectedTemplateView):
             {"title": title, "name": name} for name, title in WORKFLOW_STATES
         ]
         components = get_choices("name", model_cls=Component)
+        countries = get_choices("name", model_cls=pickmodels.Country)
         context.update(
             {
                 "provider_types": provider_types,
                 "states": states,
                 "components": components,
+                "countries": countries,
             }
         )
         return context
@@ -78,8 +80,9 @@ class DataProviderListJson(ESDatatableView):
     order_columns = columns
     filter_translation = {
         "component": "components.name",
+        "country": "countries.name",
     }
-    filters = ["is_network", "provider_type", "state", "component"]
+    filters = ["is_network", "provider_type", "state", "component", "country"]
     filter_fields = [
         "is_network",
         "details__provider_type__name",
