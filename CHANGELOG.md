@@ -3,6 +3,11 @@ Changelog
 
 * In case of major changes, an email should be sent to all users with the modifications.
 
+2.11.23 (2025-06-26)
+--------------------
+[dianaboiangiu]
+* Add country filter in Data Providers listing
+
 2.11.22 (2025-04-11)
 --------------------
 * Fix filters in data listing page
