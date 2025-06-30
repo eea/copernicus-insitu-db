@@ -3,6 +3,12 @@ Changelog
 
 * In case of major changes, an email should be sent to all users with the modifications.
 
+3.0.0 (2025-06-30)
+------------------
+[dianaboiangiu]
+* Release version 3.0.0
+
+
 2.11.23 (2025-06-26)
 --------------------
 [dianaboiangiu]
