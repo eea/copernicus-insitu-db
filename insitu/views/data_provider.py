@@ -573,6 +573,7 @@ class DataProviderListApiView(ProtectedView):
 
         providers_components = {}
         for provider in data_providers:
+
             components = []
             for component in providers_grouped_by_components:
                 if provider.id in component["data_providers"]:
@@ -586,17 +587,15 @@ class DataProviderListApiView(ProtectedView):
                             }
                         )
             providers_components[provider.id] = components
-
         for provider in data_providers:
             components = providers_components[provider.id]
             providers_components_dict = {}
             for component in components:
                 providers_components_dict[component["id"]] = component
             for network in provider.networks.all():
-                for network in network.members.all():
-                    for entry in providers_components[network.id]:
-                        if not providers_components_dict.get(entry["id"]):
-                            providers_components_dict[entry["id"]] = entry
+                for entry in providers_components[network.id]:
+                    if not providers_components_dict.get(entry["id"]):
+                        providers_components_dict[entry["id"]] = entry
             components = list(providers_components_dict.values())
             entry = {
                 "id": provider.id,
