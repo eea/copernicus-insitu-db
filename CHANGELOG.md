@@ -3,11 +3,16 @@ Changelog
 
 * In case of major changes, an email should be sent to all users with the modifications.
 
+3.0.1 (2025-07-14)
+------------------
+[dianaboiangiu]
+* Add script for settings native name for English-speaking providers
+* Fix bug in data providers api
+
 3.0.0 (2025-06-30)
 ------------------
 [dianaboiangiu]
 * Release version 3.0.0
-
 
 2.11.23 (2025-06-26)
 --------------------
