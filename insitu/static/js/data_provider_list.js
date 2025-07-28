@@ -75,112 +75,121 @@ $(document).ready(function () {
       ['10 rows', '25 rows', '50 rows', 'Show all']
     ],
     "buttons": [{
-        extend: 'pdf',
-        exportOptions: {
-          orthogonal: 'export',
-          format: {
-            body: function (data, row, _column, _node) {
-              if (row === 9) {
-                if (data.indexOf('glyphicon-ok-circle') != -1) {
-                  return 'Yes';
-                }
-                else {
-                  return 'No';
-                }
+      extend: 'pdf',
+      text: 'Save as PDF',
+      filename: 'CIS2_DataProviders',
+      title: 'CIS2 Data Providers',
+      orientation: 'landscape',
+      exportOptions: {
+        format: {
+          body: function (data, row, column, node) {
+            var table = $('#providers').DataTable();
+            var columnName = table.column(row).header().textContent.trim();
+            if (columnName === "Is network?") {
+              if (data.indexOf('glyphicon-ok-circle') != -1) {
+                return 'Yes';
               }
-              if (row === 1 || row === 5 || row === 6) {
-                return $.parseHTML(data)[0].innerHTML;
+              else {
+                return 'No';
               }
-              return data;
             }
-          }
-        },
-        text: 'Save as PDF',
-        filename: 'CIS2_DataProviders',
-        title: 'CIS2 Data Providers',
-        orientation: 'landscape',
-      },
-      {
-        extend: 'excel',
-        filename: 'CIS2_DataProviders.',
-        title: 'CIS2 Data Providers',
-        text: 'Save as Excel',
-        exportOptions: {
-          format: {
-            body: function (data, row, _column, _node) {
-              if (row === 9) {
-                if (data.indexOf('glyphicon-ok-circle') != -1) {
-                  return 'Yes';
-                }
-                else {
-                  return 'No';
-                }
-              }
-              if (row === 1 || row === 5 || row === 6) {
-                return $.parseHTML(data)[0].innerHTML;
-              }
-              return data;
+            if (columnName === "Name") {
+              return $.parseHTML(data)[1].innerHTML;
             }
+            if (columnName === "Phone" || columnName === "Email") {
+              return $.parseHTML(data)[0].innerHTML;
+            }
+            return data;
           }
         }
       },
-    ],
-    "language": {
-      "infoFiltered": "<span class='green-text'>(filtered from _MAX_ total records)<span>",
     },
-    "stateSave": true,
-    "stateSaveParams": function (_settings, data) {
-      data.is_network = $('#is_network').val();
-      data.provider_type = $('#provider_type').val();
-      data.state = $('#state').val();
-      data.component = $('#component').val();
-      data.country = $('#country').val();
-
-      var keys = ['is_network', 'provider_type', 'state', 'component', 'country'];
-      var queryString = ''
-      for(var key of keys) {
-        if(isOk(data[key])) {
-          queryString += `${queryString.length ? "&" : ""}${key}=${encodeURIComponent(data[key])}`
+    {
+      extend: 'excel',
+      filename: 'CIS2_DataProviders.',
+      title: 'CIS2 Data Providers',
+      text: 'Save as Excel',
+      exportOptions: {
+        format: {
+          body: function (data, row, column, node) {
+            var table = $('#providers').DataTable();
+            var columnName = table.column(row).header().textContent.trim();
+            if (columnName === "Is network?") {
+              if (data.indexOf('glyphicon-ok-circle') != -1) {
+                return 'Yes';
+              }
+              else {
+                return 'No';
+              }
+            }
+            if (columnName === "Name") {
+              return $.parseHTML(data)[1].innerHTML;
+            }
+            if (columnName === "Phone" || columnName === "Email") {
+              return $.parseHTML(data)[0].innerHTML;
+            }
+            return data;
+          }
         }
       }
+    },
+  ],
+  "language": {
+    "infoFiltered": "<span class='green-text'>(filtered from _MAX_ total records)<span>",
+  },
+  "stateSave": true,
+  "stateSaveParams": function (_settings, data) {
+    data.is_network = $('#is_network').val();
+    data.provider_type = $('#provider_type').val();
+    data.state = $('#state').val();
+    data.component = $('#component').val();
+    data.country = $('#country').val();
 
-      if(queryString.length) {
-        window.history.pushState({}, '', '?' + queryString);
-      } else {
-        window.history.pushState({}, '', window.location.pathname);
+    var keys = ['is_network', 'provider_type', 'state', 'component', 'country'];
+    var queryString = ''
+    for(var key of keys) {
+      if(isOk(data[key])) {
+        queryString += `${queryString.length ? "&" : ""}${key}=${encodeURIComponent(data[key])}`
       }
-    },
-    "stateLoadParams": function (_settings, data) {
-      Object.keys(filters).forEach(function(key) {
-        data[key] = filters[key]
-      })
+    }
 
-      $('#is_network').val(data.is_network);
-      $('#provider_type').val(data.provider_type);
-      $('#state').val(data.state);
-      $('#component').val();
-      $('#country').val();
-    },
-    "drawCallback": function (_settings) {
-      let info = $(this).closest('.dataTables_wrapper').find('.dataTables_info');
-      info.toggle(this.api().page.info().recordsDisplay > 9);
-    },
-    "columnDefs": [
-      {
-        "render": function (data, _type, _row) {
-          if (data) {
-            return "<span class='glyphicon glyphicon-ok-circle " +
-              "text-success'></span>";
-          }
-          else {
-            return "<span class='glyphicon glyphicon-remove-circle " +
-              "text-danger'></span>";
-          }
-        },
-        "targets": [columnIndex],
-        "bSortable": false
-      }
-    ]
+    if(queryString.length) {
+      window.history.pushState({}, '', '?' + queryString);
+    } else {
+      window.history.pushState({}, '', window.location.pathname);
+    }
+  },
+  "stateLoadParams": function (_settings, data) {
+    Object.keys(filters).forEach(function(key) {
+      data[key] = filters[key]
+    })
+
+    $('#is_network').val(data.is_network);
+    $('#provider_type').val(data.provider_type);
+    $('#state').val(data.state);
+    $('#component').val();
+    $('#country').val();
+  },
+  "drawCallback": function (_settings) {
+    let info = $(this).closest('.dataTables_wrapper').find('.dataTables_info');
+    info.toggle(this.api().page.info().recordsDisplay > 9);
+  },
+  "columnDefs": [
+    {
+      "render": function (data, _type, _row) {
+        if (data) {
+          return "<span class='glyphicon glyphicon-ok-circle " +
+            "text-success'></span>";
+        }
+        else {
+          return "<span class='glyphicon glyphicon-remove-circle " +
+            "text-danger'></span>";
+        }
+      },
+      "targets": [columnIndex],
+      "bSortable": false
+    }
+  ]
   }).fnFilterOnReturn();
 
   $('#is_network,#provider_type,#state,#component,#country').on('change', function (_event) {
