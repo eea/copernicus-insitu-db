@@ -94,7 +94,11 @@ $(document).ready(function () {
               }
             }
             if (columnName === "Name") {
-              return $.parseHTML(data)[1].innerHTML;
+              var index = 0;
+              if ($.parseHTML(data).length > 1) {
+                index = 1
+              }
+              return $.parseHTML(data)[index].innerHTML;
             }
             if (columnName === "Phone" || columnName === "Email") {
               return $.parseHTML(data)[0].innerHTML;
@@ -123,7 +127,11 @@ $(document).ready(function () {
               }
             }
             if (columnName === "Name") {
-              return $.parseHTML(data)[1].innerHTML;
+              var index = 0;
+              if ($.parseHTML(data).length > 1) {
+                index = 1
+              }
+              return $.parseHTML(data)[index].innerHTML;
             }
             if (columnName === "Phone" || columnName === "Email") {
               return $.parseHTML(data)[0].innerHTML;
