@@ -3,6 +3,11 @@ Changelog
 
 * In case of major changes, an email should be sent to all users with the modifications.
 
+3.0.3 (2025-07-28)
+------------------
+[dianaboiangiu]
+* Fix data providers listing export columns
+
 3.0.2 (2025-07-28)
 ------------------
 [dianaboiangiu]
