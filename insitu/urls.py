@@ -216,9 +216,9 @@ reports_patterns = [
         views.UserActionsReportView.as_view(),
         name="user_actions_report",
     ),
+    path("snapshot/", views.SnapshotView.as_view(), name="snapshot"),
     path("<query_id>/", views.ReportsDetailView.as_view(), name="detail"),
     path("<query_id>/json/", views.ReportDataJsonView.as_view(), name="json"),
-    path("snapshot/", views.SnapshotView.as_view(), name="snapshot"),
     path(
         "<query_id>/download/",
         views.DownloadReportsView.as_view(),
