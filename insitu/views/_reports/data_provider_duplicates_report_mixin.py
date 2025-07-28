@@ -46,6 +46,16 @@ class DataProviderDuplicatesReportMixin(BaseExcelMixin):
             }
         )
 
+    def check_providers_have_different_edmo(self, dp1, dp2):
+        """
+        Check if two data providers have the same EDMO code.
+        Returns True only if both providers have an EDMO code and they are different.
+        If one or both providers do not have an EDMO code, returns False.
+        """
+        if dp1.edmo and dp2.edmo:
+            return dp1.edmo != dp2.edmo
+        return False
+
     def generate_worksheets(self, workbook, data=None):
         worksheet = workbook.add_worksheet("")
         worksheet.set_column("A1:A1", 30)
@@ -91,6 +101,7 @@ class DataProviderDuplicatesReportMixin(BaseExcelMixin):
                 dp2
                 for dp2 in data_providers
                 if dp.id != dp2.id
+                and not self.check_providers_have_different_edmo(dp, dp2)
                 and (
                     distance(dp.name, dp2.name) <= 2
                     or (dp.website != "" and distance(dp.website, dp2.website) < 2)

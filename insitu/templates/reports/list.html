@@ -8,7 +8,7 @@
   <div class="row">
     <h1 class="col-sm-12">
       <span>Reports</span>
-      {% if not user|has_group:READ_ONLY_GROUP and user.is_authenticated %}
+      {% if not user|has_group:READ_ONLY_GROUP and user.is_authenticated and DEBUG %}
         <span class="pull-right">
           <a class="btn btn-primary pull-right margin-left-5" href="{% url 'reports:snapshot' %}">Download database</a>
         </span>
