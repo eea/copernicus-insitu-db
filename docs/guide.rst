@@ -456,12 +456,6 @@ is available in *Figure 17* .
 
     *Reports list page*
 
------------------
-Database download
------------------
-A database dump can be downloaded from the Reports' list page by clicking on the "Database download" button.
-This dump can than be used to manipulate the data with specialized tools.
-
 ------------------
 Report detail page
 ------------------
