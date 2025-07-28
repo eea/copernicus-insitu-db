@@ -3,6 +3,11 @@ Changelog
 
 * In case of major changes, an email should be sent to all users with the modifications.
 
+3.0.2 (2025-07-28)
+------------------
+[dianaboiangiu]
+* Improve providers duplicates detection by excluding potential duplicates with different EDMO codes
+
 3.0.1 (2025-07-14)
 ------------------
 [dianaboiangiu]
