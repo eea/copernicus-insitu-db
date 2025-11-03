@@ -36,10 +36,15 @@ class EntriesStateReportExcelMixin(BaseExcelMixin):
         worksheet.set_column("C1:C1", 35)
         worksheet.set_column("D1:D1", 35)
         worksheet.set_column("E1:E1", 35)
+        worksheet.set_column("F1:F1", 20)
+        worksheet.set_column("G1:G1", 50)
+
         headers = [
             "UID",
             "Name",
             "State",
+            "Created by",
+            "Owner",
             "Last updated",
             "URL",
         ]
@@ -49,6 +54,8 @@ class EntriesStateReportExcelMixin(BaseExcelMixin):
                 entry.id,
                 entry.name,
                 getattr(entry, "state", ""),
+                str(getattr(entry, "created_by", "")),
+                str(getattr(entry, "owner", "")),
                 getattr(entry, "updated_at", "").strftime("%Y-%m-%d %H:%M:%S"),
                 self.request.build_absolute_uri(entry.get_detail_link()),
             ]
