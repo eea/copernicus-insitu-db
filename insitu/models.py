@@ -526,7 +526,7 @@ class DataProvider(OwnerHistoryModel, ValidationWorkflowModel, SoftDeleteModel):
     def get_elastic_search_data(self):
         data = dict()
         details = self.details.first()
-        for field in ["acronym", "address", "phone", "email", "contact_person"]:
+        for field in ["acronym", "address", "phone", "email"]:
             data[field] = getattr(details, field) if details else "-"
         data["provider_type"] = (
             getattr(details, "provider_type").name if details else "-"

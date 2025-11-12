@@ -36,7 +36,6 @@ class DataProviderTests(base.FormCheckTestCase):
             "address",
             "phone",
             "email",
-            "contact_person",
             "provider_type",
             "data_provider",
         ]
@@ -50,7 +49,6 @@ class DataProviderTests(base.FormCheckTestCase):
             "address": "test address",
             "phone": "test phone",
             "email": "test@email.com",
-            "contact_person": "test person",
             "provider_type": provider_type.pk,
         }
         self.creator = base.UserFactory(username="New user 1")

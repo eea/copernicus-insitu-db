@@ -321,7 +321,6 @@ class DataProviderDoc(Document):
     address = fields.KeywordField(attr="get_elastic_search_data.address")
     phone = fields.KeywordField(attr="get_elastic_search_data.phone")
     email = fields.KeywordField(attr="get_elastic_search_data.email")
-    contact_person = fields.KeywordField(attr="get_elastic_search_data.contact_person")
     provider_type = fields.KeywordField(attr="get_elastic_search_data.provider_type")
     state = fields.KeywordField(attr="state")
     countries = fields.ObjectField(

@@ -50,8 +50,6 @@
 
     {% bootstrap_field details.email %}
 
-    {% bootstrap_field details.contact_person %}
-
     {% bootstrap_field form.is_network %}
     <input class="btn btn-primary" type="submit" value="Save" />
     <a href="{% url 'provider:detail' provider.pk %}"

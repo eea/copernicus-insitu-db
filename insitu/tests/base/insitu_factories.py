@@ -132,7 +132,6 @@ class DataProviderDetailsFactory(DjangoModelFactory):
     address = "test address"
     phone = "test phone"
     email = "test email"
-    contact_person = "test contact"
     provider_type = SubFactory(factories.ProviderTypeFactory)
     data_provider = SubFactory(DataProviderFactory)
 
