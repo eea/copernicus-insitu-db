@@ -564,7 +564,6 @@ class DataProviderDetailsForm(CreatedByFormMixin, forms.ModelForm):
             "address",
             "phone",
             "email",
-            "contact_person",
             "provider_type",
             "data_provider",
         ]

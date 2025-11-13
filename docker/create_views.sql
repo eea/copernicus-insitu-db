@@ -160,7 +160,6 @@ CREATE VIEW insitu_dataprovider_without_networks_view as
            dpd.address AS "data_provider_address",
            dpd.phone AS "data_provider_phone",
            dpd.email AS "data_provider_email",
-           dpd.contact_person AS "data_provider_contact_person",
            pt.name AS "data_provider_type",
            dp.state AS "data_provider_state"
     FROM insitu_dataprovider dp
@@ -179,7 +178,6 @@ CREATE VIEW insitu_dataprovider_view as
            dpd.address AS "data_provider_address",
            dpd.phone AS "data_provider_phone",
            dpd.email AS "data_provider_email",
-           dpd.contact_person AS "data_provider_contact_person",
            pt.name AS "data_provider_type",
            c.name AS "data_provider_country",
            dpnetwork.name AS "data_provider_network_name",
