@@ -3,6 +3,12 @@ Changelog
 
 * In case of major changes, an email should be sent to all users with the modifications.
 
+3.0.4 (2025-11-13)
+------------------
+* Add Owner/Created by columns on Entries State Report
+* Removal of contact person field
+[dianaboiangiu]
+
 3.0.3 (2025-07-28)
 ------------------
 [dianaboiangiu]
