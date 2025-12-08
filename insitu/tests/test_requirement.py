@@ -407,6 +407,10 @@ class RequirementTests(base.FormCheckTestCase):
             for item in items:
                 self.assertEqual(getattr(item, "state"), transition["source"])
             self.client.force_login(transition["user"])
+            request_data = {}
+            if transition["transition"] == "request_changes":
+                request_data["feedback"] = "this is a feedback test"
+
             response = self.client.post(
                 reverse(
                     "requirement:transition",
@@ -416,7 +420,8 @@ class RequirementTests(base.FormCheckTestCase):
                         "transition": transition["transition"],
                         "pk": requirement.pk,
                     },
-                )
+                ),
+                data=request_data,
             )
             self.assertRedirects(
                 response, reverse("requirement:detail", kwargs={"pk": requirement.pk})

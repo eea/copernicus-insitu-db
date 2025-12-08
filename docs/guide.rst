@@ -383,17 +383,18 @@ or one of their teammates can mark as ready the object.
 
 **Ready for validation**
 
-In this state the object and its relations cannot be edited. A user different from the owner or their teammates can either
-mark as valid the object and end the workflow or request changes if that user considers that there is missing information.
+In this state the object and its relations cannot be edited. A user different from the owner or their teammates can 
+mark as valid the object and end the workflow. All users can request changes if that user considers that
+there is missing information (including the owner).
 
 **Changes requested**
 
 In this state the object and its relations cannot be edited. The owner or one of their teammates can get the object back
 to the draft state.
 
-When an object's state is changed into "changes requested", the user requesting the changes can complete a feedback field in which they
-inform the owner of the object about the changes that should be made (*Figure 15*). The owner receives an e-mail
-that their object has requests for changes, the user that made those requests and what changes the user requested (from the feedback field).
+When an object's state is changed into "changes requested", the user requesting the changes has to complete a feedback field in which they
+inform the owner of the object about the changes that should be made (*Figure 15*). The owner and their teammates receive an e-mail
+informing them that the object has requests for changes, the user that made those requests and what changes the user requested (from the feedback field).
 The users in the application can see this feedback when the object is in state "Changes requested" or "Draft" on the detail page of the object
 (*Figure 16*) . This feedback can be cleared by the owner or their teammates if the object is an editable state.
 

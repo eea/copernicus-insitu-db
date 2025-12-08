@@ -213,7 +213,7 @@
                     Mark as valid
                   </a>
                 {% endif %}
-                {% if data.created_by != request.user and request.user not in data.created_by.team.teammates.all and not user_perm  and not user|has_group:DATA_DATA_PROVIDER_EDITOR_GROUP %}
+                {% if data.created_by != request.user %}
                   <a class="btn btn-primary" href="{% url 'data:transition' pk=data.pk source='ready' target='changes' transition='request_changes' %}">
                     Request changes
                   </a>

@@ -495,6 +495,9 @@ class DataProviderTests(base.FormCheckTestCase):
             for item in items:
                 self.assertEqual(getattr(item, "state"), transition["source"])
             self.client.force_login(transition["user"])
+            request_data = {}
+            if transition["transition"] == "request_changes":
+                request_data["feedback"] = "this is a feedback test"
             response = self.client.post(
                 reverse(
                     "provider:transition",
@@ -504,7 +507,8 @@ class DataProviderTests(base.FormCheckTestCase):
                         "transition": transition["transition"],
                         "pk": provider.pk,
                     },
-                )
+                ),
+                data=request_data,
             )
             self.assertRedirects(
                 response, reverse("provider:detail", kwargs={"pk": provider.pk})
@@ -927,6 +931,9 @@ class DataProviderTests(base.FormCheckTestCase):
             for item in items:
                 self.assertEqual(getattr(item, "state"), transition["source"])
             self.client.force_login(transition["user"])
+            request_data = {}
+            if transition["transition"] == "request_changes":
+                request_data["feedback"] = "this is a feedback test"
             response = self.client.post(
                 reverse(
                     "provider:transition",
@@ -936,7 +943,8 @@ class DataProviderTests(base.FormCheckTestCase):
                         "transition": transition["transition"],
                         "pk": provider.pk,
                     },
-                )
+                ),
+                data=request_data,
             )
             self.assertRedirects(
                 response, reverse("provider:detail", kwargs={"pk": provider.pk})
