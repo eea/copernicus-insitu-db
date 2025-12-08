@@ -420,12 +420,10 @@ class DataTests(base.FormCheckTestCase):
         provider = base.DataProviderFactory(
             name="Test provider", created_by=self.creator
         )
-        data_provider = base.DataProviderRelationFactory(
+        base.DataProviderRelationFactory(
             data=data, created_by=self.creator, provider=provider
         )
-        items = [data, data_provider]
-        for item in items:
-            self.assertEqual(getattr(item, "state"), "draft")
+        self.assertEqual(getattr(data, "state"), "draft")
 
         transitions = [
             {
@@ -479,8 +477,7 @@ class DataTests(base.FormCheckTestCase):
         ]
 
         for idx, transition in enumerate(transitions):
-            for item in items:
-                self.assertEqual(getattr(item, "state"), transition["source"])
+            self.assertEqual(getattr(data, "state"), transition["source"])
             self.client.force_login(transition["user"])
             request_data = {}
             if transition["transition"] == "request_changes":
@@ -500,13 +497,12 @@ class DataTests(base.FormCheckTestCase):
             self.assertRedirects(
                 response, reverse("data:detail", kwargs={"pk": data.pk})
             )
-            for item in items:
-                getattr(item, "refresh_from_db")()
-                self.assertEqual(getattr(item, "state"), transition["target"])
+            getattr(data, "refresh_from_db")()
+            self.assertEqual(getattr(data, "state"), transition["target"])
+
             if transition["target"] == "valid":
-                for item in items:
-                    item.state = transition["source"]
-                    item.save()
+                data.state = transition["source"]
+                data.save()
             self.check_logged_action(
                 "changed state from {source} to {target} for".format(
                     source=transition["source"], target=transition["target"]
@@ -523,13 +519,11 @@ class DataTests(base.FormCheckTestCase):
         provider = base.DataProviderFactory(
             name="Test provider", created_by=self.creator
         )
-        data_provider = base.DataProviderRelationFactory(
+        base.DataProviderRelationFactory(
             data=data, created_by=self.creator, provider=provider
         )
+        self.assertEqual(getattr(data, "state"), "draft")
 
-        items = [data, data_provider]
-        for item in items:
-            self.assertEqual(getattr(item, "state"), "draft")
         self.client.force_login(self.creator)
         response = self.client.get(
             reverse(
@@ -550,10 +544,9 @@ class DataTests(base.FormCheckTestCase):
         provider = base.DataProviderFactory(
             name="Test provider", created_by=self.creator
         )
-        data_provider = base.DataProviderRelationFactory(
+        base.DataProviderRelationFactory(
             data=data, created_by=self.creator, provider=provider
         )
-        items = [data, data_provider]
 
         response = self.client.post(
             reverse(
@@ -568,9 +561,8 @@ class DataTests(base.FormCheckTestCase):
         )
         self.assertEqual(response.status_code, 404)
 
-        for item in items:
-            getattr(item, "refresh_from_db")()
-            self.assertEqual(getattr(item, "state"), "draft")
+        getattr(data, "refresh_from_db")()
+        self.assertEqual(getattr(data, "state"), "draft")
 
     def test_transition_existent_state_no_transition(self):
         self.login_creator()
@@ -581,8 +573,6 @@ class DataTests(base.FormCheckTestCase):
         base.DataProviderRelationFactory(
             data=data, created_by=self.creator, provider=provider
         )
-
-        items = [data, provider]
 
         response = self.client.post(
             reverse(
@@ -597,9 +587,8 @@ class DataTests(base.FormCheckTestCase):
         )
         self.assertEqual(response.status_code, 404)
 
-        for item in items:
-            getattr(item, "refresh_from_db")()
-            self.assertEqual(getattr(item, "state"), "draft")
+        getattr(data, "refresh_from_db")()
+        self.assertEqual(getattr(data, "state"), "draft")
 
     def test_transition_changes_requested_feedback(self):
         self.erase_logging_file()
@@ -610,12 +599,10 @@ class DataTests(base.FormCheckTestCase):
         provider = base.DataProviderFactory(
             name="Test provider", created_by=self.creator
         )
-        data_provider = base.DataProviderRelationFactory(
-            data=data, state="ready", created_by=self.creator, provider=provider
+        base.DataProviderRelationFactory(
+            data=data, created_by=self.creator, provider=provider
         )
-        items = [data, data_provider]
-        for item in items:
-            self.assertEqual(getattr(item, "state"), "ready")
+        self.assertEqual(getattr(data, "state"), "ready")
 
         self.client.force_login(self.other_user)
         self.client.post(

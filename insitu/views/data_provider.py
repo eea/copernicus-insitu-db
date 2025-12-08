@@ -417,15 +417,10 @@ class DataProviderTransition(
                 raise Http404()
         except AttributeError:
             raise Http404()
-        objects = [
-            {"obj": item, "type": item.__class__.__name__}
-            for item in self.object.get_related_objects()
-        ]
         context.update(
             {
                 "target": target,
                 "source": source,
-                "objects": objects,
             }
         )
         return context

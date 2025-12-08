@@ -213,11 +213,10 @@
                     Mark as valid
                   </a>
                 {% endif %}
-                {% if data.created_by != request.user %}
-                  <a class="btn btn-primary" href="{% url 'data:transition' pk=data.pk source='ready' target='changes' transition='request_changes' %}">
-                    Request changes
-                  </a>
-                {% elif data.created_by == request.user or request.user in data.created_by.team.teammates.all or user_perm or user|has_group:DATA_DATA_PROVIDER_EDITOR_GROUP %}
+                <a class="btn btn-primary" href="{% url 'data:transition' pk=data.pk source='ready' target='changes' transition='request_changes' %}">
+                  Request changes
+                </a>
+                {% if data.created_by == request.user or request.user in data.created_by.team.teammates.all or user_perm or user|has_group:DATA_DATA_PROVIDER_EDITOR_GROUP %}
                   <a class="btn btn-primary" href="{% url 'data:transition' pk=data.pk source='ready' target='draft' transition='cancel' %}">
                     Move back to draft
                   </a>

@@ -74,7 +74,7 @@ class RequirementFactory(DjangoModelFactory):
     essential_variables = RelatedFactory(factories.EssentialVariableFactory)
 
     @staticmethod
-    def create_metrics(creator, state="draft"):
+    def create_metrics(creator):
         data = {
             "uncertainty": MetricFactory(created_by=creator),
             "update_frequency": MetricFactory(created_by=creator),

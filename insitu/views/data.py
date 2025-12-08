@@ -365,15 +365,10 @@ class DataTransition(ChangesRequestedMailMixin, LoggingTransitionProtectedDetail
                 raise Http404()
         except AttributeError:
             raise Http404()
-        objects = [
-            {"obj": item, "type": item.__class__.__name__}
-            for item in self.object.get_related_objects()
-        ]
         context.update(
             {
                 "target": target,
                 "source": source,
-                "objects": objects,
             }
         )
         return context
@@ -418,7 +413,6 @@ class DataTransition(ChangesRequestedMailMixin, LoggingTransitionProtectedDetail
             feedback = request.POST.get("feedback", "")
             self.send_mail(data, data.name, feedback)
         return HttpResponseRedirect(reverse("data:detail", kwargs={"pk": data.pk}))
-        raise Http404()
 
 
 class DataClearFeedback(LoggingProtectedCreateView):

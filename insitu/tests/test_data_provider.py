@@ -433,12 +433,10 @@ class DataProviderTests(base.FormCheckTestCase):
         provider = base.DataProviderFactory(
             is_network=True, name="Test provider", created_by=self.creator
         )
-        provider_details = base.DataProviderDetailsFactory(
+        base.DataProviderDetailsFactory(
             data_provider=provider, created_by=self.creator
         )
-        items = [provider, provider_details]
-        for item in items:
-            self.assertEqual((getattr(item, "state")), "draft")
+        self.assertEqual((getattr(provider, "state")), "draft")
 
         transitions = [
             {
@@ -492,8 +490,7 @@ class DataProviderTests(base.FormCheckTestCase):
         ]
 
         for idx, transition in enumerate(transitions):
-            for item in items:
-                self.assertEqual(getattr(item, "state"), transition["source"])
+            self.assertEqual(getattr(provider, "state"), transition["source"])
             self.client.force_login(transition["user"])
             request_data = {}
             if transition["transition"] == "request_changes":
@@ -513,13 +510,13 @@ class DataProviderTests(base.FormCheckTestCase):
             self.assertRedirects(
                 response, reverse("provider:detail", kwargs={"pk": provider.pk})
             )
-            for item in items:
-                getattr(item, "refresh_from_db")()
-                self.assertEqual((getattr(item, "state")), transition["target"])
+            getattr(provider, "refresh_from_db")()
+            self.assertEqual((getattr(provider, "state")), transition["target"])
+
             if transition["target"] == "valid":
-                for item in items:
-                    item.state = transition["source"]
-                    item.save()
+                provider.state = transition["source"]
+                provider.save()
+
             self.check_logged_action(
                 "changed state from {source} to {target} for".format(
                     source=transition["source"], target=transition["target"]
@@ -535,12 +532,12 @@ class DataProviderTests(base.FormCheckTestCase):
         provider = base.DataProviderFactory(
             is_network=True, name="Test provider", created_by=self.creator
         )
-        provider_details = base.DataProviderDetailsFactory(
+        base.DataProviderDetailsFactory(
             data_provider=provider, created_by=self.creator
         )
-        items = [provider, provider_details]
-        for item in items:
-            self.assertEqual(getattr(item, "state"), "draft")
+
+        self.assertEqual(getattr(provider, "state"), "draft")
+
         self.client.force_login(self.creator)
         response = self.client.get(
             reverse(
@@ -560,10 +557,9 @@ class DataProviderTests(base.FormCheckTestCase):
         provider = base.DataProviderFactory(
             is_network=True, name="Test provider", created_by=self.creator
         )
-        provider_details = base.DataProviderDetailsFactory(
+        base.DataProviderDetailsFactory(
             data_provider=provider, created_by=self.creator
         )
-        items = [provider, provider_details]
         response = self.client.post(
             reverse(
                 "provider:transition",
@@ -577,19 +573,17 @@ class DataProviderTests(base.FormCheckTestCase):
         )
         self.assertEqual(response.status_code, 404)
 
-        for item in items:
-            getattr(item, "refresh_from_db")()
-            self.assertEqual(getattr(item, "state"), "draft")
+        getattr(provider, "refresh_from_db")()
+        self.assertEqual(getattr(provider, "state"), "draft")
 
     def test_transition_existent_state_no_transition(self):
         self.login_creator()
         provider = base.DataProviderFactory(
             is_network=True, name="Test provider", created_by=self.creator
         )
-        provider_details = base.DataProviderDetailsFactory(
+        base.DataProviderDetailsFactory(
             data_provider=provider, created_by=self.creator
         )
-        items = [provider, provider_details]
         response = self.client.post(
             reverse(
                 "provider:transition",
@@ -603,9 +597,8 @@ class DataProviderTests(base.FormCheckTestCase):
         )
         self.assertEqual(response.status_code, 404)
 
-        for item in items:
-            getattr(item, "refresh_from_db")()
-            self.assertEqual(getattr(item, "state"), "draft")
+        getattr(provider, "refresh_from_db")()
+        self.assertEqual(getattr(provider, "state"), "draft")
 
     def test_transition_changes_requested_feedback(self):
         self.erase_logging_file()
@@ -616,12 +609,10 @@ class DataProviderTests(base.FormCheckTestCase):
             name="Test provider",
             created_by=self.creator,
         )
-        provider_details = base.DataProviderDetailsFactory(
-            data_provider=provider, state="ready", created_by=self.creator
+        base.DataProviderDetailsFactory(
+            data_provider=provider, created_by=self.creator
         )
-        items = [provider, provider_details]
-        for item in items:
-            self.assertEqual(getattr(item, "state"), "ready")
+        self.assertEqual(getattr(provider, "state"), "ready")
 
         self.client.force_login(self.other_user)
         self.client.post(
@@ -875,12 +866,10 @@ class DataProviderTests(base.FormCheckTestCase):
         provider = base.DataProviderFactory(
             is_network=False, name="Test provider", created_by=self.creator
         )
-        provider_details = base.DataProviderDetailsFactory(
+        base.DataProviderDetailsFactory(
             data_provider=provider, created_by=self.creator
         )
-        items = [provider, provider_details]
-        for item in items:
-            self.assertEqual(getattr(item, "state"), "draft")
+        self.assertEqual(getattr(provider, "state"), "draft")
 
         transitions = [
             {
@@ -928,8 +917,7 @@ class DataProviderTests(base.FormCheckTestCase):
         ]
 
         for idx, transition in enumerate(transitions):
-            for item in items:
-                self.assertEqual(getattr(item, "state"), transition["source"])
+            self.assertEqual(getattr(provider, "state"), transition["source"])
             self.client.force_login(transition["user"])
             request_data = {}
             if transition["transition"] == "request_changes":
@@ -949,9 +937,9 @@ class DataProviderTests(base.FormCheckTestCase):
             self.assertRedirects(
                 response, reverse("provider:detail", kwargs={"pk": provider.pk})
             )
-            for item in items:
-                getattr(item, "refresh_from_db")()
-                self.assertEqual(getattr(item, "state"), transition["target"])
+
+            getattr(provider, "refresh_from_db")()
+            self.assertEqual(getattr(provider, "state"), transition["target"])
             self.check_logged_action(
                 "changed state from {source} to {target} for".format(
                     source=transition["source"], target=transition["target"]
@@ -970,9 +958,7 @@ class DataProviderTests(base.FormCheckTestCase):
         provider_details = base.DataProviderDetailsFactory(
             data_provider=provider, created_by=self.creator
         )
-        items = [provider, provider_details]
-        for item in items:
-            self.assertEqual(getattr(item, "state"), "draft")
+        self.assertEqual(getattr(provider, "state"), "draft")
         self.client.force_login(self.creator)
         response = self.client.get(
             reverse(
@@ -992,10 +978,9 @@ class DataProviderTests(base.FormCheckTestCase):
         provider = base.DataProviderFactory(
             is_network=False, name="Test provider", created_by=self.creator
         )
-        provider_details = base.DataProviderDetailsFactory(
+        base.DataProviderDetailsFactory(
             data_provider=provider, created_by=self.creator
         )
-        items = [provider, provider_details]
         response = self.client.post(
             reverse(
                 "provider:transition",
@@ -1009,19 +994,17 @@ class DataProviderTests(base.FormCheckTestCase):
         )
         self.assertEqual(response.status_code, 404)
 
-        for item in items:
-            getattr(item, "refresh_from_db")()
-            self.assertEqual(getattr(item, "state"), "draft")
+        getattr(provider, "refresh_from_db")()
+        self.assertEqual(getattr(provider, "state"), "draft")
 
     def test_transition_existent_state_no_transition_non_network(self):
         self.login_creator()
         provider = base.DataProviderFactory(
             is_network=False, name="Test provider", created_by=self.creator
         )
-        provider_details = base.DataProviderDetailsFactory(
+        base.DataProviderDetailsFactory(
             data_provider=provider, created_by=self.creator
         )
-        items = [provider, provider_details]
         response = self.client.post(
             reverse(
                 "provider:transition",
@@ -1034,10 +1017,8 @@ class DataProviderTests(base.FormCheckTestCase):
             )
         )
         self.assertEqual(response.status_code, 404)
-
-        for item in items:
-            getattr(item, "refresh_from_db")()
-            self.assertEqual(getattr(item, "state"), "draft")
+        getattr(provider, "refresh_from_db")()
+        self.assertEqual(getattr(provider, "state"), "draft")
 
 
 class DataProviderPermissionsTests(base.PermissionsCheckTestCase):

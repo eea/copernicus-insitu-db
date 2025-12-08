@@ -6,7 +6,6 @@ from django.contrib import messages
 from insitu.views.base import CreatedByMixin
 from insitu.views.protected import (
     IsAuthenticated,
-    IsDraftObject,
     IsNotReadOnlyUser,
     IsDataProviderAndDataEditorUser,
 )
@@ -63,7 +62,6 @@ class DataDataProviderEdit(LoggingProtectedUpdateView):
     context_object_name = "rel"
     permission_classes = (
         IsDataProviderAndDataEditorUser,
-        IsDraftObject,
         IsNotReadOnlyUser,
     )
     permission_denied_redirect = reverse_lazy("data:list")
@@ -92,7 +90,6 @@ class DataDataProviderDelete(LoggingProtectedDeleteView):
     context_object_name = "rel"
     permission_classes = (
         IsDataProviderAndDataEditorUser,
-        IsDraftObject,
         IsNotReadOnlyUser,
     )
     permission_denied_redirect = reverse_lazy("data:list")

@@ -10,6 +10,7 @@
     <h1 class="col-sm-12">{{ requirement }}</h1>
     <h3 class="col-sm-12 text-muted">Mark requirement as {{ target }}</h3>
   </div>
+  {% if objects %}
   <div class="row">
     <div class="col-sm-12">
       <span class="glyphicon glyphicon-warning-sign text-danger"></span>
@@ -28,6 +29,7 @@
       {% endfor %}
     </ul>
   </div>
+  {% endif %}
   <div class="row">
     <form method="POST">
       {% csrf_token %}

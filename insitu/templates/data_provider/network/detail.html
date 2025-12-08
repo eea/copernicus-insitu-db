@@ -15,6 +15,7 @@
 {% endblock %}
 
 {% block content %}
+  {% has_user_perm provider user as user_perm %}
   <div class="row">
     <span class="margin-left-btn">
       <a class="btn btn-default btn-sm" href="{% url 'provider:list' %}">Back to data provider list</a>
@@ -153,7 +154,7 @@
           {% if not user_groups|check_group:READ_ONLY_GROUP and user.is_authenticated %}
             <div class="pull-right">
               {% if provider.state == 'draft' %}
-                {% if provider.created_by == request.user or request.user in provider.created_by.team.teammates.all or user|has_group:DATA_DATA_PROVIDER_EDITOR_GROUP %}
+                {% if provider.created_by == request.user or request.user in provider.created_by.team.teammates.all or user_perm or user|has_group:DATA_DATA_PROVIDER_EDITOR_GROUP %}
                   <a class="btn btn-primary"
                      href="{% url 'provider:transition' pk=provider.pk source='draft' target='ready' transition='mark_as_ready' %}">
                     Mark as ready
@@ -161,7 +162,7 @@
                 {% endif %}
               {% endif %}
               {% if provider.state == 'ready' %}
-                {% if request.user not in provider.created_by.team.teammates.all %}
+                {% if request.user not in provider.created_by.team.teammates.all or user_perm %}
                   <a class="btn btn-primary"
                      href="{% url 'provider:transition' pk=provider.pk source='ready' target='valid' transition='validate' %}">
                     Mark as valid
@@ -171,7 +172,7 @@
                     href="{% url 'provider:transition' pk=provider.pk source='ready' target='changes' transition='request_changes' %}">
                   Request changes
                 </a>
-                {% if provider.created_by == request.user or request.user in provider.created_by.team.teammates.all or user|has_group:DATA_DATA_PROVIDER_EDITOR_GROUP %}
+                {% if provider.created_by == request.user or request.user in provider.created_by.team.teammates.all or user_perm or user|has_group:DATA_DATA_PROVIDER_EDITOR_GROUP %}
                   <a class="btn btn-primary"
                      href="{% url 'provider:transition' pk=provider.pk source='ready' target='draft' transition='cancel' %}">
                     Move back to draft
@@ -179,7 +180,7 @@
                 {% endif %}
               {% endif %}
               {% if provider.state == 'changes' %}
-                {% if provider.created_by == request.user or request.user in provider.created_by.team.teammates.all or user|has_group:DATA_DATA_PROVIDER_EDITOR_GROUP %}
+                {% if provider.created_by == request.user or request.user in provider.created_by.team.teammates.all or user_perm or user|has_group:DATA_DATA_PROVIDER_EDITOR_GROUP %}
                   <a class="btn btn-primary"
                      href="{% url 'provider:transition' pk=provider.pk source='changes' target='draft' transition='make_changes' %}">
                     Implement feedback
@@ -187,7 +188,7 @@
                 {% endif %}
               {% endif %}
               {% if provider.state == 'valid' %}
-                {% if provider.created_by == request.user or request.user in provider.created_by.team.teammates.all or user|has_group:DATA_DATA_PROVIDER_EDITOR_GROUP %}
+                {% if provider.created_by == request.user or request.user in provider.created_by.team.teammates.all or user_perm or user|has_group:DATA_DATA_PROVIDER_EDITOR_GROUP %}
                   <a class="btn btn-primary" href="{% url 'provider:transition' pk=provider.pk source='valid' target='draft' transition='revalidate' %}">
                     Move back to draft
                   </a>
@@ -200,7 +201,7 @@
                   <h5>Feedback:</h5>
                   {{ provider.feedback|linebreaksbr }}
                 </div>
-                {% if provider.created_by == request.user or request.user in provider.created_by.team.teammates.all or user|has_group:DATA_DATA_PROVIDER_EDITOR_GROUP %}
+                {% if provider.created_by == request.user or request.user in provider.created_by.team.teammates.all or user_perm or user|has_group:DATA_DATA_PROVIDER_EDITOR_GROUP %}
                   <form method="POST" action="{% url 'provider:clear_feedback' provider.pk %}">
                     {% csrf_token %}
                     <button class="btn btn-primary" type="submit">
