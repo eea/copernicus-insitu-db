@@ -445,6 +445,22 @@ class DataProviderTransition(
                 raise Http404()
         except AttributeError:
             raise Http404()
+        if transition_name == "request_changes":
+            if not request.POST.get("feedback", ""):
+                messages.error(
+                    request, "Feedback is required when requesting changes."
+                )
+                return HttpResponseRedirect(
+                    reverse(
+                        "provider:transition",
+                        kwargs={
+                            "pk": data_provider.pk,
+                            "source": source,
+                            "target": target,
+                            "transition": transition_name,
+                        },
+                    )
+                )
         self.post_action = "changed state from {source} to {target} for".format(
             source=source, target=target
         )

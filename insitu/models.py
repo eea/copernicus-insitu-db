@@ -364,9 +364,7 @@ class Requirement(OwnerHistoryModel, ValidationWorkflowModel, SoftDeleteModel):
             obj.cancel()
             obj.save()
 
-    @transition(
-        field="state", source="ready", target="changes", permission=check_other_user
-    )
+    @transition(field="state", source="ready", target="changes")
     def request_changes(self):
         for obj in self.get_related_objects():
             if obj.state == "changes":
@@ -584,9 +582,7 @@ class DataProvider(OwnerHistoryModel, ValidationWorkflowModel, SoftDeleteModel):
             obj.cancel()
             obj.save()
 
-    @transition(
-        field="state", source="ready", target="changes", permission=check_other_user
-    )
+    @transition(field="state", source="ready", target="changes")
     def request_changes(self):
         for obj in self.get_related_objects():
             if obj.state == "changes":
@@ -803,9 +799,7 @@ class Data(OwnerHistoryModel, ValidationWorkflowModel, SoftDeleteModel):
             obj.cancel()
             obj.save()
 
-    @transition(
-        field="state", source="ready", target="changes", permission=check_other_user
-    )
+    @transition(field="state", source="ready", target="changes")
     def request_changes(self):
         for obj in self.get_related_objects():
             if obj.state == "changes":
