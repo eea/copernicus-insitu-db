@@ -146,7 +146,7 @@ class RequirementDoc(Document):
         },
     )
 
-    note = fields.TextField()
+    description = fields.TextField()
 
     class Django:
         model = Requirement
@@ -229,7 +229,7 @@ class DataDoc(Document):
     )
     state = fields.KeywordField(attr="state")
     status = fields.KeywordField(attr="status.name")
-    note = fields.TextField()
+    description = fields.TextField()
 
     components = fields.ObjectField(
         attr="components",

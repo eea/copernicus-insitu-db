@@ -60,7 +60,7 @@ class ComponentFactory(DjangoModelFactory):
 
 class RequirementFactory(DjangoModelFactory):
     name = "Test requirement"
-    note = "Test note"
+    description = "Test description"
     owner = "Test owner"
     dissemination = SubFactory(factories.DisseminationFactory)
     quality_control_procedure = SubFactory(factories.QualityControlProcedureFactory)
@@ -74,7 +74,7 @@ class RequirementFactory(DjangoModelFactory):
     essential_variables = RelatedFactory(factories.EssentialVariableFactory)
 
     @staticmethod
-    def create_metrics(creator, state="draft"):
+    def create_metrics(creator):
         data = {
             "uncertainty": MetricFactory(created_by=creator),
             "update_frequency": MetricFactory(created_by=creator),

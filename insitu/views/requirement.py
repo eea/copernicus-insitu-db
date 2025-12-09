@@ -53,7 +53,7 @@ class GetInitialMixin:
         initial_data = super().get_initial()
         for field in [
             "name",
-            "note",
+            "description",
             "dissemination",
             "owner",
             "quality_control_procedure",
@@ -307,15 +307,10 @@ class RequirementTransition(
                 raise Http404()
         except AttributeError:
             raise Http404()
-        objects = [
-            {"obj": item, "type": item.__class__.__name__}
-            for item in self.object.get_related_objects()
-        ]
         context.update(
             {
                 "target": target,
                 "source": source,
-                "objects": objects,
             }
         )
         return context
@@ -370,7 +365,6 @@ class RequirementTransition(
         return HttpResponseRedirect(
             reverse("requirement:detail", kwargs={"pk": requirement.pk})
         )
-        raise Http404()
 
 
 class RequirementClearFeedback(LoggingProtectedCreateView):

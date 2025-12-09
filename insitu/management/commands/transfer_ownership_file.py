@@ -3,9 +3,7 @@ from insitu.models import Data, DataProvider, Requirement, User
 
 
 class Command(BaseCommand):
-    help = (
-        "Use in case the relation state gets out of sync from the requirement state."
-    )
+    help = "Transfer ownership of objects listed in a file to a new user."
 
     def add_arguments(self, parser):
         parser.add_argument("object_type", type=str)

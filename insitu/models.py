@@ -203,7 +203,7 @@ class ValidationWorkflowModel(models.Model):
 
 class Team(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="team")
-    teammates = models.ManyToManyField(User, related_name="teams")
+    teammates = models.ManyToManyField(User, related_name="teams", blank=True)
     requests = models.ManyToManyField(User, related_name="requests", blank=True)
 
 
@@ -272,7 +272,7 @@ class Requirement(OwnerHistoryModel, ValidationWorkflowModel, SoftDeleteModel):
     elastic_delete_signal = signals.requirement_deleted
 
     name = models.CharField(max_length=100)
-    note = models.TextField(blank=True)
+    description = models.TextField(blank=True)
     dissemination = models.ForeignKey(
         pickmodels.Dissemination, on_delete=models.CASCADE, related_name="+"
     )
@@ -337,63 +337,25 @@ class Requirement(OwnerHistoryModel, ValidationWorkflowModel, SoftDeleteModel):
         field="state", source="draft", target="ready", permission=check_owner_user
     )
     def mark_as_ready(self):
-        for obj in self.get_related_objects():
-            if obj.state == "ready":
-                continue
-            obj.requesting_user = self.requesting_user
-            obj.mark_as_ready()
-            obj.save()
-
-    @transition(field="state", source="ready", target="valid")
-    def validate(self):
-        for obj in self.get_related_objects():
-            if obj.state == "valid":
-                continue
-            obj.requesting_user = self.requesting_user
-            obj.validate()
-            obj.save()
+        pass
 
     @transition(
         field="state", source="ready", target="draft", permission=check_owner_user
     )
     def cancel(self):
-        for obj in self.get_related_objects():
-            if obj.state == "draft":
-                continue
-            obj.requesting_user = self.requesting_user
-            obj.cancel()
-            obj.save()
-
-    @transition(field="state", source="ready", target="changes")
-    def request_changes(self):
-        for obj in self.get_related_objects():
-            if obj.state == "changes":
-                continue
-            obj.requesting_user = self.requesting_user
-            obj.request_changes()
-            obj.save()
+        pass
 
     @transition(
         field="state", source="valid", target="draft", permission=check_owner_user
     )
     def revalidate(self):
-        for obj in self.get_related_objects():
-            if obj.state == "draft":
-                continue
-            obj.requesting_user = self.requesting_user
-            obj.revalidate()
-            obj.save()
+        pass
 
     @transition(
         field="state", source="changes", target="draft", permission=check_owner_user
     )
     def make_changes(self):
-        for obj in self.get_related_objects():
-            if obj.state == "draft":
-                continue
-            obj.requesting_user = self.requesting_user
-            obj.make_changes()
-            obj.save()
+        pass
 
     class Meta:
         indexes = [
@@ -441,7 +403,7 @@ class Product(SoftDeleteModel):
         ]
 
 
-class ProductRequirement(OwnerHistoryModel, ValidationWorkflowModel, SoftDeleteModel):
+class ProductRequirement(OwnerHistoryModel, SoftDeleteModel):
     product = models.ForeignKey(
         Product, on_delete=models.CASCADE, related_name="product_requirements"
     )
@@ -555,66 +517,28 @@ class DataProvider(OwnerHistoryModel, ValidationWorkflowModel, SoftDeleteModel):
         field="state", source="draft", target="ready", permission=check_owner_user
     )
     def mark_as_ready(self):
-        for obj in self.get_related_objects():
-            if obj.state == "ready":
-                continue
-            obj.requesting_user = self.requesting_user
-            obj.mark_as_ready()
-            obj.save()
-
-    @transition(field="state", source="ready", target="valid")
-    def validate(self):
-        for obj in self.get_related_objects():
-            if obj.state == "valid":
-                continue
-            obj.requesting_user = self.requesting_user
-            obj.validate()
-            obj.save()
+        pass
 
     @transition(
         field="state", source="ready", target="draft", permission=check_owner_user
     )
     def cancel(self):
-        for obj in self.get_related_objects():
-            if obj.state == "draft":
-                continue
-            obj.requesting_user = self.requesting_user
-            obj.cancel()
-            obj.save()
-
-    @transition(field="state", source="ready", target="changes")
-    def request_changes(self):
-        for obj in self.get_related_objects():
-            if obj.state == "changes":
-                continue
-            obj.requesting_user = self.requesting_user
-            obj.request_changes()
-            obj.save()
+        pass
 
     @transition(
         field="state", source="valid", target="draft", permission=check_owner_user
     )
     def revalidate(self):
-        for obj in self.get_related_objects():
-            if obj.state == "draft":
-                continue
-            obj.requesting_user = self.requesting_user
-            obj.revalidate()
-            obj.save()
+        pass
 
     @transition(
         field="state", source="changes", target="draft", permission=check_owner_user
     )
     def make_changes(self):
-        for obj in self.get_related_objects():
-            if obj.state == "draft":
-                continue
-            obj.requesting_user = self.requesting_user
-            obj.make_changes()
-            obj.save()
+        pass
 
 
-class DataProviderDetails(OwnerHistoryModel, ValidationWorkflowModel, SoftDeleteModel):
+class DataProviderDetails(OwnerHistoryModel, SoftDeleteModel):
     acronym = models.CharField(max_length=10, blank=True)
     website = models.CharField(max_length=255, blank=True)
     address = models.TextField(blank=True)
@@ -660,7 +584,7 @@ class Data(OwnerHistoryModel, ValidationWorkflowModel, SoftDeleteModel):
     elastic_delete_signal = signals.data_deleted
 
     name = models.CharField(max_length=100)
-    note = models.TextField(blank=True)
+    description = models.TextField(blank=True)
     feedback = models.TextField(blank=True)
     update_frequency = models.ForeignKey(
         pickmodels.UpdateFrequency,
@@ -772,63 +696,25 @@ class Data(OwnerHistoryModel, ValidationWorkflowModel, SoftDeleteModel):
         field="state", source="draft", target="ready", permission=check_owner_user
     )
     def mark_as_ready(self):
-        for obj in self.get_related_objects():
-            if obj.state == "ready":
-                continue
-            obj.requesting_user = self.requesting_user
-            obj.mark_as_ready()
-            obj.save()
-
-    @transition(field="state", source="ready", target="valid")
-    def validate(self):
-        for obj in self.get_related_objects():
-            if obj.state == "valid":
-                continue
-            obj.requesting_user = self.requesting_user
-            obj.validate()
-            obj.save()
+        pass
 
     @transition(
         field="state", source="ready", target="draft", permission=check_owner_user
     )
     def cancel(self):
-        for obj in self.get_related_objects():
-            if obj.state == "draft":
-                continue
-            obj.requesting_user = self.requesting_user
-            obj.cancel()
-            obj.save()
-
-    @transition(field="state", source="ready", target="changes")
-    def request_changes(self):
-        for obj in self.get_related_objects():
-            if obj.state == "changes":
-                continue
-            obj.requesting_user = self.requesting_user
-            obj.request_changes()
-            obj.save()
+        pass
 
     @transition(
         field="state", source="valid", target="draft", permission=check_owner_user
     )
     def revalidate(self):
-        for obj in self.get_related_objects():
-            if obj.state == "draft":
-                continue
-            obj.requesting_user = self.requesting_user
-            obj.revalidate()
-            obj.save()
+        pass
 
     @transition(
         field="state", source="changes", target="draft", permission=check_owner_user
     )
     def make_changes(self):
-        for obj in self.get_related_objects():
-            if obj.state == "draft":
-                continue
-            obj.requesting_user = self.requesting_user
-            obj.make_changes()
-            obj.save()
+        pass
 
     def has_user_perm(self, user):
         return user.has_perm("change_data", self) and user.has_perm(
@@ -836,7 +722,7 @@ class Data(OwnerHistoryModel, ValidationWorkflowModel, SoftDeleteModel):
         )
 
 
-class DataRequirement(OwnerHistoryModel, ValidationWorkflowModel, SoftDeleteModel):
+class DataRequirement(OwnerHistoryModel, SoftDeleteModel):
     data = models.ForeignKey(Data, on_delete=models.CASCADE)
     requirement = models.ForeignKey(Requirement, on_delete=models.CASCADE)
     information_costs = models.BooleanField(default=False)
@@ -870,9 +756,7 @@ class DataRequirement(OwnerHistoryModel, ValidationWorkflowModel, SoftDeleteMode
         )
 
 
-class DataProviderRelation(
-    OwnerHistoryModel, ValidationWorkflowModel, SoftDeleteModel
-):
+class DataProviderRelation(OwnerHistoryModel, SoftDeleteModel):
     ORIGINATOR = 1
     DISTRIBUTOR = 2
     ROLE_CHOICES = (

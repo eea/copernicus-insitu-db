@@ -14,7 +14,6 @@ from insitu.views.protected import (
 )
 from insitu.views.protected.permissions import (
     IsAuthenticated,
-    IsDraftObject,
     IsNotReadOnlyUser,
     IsOwnerUser,
 )
@@ -84,7 +83,7 @@ class ProductRequirementEdit(LoggingProtectedUpdateView):
     template_name = "product/requirement/edit.html"
     form_class = forms.ProductRequirementEditForm
     context_object_name = "rel"
-    permission_classes = (IsOwnerUser, IsDraftObject, IsNotReadOnlyUser)
+    permission_classes = (IsOwnerUser, IsNotReadOnlyUser)
     permission_denied_redirect = reverse_lazy("requirement:list")
     target_type = "relation between product and requirement"
 
@@ -121,7 +120,7 @@ class ProductRequirementDelete(LoggingProtectedDeleteView):
     model = models.ProductRequirement
     template_name = "product/requirement/delete.html"
     context_object_name = "rel"
-    permission_classes = (IsOwnerUser, IsDraftObject, IsNotReadOnlyUser)
+    permission_classes = (IsOwnerUser, IsNotReadOnlyUser)
     permission_denied_redirect = reverse_lazy("requirement:list")
     target_type = "relation between product and requirement"
 

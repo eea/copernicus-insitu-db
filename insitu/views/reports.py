@@ -398,7 +398,10 @@ class EntriesStateReportView(ProtectedTemplateView, EntriesStateReportExcelMixin
     def post(self, request, *args, **kwargs):
         form = EntriesStateReportForm(request.POST)
         if form.is_valid():
-            filename = self.generate_filename("CIS2_Entries_State_Report", "xlsx")
+            base_filename = (
+                f"CIS2_{form.cleaned_data['entry_type']}_Entries_State_Report"
+            )
+            filename = self.generate_filename(base_filename, "xlsx")
             self.entry_type = form.cleaned_data["entry_type"]
             return self.generate_excel(filename)
         return HttpResponse("Incorrect value selected")

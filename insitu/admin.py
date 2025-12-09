@@ -250,9 +250,8 @@ class ProductRequirementAdmin(BaseDisplayDeleteAdminMixin, admin.ModelAdmin):
         "requirement_id",
         "product__name",
         "requirement__name",
-        "state",
     )
-    list_filter = ("state", "product_id", "requirement_id")
+    list_filter = ("product_id", "requirement_id")
 
     @admin.display(ordering="product__name", description="Product")
     def product__name(self, obj):
@@ -281,9 +280,8 @@ class DataRequirementAdmin(BaseDisplayDeleteAdminMixin, admin.ModelAdmin):
         "data_id",
         "data__name",
         "requirement__name",
-        "state",
     )
-    list_filter = ("state", "data_id", "requirement_id")
+    list_filter = ("data_id", "requirement_id")
 
     @admin.display(ordering="data__name", description="Data")
     def data__name(self, obj):

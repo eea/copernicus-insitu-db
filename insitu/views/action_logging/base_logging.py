@@ -28,7 +28,7 @@ class BaseLoggingView:
 
             if hasattr(target_obj, "note"):
                 target_note = target_obj.note
-            # DataProvider doesn't have a note field, but it does have a description
+            # some entries don't have a note field, but they have a description
             elif hasattr(target_obj, "description"):
                 target_note = target_obj.description
         LoggedAction.objects.create(

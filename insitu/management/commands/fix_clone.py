@@ -9,7 +9,7 @@ class Command(BaseCommand):
         requirements = Requirement.objects.all()
         for requirement in requirements:
             requirement.name = requirement.name.strip()
-            requirement.note = requirement.note.strip()
+            requirement.description = requirement.description.strip()
             requirement.uncertainty.threshold = (
                 requirement.uncertainty.threshold.strip()
             )
