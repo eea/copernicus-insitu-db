@@ -14,7 +14,7 @@ import datetime
 class DataTests(base.FormCheckTestCase):
     fields = [
         "name",
-        "note",
+        "description",
         "start_time_coverage",
         "end_time_coverage",
         "copernicus_service_product",
@@ -66,7 +66,7 @@ class DataTests(base.FormCheckTestCase):
 
         self._DATA = {
             "name": "TEST data",
-            "note": "TEST note",
+            "description": "TEST description",
             "update_frequency": update_frequency.pk,
             "area": area.pk,
             "status": status.pk,
@@ -97,7 +97,7 @@ class DataTests(base.FormCheckTestCase):
         geographical_coverages = [base.CountryFactory(code="T4")]
         DATA_FOR_CLONE = {
             "name": data.name,
-            "note": "TEST note",
+            "description": "TEST description",
             "dissemination": data.dissemination.pk,
             "update_frequency": data.update_frequency.pk,
             "area": data.area.pk,

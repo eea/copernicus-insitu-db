@@ -166,7 +166,7 @@ class StandardReportPDFMixin(BasePDFMixin):
             [
                 Paragraph("REQUIREMENT UID", self.headerstyle_table1),
                 Paragraph("REQUIREMENT", self.headerstyle_table1),
-                Paragraph("NOTE", self.headerstyle_table1),
+                Paragraph("DESCRIPTION", self.headerstyle_table1),
                 Paragraph("DISSEMINATION", self.headerstyle_table1),
                 Paragraph("QUALITY CONTROL", self.headerstyle_table1),
                 Paragraph("GROUP", self.headerstyle_table1),
@@ -183,7 +183,7 @@ class StandardReportPDFMixin(BasePDFMixin):
                 [
                     Paragraph(str(x.id), self.rowstyle_table1),
                     Paragraph(x.name, self.rowstyle_table1),
-                    Paragraph(x.note, self.rowstyle_table1),
+                    Paragraph(x.description, self.rowstyle_table1),
                     Paragraph(x.dissemination.name, self.rowstyle_table1),
                     Paragraph(x.quality_control_procedure.name, self.rowstyle_table1),
                     Paragraph(x.group.name, self.rowstyle_table1),
@@ -1286,7 +1286,7 @@ class StandardReportExcelMixin(BaseExcelMixin):
         headers = [
             "REQUIREMENT UID",
             "REQUIREMENT",
-            "NOTE",
+            "DESCRIPTION",
             "DISSEMINATION",
             "QUALITY CONTROL",
             "GROUP",
@@ -1329,7 +1329,7 @@ class StandardReportExcelMixin(BaseExcelMixin):
             data = [
                 requirement.id,
                 requirement.name,
-                requirement.note,
+                requirement.description,
                 requirement.dissemination.name,
                 requirement.quality_control_procedure.name,
                 requirement.group.name,

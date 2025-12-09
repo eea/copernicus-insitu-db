@@ -203,7 +203,7 @@ class ValidationWorkflowModel(models.Model):
 
 class Team(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="team")
-    teammates = models.ManyToManyField(User, related_name="teams")
+    teammates = models.ManyToManyField(User, related_name="teams", blank=True)
     requests = models.ManyToManyField(User, related_name="requests", blank=True)
 
 
@@ -272,7 +272,7 @@ class Requirement(OwnerHistoryModel, ValidationWorkflowModel, SoftDeleteModel):
     elastic_delete_signal = signals.requirement_deleted
 
     name = models.CharField(max_length=100)
-    note = models.TextField(blank=True)
+    description = models.TextField(blank=True)
     dissemination = models.ForeignKey(
         pickmodels.Dissemination, on_delete=models.CASCADE, related_name="+"
     )
@@ -584,7 +584,7 @@ class Data(OwnerHistoryModel, ValidationWorkflowModel, SoftDeleteModel):
     elastic_delete_signal = signals.data_deleted
 
     name = models.CharField(max_length=100)
-    note = models.TextField(blank=True)
+    description = models.TextField(blank=True)
     feedback = models.TextField(blank=True)
     update_frequency = models.ForeignKey(
         pickmodels.UpdateFrequency,

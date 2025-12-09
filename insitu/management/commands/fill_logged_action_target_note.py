@@ -23,7 +23,7 @@ class Command(BaseCommand):
                     print(f"Requirement not found for pk {logged_req.id_target}")
                     continue
 
-                logged_req.target_note = req.note
+                logged_req.target_note = req.description
                 logged_req.save()
                 print(
                     f"Saved note for LoggedAction {logged_req.pk} requirement {req.pk}"
@@ -66,7 +66,7 @@ class Command(BaseCommand):
                     print(f"Data not found for pk {logged_data.id_target}")
                     continue
 
-                logged_data.target_note = data.note
+                logged_data.target_note = data.description
                 logged_data.save()
                 print(f"Saved note for LoggedAction {logged_data.pk} data {data.pk}")
 

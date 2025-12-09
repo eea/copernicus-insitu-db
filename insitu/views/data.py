@@ -162,7 +162,7 @@ class DataAdd(CreatedByMixin, LoggingProtectedCreateView):
         initial_data = super().get_initial()
         for field in [
             "name",
-            "note",
+            "description",
             "update_frequency",
             "area",
             "start_time_coverage",
@@ -264,7 +264,7 @@ class DataDetail(ProtectedDetailView):
         data = {
             "id": self.object.id,
             "name": self.object.name,
-            "note": self.object.note,
+            "description": self.object.description,
             "update_frequency": self.object.update_frequency_id,
             "area": self.object.area_id,
             "start_time_coverage": self.object.start_time_coverage,

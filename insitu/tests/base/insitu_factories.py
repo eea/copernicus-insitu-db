@@ -60,7 +60,7 @@ class ComponentFactory(DjangoModelFactory):
 
 class RequirementFactory(DjangoModelFactory):
     name = "Test requirement"
-    note = "Test note"
+    description = "Test description"
     owner = "Test owner"
     dissemination = SubFactory(factories.DisseminationFactory)
     quality_control_procedure = SubFactory(factories.QualityControlProcedureFactory)

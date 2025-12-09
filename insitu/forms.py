@@ -186,7 +186,7 @@ class RequirementForm(forms.ModelForm):
         model = models.Requirement
         fields = [
             "name",
-            "note",
+            "description",
             "dissemination",
             "quality_control_procedure",
             "essential_variables",
@@ -306,7 +306,7 @@ class RequirementForm(forms.ModelForm):
         )
         data = {
             "name": self.cleaned_data["name"],
-            "note": self.cleaned_data["note"],
+            "description": self.cleaned_data["description"],
             "owner": self.cleaned_data["owner"],
             "dissemination": self.cleaned_data["dissemination"],
             "quality_control_procedure": self.cleaned_data[
@@ -367,7 +367,7 @@ class DataForm(CreatedByFormMixin, forms.ModelForm):
         auto_created = True
         fields = [
             "name",
-            "note",
+            "description",
             "update_frequency",
             "area",
             "start_time_coverage",
@@ -424,7 +424,7 @@ class DataReadyForm(RequiredFieldsMixin, DataForm):
         auto_created = True
         fields = [
             "name",
-            "note",
+            "description",
             "update_frequency",
             "area",
             "start_time_coverage",

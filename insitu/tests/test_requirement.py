@@ -9,7 +9,7 @@ from insitu.tests import base
 
 
 class RequirementTests(base.FormCheckTestCase):
-    fields = ["name", "note"]
+    fields = ["name", "description"]
     related_fields = ["dissemination", "quality_control_procedure"]
     required_fields = ["name", "dissemination", "quality_control_procedure", "group"]
     related_entities_updated = [
@@ -40,7 +40,7 @@ class RequirementTests(base.FormCheckTestCase):
         self.client.force_login(self.creator)
         self._DATA = {
             "name": "TEST requirement",
-            "note": "TEST note",
+            "description": "TEST description",
             "owner": "TEST owner",
             "dissemination": dissemination.pk,
             "quality_control_procedure": quality_control_procedure.pk,
@@ -72,7 +72,7 @@ class RequirementTests(base.FormCheckTestCase):
             "name": requirement.name,
             "owner": requirement.owner,
             "dissemination": requirement.dissemination.pk,
-            "note": requirement.note,
+            "description": requirement.description,
             "quality_control_procedure": requirement.quality_control_procedure.pk,
             "group": requirement.group.pk,
             "essential_variables": [],

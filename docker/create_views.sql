@@ -43,7 +43,7 @@ CREATE VIEW insitu_productrequirement_view as
 
 CREATE VIEW insitu_requirement_view as
     SELECT r.id as "requirement_id",
-           r.note as "requirement_note",
+           r.description as "requirement_description",
            r.name as "requirement_name",
            r.owner as "requirement_owner",
            d.name as "requirement_dissemination",
@@ -103,7 +103,7 @@ CREATE VIEW insitu_datarequirement_view as
 CREATE VIEW insitu_data_view as
     SELECT d.id AS "data_id",
            d.name AS "data_name",
-           d.note AS "data_note",
+           d.description AS "data_description",
            d.copernicus_service_product AS "data_copernicus_service_product",
            a.name AS "data_area",
            df.name AS "data_format",
@@ -156,10 +156,6 @@ CREATE VIEW insitu_dataprovider_without_networks_view as
            dpd.acronym AS "data_provider_acronym",
            dp.name AS "data_provider_name",
            dp.is_network AS "data_provider_is_network",
-           dpd.website AS "data_provider_website",
-           dpd.address AS "data_provider_address",
-           dpd.phone AS "data_provider_phone",
-           dpd.email AS "data_provider_email",
            pt.name AS "data_provider_type",
            dp.state AS "data_provider_state"
     FROM insitu_dataprovider dp
@@ -174,10 +170,6 @@ CREATE VIEW insitu_dataprovider_view as
            dpd.acronym AS "data_provider_acronym",
            dp.name AS "data_provider_name",
            dp.is_network AS "data_provider_is_network",
-           dpd.website AS "data_provider_website",
-           dpd.address AS "data_provider_address",
-           dpd.phone AS "data_provider_phone",
-           dpd.email AS "data_provider_email",
            pt.name AS "data_provider_type",
            c.name AS "data_provider_country",
            dpnetwork.name AS "data_provider_network_name",

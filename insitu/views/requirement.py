@@ -53,7 +53,7 @@ class GetInitialMixin:
         initial_data = super().get_initial()
         for field in [
             "name",
-            "note",
+            "description",
             "dissemination",
             "owner",
             "quality_control_procedure",
