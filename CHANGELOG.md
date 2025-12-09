@@ -3,6 +3,13 @@ Changelog
 
 * In case of major changes, an email should be sent to all users with the modifications.
 
+3.0.6 (2025-12-09)
+------------------
+* Remove state from link objects
+* Allow relation editing in all main objects states
+* Rename requirement and data note to description
+[dianaboiangiu]
+
 3.0.5 (2025-12-08)
 ------------------
 * Allow all users to request changes to Requirement/Data/Data Providers
