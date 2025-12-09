@@ -32,7 +32,7 @@
       <span>Data details</span>
       {% if not user_groups|check_group:READ_ONLY_GROUP %}
         {% if data.state == 'draft' %}
-          {% if request.user == data.created_by or request.user.is_superuser or request.user in data.created_by.team.teammates.all or user_perm or user|has_group:DATA_DATA_PROVIDER_EDITOR_GROUP %}
+          {% if user == data.created_by or user.is_superuser or user in data.created_by.team.teammates.all or user_perm or user|has_group:DATA_DATA_PROVIDER_EDITOR_GROUP %}
             <span class="pull-right margin-left-btn">
               <a class="btn btn-primary pull-right" href="{% url 'data:delete' data.pk %}">Delete data</a>
             </span>
@@ -201,14 +201,14 @@
           {% if not user_groups|check_group:READ_ONLY_GROUP and user.is_authenticated %}
             <div class="pull-right">
               {% if data.state == 'draft' %}
-                {% if data.created_by == request.user or request.user in data.created_by.team.teammates.all or user_perm or user|has_group:DATA_DATA_PROVIDER_EDITOR_GROUP %}
+                {% if data.created_by == user in data.created_by.team.teammates.all or user_perm or user|has_group:DATA_DATA_PROVIDER_EDITOR_GROUP %}
                   <a class="btn btn-primary" href="{% url 'data:transition' pk=data.pk source='draft' target='ready' transition='mark_as_ready' %}">
                     Mark as ready
                   </a>
                 {% endif %}
               {% endif %}
               {% if data.state == 'ready' %}
-                {% if request.user not in data.created_by.team.teammates.all %}
+                {% if user not in data.created_by.team.teammates.all %}
                   <a class="btn btn-primary" href="{% url 'data:transition' pk=data.pk source='ready' target='valid' transition='validate' %}">
                     Mark as valid
                   </a>
@@ -216,21 +216,21 @@
                 <a class="btn btn-primary" href="{% url 'data:transition' pk=data.pk source='ready' target='changes' transition='request_changes' %}">
                   Request changes
                 </a>
-                {% if data.created_by == request.user or request.user in data.created_by.team.teammates.all or user_perm or user|has_group:DATA_DATA_PROVIDER_EDITOR_GROUP %}
+                {% if data.created_by == user or user in data.created_by.team.teammates.all or user_perm or user|has_group:DATA_DATA_PROVIDER_EDITOR_GROUP %}
                   <a class="btn btn-primary" href="{% url 'data:transition' pk=data.pk source='ready' target='draft' transition='cancel' %}">
                     Move back to draft
                   </a>
                 {% endif %}
               {% endif %}
               {% if data.state == 'changes' %}
-                {% if data.created_by == request.user or request.user in data.created_by.team.teammates.all or user_perm or user|has_group:DATA_DATA_PROVIDER_EDITOR_GROUP %}
+                {% if data.created_by == user or user in data.created_by.team.teammates.all or user_perm or user|has_group:DATA_DATA_PROVIDER_EDITOR_GROUP %}
                   <a class="btn btn-primary" href="{% url 'data:transition' pk=data.pk source='changes' target='draft' transition='make_changes' %}">
                     Implement feedback
                   </a>
                 {% endif %}
               {% endif %}
               {% if data.state == 'valid' %}
-                {% if data.created_by == request.user or request.user in data.created_by.team.teammates.all or user_perm or user|has_group:DATA_DATA_PROVIDER_EDITOR_GROUP %}
+                {% if data.created_by == user or user in data.created_by.team.teammates.all or user_perm or user|has_group:DATA_DATA_PROVIDER_EDITOR_GROUP %}
                   <a class="btn btn-primary" href="{% url 'data:transition' pk=data.pk source='valid' target='draft' transition='revalidate' %}">
                     Move back to draft
                   </a>
@@ -243,7 +243,7 @@
                   <h5>Feedback:</h5>
                   {{ data.feedback|linebreaksbr }}
                 </div>
-                {% if data.created_by == request.user or request.user in data.created_by.team.teammates.all or user_perm or user|has_group:DATA_DATA_PROVIDER_EDITOR_GROUP %}
+                {% if data.created_by == user or user in data.created_by.team.teammates.all or user_perm or user|has_group:DATA_DATA_PROVIDER_EDITOR_GROUP %}
                   <form method="POST" action="{% url 'data:clear_feedback' data.pk %}">
                     {% csrf_token %}
                     <button class="btn btn-primary" type="submit">
@@ -288,15 +288,13 @@
     <h3 class="col-sm-12">
       <span>Data Providers</span>
       {% if not user_groups|check_group:READ_ONLY_GROUP %}
-        {% if data.state == 'draft' %}
-          {% if request.user == data.created_by or request.user.is_superuser or request.user in data.created_by.team.teammates.all or user_perm or user|has_group:DATA_DATA_PROVIDER_EDITOR_GROUP %}
+          {% if user == data.created_by or user.is_superuser or user in data.created_by.team.teammates.all or user_perm or user|has_group:DATA_DATA_PROVIDER_EDITOR_GROUP %}
             <span class="pull-right">
               <a class="btn btn-primary pull-right"
                  href="{% url 'data:provider:add' data.pk %}">Add data to data provider
               </a>
             </span>
           {% endif %}
-        {% endif %}
       {% endif %}
     </h3>
     <div class="col-sm-12">
@@ -313,7 +311,7 @@
           <th class="no-sort">Is network</th>
           <th>Created on</th>
           <th>Last modified on</th>
-          <th class="no-sort"></th>
+          <th class="no-sort col-sm-1"></th>
         </tr>
         </thead>
         <tbody>
@@ -332,12 +330,11 @@
                 <span class='glyphicon glyphicon-remove-circle text-danger'></span>
               {% endif %}
             </td>
-            <td>{{ data.created_at }}</td>
-            <td>{{ data.updated_at }}</td>
+            <td>{{ rel.created_at }}</td>
+            <td>{{ rel.updated_at }}</td>
             <td class="row">
               {% if not user_groups|check_group:READ_ONLY_GROUP %}
-                {% if rel.state == 'draft' %}
-                  {% if request.user == rel.created_by or request.user == data.created_by or request.user.is_superuser or request.user in rel.created_by.team.teammates.all or user_perm or user|has_group:DATA_DATA_PROVIDER_EDITOR_GROUP %}
+                  {% if user == rel.created_by or user == data.created_by or user.is_superuser or user in rel.created_by.team.teammates.all or user_perm or user|has_group:DATA_DATA_PROVIDER_EDITOR_GROUP %}
                     <a href="{% url 'data:provider:edit' group_pk=data.pk pk=rel.pk %}" class="col-sm-6">
                       <span class="glyphicon glyphicon-edit"></span>
                     </a>
@@ -345,7 +342,6 @@
                       <span class="glyphicon glyphicon-trash"></span>
                     </a>
                   {% endif %}
-                {% endif %}
               {% endif %}
             </td>
           </tr>
@@ -397,8 +393,8 @@
                 <span class='glyphicon glyphicon-remove-circle text-danger'></span>
               {% endif %}
             </td>
-            <td>{{ data.created_at }}</td>
-            <td>{{ data.updated_at }}</td>
+            <td>{{ rel.created_at }}</td>
+            <td>{{ rel.updated_at }}</td>
           </tr>
         {% endfor %}
         </tbody>

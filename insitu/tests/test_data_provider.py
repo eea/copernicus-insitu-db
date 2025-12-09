@@ -955,7 +955,7 @@ class DataProviderTests(base.FormCheckTestCase):
         provider = base.DataProviderFactory(
             is_network=False, name="Test provider", created_by=self.creator
         )
-        provider_details = base.DataProviderDetailsFactory(
+        base.DataProviderDetailsFactory(
             data_provider=provider, created_by=self.creator
         )
         self.assertEqual(getattr(provider, "state"), "draft")

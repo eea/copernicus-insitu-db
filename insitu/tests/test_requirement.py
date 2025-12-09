@@ -445,7 +445,7 @@ class RequirementTests(base.FormCheckTestCase):
         data = base.DataFactory(
             name="Test data", created_by=self.creator, update_frequency=None
         )
-        data_requirement = base.DataRequirementFactory(
+        base.DataRequirementFactory(
             data=data, created_by=self.creator, requirement=requirement
         )
 
@@ -471,17 +471,15 @@ class RequirementTests(base.FormCheckTestCase):
             name="Test requirement", created_by=self.creator, **metrics
         )
         data = base.DataFactory(name="Test data", created_by=self.creator)
-        data_requirement = base.DataRequirementFactory(
+        base.DataRequirementFactory(
             data=data, created_by=self.creator, requirement=requirement
         )
         provider = base.DataProviderFactory(
             name="Test provider", created_by=self.creator
         )
-        data_provider = base.DataProviderRelationFactory(
+        base.DataProviderRelationFactory(
             data=data, created_by=self.creator, provider=provider
         )
-
-        items = [requirement, data, data_requirement, provider, data_provider]
 
         response = self.client.post(
             reverse(
