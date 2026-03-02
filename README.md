@@ -127,10 +127,7 @@ To install
 After the documentation has changed, a new PDF file should be generated and it should replace the current file.
 
         docker exec -it insitu.app sh
-        apk add texlive-full
+        apt install texlive-latex-recommended texlive-latex-extra texlive-fonts-recommended latexmk
         cd docs/
         make latexpdf
         cp _build/latex/CIS2.pdf ../insitu/static/docs/CIS2.pdf
-        
-        
-        

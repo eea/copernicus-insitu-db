@@ -1,27 +1,26 @@
-FROM python:3.8-alpine
+FROM python:3.8-slim
+
 ARG REQFILE=requirements-dep.txt
 ENV APP_HOME=/var/local/copernicus
-
 
 COPY . $APP_HOME
 WORKDIR $APP_HOME
 
+RUN apt-get update \
+ && apt-get install -y --no-install-recommends \
+    build-essential \
+    libffi-dev \
+    libjpeg62-turbo \
+    libxml2-dev \
+    libxslt1-dev \
+    netcat-traditional \
+    zlib1g-dev
 
-RUN apk update \
-    && apk add --no-cache python3-dev musl-dev \
-        jpeg-dev zlib-dev libjpeg \
-        gcc netcat-openbsd postgresql-dev \
-    pcre-dev linux-headers make \
-    xvfb  ttf-freefont fontconfig dbus libffi-dev \
-    --repository http://dl-3.alpinelinux.org/alpine/edge/community/ \
-    --allow-untrusted \ 
-    && mkdir -p $APP_HOME/logging \
+RUN mkdir -p $APP_HOME/logging
 
-    && pip install pip==24.0 \
-    && pip install Pillow \
-    && pip install --no-cache-dir -r $REQFILE \
+RUN pip install pip==24.0 && \
+    pip install --no-cache-dir -r $REQFILE
 
-    && cd docs \
-    && make html
+RUN cd docs && make html
 
 ENTRYPOINT ["./docker-entrypoint.sh"]
