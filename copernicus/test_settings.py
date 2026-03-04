@@ -16,8 +16,12 @@ DATABASES = {
 
 ELASTICSEARCH_DSL = {
     "default": {
-        "hosts": os.environ.get("ELASTICSEARCH_TEST_HOST", "elasticsearch_test"),
-        "http_auth": os.environ.get("ELASTICSEARCH_TEST_AUTH", "user:password"),
+        "hosts": os.environ.get(
+            "ELASTICSEARCH_TEST_HOST", "http://elasticsearch_test:9200"
+        ),
+        "http_auth": tuple(
+            os.environ.get("ELASTICSEARCH_TEST_AUTH", "user:password").split(":")
+        ),
     },
 }
 

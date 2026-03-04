@@ -9,10 +9,11 @@ services:
     container_name: insitu.app
     entrypoint: ["/usr/bin/tail", "-f", "/dev/null"]
     environment:
+      - POSTGRES_HOST=db
       - DJANGO_MIGRATE=yes
       - DJANGO_COLLECT_STATIC=yes
       - DJANGO_INDEX_CONTENT=no
-      - ELASTICSEARCH_TIMEOUT=60
+      - ELASTICSEARCH_REQUEST_TIMEOUT=60
       - ALLOWED_HOSTS=0.0.0.0
       - UWSGI_PORT=8000
       - TIMEOUT=60
@@ -23,7 +24,7 @@ services:
       - logging:/var/local/copernicus/logging
 
   db:
-    image: postgres:15-alpine
+    image: postgres:17-alpine
     container_name: insitu.db
     env_file:
       - docker/db.env
@@ -31,7 +32,7 @@ services:
       - data:/var/lib/postgresql/data
 
   elasticsearch_test:
-    image: docker.elastic.co/elasticsearch/elasticsearch:6.6.1
+    image: docker.elastic.co/elasticsearch/elasticsearch:9.3.1
     container_name: insitu.elasticsearch_test
     volumes:
       - esdata_test:/usr/share/elasticsearch/data

@@ -218,9 +218,11 @@ MEDIA_ROOT = os.path.join(BASE_DIR, "..", "static/media/")
 
 ELASTICSEARCH_DSL = {
     "default": {
-        "hosts": env("ELASTICSEARCH_HOST", default="elasticsearch"),
-        "http_auth": os.environ.get("ELASTICSEARCH_AUTH", "user:password"),
-        "timeout": int(os.environ.get("ELASTICSEARCH_TIMEOUT", 120)),
+        "hosts": env("ELASTICSEARCH_HOST", default="http://elasticsearch:9200"),
+        "http_auth": tuple(
+            os.environ.get("ELASTICSEARCH_AUTH", "user:password").split(":")
+        ),
+        "request_timeout": int(os.environ.get("ELASTICSEARCH_REQUEST_TIMEOUT", 120)),
     },
 }
 
