@@ -8,6 +8,7 @@ WORKDIR $APP_HOME
 
 RUN apt-get update \
  && apt-get install -y --no-install-recommends \
+    cron \
     build-essential \
     libcairo2-dev \
     libffi-dev \

@@ -361,7 +361,7 @@ class DataProviderEditNetworkMembers(ProtectedUpdateView):
 
 class DataProviderDeleteNetwork(LoggingProtectedDeleteView):
     template_name = "data_provider/network/delete.html"
-    form_class = forms.DataProviderNetworkForm
+    form_class = forms.DeleteConfirmationForm
     context_object_name = "provider"
     model = DataProvider
     permission_classes = (
@@ -381,7 +381,7 @@ class DataProviderDeleteNetwork(LoggingProtectedDeleteView):
 
 class DataProviderDeleteNonNetwork(LoggingProtectedDeleteView):
     template_name = "data_provider/non_network/delete.html"
-    form_class = forms.DataProviderNonNetworkForm
+    form_class = forms.DeleteConfirmationForm
     context_object_name = "provider"
     model = DataProvider
     permission_classes = (

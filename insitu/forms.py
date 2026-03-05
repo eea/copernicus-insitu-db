@@ -6,7 +6,7 @@ from django.core.mail import send_mail
 from django.urls import reverse
 from django.db import transaction
 from django.template.loader import render_to_string
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 
 from copernicus.settings import COUNTRY_MEMBERSHIPS, DEFAULT_FROM_EMAIL, SITE_URL
 from insitu import models
@@ -29,6 +29,13 @@ class RequiredFieldsMixin:
         fields_required = getattr(self.Meta, "fields_required", None)
         for key in fields_required:
             self.fields[key].required = True
+
+
+class DeleteConfirmationForm(forms.Form):
+    confirm = forms.BooleanField(
+        required=True,
+        label="Please confirm that you want to delete this item.",
+    )
 
 
 class ProductForm(forms.ModelForm):

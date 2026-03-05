@@ -20,7 +20,7 @@ ELASTICSEARCH_DSL = {
             "ELASTICSEARCH_TEST_HOST", "http://elasticsearch_test:9200"
         ),
         "http_auth": tuple(
-            os.environ.get("ELASTICSEARCH_TEST_AUTH", "user:password").split(":")
+            os.environ.get("ELASTICSEARCH_TEST_AUTH", "elastic:password").split(":")
         ),
     },
 }

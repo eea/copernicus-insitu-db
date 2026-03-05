@@ -76,7 +76,7 @@ class InsituUserAdmin(UserAdmin):
         is_new_user = obj.pk is None
 
         if is_new_user:
-            obj.set_password(get_random_string())
+            obj.set_password(get_random_string(length=24))
 
         super().save_model(request, obj, form, change)
 

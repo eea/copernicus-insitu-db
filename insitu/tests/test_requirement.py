@@ -300,7 +300,7 @@ class RequirementTests(base.FormCheckTestCase):
             name="Test requirement", created_by=self.creator, **metrics
         )
         resp = self.client.get(
-            reverse("requirement:delete", kwargs={"pk": requirement.pk})
+            reverse("requirement:delete", kwargs={"pk": requirement.pk}),
         )
         self.assertEqual(resp.status_code, 200)
 
@@ -311,7 +311,8 @@ class RequirementTests(base.FormCheckTestCase):
             name="Test requirement", created_by=self.creator, **metrics
         )
         resp = self.client.post(
-            reverse("requirement:delete", kwargs={"pk": requirement.pk})
+            reverse("requirement:delete", kwargs={"pk": requirement.pk}),
+            data={"confirm": "1"},
         )
         self.assertEqual(resp.status_code, 302)
         self.check_single_object_deleted(models.Requirement)
@@ -331,7 +332,10 @@ class RequirementTests(base.FormCheckTestCase):
         base.DataRequirementFactory(
             requirement=requirement, data=data, created_by=self.creator
         )
-        self.client.post(reverse("requirement:delete", kwargs={"pk": requirement.pk}))
+        self.client.post(
+            reverse("requirement:delete", kwargs={"pk": requirement.pk}),
+            data={"confirm": "1"},
+        )
         self.check_logged_action("deleted", requirement)
         self.check_objects_are_soft_deleted(models.ProductRequirement)
         self.check_objects_are_soft_deleted(models.DataRequirement)

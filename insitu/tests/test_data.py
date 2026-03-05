@@ -389,7 +389,9 @@ class DataTests(base.FormCheckTestCase):
         self.login_creator()
         self.erase_logging_file()
         data = base.DataFactory(created_by=self.creator)
-        resp = self.client.post(reverse("data:delete", kwargs={"pk": data.pk}))
+        resp = self.client.post(
+            reverse("data:delete", kwargs={"pk": data.pk}), data={"confirm": "1"}
+        )
         self.assertEqual(resp.status_code, 302)
         self.check_single_object_deleted(models.Data)
         self.check_objects_are_soft_deleted(models.Data, DataDoc)
@@ -408,7 +410,9 @@ class DataTests(base.FormCheckTestCase):
         base.DataProviderRelationFactory(
             data=data, provider=data_provider, created_by=self.creator
         )
-        self.client.post(reverse("data:delete", kwargs={"pk": data.pk}))
+        self.client.post(
+            reverse("data:delete", kwargs={"pk": data.pk}), data={"confirm": "1"}
+        )
         self.check_objects_are_soft_deleted(models.DataRequirement)
         self.check_objects_are_soft_deleted(models.DataProviderRelation)
         self.check_logged_action("deleted", data)

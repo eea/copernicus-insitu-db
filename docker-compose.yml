@@ -7,7 +7,6 @@ services:
       args:
         REQFILE: requirements-dev.txt
     container_name: insitu.app
-    entrypoint: ["/usr/bin/tail", "-f", "/dev/null"]
     environment:
       - POSTGRES_HOST=db
       - DJANGO_MIGRATE=yes

@@ -787,7 +787,8 @@ class DataProviderTests(base.FormCheckTestCase):
         self.login_creator()
         provider = base.DataProviderFactory(is_network=False, created_by=self.creator)
         resp = self.client.get(
-            reverse("provider:delete_network", kwargs={"pk": provider.pk})
+            reverse("provider:delete_network", kwargs={"pk": provider.pk}),
+            data={"confirm": "1"},
         )
         self.assertEqual(resp.status_code, 200)
         self.logging()
@@ -797,7 +798,8 @@ class DataProviderTests(base.FormCheckTestCase):
         self.erase_logging_file()
         provider = base.DataProviderFactory(is_network=True, created_by=self.creator)
         resp = self.client.post(
-            reverse("provider:delete_network", kwargs={"pk": provider.pk})
+            reverse("provider:delete_network", kwargs={"pk": provider.pk}),
+            data={"confirm": "1"},
         )
         self.assertEqual(resp.status_code, 302)
         self.check_single_object_deleted(models.DataProvider)
@@ -816,7 +818,8 @@ class DataProviderTests(base.FormCheckTestCase):
             provider=provider, data=data, created_by=self.creator
         )
         self.client.post(
-            reverse("provider:delete_network", kwargs={"pk": provider.pk})
+            reverse("provider:delete_network", kwargs={"pk": provider.pk}),
+            data={"confirm": "1"},
         )
         self.check_objects_are_soft_deleted(models.DataProviderDetails)
         self.check_objects_are_soft_deleted(models.DataProviderRelation)
@@ -826,7 +829,8 @@ class DataProviderTests(base.FormCheckTestCase):
         self.login_creator()
         provider = base.DataProviderFactory(is_network=False, created_by=self.creator)
         resp = self.client.get(
-            reverse("provider:delete_non_network", kwargs={"pk": provider.pk})
+            reverse("provider:delete_non_network", kwargs={"pk": provider.pk}),
+            data={"confirm": "1"},
         )
         self.assertEqual(resp.status_code, 200)
 
@@ -835,7 +839,8 @@ class DataProviderTests(base.FormCheckTestCase):
         self.erase_logging_file()
         provider = base.DataProviderFactory(is_network=False, created_by=self.creator)
         resp = self.client.post(
-            reverse("provider:delete_non_network", kwargs={"pk": provider.pk})
+            reverse("provider:delete_non_network", kwargs={"pk": provider.pk}),
+            data={"confirm": "1"},
         )
         self.assertEqual(resp.status_code, 302)
         self.check_single_object_deleted(models.DataProvider)
@@ -854,7 +859,8 @@ class DataProviderTests(base.FormCheckTestCase):
             provider=provider, data=data, created_by=self.creator
         )
         self.client.post(
-            reverse("provider:delete_non_network", kwargs={"pk": provider.pk})
+            reverse("provider:delete_non_network", kwargs={"pk": provider.pk}),
+            data={"confirm": "1"},
         )
         self.check_objects_are_soft_deleted(models.DataProviderDetails)
         self.check_objects_are_soft_deleted(models.DataProviderRelation)

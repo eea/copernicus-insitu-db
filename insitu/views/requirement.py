@@ -188,7 +188,22 @@ class RequirementListJson(ESDatatableView):
         "status",
         "essential_variables",
     ]
-    order_columns = columns
+    order_columns = [
+        "id",
+        "name",
+        "dissemination",
+        "quality_control_procedure",
+        "group",
+        "uncertainty",
+        "update_frequency",
+        "timeliness",
+        "scale",
+        "horizontal_resolution",
+        "vertical_resolution",
+        "state",
+        "status",
+        "essential_variables.essential_variable",
+    ]
     filter_translation = {
         "product": "products.product",
         "component": "components.component",
@@ -271,7 +286,7 @@ class RequirementEdit(GetInitialMixin, LoggingProtectedUpdateView):
 
 class RequirementDelete(LoggingProtectedDeleteView):
     template_name = "requirement/delete.html"
-    form_class = forms.RequirementForm
+    form_class = forms.DeleteConfirmationForm
     model = models.Requirement
     context_object_name = "requirement"
     permission_classes = (IsOwnerUser, IsDraftObject, IsNotReadOnlyUser)
