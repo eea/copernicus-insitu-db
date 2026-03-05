@@ -11,7 +11,7 @@ django-guardian==3.3.0
 django-hijack==3.7.6
 django-markdownx==4.0.9
 django-sql-explorer==5.3
-Django==5.2.11
+Django==5.2.12
 reportlab==4.4.10
 elasticsearch==9.3.0
 Levenshtein==0.27.3
