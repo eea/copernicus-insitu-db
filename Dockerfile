@@ -20,7 +20,6 @@ RUN apt-get update \
     zlib1g-dev \
  && rm -rf /var/lib/apt/lists/*
 
-
 RUN mkdir -p $APP_HOME/logging
 
 RUN pip install --upgrade pip && \
