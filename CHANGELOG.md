@@ -3,6 +3,13 @@ Changelog
 
 * In case of major changes, an email should be sent to all users with the modifications.
 
+4.0.0 (2026-03-05)
+-----------------
+* Upgrade python
+* Upgrade Django packages
+* Upgrade Elasticsearch
+  [dianaboiangiu]
+
 3.0.6 (2025-12-09)
 ------------------
 * Remove state from link objects
