@@ -11,4 +11,4 @@ done
 crontab -u root crontab
 
 # Start crontab service
-/usr/sbin/crond -f
+/usr/sbin/cron -f

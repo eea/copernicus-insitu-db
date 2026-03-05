@@ -9,12 +9,16 @@ WORKDIR $APP_HOME
 RUN apt-get update \
  && apt-get install -y --no-install-recommends \
     build-essential \
+    cron \
+    libcairo2-dev \
     libffi-dev \
     libjpeg62-turbo \
+    libpango1.0-dev \
     libxml2-dev \
     libxslt1-dev \
     netcat-traditional \
-    zlib1g-dev
+    zlib1g-dev \
+ && rm -rf /var/lib/apt/lists/*
 
 RUN mkdir -p $APP_HOME/logging
 
