@@ -168,7 +168,9 @@ class ProductTests(base.FormCheckTestCase):
 
     def test_delete_product(self):
         product = base.ProductFactory()
-        resp = self.client.post(reverse("product:delete", kwargs={"pk": product.pk}))
+        resp = self.client.post(
+            reverse("product:delete", kwargs={"pk": product.pk}), data={"confirm": "1"}
+        )
         self.assertEqual(resp.status_code, 302)
         self.check_logged_action("deleted", product)
         self.check_single_object_deleted(models.Product)
@@ -181,7 +183,9 @@ class ProductTests(base.FormCheckTestCase):
         base.ProductRequirementFactory(
             product=product, requirement=requirement, created_by=self.creator
         )
-        self.client.post(reverse("product:delete", kwargs={"pk": product.pk}))
+        self.client.post(
+            reverse("product:delete", kwargs={"pk": product.pk}), data={"confirm": "1"}
+        )
         self.check_logged_action("deleted", product)
         self.check_objects_are_soft_deleted(models.ProductRequirement)
 

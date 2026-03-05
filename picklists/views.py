@@ -6,6 +6,7 @@ from django.apps import apps
 from django.core.management import call_command
 from django.db import transaction, connection
 from django.db.models.fields.reverse_related import ForeignObjectRel
+from django.db.models.manager import BaseManager
 from django.http import HttpResponse
 from openpyxl import Workbook, load_workbook
 from openpyxl.styles import Font
@@ -96,8 +97,15 @@ class ExportPicklistsView(protected.ProtectedView):
                 current_row += 1
                 for col in columns:
                     value = getattr(entry, col.name)
+                    if col.many_to_many:
+                        # check if value is manager
+                        if isinstance(value, BaseManager):
+                            value = ", ".join([str(v) for v in value.all()])
                     if col.related_model:
-                        value = value.pk
+                        try:
+                            value = value.pk
+                        except AttributeError:
+                            value = value
                     ws.cell(
                         row=current_row, column=columns.index(col) + 1, value=value
                     )

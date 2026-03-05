@@ -331,7 +331,7 @@ class DataDetail(ProtectedDetailView):
 
 class DataDelete(LoggingProtectedDeleteView):
     template_name = "data/delete.html"
-    form_class = forms.DataForm
+    form_class = forms.DeleteConfirmationForm
     model = models.Data
     context_object_name = "data"
     permission_classes = (

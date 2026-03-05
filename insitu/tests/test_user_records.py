@@ -1,5 +1,6 @@
 from django.urls import reverse
 from insitu.tests import base
+from insitu import models
 
 
 class UserRecordsTests(base.FormCheckTestCase):
@@ -17,7 +18,9 @@ class UserRecordsTests(base.FormCheckTestCase):
         resp = self.client.get(reverse("user_records"))
 
         self.assertEqual(resp.status_code, 200)
-        self.assertQuerysetEqual(resp.context["data_list"], ["<Data: test Data>"])
+
+        expected_response_queryset = models.Data.objects.filter(id=user_data.id)
+        self.assertQuerySetEqual(resp.context["data_list"], expected_response_queryset)
         self.assertEqual(resp.context["providers_list"][0].created_by, self.creator)
         self.assertEqual(len(resp.context["provider_relations"]), 1)
         self.assertEqual(len(resp.context["requirements_list"]), 0)

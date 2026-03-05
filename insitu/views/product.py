@@ -81,7 +81,7 @@ class ProductListJson(ESDatatableView):
         "id",
         "name",
         "service",
-        "entities",
+        "entities.entity",
         "component",
         "group",
         "status",
@@ -192,7 +192,7 @@ class ProductDetail(ProtectedDetailView):
 
 class ProductDelete(LoggingProtectedDeleteView):
     template_name = "product/delete.html"
-    form_class = forms.ProductForm
+    form_class = forms.DeleteConfirmationForm
     model = models.Product
     context_object_name = "product"
     permission_classes = (IsSuperuser,)

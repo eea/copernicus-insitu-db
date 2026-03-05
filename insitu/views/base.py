@@ -81,11 +81,7 @@ class ESDatatableView(BaseDatatableView, ProtectedView):
             sdir = "-" if sort_dir == "desc" else ""
             sortcol = order_columns[sort_col]
 
-            if isinstance(sortcol, list):
-                for sc in sortcol:
-                    order.append("{0}{1}".format(sdir, sc.replace(".", "__")))
-            else:
-                order.append("{0}{1}".format(sdir, sortcol.replace(".", "__")))
+            order.append("{0}{1}".format(sdir, sortcol))
 
         if order:
             for i in range(0, len(order)):

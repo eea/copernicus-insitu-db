@@ -2,8 +2,8 @@ from django.conf import settings
 from django.urls import reverse
 from django.db.models import Prefetch
 from django_elasticsearch_dsl import Document, Index, fields
-from elasticsearch_dsl.analysis import analyzer, tokenizer, normalizer
-from elasticsearch_dsl.search import Search
+from elasticsearch.dsl.analysis import analyzer, tokenizer, normalizer
+from elasticsearch.dsl.search import Search
 
 from insitu.models import (
     Data,
@@ -39,7 +39,7 @@ if not getattr(Search, "_patched", False):
 
 case_insensitive_analyzer = analyzer(
     "case_insensitive_analyzer",
-    tokenizer=tokenizer("trigram", "nGram"),
+    tokenizer=tokenizer("trigram", "ngram"),
     filter=["lowercase"],
 )
 
@@ -83,6 +83,10 @@ class ProductDoc(Document):
 
     def get_entities_display(self):
         return ", ".join([entry["entity"] for entry in self.entities])
+
+    def get_indexing_queryset(self):
+        qs = self.get_queryset()
+        return qs.iterator(chunk_size=1000)
 
     @staticmethod
     def delete_index(sender, **kwargs):
@@ -154,6 +158,10 @@ class RequirementDoc(Document):
         fields = [
             "id",
         ]
+
+    def get_indexing_queryset(self):
+        qs = self.get_queryset()
+        return qs.iterator(chunk_size=1000)
 
     def get_name_display(self):
         url = reverse("requirement:detail", kwargs={"pk": self.id})
@@ -254,6 +262,10 @@ class DataDoc(Document):
     def get_name_display(self):
         url = reverse("data:detail", kwargs={"pk": self.id})
         return '<a href="{url}">{name}</a>'.format(url=url, name=self.name)
+
+    def get_indexing_queryset(self):
+        qs = self.get_queryset()
+        return qs.iterator(chunk_size=1000)
 
     @staticmethod
     def delete_index(sender, **kwargs):
@@ -359,9 +371,7 @@ class DataProviderDoc(Document):
             <span data-toggle="popover" title="Native name: {native_name}"
                   class="glyphicon glyphicon-info-sign small"
             </span>
-          """.format(
-                text=text, native_name=self.native_name
-            )
+          """.format(text=text, native_name=self.native_name)
 
         return text
 
@@ -370,6 +380,10 @@ class DataProviderDoc(Document):
 
     def get_email_display(self):
         return '<a href="mailto:{email}">{email}</a>'.format(email=self.email)
+
+    def get_indexing_queryset(self):
+        qs = self.get_queryset()
+        return qs.iterator(chunk_size=1000)
 
     @staticmethod
     def delete_index(sender, **kwargs):

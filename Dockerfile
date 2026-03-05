@@ -1,4 +1,4 @@
-FROM python:3.8-slim
+FROM python:3.13-slim
 
 ARG REQFILE=requirements-dep.txt
 ENV APP_HOME=/var/local/copernicus
@@ -8,8 +8,8 @@ WORKDIR $APP_HOME
 
 RUN apt-get update \
  && apt-get install -y --no-install-recommends \
-    build-essential \
     cron \
+    build-essential \
     libcairo2-dev \
     libffi-dev \
     libjpeg62-turbo \
@@ -22,7 +22,7 @@ RUN apt-get update \
 
 RUN mkdir -p $APP_HOME/logging
 
-RUN pip install pip==24.0 && \
+RUN pip install --upgrade pip && \
     pip install --no-cache-dir -r $REQFILE
 
 RUN cd docs && make html

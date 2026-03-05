@@ -19,6 +19,7 @@ services:
         REQFILE: requirements-dev.txt
     container_name: insitu.cron
     environment:
+      - POSTGRES_HOST=db
       - TZ=Europe/Bucharest
     depends_on:
       - db
@@ -27,12 +28,15 @@ services:
     entrypoint: ["./docker-entrypoint.cron.sh"]
 
   elasticsearch:
-    image: docker.elastic.co/elasticsearch/elasticsearch:6.6.1
+    image: docker.elastic.co/elasticsearch/elasticsearch:9.3.1
     container_name: insitu.elasticsearch
     environment:
       - cluster.name=docker-cluster
       - bootstrap.memory_lock=true
-      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+      - discovery.type=single-node
+      - ELASTIC_PASSWORD=password
+      # - xpack.security.enabled=false
+      - xpack.security.http.ssl.enabled=false
     ulimits:
       memlock:
         soft: -1
@@ -47,7 +51,10 @@ services:
     environment:
       - cluster.name=docker-cluster
       - bootstrap.memory_lock=true
-      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+      - discovery.type=single-node
+      - ELASTIC_PASSWORD=password
+      # - xpack.security.enabled=false
+      - xpack.security.http.ssl.enabled=false
     ulimits:
       memlock:
         soft: -1
@@ -68,7 +75,7 @@ services:
       io.rancher.scheduler.affinity:host_label_ne: reserved=yes
 
   kibana:
-    image: docker.elastic.co/kibana/kibana:6.6.1
+    image: docker.elastic.co/kibana/kibana:9.3.1
     container_name: insitu.kibana
     ports:
       - 5601:5601
