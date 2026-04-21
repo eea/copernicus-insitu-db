@@ -3,6 +3,11 @@ Changelog
 
 * In case of major changes, an email should be sent to all users with the modifications.
 
+3.0.7 (2026-04-21)
+------------------
+* Fix permissions check for Mark as Ready
+[dianaboiangiu]
+
 3.0.6 (2025-12-09)
 ------------------
 * Remove state from link objects
