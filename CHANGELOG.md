@@ -3,6 +3,11 @@ Changelog
 
 * In case of major changes, an email should be sent to all users with the modifications.
 
+4.0.1 (2026-03-06)
+-----------------
+* Fix Mark as ready Data check
+  [dianaboiangiu]
+
 4.0.0 (2026-03-05)
 -----------------
 * Upgrade python
