@@ -201,7 +201,7 @@
           {% if not user_groups|check_group:READ_ONLY_GROUP and user.is_authenticated %}
             <div class="pull-right">
               {% if data.state == 'draft' %}
-                {% if data.created_by == user in data.created_by.team.teammates.all or user_perm or user|has_group:DATA_DATA_PROVIDER_EDITOR_GROUP %}
+                {% if data.created_by == user or user in data.created_by.team.teammates.all or user_perm or user|has_group:DATA_DATA_PROVIDER_EDITOR_GROUP %}
                   <a class="btn btn-primary" href="{% url 'data:transition' pk=data.pk source='draft' target='ready' transition='mark_as_ready' %}">
                     Mark as ready
                   </a>
