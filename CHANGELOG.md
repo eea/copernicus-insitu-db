@@ -3,6 +3,11 @@ Changelog
 
 * In case of major changes, an email should be sent to all users with the modifications.
 
+4.0.2 (2026-04-21)
+------------------
+* Upgrade Django
+  [dianboiangiu]
+
 4.0.1 (2026-03-06)
 -----------------
 * Fix Mark as ready Data check
