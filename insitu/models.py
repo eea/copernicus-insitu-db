@@ -440,6 +440,10 @@ class ProductRequirement(OwnerHistoryModel, SoftDeleteModel):
             "delete_requirement", self.requirement
         )
 
+    @property
+    def parent(self):
+        return self.requirement
+
     class Meta:
         indexes = [
             models.Index(fields=["_deleted"]),
@@ -750,6 +754,10 @@ class DataRequirement(OwnerHistoryModel, SoftDeleteModel):
     def name(self):
         return f"Data: {self.data.name} - Requirement: {self.requirement.name}"
 
+    @property
+    def parent(self):
+        return self.requirement
+
     def has_user_perm(self, user):
         return user.has_perm("change_requirement", self.requirement) and user.has_perm(
             "delete_requirement", self.requirement
@@ -779,6 +787,10 @@ class DataProviderRelation(OwnerHistoryModel, SoftDeleteModel):
     @property
     def name(self):
         return f"Provider: {self.provider.name} - Data: {self.data.name}"
+
+    @property
+    def parent(self):
+        return self.data
 
     def has_user_perm(self, user):
         return user.has_perm("change_data", self.data) and user.has_perm(
