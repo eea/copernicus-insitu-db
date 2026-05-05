@@ -3,6 +3,11 @@ Changelog
 
 * In case of major changes, an email should be sent to all users with the modifications.
 
+3.0.8 (2026-05-05)
+------------------
+* Fix permissions on related objects
+[dianaboiangiu]
+
 3.0.7 (2026-04-21)
 ------------------
 * Fix permissions check for Mark as Ready
