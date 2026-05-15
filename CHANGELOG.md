@@ -3,6 +3,11 @@ Changelog
 
 * In case of major changes, an email should be sent to all users with the modifications.
 
+4.0.3 (2026-05-15)
+------------------
+* Merge production changes into development
+  [dianaboiangiu]
+
 4.0.2 (2026-04-21)
 ------------------
 * Upgrade Django
@@ -19,6 +24,11 @@ Changelog
 * Upgrade Django packages
 * Upgrade Elasticsearch
   [dianaboiangiu]
+
+3.0.7 (2026-04-21)
+------------------
+* Fix permissions check for Mark as Ready
+[dianaboiangiu]
 
 3.0.6 (2025-12-09)
 ------------------
