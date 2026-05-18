@@ -347,3 +347,5 @@ COUNTRY_MEMBERSHIPS = [
     ("Copernicus", "Copernicus"),
     ("EUMETNET", "EUMETNET"),
 ]
+
+SHOW_MIGRATION_BANNER = env("SHOW_MIGRATION_BANNER", default=False)
