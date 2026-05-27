@@ -3,6 +3,11 @@ Changelog
 
 * In case of major changes, an email should be sent to all users with the modifications.
 
+4.0.6 (2026-05-27)
+------------------
+* Update banner text
+  [dianaboiangiu]
+
 4.0.5 (2026-05-18)
 ------------------
 * Show migration banner on all pages
