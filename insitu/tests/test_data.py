@@ -44,6 +44,7 @@ class DataTests(base.FormCheckTestCase):
         "quality_control_procedure",
         "dissemination",
         "geographical_coverage",
+        "copernicus_service_product",
     ]
     target_type = "data"
     custom_errors = {

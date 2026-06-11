@@ -35,6 +35,7 @@
   <script nonce="{{request.csp_nonce}}">
     $(document).ready(function () {
       $('select').select2({
+        allowClear: true,
         sorter: function(data) {
           /* Sort data using lowercase comparison */
           return data.sort(function (a, b) {

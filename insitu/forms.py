@@ -1,19 +1,19 @@
 import re
 
 from django import forms
+from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
 from django.core.mail import send_mail
-from django.urls import reverse
 from django.db import transaction
 from django.template.loader import render_to_string
 from django.utils.translation import gettext_lazy as _
+from django.urls import reverse
 
 from copernicus.settings import COUNTRY_MEMBERSHIPS, DEFAULT_FROM_EMAIL, SITE_URL
 from insitu import models
 from insitu import signals
-from picklists.models import ProductGroup, Country
-from django.contrib.auth.forms import UserCreationForm
-from django.contrib.auth.models import User
+from picklists import models as picklist_models
 
 
 class CreatedByFormMixin:
@@ -39,6 +39,41 @@ class DeleteConfirmationForm(forms.Form):
 
 
 class ProductForm(forms.ModelForm):
+    group = forms.ModelChoiceField(
+        queryset=picklist_models.ProductGroup.objects.all(),
+        required=True,
+        widget=forms.Select(
+            attrs={
+                "data-placeholder": "Choose the proper Group from the drop-down list."
+            }
+        ),
+    )
+    component = forms.ModelChoiceField(
+        queryset=models.Component.objects.all(),
+        required=True,
+        widget=forms.Select(
+            attrs={"data-placeholder": "Choose it from the drop-down list."}
+        ),
+    )
+    status = forms.ModelChoiceField(
+        queryset=picklist_models.Status.objects.all(),
+        required=True,
+        widget=forms.Select(
+            attrs={
+                "data-placeholder": "Based on its maturity level.Choose the relevant Status from the drop-down list."
+            }
+        ),
+    )
+    area = forms.ModelChoiceField(
+        queryset=picklist_models.Area.objects.all(),
+        required=True,
+        widget=forms.Select(
+            attrs={
+                "data-placeholder": "Area of interest of the product.Select from the drop-down list."
+            }
+        ),
+    )
+
     class Meta:
         model = models.Product
         fields = [
@@ -114,7 +149,9 @@ class ProductRequirementEditForm(ProductRequirementBaseForm):
 
 
 class ProductGroupRequirementForm(ProductRequirementBaseForm):
-    product_group = forms.ModelChoiceField(queryset=ProductGroup.objects.all())
+    product_group = forms.ModelChoiceField(
+        queryset=picklist_models.ProductGroup.objects.all()
+    )
 
     class Meta:
         model = models.ProductRequirement
@@ -156,6 +193,39 @@ class ProductGroupRequirementForm(ProductRequirementBaseForm):
 
 
 class RequirementForm(forms.ModelForm):
+    dissemination = forms.ModelChoiceField(
+        queryset=picklist_models.Dissemination.objects.all(),
+        required=True,
+        widget=forms.Select(
+            attrs={
+                "data-placeholder": "How to access the requirement. Select from the drop-down list."
+            }
+        ),
+    )
+    quality_control_procedure = forms.ModelChoiceField(
+        queryset=picklist_models.QualityControlProcedure.objects.all(),
+        required=True,
+        widget=forms.Select(
+            attrs={
+                "data-placeholder": "The method could be used to perform the QC, if available, else leave it empty."
+            }
+        ),
+    )
+    group = forms.ModelChoiceField(
+        queryset=picklist_models.RequirementGroup.objects.all(),
+        required=True,
+        widget=forms.Select(
+            attrs={
+                "data-placeholder": "Choose the proper Group from the drop-down list."
+            }
+        ),
+    )
+    status = forms.ModelChoiceField(
+        queryset=picklist_models.Status.objects.all(),
+        required=False,
+        widget=forms.Select(attrs={"data-placeholder": ""}),
+    )
+
     uncertainty__threshold = forms.CharField(max_length=100, required=False)
     uncertainty__breakthrough = forms.CharField(max_length=100, required=False)
     uncertainty__goal = forms.CharField(max_length=100, required=False)
@@ -204,9 +274,6 @@ class RequirementForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields["name"].help_text = (
-            'Please avoid separating words with the character "_"'
-        )
 
     def _clean_scale(self):
         check_fields = [
@@ -369,6 +436,115 @@ class RequirementCloneForm(RequirementForm):
 
 
 class DataForm(CreatedByFormMixin, forms.ModelForm):
+    update_frequency = forms.ModelChoiceField(
+        queryset=picklist_models.UpdateFrequency.objects.all(),
+        widget=forms.Select(
+            attrs={
+                "data-placeholder": "How often the data is updated. Select from the drop-down list."
+            }
+        ),
+        required=False,
+    )
+    area = forms.ModelChoiceField(
+        queryset=picklist_models.Area.objects.all(),
+        widget=forms.Select(
+            attrs={
+                "data-placeholder": "The specific geographical area (not a specific country) covered by the data. Select from the drop-down list."
+            }
+        ),
+        required=False,
+    )
+    timeliness = forms.ModelChoiceField(
+        queryset=picklist_models.Timeliness.objects.all(),
+        widget=forms.Select(
+            attrs={
+                "data-placeholder": "The expected time to access the data, if available, else leave it empty. Select from the drop-down list."
+            }
+        ),
+        required=False,
+    )
+    data_policy = forms.ModelChoiceField(
+        queryset=picklist_models.DataPolicy.objects.all(),
+        widget=forms.Select(
+            attrs={
+                "data-placeholder": "The user access rights to the data and associated costs. Select from the drop-down list."
+            }
+        ),
+        required=False,
+    )
+    data_type = forms.ModelChoiceField(
+        queryset=picklist_models.DataType.objects.all(),
+        widget=forms.Select(
+            attrs={
+                "data-placeholder": "The data classification group based on its characteristics and contents. Select from the drop-down list."
+            }
+        ),
+        required=False,
+    )
+    data_format = forms.ModelChoiceField(
+        queryset=picklist_models.DataFormat.objects.all(),
+        widget=forms.Select(
+            attrs={
+                "data-placeholder": "The data format type. Select from the drop-down list."
+            }
+        ),
+        required=False,
+    )
+    quality_control_procedure = forms.ModelChoiceField(
+        queryset=picklist_models.QualityControlProcedure.objects.all(),
+        widget=forms.Select(
+            attrs={
+                "data-placeholder": "The method used for the Quality Check of the data. Select from the drop-down list."
+            }
+        ),
+        required=False,
+    )
+    dissemination = forms.ModelChoiceField(
+        queryset=picklist_models.Dissemination.objects.all(),
+        widget=forms.Select(
+            attrs={
+                "data-placeholder": "How the data is distributed/shared to the users. Select from the drop-down list."
+            }
+        ),
+        required=False,
+    )
+    inspire_themes = forms.ModelMultipleChoiceField(
+        queryset=picklist_models.InspireTheme.objects.all(),
+        widget=forms.SelectMultiple(
+            attrs={
+                "data-placeholder": "  The INSPIRE (INfrastructure for SPatial InfoRmation in Europe) group to which the data belongs, based on the INSPIRE Directive (2007/2/EC). Select from the drop-down list.",
+            }
+        ),
+        required=False,
+    )
+    geographical_coverage = forms.ModelMultipleChoiceField(
+        queryset=picklist_models.Country.objects.all(),
+        widget=forms.SelectMultiple(
+            attrs={
+                "data-placeholder": "  Add country/countries covered by the data. Select from drop-down list.",
+            }
+        ),
+        required=False,
+    )
+    status = forms.ModelChoiceField(
+        queryset=picklist_models.Status.objects.all(),
+        widget=forms.Select(attrs={"data-placeholder": ""}),
+        required=False,
+    )
+    copernicus_service_product = forms.TypedChoiceField(
+        choices=(
+            ("False", _("No")),
+            ("True", _("Yes")),
+        ),
+        coerce=lambda value: value == "True",
+        widget=forms.Select(
+            attrs={
+                "data-placeholder": "Check if the data itself is a Copernicus Service product.",
+            }
+        ),
+        required=False,
+    )
+
     class Meta:
         model = models.Data
         auto_created = True
@@ -457,6 +633,7 @@ class DataReadyForm(RequiredFieldsMixin, DataForm):
             "quality_control_procedure",
             "dissemination",
             "geographical_coverage",
+            "copernicus_service_product",
         ]
 
     def clean(self):
@@ -509,6 +686,15 @@ class DataRequirementEditForm(DataRequirementBaseForm):
 
 class DataProviderNetworkForm(CreatedByFormMixin, forms.ModelForm):
     is_network = forms.BooleanField(initial=True, widget=forms.HiddenInput)
+    countries = forms.ModelMultipleChoiceField(
+        queryset=picklist_models.Country.objects.all(),
+        widget=forms.SelectMultiple(
+            attrs={
+                "data-placeholder": "  Location (headquarters) of the provider network."
+            }
+        ),
+        required=True,
+    )
 
     class Meta:
         model = models.DataProvider
@@ -524,7 +710,12 @@ class DataProviderNetworkForm(CreatedByFormMixin, forms.ModelForm):
 
 class DataProviderNetworkMembersForm(forms.ModelForm):
     members = forms.ModelMultipleChoiceField(
-        required=False, queryset=models.DataProvider.objects.all(), label="Members"
+        required=False,
+        queryset=models.DataProvider.objects.all(),
+        label="Members",
+        widget=forms.SelectMultiple(
+            attrs={"data-placeholder": "  Add the relevant organisation members."}
+        ),
     )
 
     class Meta:
@@ -560,6 +751,15 @@ class DataProviderDetailsForm(CreatedByFormMixin, forms.ModelForm):
         queryset=models.DataProvider.objects.all(),
         required=False,
     )
+    provider_type = forms.ModelChoiceField(
+        queryset=picklist_models.ProviderType.objects.all(),
+        widget=forms.Select(
+            attrs={
+                "data-placeholder": "Primary Role of the provider and the funding nature. Select from drop-down list."
+            }
+        ),
+        required=True,
+    )
     email = forms.CharField(required=False)
     website = forms.URLField(required=False, widget=forms.TextInput)
 
@@ -581,6 +781,20 @@ class DataProviderNonNetworkForm(CreatedByFormMixin, forms.ModelForm):
         required=False,
         queryset=models.DataProvider.objects.filter(is_network=True),
         label="Networks",
+        widget=forms.SelectMultiple(
+            attrs={
+                "data-placeholder": "  Select the relevant network from drop-down list, if DP is part of a network. Else leave it empty."
+            }
+        ),
+    )
+    countries = forms.ModelMultipleChoiceField(
+        queryset=picklist_models.Country.objects.all(),
+        widget=forms.SelectMultiple(
+            attrs={
+                "data-placeholder": "  Location (headquarters) of the data provider."
+            }
+        ),
+        required=True,
     )
 
     class Meta:
@@ -692,14 +906,16 @@ class StandardReportForm(forms.Form):
 
 class CountryReportForm(forms.Form):
     country = forms.ModelChoiceField(
-        required=True, queryset=Country.objects.all(), label="Select a country"
+        required=True,
+        queryset=picklist_models.Country.objects.all(),
+        label="Select a country",
     )
 
 
 class DataProviderDuplicatesReportForm(forms.Form):
     country = forms.ModelChoiceField(
         required=False,
-        queryset=Country.objects.all(),
+        queryset=picklist_models.Country.objects.all(),
         label="Select a country",
         empty_label="All countries",
     )
@@ -710,7 +926,7 @@ class DataNetworkReportForm(forms.Form):
         required=False, choices=COUNTRY_MEMBERSHIPS
     )
     countries = forms.ModelMultipleChoiceField(
-        required=True, queryset=Country.objects.all()
+        required=True, queryset=picklist_models.Country.objects.all()
     )
 
 

@@ -5,7 +5,7 @@ Changelog
 
 4.0.6 (2026-05-27)
 ------------------
-* Update banner text
+* Update bananer text
   [dianaboiangiu]
 
 4.0.5 (2026-05-18)

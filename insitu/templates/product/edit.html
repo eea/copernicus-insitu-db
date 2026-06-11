@@ -26,13 +26,13 @@
 
   <form action="" method="POST">
     {% csrf_token %}
-    {% bootstrap_field form.acronym %}
+    {% bootstrap_field form.acronym placeholder="Official product acronym, if available, else leave it empty." %}
 
-    {% bootstrap_field form.name required_css_class='required' %}
+    {% bootstrap_field form.name required_css_class='required' placeholder="Original name from official website or Product portfolio of the Cop. Service Component. No acronym in this field." %}
 
-    {% bootstrap_field form.description %}
+    {% bootstrap_field form.description placeholder="It must provide the user a clear idea of what the  product consist of.&#10;The description could be taken directly from the relevant Copernicus Product portfolio or Websites (summary text) or, as last option, it should come from the Service.&#10;Further add URL to product description, if available." %}
 
-    {% bootstrap_field form.group required_css_class='required' addon_after='<a target="_blank" href="/help#productgroup"><span class="glyphicon glyphicon-question-sign"></span></a>' %}
+    {% bootstrap_field form.group required_css_class='required' addon_after='<a target="_blank" href="/help#productgroup"><span class="glyphicon glyphicon-question-sign"></span></a>' placeholder="Choose the proper Group from the drop-down list." %}
 
     {% bootstrap_field form.component required_css_class='required' %}
 
@@ -50,7 +50,9 @@
   <script src="{% static 'js/select2.min.js' %}"></script>
   <script nonce="{{request.csp_nonce}}">
     $(document).ready(function () {
-      $('select').select2();
+      $('select').select2({
+        allowClear: true
+      });
     });
   </script>
 {% endblock %}

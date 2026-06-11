@@ -40,9 +40,9 @@
   <form action="" method="POST">
     {% csrf_token %}
 
-    {% bootstrap_field form.name required_css_class='required' %}
+    {% bootstrap_field form.name required_css_class='required' placeholder="Name from the official website." %}
 
-    {% bootstrap_field form.description %}
+    {% bootstrap_field form.description placeholder="It must include a comprehensive description of the data along with some technical details, if necessary. Add the weblink to the data if available." %}
 
     {% bootstrap_field form.update_frequency required_css_class='required' addon_after='<a target="_blank" href="/help#updatefrequency"><span class="glyphicon glyphicon-question-sign"></span></a>' %}
 
@@ -55,10 +55,12 @@
       <div class="input-group input-daterange">
         <input type="text" class="input-sm form-control" name="start_time_coverage"
                id="id_start_time_coverage" data-provide="datepicker"
+               placeholder="Reference time range covered by the data (from - to)"
                value="{{ form.start_time_coverage.value|date:'m/d/Y'}}"/>
         <span class="input-group-addon">to</span>
         <input type="text" class="input-sm form-control" name="end_time_coverage"
                id="id_end_time_coverage" data-provide="datepicker"
+               placeholder="Reference time range covered by the data (from - to)"
                value="{{ form.end_time_coverage.value|date:'m/d/Y'}}"/>
         <div class="input-group-addon">
           <span class="glyphicon glyphicon-th"></span>
@@ -97,7 +99,9 @@
   <script src="{% static 'js/bootstrap-datetime-picker.min.js' %}"></script>
   <script nonce="{{request.csp_nonce}}">
     $(document).ready(function () {
-      $('select').select2();
+      $('select').select2({
+        allowClear: true
+      });
     });
   </script>
 {% endblock %}
