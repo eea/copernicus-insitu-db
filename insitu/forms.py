@@ -31,6 +31,19 @@ class RequiredFieldsMixin:
             self.fields[key].required = True
 
 
+class PlaceholderSelect(forms.Select):
+    def create_option(
+        self, name, value, label, selected, index, subindex=None, attrs=None
+    ):
+        option = super().create_option(
+            name, value, label, selected, index, subindex=subindex, attrs=attrs
+        )
+        if option["value"] == "":
+            option["attrs"]["disabled"] = True
+            option["attrs"]["hidden"] = True
+        return option
+
+
 class DeleteConfirmationForm(forms.Form):
     confirm = forms.BooleanField(
         required=True,
@@ -533,16 +546,17 @@ class DataForm(CreatedByFormMixin, forms.ModelForm):
     )
     copernicus_service_product = forms.TypedChoiceField(
         choices=(
+            ("", _("Select Yes or No")),
             ("False", _("No")),
             ("True", _("Yes")),
         ),
         coerce=lambda value: value == "True",
-        widget=forms.Select(
+        widget=PlaceholderSelect(
             attrs={
                 "data-placeholder": "Check if the data itself is a Copernicus Service product.",
             }
         ),
-        required=False,
+        empty_value=None,
     )
 
     class Meta:

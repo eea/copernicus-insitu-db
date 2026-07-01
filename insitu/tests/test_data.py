@@ -262,7 +262,10 @@ class DataTests(base.FormCheckTestCase):
     def test_add_data_draft(self):
         data = {}
         resp = self.client.post(reverse("data:add"), data)
-        self.errors = {"name": self.REQUIRED_ERROR}
+        self.errors = {
+            "copernicus_service_product": self.REQUIRED_ERROR,
+            "name": self.REQUIRED_ERROR,
+        }
         self.check_required_errors(resp, self.errors)
         self.check_logged_action("tried to create")
 
