@@ -3,6 +3,11 @@ Changelog
 
 * In case of major changes, an email should be sent to all users with the modifications.
 
+4.0.9 (2026-07-01)
+------------------
+* Display empty selection in Copernicus service product field by default
+  [dianaboiangiu]
+
 4.0.8 (2026-07-01)
 ------------------
 * Update product area placeholder
