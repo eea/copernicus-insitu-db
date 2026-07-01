@@ -3,6 +3,11 @@ Changelog
 
 * In case of major changes, an email should be sent to all users with the modifications.
 
+4.0.8 (2026-07-01)
+------------------
+* Update product area placeholder
+  [dianaboiangiu]
+
 4.0.7 (2026-06-11)
 ------------------
 * Add placeholder texts in forms
