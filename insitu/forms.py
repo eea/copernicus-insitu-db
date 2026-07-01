@@ -69,7 +69,7 @@ class ProductForm(forms.ModelForm):
         required=True,
         widget=forms.Select(
             attrs={
-                "data-placeholder": "Area of interest of the product.Select from the drop-down list."
+                "data-placeholder": "Geographical area of interest of the product.Select from the drop-down list."
             }
         ),
     )
